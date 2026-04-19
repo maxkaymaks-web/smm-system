@@ -136,9 +136,114 @@ await downloadFile(data.images[0].url, "./output/image.jpg");
 
 | Model ID | Что делает |
 |----------|-----------|
-| `fal-ai/birefnet` | Удаление фона (качественно) |
-| `fal-ai/remove-background` | Удаление фона (быстро) |
-| `fal-ai/esrgan` | Апскейл изображения |
+| `fal-ai/bria/background/remove` | Удаление фона — **основная модель** (BRIA RMBG 2.0) |
+| `fal-ai/birefnet` | Удаление фона — альтернатива |
+| `fal-ai/remove-background` | Удаление фона — быстро, низкое качество |
+| `fal-ai/seedvr/upscale/image` | Апскейл изображения — **основная модель** (SeedVR2) |
+| `fal-ai/esrgan` | Апскейл — альтернатива (Real-ESRGAN) |
+
+---
+
+## Удаление фона: fal-ai/bria/background/remove
+
+**Использовать** `fal.subscribe()` — задача небыстрая.
+
+### Параметры
+
+| Параметр | Тип | По умолч. | Описание |
+|----------|-----|-----------|---------|
+| `image_url` | string | — | **Обязательный.** URL входного изображения |
+| `sync_mode` | boolean | — | Вернуть как data URI вместо URL |
+
+### Вывод
+
+```json
+{
+  "image": { "url": "...", "width": 1024, "height": 1024, "content_type": "image/png", "file_size": 12345 }
+}
+```
+
+### Пример — Node.js
+
+```js
+import { fal } from "@fal-ai/client";
+import fs from "fs";
+import https from "https";
+
+fal.config({ credentials: process.env.FAL_KEY });
+
+// Загрузить файл в fal storage, получить URL
+const buf = fs.readFileSync("photo.jpg");
+const imageUrl = await fal.storage.upload(new Blob([buf], { type: "image/jpeg" }), { contentType: "image/jpeg" });
+
+const result = await fal.subscribe("fal-ai/bria/background/remove", {
+  input: { image_url: imageUrl },
+  logs: true,
+  onQueueUpdate: (u) => {
+    if (u.status === "IN_PROGRESS") u.logs?.forEach(l => console.log("[fal]", l.message));
+  },
+});
+
+// result.data.image.url — PNG с прозрачным фоном
+```
+
+**CLI-инструмент:** `node tools/remove-bg.mjs <input.jpg> <output.png>`
+
+---
+
+## Апскейл: fal-ai/seedvr/upscale/image
+
+**Использовать** `fal.subscribe()` — медленнее ESRGAN, лучше качество.
+
+### Параметры
+
+| Параметр | Тип | По умолч. | Описание |
+|----------|-----|-----------|---------|
+| `image_url` | string | — | **Обязательный.** URL входного изображения |
+| `upscale_mode` | enum | `factor` | `factor` — умножить размер, `target` — задать разрешение |
+| `upscale_factor` | float | `2` | Множитель (при `upscale_mode: factor`) |
+| `target_resolution` | enum | `1080p` | `720p` / `1080p` / `1440p` / `2160p` (при `upscale_mode: target`) |
+| `seed` | integer | — | Сид воспроизводимости |
+| `noise_scale` | float | `0.1` | Интенсивность шума |
+| `output_format` | enum | `jpg` | `jpg` / `png` / `webp` |
+| `sync_mode` | boolean | — | Вернуть как data URI |
+
+### Вывод
+
+```json
+{
+  "image": { "url": "...", "width": 2048, "height": 2048, "content_type": "image/jpeg" },
+  "seed": 42
+}
+```
+
+### Пример — Node.js
+
+```js
+import { fal } from "@fal-ai/client";
+
+fal.config({ credentials: process.env.FAL_KEY });
+
+const buf = fs.readFileSync("photo.jpg");
+const imageUrl = await fal.storage.upload(new Blob([buf], { type: "image/jpeg" }), { contentType: "image/jpeg" });
+
+const result = await fal.subscribe("fal-ai/seedvr/upscale/image", {
+  input: {
+    image_url: imageUrl,
+    upscale_factor: 2,          // или upscale_mode: "target", target_resolution: "2160p"
+    output_format: "jpg",
+    noise_scale: 0.1,
+  },
+  logs: true,
+  onQueueUpdate: (u) => {
+    if (u.status === "IN_PROGRESS") u.logs?.forEach(l => console.log("[fal]", l.message));
+  },
+});
+
+// result.data.image.url — апскейленное изображение
+```
+
+**CLI-инструмент:** `node tools/upscale.mjs <input.jpg> <output.jpg> [factor]`
 
 ---
 

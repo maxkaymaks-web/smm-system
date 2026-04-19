@@ -186,40 +186,81 @@ cd /путь/до/smm-system
 node tools/render-html.js projects/{client}/posts/drafts/post-NN.html projects/{client}/posts/drafts/post-NN.png
 ```
 
-## Генерация фото через fal.ai
-
-Когда ТЗ требует фото-фон — используй `tools/generate-image.mjs`.
+## fal.ai — инструменты для работы с изображениями
 
 **Установка (один раз):**
 ```bash
-cd smm-system
-npm install @fal-ai/client
+cd smm-system && npm install @fal-ai/client
 ```
 
-**Генерация:**
+**Полная документация моделей:** `skills/fal-ai/SKILL.md`
+
+---
+
+### 1. Генерация фото-фонов
+
+Когда ТЗ требует фото-фон:
+
 ```bash
 node tools/generate-image.mjs "ПРОМПТ НА АНГЛИЙСКОМ" projects/{client}/assets/images/post-NN-bg.jpg 3:4 1K
 ```
 
-**Параметры aspect_ratio:**
-- `3:4` — портрет 1080×1350 (стандарт для каруселей)
-- `1:1` — квадрат 1080×1080
+**aspect_ratio:** `3:4` (портрет 1080×1350) · `1:1` (квадрат 1080×1080)
 
-**Вставка в HTML после генерации:**
+**Вставка в HTML:**
 ```html
-<!-- Вместо placeholder div: -->
 <div style="position:absolute;inset:0;
   background-image:url('../../assets/images/post-NN-bg.jpg');
   background-size:cover;background-position:center;">
 </div>
 ```
 
-**Полный скилл:** `skills/fal-ai/SKILL.md` (модели, параметры, примеры).
+---
 
-**Важно:**
-- Скачивай сразу — URL временный (~1 час)
+### 2. Удаление фона с фото клиента
+
+Модель: `fal-ai/bria/background/remove` — убирает фон, оставляет PNG с прозрачностью.
+
+```bash
+node tools/remove-bg.mjs projects/{client}/assets/images/photo.jpg \
+                         projects/{client}/assets/images/photo-nobg.png
+```
+
+**Когда использовать:**
+- Вырезать продукт/человека для вставки на фирменный фон слайда
+- Подготовить фото для коллажа
+
+**Вставка в HTML после удаления фона:**
+```html
+<img src="./photo-nobg.png"
+     style="position:absolute;bottom:0;right:0;height:80%;object-fit:contain">
+```
+
+---
+
+### 3. Апскейл фото от клиента
+
+Модель: `fal-ai/seedvr/upscale/image` — SeedVR2, лучше качество чем ESRGAN.
+
+```bash
+# Апскейл ×2 (по умолчанию)
+node tools/upscale.mjs projects/{client}/assets/images/photo.jpg \
+                       projects/{client}/assets/images/photo-4k.jpg 2
+
+# Апскейл до 2160p (4K)
+node tools/upscale.mjs photo.jpg photo-4k.jpg target 2160p
+```
+
+**Когда использовать:**
+- Фото от клиента низкого разрешения → нужно для полноэкранного фона слайда
+- Фото до/после для карусели — улучшить перед вставкой
+
+---
+
+**Правила fal.ai:**
+- Скачивай результат сразу — URL временный (~1 час)
 - Для BeautyCulture: добавляй grain overlay поверх фото (см. шаблон ниже)
-- `<img src="...">` не использовать — только CSS `background-image`
+- `<img src="http...">` не использовать — только локальные пути или CSS `background-image`
 
 ## Grain texture overlay (шаблон)
 
