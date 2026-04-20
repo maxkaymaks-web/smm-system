@@ -52,41 +52,38 @@ body { font-family: 'Raleway', sans-serif; background: #FAF8F5; }
       </li>
     </ul>
 
-    <!-- Before / After photos — flex:1 fills remaining space -->
-    <div style="display:flex;gap:12px;flex:1;min-height:0">
+    <!-- Editorial center block -->
+    <div style="flex:1;min-height:0;position:relative;overflow:hidden">
 
-      <!-- До -->
-      <div style="flex:1;position:relative;border-radius:14px;overflow:hidden;background:#e8e0d8">
-        <img src="./photo-02-before.jpg"
-             style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block">
-        <!-- Gradient bottom overlay -->
-        <div style="position:absolute;bottom:0;left:0;right:0;height:90px;
-          background:linear-gradient(to top, rgba(20,16,12,0.72) 0%, transparent 100%)"></div>
-        <!-- "До" label -->
-        <div style="position:absolute;bottom:20px;left:0;right:0;text-align:center;
-          font-family:'Raleway',sans-serif;font-size:28px;font-weight:500;
-          letter-spacing:6px;text-transform:uppercase;color:#fff">До</div>
+      <!-- Body image — centered, fills height -->
+      <img src="./photo-02-body-color-nobg.png"
+           style="position:absolute;top:0;left:50%;transform:translateX(-50%);height:100%;object-fit:contain;z-index:1;pointer-events:none">
+
+      <!-- Left gradient — fade into background -->
+      <div style="position:absolute;top:0;left:0;bottom:0;width:38%;background:linear-gradient(to right,#FAF8F5 20%,transparent 100%);z-index:2;pointer-events:none"></div>
+
+      <!-- Right gradient -->
+      <div style="position:absolute;top:0;right:0;bottom:0;width:38%;background:linear-gradient(to left,#FAF8F5 20%,transparent 100%);z-index:2;pointer-events:none"></div>
+
+      <!-- Top gradient -->
+      <div style="position:absolute;top:0;left:0;right:0;height:22%;background:linear-gradient(to bottom,#FAF8F5 0%,transparent 100%);z-index:2;pointer-events:none"></div>
+
+      <!-- Bottom gradient -->
+      <div style="position:absolute;bottom:0;left:0;right:0;height:20%;background:linear-gradient(to top,#FAF8F5 0%,transparent 100%);z-index:2;pointer-events:none"></div>
+
+      <!-- Script + Bold pair — top, over gradients -->
+      <div style="position:absolute;top:22px;left:0;right:0;text-align:center;z-index:4">
+        <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:66px;font-weight:300;color:rgba(0,0,0,0.48);line-height:1">идеальный</div>
+        <div style="font-family:'Raleway',sans-serif;font-size:64px;font-weight:600;letter-spacing:5px;text-transform:uppercase;color:#1a1a1a;line-height:1.05;margin-top:2px">первый шаг</div>
       </div>
 
-      <!-- После -->
-      <div style="flex:1;position:relative;border-radius:14px;overflow:hidden;background:#e8e0d8">
-        <img src="./photo-02-after.jpg"
-             style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block">
-        <!-- Gradient bottom overlay -->
-        <div style="position:absolute;bottom:0;left:0;right:0;height:90px;
-          background:linear-gradient(to top, rgba(20,16,12,0.72) 0%, transparent 100%)"></div>
-        <!-- "После" label -->
-        <div style="position:absolute;bottom:20px;left:0;right:0;text-align:center;
-          font-family:'Raleway',sans-serif;font-size:28px;font-weight:500;
-          letter-spacing:6px;text-transform:uppercase;color:#fff">После</div>
+      <!-- Pills — bottom, over gradients -->
+      <div style="position:absolute;bottom:20px;left:0;right:0;display:flex;justify-content:center;gap:10px;z-index:4">
+        <div style="background:#1a1a1a;border-radius:40px;padding:10px 24px;font-family:'Raleway',sans-serif;font-size:14px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:#FAF8F5">Безболезненно</div>
+        <div style="background:#1a1a1a;border-radius:40px;padding:10px 24px;font-family:'Raleway',sans-serif;font-size:14px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:#FAF8F5">С первого сеанса</div>
+        <div style="background:#1a1a1a;border-radius:40px;padding:10px 24px;font-family:'Raleway',sans-serif;font-size:14px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:#FAF8F5">Без реабилитации</div>
       </div>
 
-    </div>
-
-    <!-- Footnote -->
-    <div style="margin-top:12px;text-align:center;font-family:'Raleway',sans-serif;
-      font-size:15px;font-weight:300;letter-spacing:2px;color:rgba(0,0,0,0.28)">
-      * результат после 1 процедуры
     </div>
 
     <!-- Price -->
