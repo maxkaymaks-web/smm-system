@@ -13,18 +13,15 @@ body { font-family: 'Raleway', sans-serif; background: #FAF8F5; }
     <rect width="1080" height="1350" filter="url(#grain)" opacity="0.06"/>
   </svg>
 
-  <!-- Ghost letter S — bigger -->
-  <div style="position:absolute;right:-40px;top:10px;font-family:'Cormorant Garamond',serif;font-size:700px;font-weight:300;color:rgba(0,0,0,0.05);line-height:1;user-select:none;pointer-events:none;z-index:0">S</div>
+  <!-- Ghost letter S — z-index:3 so it shows above body and gradients -->
+  <div style="position:absolute;right:-40px;top:10px;font-family:'Cormorant Garamond',serif;font-size:700px;font-weight:300;color:rgba(0,0,0,0.05);line-height:1;user-select:none;pointer-events:none;z-index:3">S</div>
 
-  <!-- Body image — page level z-index:1, below botanical and content -->
-  <img src="./photo-02-body-lying-nobg.png"
-       style="position:absolute;bottom:230px;left:50%;transform:translateX(-50%);width:108%;object-fit:contain;z-index:1;pointer-events:none">
-
-  <!-- Top fade — masks body above zone list -->
-  <div style="position:absolute;top:0;left:0;right:0;height:520px;background:linear-gradient(to bottom,#FAF8F5 55%,transparent 100%);z-index:2;pointer-events:none"></div>
+  <!-- Body image — page level, sits in spacer zone between texts -->
+  <img src="./photo-02-body-v3-nobg.png"
+       style="position:absolute;top:430px;left:-30px;width:calc(100% + 60px);height:490px;object-fit:cover;object-position:center 36%;z-index:1;pointer-events:none">
 
   <!-- Bottom fade — blends body into price section -->
-  <div style="position:absolute;bottom:100px;left:0;right:0;height:200px;background:linear-gradient(to top,#FAF8F5 45%,transparent 100%);z-index:2;pointer-events:none"></div>
+  <div style="position:absolute;bottom:100px;left:0;right:0;height:200px;background:linear-gradient(to top,#FAF8F5 50%,transparent 100%);z-index:2;pointer-events:none"></div>
 
   <!-- Botanical left — above body image -->
   <svg width="80" height="560" viewBox="0 0 50 350" style="position:absolute;left:22px;top:300px;opacity:0.09;pointer-events:none;z-index:3" xmlns="http://www.w3.org/2000/svg">
