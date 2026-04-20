@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "slides-preview",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "7788", "--directory", "/Users/maxkaymaks/CLAUDE/smm-system/projects/BeautyCulture_DariaSopkina/posts/drafts/22_04_2026-1"],
+      "port": 7788
+    },
+    {
+      "name": "drafts-preview",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "7789", "--directory", "/Users/maxkaymaks/CLAUDE/smm-system/projects/BeautyCulture_DariaSopkina/posts/drafts/22_04_2026-1"],
+      "port": 7789
+    }
+  ]
+}
