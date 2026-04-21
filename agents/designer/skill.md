@@ -259,57 +259,26 @@ node tools/upscale.mjs photo.jpg photo-4k.jpg target 2160p
 
 **Правила fal.ai:**
 - Скачивай результат сразу — URL временный (~1 час)
-- Для BeautyCulture: добавляй grain overlay поверх фото (см. шаблон ниже)
 - `<img src="http...">` не использовать — только локальные пути или CSS `background-image`
 
 ## Grain texture overlay (шаблон)
 
-Добавляй на все слайды BeautyCulture для плёночной эстетики:
+Плёночная текстура поверх фото — используй когда бренд требует такую эстетику (указано в context.md клиента):
 
 ```html
-<!-- Grain overlay — вставлять первым дочерним элементом контейнера -->
+<!-- Grain overlay — вставлять поверх фото, под текст -->
 <svg style="position:absolute;inset:0;width:1080px;height:1350px;
-  pointer-events:none;z-index:1" xmlns="http://www.w3.org/2000/svg">
+  pointer-events:none;z-index:2" xmlns="http://www.w3.org/2000/svg">
   <filter id="grain">
     <feTurbulence type="fractalNoise" baseFrequency="0.68"
       numOctaves="4" stitchTiles="stitch"/>
     <feColorMatrix type="saturate" values="0"/>
   </filter>
-  <rect width="1080" height="1350" filter="url(#grain)" opacity="0.06"/>
+  <rect width="1080" height="1350" filter="url(#grain)" opacity="0.05"/>
 </svg>
 ```
 
 Для квадратных слайдов: `height:1080px` вместо 1350px.
-
-## Декоративный ботанический элемент (BeautyCulture)
-
-Тонкие SVG-линии слева — в стиль минимализма студии:
-
-```html
-<!-- Botanical left — opacity 0.10, z-index:1, position:absolute -->
-<svg width="100" height="700" viewBox="0 0 50 350"
-  style="position:absolute;left:30px;top:350px;opacity:0.10;
-  pointer-events:none;z-index:1" xmlns="http://www.w3.org/2000/svg">
-  <path d="M25 340 C23 300 27 260 25 220 C23 180 26 140 25 100 C24 70 25 40 25 10"
-    stroke="#3a3028" stroke-width="1.2" fill="none" stroke-linecap="round"/>
-  <path d="M25 280 C10 265 2 250 5 238 C8 228 18 242 25 255"
-    stroke="#3a3028" stroke-width="1" fill="none" stroke-linecap="round"/>
-  <path d="M25 280 C40 265 48 250 45 238 C42 228 32 242 25 255"
-    stroke="#3a3028" stroke-width="1" fill="none" stroke-linecap="round"/>
-  <path d="M25 210 C8 196 -2 180 2 167 C6 155 16 170 25 183"
-    stroke="#3a3028" stroke-width="1" fill="none" stroke-linecap="round"/>
-  <path d="M25 210 C42 196 52 180 48 167 C44 155 34 170 25 183"
-    stroke="#3a3028" stroke-width="1" fill="none" stroke-linecap="round"/>
-  <path d="M25 145 C12 132 4 118 8 108 C12 99 20 113 25 126"
-    stroke="#3a3028" stroke-width="0.9" fill="none" stroke-linecap="round"/>
-  <path d="M25 145 C38 132 46 118 42 108 C38 99 30 113 25 126"
-    stroke="#3a3028" stroke-width="0.9" fill="none" stroke-linecap="round"/>
-  <path d="M25 55 C18 44 14 32 18 26 C22 20 25 36 25 48"
-    stroke="#3a3028" stroke-width="0.8" fill="none" stroke-linecap="round"/>
-  <path d="M25 55 C32 44 36 32 32 26 C28 20 25 36 25 48"
-    stroke="#3a3028" stroke-width="0.8" fill="none" stroke-linecap="round"/>
-</svg>
-```
 
 ## Чего не делать
 
@@ -318,4 +287,3 @@ node tools/upscale.mjs photo.jpg photo-4k.jpg target 2160p
 - Не делать текст меньше 24px
 - Не забывать `overflow: hidden`
 - Не использовать JS в HTML (только CSS/HTML)
-- **Никогда не рисовать SVG-схемы тела** — запрет от клиента BeautyCulture
