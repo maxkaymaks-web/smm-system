@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Контент-план — {CLIENT} | bit&pix агент</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+@font-face { font-family: 'Nata Sans'; src: local('Nata Sans'); font-weight: 100 900; }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #FEFEFF;
+  --bg-alt:   #F6FAFC;
+  --text:     #0B0B0B;
+  --accent:   #FF1E1E;
+  --border:   rgba(11,11,11,0.09);
+  --muted:    rgba(11,11,11,0.42);
+  --r:        12px;
+  --r-sm:     6px;
+  --r-pill:   20px;
+  --font:     'Nata Sans', 'Inter', -apple-system, sans-serif;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  padding: 52px 56px;
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── HEADER ─── */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 36px;
+  padding-bottom: 28px;
+  border-bottom: 1.5px solid var(--border);
+}
+
+.header-meta { display: flex; flex-direction: column; gap: 2px; }
+
+.meta-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.meta-title {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+}
+
+.meta-sub {
+  font-size: 14px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+/* ─── LOGO ─── */
+.logo svg text { font-family: 'Nata Sans', 'Inter', Arial, sans-serif !important; }
+
+/* ─── STATS ─── */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 36px;
+}
+
+.stat {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 18px 22px;
+}
+
+.stat-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+
+.stat-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.15;
+}
+
+.stat-value.red { color: var(--accent); }
+
+/* ─── SECTION LABEL ─── */
+.section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+
+/* ─── TABLE ─── */
+.table-wrap {
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  margin-bottom: 36px;
+}
+
+table { width: 100%; border-collapse: collapse; }
+
+thead th {
+  background: var(--bg-alt);
+  padding: 11px 16px;
+  text-align: left;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+tbody tr { border-bottom: 1px solid var(--border); }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: #f9fbfd; }
+
+tbody td { padding: 13px 16px; vertical-align: top; }
+
+/* ─── CELL TYPES ─── */
+.cell-num {
+  color: rgba(11,11,11,0.25);
+  font-size: 11px;
+  font-weight: 700;
+  width: 36px;
+}
+
+.cell-date { width: 92px; white-space: nowrap; }
+.date-main { font-size: 14px; font-weight: 600; }
+.date-dow { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.holiday-label { display: block; font-size: 10px; color: var(--accent); font-weight: 700; margin-top: 2px; letter-spacing: 0.3px; }
+
+.cell-rubric { width: 120px; }
+
+.cell-topic {}
+.topic-title { font-size: 14px; font-weight: 600; line-height: 1.35; }
+.topic-desc { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.45; }
+
+.cell-format { width: 110px; white-space: nowrap; }
+.cell-status { width: 100px; }
+.cell-notes { width: 180px; }
+.note { font-size: 12px; color: var(--muted); line-height: 1.45; }
+
+/* ─── TAGS ─── */
+.tag {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.tag-tech     { background: rgba(255,30,30,0.09); color: #C00; }
+.tag-team     { background: #0B0B0B; color: #FEFEFF; }
+.tag-case     { background: rgba(11,11,11,0.07); color: #0B0B0B; }
+.tag-product  { background: var(--accent); color: #FEFEFF; }
+.tag-industry { background: var(--bg-alt); color: rgba(11,11,11,0.60); border: 1px solid var(--border); }
+.tag-rd       { background: var(--bg); color: #C00; border: 1px solid rgba(255,30,30,0.35); }
+.tag-event    { background: #0B0B0B; color: #FEFEFF; }
+
+/* ─── FORMAT BADGE ─── */
+.fmt {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: var(--r-sm);
+  font-size: 11px;
+  font-weight: 500;
+  background: var(--bg-alt);
+  color: rgba(11,11,11,0.55);
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+/* ─── STATUS ─── */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(11,11,11,0.42);
+  font-weight: 500;
+}
+.status::before {
+  content: '';
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: rgba(11,11,11,0.18);
+  flex-shrink: 0;
+}
+.status.done { color: #1a7a3e; }
+.status.done::before { background: #2ECC71; }
+.status.approved { color: #1a5e7a; }
+.status.approved::before { background: #3498DB; }
+.status.review { color: #8a6000; }
+.status.review::before { background: #F1C40F; }
+
+/* ─── HOLIDAY ROW ─── */
+tbody tr.is-holiday td { background: rgba(255,30,30,0.025); }
+
+/* ─── WEEK SEPARATOR ─── */
+.week-row td {
+  background: var(--bg-alt);
+  padding: 6px 16px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.week-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(11,11,11,0.35);
+}
+
+/* ─── FOOTER ─── */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+}
+
+.footer-left { font-size: 12px; color: var(--muted); }
+.footer-right { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+.footer-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); display: inline-block; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-meta">
+    <div class="meta-label">Контент-план</div>
+    <div class="meta-title">{НАЗВАНИЕ КЛИЕНТА}</div>
+    <div class="meta-sub">{Платформа} · {Период} · {N} постов</div>
+  </div>
+
+  <!-- LOGO -->
+  <div class="logo">
+    <svg width="200" height="72" viewBox="0 0 200 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <text x="0" y="31" font-family="'Nata Sans','Inter',Arial,sans-serif" font-size="30" font-weight="900" fill="#0B0B0B" letter-spacing="-0.5">bit</text>
+      <rect x="56" y="3" width="36" height="25" rx="6" fill="#FF1E1E"/>
+      <polygon points="58,22 49,30 60,26" fill="#FF1E1E"/>
+      <text x="62" y="22" font-family="'Nata Sans','Inter',Arial,sans-serif" font-size="16" font-weight="800" fill="#FEFEFF">&amp;</text>
+      <text x="0" y="66" font-family="'Nata Sans','Inter',Arial,sans-serif" font-size="30" font-weight="900" fill="#0B0B0B" letter-spacing="-0.5">pix.</text>
+      <rect x="66" y="44" width="82" height="27" rx="8" fill="#FF1E1E"/>
+      <text x="76" y="62" font-family="'Nata Sans','Inter',Arial,sans-serif" font-size="15" font-weight="700" fill="#FEFEFF" letter-spacing="0.3">агент</text>
+    </svg>
+  </div>
+</header>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><div class="stat-label">Постов</div><div class="stat-value red">{N}</div></div>
+  <div class="stat"><div class="stat-label">Период</div><div class="stat-value" style="font-size:16px">{дата} — {дата}</div></div>
+  <div class="stat"><div class="stat-label">Частота</div><div class="stat-value" style="font-size:16px">{N}× / нед.</div></div>
+  <div class="stat"><div class="stat-label">Платформа</div><div class="stat-value" style="font-size:16px">{Платформа}</div></div>
+</div>
+
+<!-- TABLE -->
+<div class="section-label">Расписание публикаций</div>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Дата</th>
+        <th>Рубрика</th>
+        <th>Тема поста</th>
+        <th>Формат</th>
+        <th>Статус</th>
+        <th>Заметки</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- WEEK N -->
+      <tr class="week-row"><td colspan="7"><span class="week-label">Неделя 1 · {даты}</span></td></tr>
+
+      <tr>
+        <td class="cell-num">01</td>
+        <td class="cell-date"><div class="date-main">дд мес</div><div class="date-dow">День</div></td>
+        <td class="cell-rubric"><span class="tag tag-tech">Технология</span></td>
+        <td class="cell-topic">
+          <div class="topic-title">Заголовок темы</div>
+          <div class="topic-desc">Краткое описание угла и ключевого тезиса поста</div>
+        </td>
+        <td class="cell-format"><span class="fmt">Текст</span></td>
+        <td class="cell-status"><span class="status">Черновик</span></td>
+        <td class="cell-notes"><span class="note">Заметки специалиста</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-left">Обновлено: {дата} · bit&amp;pix · {Специалист}</div>
+  <div class="footer-right">
+    <span class="footer-dot"></span>
+    Красный маркер — праздничные дни
+  </div>
+</footer>
+
+</body>
+</html>

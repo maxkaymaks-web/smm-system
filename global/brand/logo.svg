@@ -1,0 +1,13 @@
+<svg width="220" height="80" viewBox="0 0 220 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- bit -->
+  <text x="0" y="34" font-family="'Nata Sans','Inter',Arial,sans-serif" font-size="32" font-weight="900" fill="#0B0B0B" letter-spacing="-0.5">bit</text>
+  <!-- & speech bubble -->
+  <rect x="60" y="4" width="38" height="28" rx="7" fill="#FF1E1E"/>
+  <polygon points="62,26 52,34 64,30" fill="#FF1E1E"/>
+  <text x="66" y="25" font-family="'Nata Sans','Inter',Arial,sans-serif" font-size="18" font-weight="800" fill="#FEFEFF">&amp;</text>
+  <!-- pix. -->
+  <text x="0" y="70" font-family="'Nata Sans','Inter',Arial,sans-serif" font-size="32" font-weight="900" fill="#0B0B0B" letter-spacing="-0.5">pix.</text>
+  <!-- агент badge -->
+  <rect x="72" y="48" width="84" height="28" rx="9" fill="#FF1E1E"/>
+  <text x="83" y="67" font-family="'Nata Sans','Inter',Arial,sans-serif" font-size="15" font-weight="700" fill="#FEFEFF" letter-spacing="0.3">агент</text>
+</svg>
