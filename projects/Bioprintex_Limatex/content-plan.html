@@ -127,7 +127,15 @@ body {
   overflow: hidden;
 }
 
-table { width: 100%; border-collapse: collapse; }
+table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+
+col.c-num    { width: 3%; }
+col.c-date   { width: 9%; }
+col.c-rubric { width: 14%; }
+col.c-topic  { width: 29%; }
+col.c-format { width: 12%; }
+col.c-status { width: 13%; }
+col.c-notes  { width: 20%; }
 
 thead th {
   background: var(--bg-alt);
@@ -139,7 +147,7 @@ thead th {
   text-transform: uppercase;
   color: var(--muted);
   border-bottom: 1px solid var(--border);
-  white-space: nowrap;
+  overflow: hidden;
 }
 
 tbody tr { border-bottom: 1px solid var(--border); }
@@ -147,23 +155,16 @@ tbody tr:last-child { border-bottom: none; }
 
 @media screen { tbody tr:hover { background: #f9fbfd; } }
 
-tbody td { padding: 10px 10px; vertical-align: top; }
+tbody td { padding: 10px 10px; vertical-align: top; overflow: hidden; word-break: break-word; }
 
-.cell-num { color: rgba(11,11,11,0.20); font-size: 10px; font-weight: 700; width: 24px; }
-
-.cell-date { width: 64px; white-space: nowrap; }
+.cell-num { color: rgba(11,11,11,0.20); font-size: 10px; font-weight: 700; }
+.cell-date { white-space: nowrap; }
 .date-main { font-size: 12px; font-weight: 600; }
 .date-dow  { font-size: 10px; color: var(--muted); margin-top: 1px; }
 
-.cell-rubric { width: 90px; }
-
 .topic-title { font-size: 12.5px; font-weight: 600; line-height: 1.35; letter-spacing: 0; }
 .topic-desc  { font-size: 11px; color: var(--muted); margin-top: 3px; line-height: 1.4; letter-spacing: 0; }
-
-.cell-format { width: 88px; }
-.cell-status { width: 78px; }
-.cell-notes  { width: 140px; }
-.note { font-size: 11px; color: var(--muted); line-height: 1.4; letter-spacing: 0; }
+.note { font-size: 11px; color: var(--muted); line-height: 1.4; letter-spacing: 0; word-break: break-word; }
 
 /* ── NEED BADGES ── */
 .needs { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
@@ -249,6 +250,10 @@ tbody td { padding: 10px 10px; vertical-align: top; }
 <div class="section-label">Расписание публикаций</div>
 <div class="table-wrap">
   <table>
+    <colgroup>
+      <col class="c-num"><col class="c-date"><col class="c-rubric">
+      <col class="c-topic"><col class="c-format"><col class="c-status"><col class="c-notes">
+    </colgroup>
     <thead>
       <tr>
         <th>#</th>
