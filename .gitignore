@@ -3,3 +3,7 @@ node_modules/
 *.log
 .env
 tools/apify/output/
+tools/apify/.venv/
+__pycache__/
+*.pyc
+*.pyo
