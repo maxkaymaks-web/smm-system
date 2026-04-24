@@ -5,14 +5,21 @@
 Клиент: Студия красоты «Культура» (Дарья Сопкина, СПб)
 Агентство: bit&pix · Специалист: Максим
 
-## При каждом запуске читай
+## При каждом запуске читай (в этом порядке)
 
-1. `projects/BeautyCulture_DariaSopkina/context.md` — контекст клиента
-2. `projects/BeautyCulture_DariaSopkina/strategy.md` — стратегия
-3. `projects/BeautyCulture_DariaSopkina/content-plan.md` — текущий план
-4. `global/rules.md` — общие правила
-5. `global/standards.md` — критерии качества
+1. `projects/BeautyCulture_DariaSopkina/voice.md` — **ПЕРВЫМ, обязательно** — голос бренда
+2. `projects/BeautyCulture_DariaSopkina/context.md` — контекст клиента
+3. `projects/BeautyCulture_DariaSopkina/strategy.md` — стратегия
+4. `projects/BeautyCulture_DariaSopkina/content-plan.md` — текущий план
+5. `global/rules.md` — общие правила и правила делегирования
 6. `projects/BeautyCulture_DariaSopkina/feedback/` — непрочитанный фидбек → обрабатывай первым
+
+## Правила делегирования (см. global/rules.md)
+
+- Текст постов → копирайтер (передавай voice.md целиком в ТЗ)
+- Дизайн и HTML → дизайнер
+- Анализ данных / тональности → аналитик
+- Оркестратор сам: статусы, коммиты, чтение файлов
 
 ## ЖЁСТКИЕ ОГРАНИЧЕНИЯ — повторяю для агентов
 
