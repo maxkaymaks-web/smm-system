@@ -49,8 +49,8 @@ for pr in projs:
     posts = []
     for line in r.text.splitlines():
         cells = [c.strip() for c in line.strip().strip('|').split('|')]
-        if len(cells) >= 5 and cells[0].strip().isdigit():
-            posts.append({'n': cells[0], 'dt': cells[1], 'th': cells[3], 'st': mst(cells[-1])})
+        if len(cells) >= 6 and cells[0].strip().isdigit():
+            posts.append({'n': cells[0], 'dt': cells[1], 'th': cells[4], 'st': mst(cells[-1])})
 
     c = {'tot': len(posts), 'pub': 0, 'draft': 0, 'wait': 0, 'rev': 0}
     for p in posts:
