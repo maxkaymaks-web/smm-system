@@ -1,0 +1,98 @@
+#!/usr/bin/env python3
+"""Daily SMM briefing — bit&pix. Reads all content-plan.md from GitHub, sends to Telegram."""
+
+import requests, sys
+from datetime import date
+
+GH    = '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'
+REPO  = 'maxkaymaks-web/smm-system'
+TG    = '8625487536:AAG0erfiGf1C6btYTAkzVqVfhsa9OGjfH90'
+CID   = 1791618146
+GHH   = {'Authorization': 'token ' + GH, 'Accept': 'application/vnd.github.v3+json'}
+today = date.today()
+
+MO = {1:'января',2:'февраля',3:'марта',4:'апреля',5:'мая',6:'июня',
+      7:'июля',8:'августа',9:'сентября',10:'октября',11:'ноября',12:'декабря'}
+
+def days_to(ds):
+    try:
+        d, m = int(ds.split('.')[0]), int(ds.split('.')[1])
+        pub = date(today.year, m, d)
+        if pub < today:
+            pub = date(today.year + 1, m, d)
+        return (pub - today).days
+    except:
+        return 999
+
+def mst(s):
+    s = s.lower()
+    if 'опубликовано' in s: return 'pub'
+    if 'на согласовании' in s: return 'rev'
+    if 'ждём' in s or 'ждем' in s: return 'wait'
+    return 'draft'
+
+# Get projects
+resp = requests.get(f'https://api.github.com/repos/{REPO}/contents/projects', headers=GHH)
+if resp.status_code != 200:
+    sys.exit(f'GitHub error: {resp.status_code} {resp.text}')
+projs = [i['name'] for i in resp.json() if isinstance(i, dict) and i.get('type') == 'dir']
+
+fire, work, mat, rev, stat = [], [], [], [], {}
+
+for pr in projs:
+    r = requests.get(
+        f'https://raw.githubusercontent.com/{REPO}/main/projects/{pr}/content-plan.md',
+        headers=GHH
+    )
+    if r.status_code != 200:
+        continue
+    posts = []
+    for line in r.text.splitlines():
+        cells = [c.strip() for c in line.strip().strip('|').split('|')]
+        if len(cells) >= 5 and cells[0].strip().isdigit():
+            posts.append({'n': cells[0], 'dt': cells[1], 'th': cells[3], 'st': mst(cells[-1])})
+
+    c = {'tot': len(posts), 'pub': 0, 'draft': 0, 'wait': 0, 'rev': 0}
+    for p in posts:
+        c[p['st']] = c.get(p['st'], 0) + 1
+        dl = days_to(p['dt'])
+        lb = f"{pr} #{p['n']} — {p['th']} — {p['dt']}"
+        if p['st'] in ('draft', 'wait') and dl <= 3:
+            fire.append(lb + (' (ПРОСРОЧЕН)' if dl < 0 else f' (через {dl} дн)'))
+        elif p['st'] == 'draft' and 4 <= dl <= 7:
+            work.append(lb + f' (через {dl} дн)')
+        if p['st'] == 'wait' and dl <= 7:
+            mat.append(lb + f' (через {dl} дн)')
+        if p['st'] == 'rev':
+            rev.append(lb)
+    stat[pr] = c
+
+# Build message
+out = [f'📅 Брифинг {today.day} {MO[today.month]} {today.year}']
+if fire:
+    out.append('\n🔥 ГОРИТ')
+    out += ['• ' + x for x in fire]
+if work:
+    out.append('\n📋 В РАБОТЕ (4–7 дней)')
+    out += ['• ' + x for x in work]
+if mat:
+    out.append('\n📦 ЗАПРОСИТЬ МАТЕРИАЛЫ')
+    out += ['• ' + x for x in mat]
+if rev:
+    out.append('\n⏳ НА СОГЛАСОВАНИИ')
+    out += ['• ' + x for x in rev]
+if not fire and not work and not mat:
+    out.append('✅ Всё в порядке, срочных задач нет.')
+out.append('\n📊 Статистика')
+for pr, c in stat.items():
+    out.append(f"{pr}: {c['tot']} постов | опубл. {c['pub']} | draft {c['draft']} | ждём {c['wait']} | согл. {c['rev']}")
+
+txt = '\n'.join(out)
+print(txt)
+
+# Send to Telegram
+r = requests.post(
+    f'https://api.telegram.org/bot{TG}/sendMessage',
+    json={'chat_id': CID, 'text': txt}
+)
+print(r.status_code, r.json().get('ok'))
