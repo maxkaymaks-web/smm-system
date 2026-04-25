@@ -1,18 +1,36 @@
 #!/usr/bin/env python3
-"""Daily SMM briefing — bit&pix. Reads all content-plan.md from GitHub, sends to Telegram."""
+"""Daily SMM briefing — bit&pix. Uses only stdlib (no pip needed)."""
 
-import requests, sys
+import json, urllib.request, urllib.parse
 from datetime import date
 
 GH    = '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'
 REPO  = 'maxkaymaks-web/smm-system'
 TG    = '8625487536:AAG0erfiGf1C6btYTAkzVqVfhsa9OGjfH90'
 CID   = 1791618146
-GHH   = {'Authorization': 'token ' + GH, 'Accept': 'application/vnd.github.v3+json'}
 today = date.today()
 
 MO = {1:'января',2:'февраля',3:'марта',4:'апреля',5:'мая',6:'июня',
       7:'июля',8:'августа',9:'сентября',10:'октября',11:'ноября',12:'декабря'}
+
+def gh_get(url):
+    req = urllib.request.Request(url, headers={
+        'Authorization': 'token ' + GH,
+        'Accept': 'application/vnd.github.v3+json',
+        'User-Agent': 'smm-briefing'
+    })
+    with urllib.request.urlopen(req) as r:
+        return r.read().decode()
+
+def tg_send(text):
+    data = json.dumps({'chat_id': CID, 'text': text}).encode()
+    req = urllib.request.Request(
+        f'https://api.telegram.org/bot{TG}/sendMessage',
+        data=data,
+        headers={'Content-Type': 'application/json'}
+    )
+    with urllib.request.urlopen(req) as r:
+        return json.loads(r.read())
 
 def days_to(ds):
     try:
@@ -31,23 +49,19 @@ def mst(s):
     if 'ждём' in s or 'ждем' in s: return 'wait'
     return 'draft'
 
-# Get projects
-resp = requests.get(f'https://api.github.com/repos/{REPO}/contents/projects', headers=GHH)
-if resp.status_code != 200:
-    sys.exit(f'GitHub error: {resp.status_code} {resp.text}')
-projs = [i['name'] for i in resp.json() if isinstance(i, dict) and i.get('type') == 'dir']
+# Get project list
+raw = gh_get(f'https://api.github.com/repos/{REPO}/contents/projects')
+projs = [i['name'] for i in json.loads(raw) if isinstance(i, dict) and i.get('type') == 'dir']
 
 fire, work, mat, rev, stat = [], [], [], [], {}
 
 for pr in projs:
-    r = requests.get(
-        f'https://raw.githubusercontent.com/{REPO}/main/projects/{pr}/content-plan.md',
-        headers=GHH
-    )
-    if r.status_code != 200:
+    try:
+        txt = gh_get(f'https://raw.githubusercontent.com/{REPO}/main/projects/{pr}/content-plan.md')
+    except:
         continue
     posts = []
-    for line in r.text.splitlines():
+    for line in txt.splitlines():
         cells = [c.strip() for c in line.strip().strip('|').split('|')]
         if len(cells) >= 6 and cells[0].strip().isdigit():
             posts.append({'n': cells[0], 'dt': cells[1], 'th': cells[4], 'st': mst(cells[-1])})
@@ -89,10 +103,5 @@ for pr, c in stat.items():
 
 txt = '\n'.join(out)
 print(txt)
-
-# Send to Telegram
-r = requests.post(
-    f'https://api.telegram.org/bot{TG}/sendMessage',
-    json={'chat_id': CID, 'text': txt}
-)
-print(r.status_code, r.json().get('ok'))
+result = tg_send(txt)
+print('Telegram:', result.get('ok'))
