@@ -30,6 +30,11 @@
 **Источник:** laser beauty studio, карусель прайс-листа
 ---
 
+### Все проекты — относительный путь к fal.ai assets
+**Вывод:** HTML в `posts/drafts/{date}-N/` → assets в `assets/images/`. Правильный путь: `../../../assets/images/file.jpg` (3 уровня вверх). Ошибка `../../` = фото не рендерится, получается чёрный фон.
+**Источник:** BeautyCulture карусель с fal.ai фонами
+---
+
 ### Beauty — фото модели как фон
 **Вывод:** Горизонтальные фото (landscape) от fal.ai nano-banana-2 на portrait-холсте (1080×1350) нужно либо кадрировать через PIL, либо использовать `background-size:cover` с правильным `background-position`. Для поз "лёжа горизонтально" — rotate 90° + crop даёт лучший результат, чем cover без поворота.
 **Источник:** beauty editorial, генерация через fal.ai
