@@ -186,6 +186,44 @@ cd /путь/до/smm-system
 node tools/render-html.js projects/{client}/posts/drafts/post-NN.html projects/{client}/posts/drafts/post-NN.png
 ```
 
+## ОБЯЗАТЕЛЬНЫЙ РАБОЧИЙ ПРОЦЕСС — ДВА ШАГА
+
+### ШАГ 1 — Визуальное планирование (ПЕРЕД любым кодом)
+
+Прежде чем писать HTML — составить и записать план:
+
+```markdown
+## Визуальный план — [пост NN]
+
+### Композиция
+[Какой паттерн из compositions.md используем и почему]
+
+### fal.ai assets (обязательно минимум 1)
+| # | Что генерим | Стиль/настроение | Aspect | Куда в макете |
+|---|-------------|-----------------|--------|---------------|
+| 1 | [объект/фон] | [стиль] | 3:4 | фон слайда |
+| 2 | [текстура/деталь] | [стиль] | 1:1 | overlay/деталь |
+
+### fal.ai промпты (английский)
+**asset_1:** [детальный промпт, 2-3 предложения]
+**asset_2:** [детальный промпт]
+
+### Типографика
+[Шрифты, размеры ключевых элементов, цвета]
+```
+
+**Правила визуального планирования:**
+- Смотри `knowledge/references.md` и `knowledge/compositions.md` — выбирай паттерн осознанно
+- Пустой фон с текстом — ЗАПРЕЩЕНО. Всегда либо fal.ai фото/текстура, либо Editorial с сильной типографикой + fal.ai деталь
+- Для beauty: крупный кроп кожи/лица/тела > студийный нейтральный фон
+- Для экспертного/инфографика: тёмная органическая текстура (fal.ai) под текстом = premium, не скучно
+
+---
+
+### ШАГ 2 — Генерация + сборка
+
+Сначала генерируем все fal.ai assets, потом собираем HTML.
+
 ## fal.ai — инструменты для работы с изображениями
 
 **Установка (один раз):**
@@ -197,15 +235,36 @@ cd smm-system && npm install @fal-ai/client
 
 ---
 
-### 1. Генерация фото-фонов
-
-Когда ТЗ требует фото-фон:
+### 1. Генерация фото/текстур (ОБЯЗАТЕЛЬНО в каждом слайде с визуалом)
 
 ```bash
 node tools/generate-image.mjs "ПРОМПТ НА АНГЛИЙСКОМ" projects/{client}/assets/images/post-NN-bg.jpg 3:4 1K
 ```
 
 **aspect_ratio:** `3:4` (портрет 1080×1350) · `1:1` (квадрат 1080×1080)
+
+**Типовые промпты по стилям:**
+
+```
+# Крупный кроп кожи/тела — beauty editorial
+"Extreme close-up of smooth bare female skin, soft golden hour light, 
+film grain texture, warm cream tones, luxury beauty editorial, 
+shot on 35mm film, ultra-detailed pores and texture, no face"
+
+# Органическая тёмная текстура — premium branding
+"Dark organic clay texture, wet stone surface, deep brown and charcoal tones,
+tactile rough surface, studio macro photography, no people, abstract background,
+luxury brand aesthetic"
+
+# Лёгкая светлая текстура — editorial light
+"Light linen fabric texture, soft natural light, cream and ivory tones,
+fashion editorial background, minimal, no text, no people"
+
+# Ботанические детали — beauty/spa
+"Single delicate botanical stem, fine ink illustration style,
+on cream paper background, minimal, elegant, no color, 
+Japanese aesthetic, close-up"
+```
 
 **Вставка в HTML:**
 ```html
