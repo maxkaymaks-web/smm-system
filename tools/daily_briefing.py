@@ -45,6 +45,7 @@ def days_to(ds):
 def mst(s):
     s = s.lower()
     if 'опубликовано' in s: return 'pub'
+    if 'готово' in s: return 'ready'
     if 'на согласовании' in s: return 'rev'
     if 'ждём' in s or 'ждем' in s: return 'wait'
     return 'draft'
@@ -66,7 +67,7 @@ for pr in projs:
         if len(cells) >= 6 and cells[0].strip().isdigit():
             posts.append({'n': cells[0], 'dt': cells[1], 'th': cells[4], 'st': mst(cells[-1])})
 
-    c = {'tot': len(posts), 'pub': 0, 'draft': 0, 'wait': 0, 'rev': 0}
+    c = {'tot': len(posts), 'pub': 0, 'draft': 0, 'wait': 0, 'rev': 0, 'ready': 0}
     for p in posts:
         c[p['st']] = c.get(p['st'], 0) + 1
         dl = days_to(p['dt'])
@@ -99,7 +100,7 @@ if not fire and not work and not mat:
     out.append('✅ Всё в порядке, срочных задач нет.')
 out.append('\n📊 Статистика')
 for pr, c in stat.items():
-    out.append(f"{pr}: {c['tot']} постов | опубл. {c['pub']} | draft {c['draft']} | ждём {c['wait']} | согл. {c['rev']}")
+    out.append(f"{pr}: {c['tot']} постов | опубл. {c['pub']} | готово {c['ready']} | draft {c['draft']} | ждём {c['wait']} | согл. {c['rev']}")
 
 txt = '\n'.join(out)
 print(txt)
