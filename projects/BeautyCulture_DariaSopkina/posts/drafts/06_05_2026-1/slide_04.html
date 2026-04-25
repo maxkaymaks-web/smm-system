@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Raleway:wght@300;400;500&display=swap');
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 1080px;
+  height: 1350px;
+  overflow: hidden;
+}
+
+.slide {
+  position: relative;
+  width: 1080px;
+  height: 1350px;
+  background-color: #F5F0EA;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px;
+}
+
+.grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.logo {
+  position: absolute;
+  top: 80px;
+  right: 80px;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 16px;
+  letter-spacing: 0.25em;
+  color: #1a1714;
+  opacity: 0.5;
+  z-index: 20;
+}
+
+.slide-num {
+  position: absolute;
+  bottom: 80px;
+  right: 80px;
+  font-family: 'Raleway', sans-serif;
+  font-size: 14px;
+  color: #1a1714;
+  opacity: 0.5;
+  letter-spacing: 0.15em;
+  z-index: 20;
+}
+
+.content {
+  max-width: 860px;
+  z-index: 5;
+}
+
+.zone-label {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 300;
+  font-size: 13px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #8a6e52;
+  opacity: 0.9;
+  margin-bottom: 28px;
+}
+
+.headline {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: 96px;
+  line-height: 1.0;
+  letter-spacing: 0.03em;
+  color: #1a1714;
+  text-transform: uppercase;
+  margin-bottom: 36px;
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background: #1a1714;
+  opacity: 0.15;
+  margin-bottom: 44px;
+}
+
+.body-text {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 1.75;
+  color: #1a1714;
+  opacity: 0.85;
+}
+
+.sessions-block {
+  margin-top: 52px;
+}
+
+.sessions-number {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: 72px;
+  line-height: 1;
+  color: #8a6e52;
+  letter-spacing: -0.02em;
+}
+
+.sessions-label {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  color: #1a1714;
+  opacity: 0.6;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.sessions-detail {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 300;
+  font-size: 15px;
+  color: #1a1714;
+  opacity: 0.5;
+  margin-top: 8px;
+  letter-spacing: 0.05em;
+}
+</style>
+</head>
+<body>
+<div class="slide">
+
+  <svg class="grain" xmlns="http://www.w3.org/2000/svg" width="1080" height="1350">
+    <filter id="grain-filter">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+    <rect width="100%" height="100%" filter="url(#grain-filter)" opacity="0.04"/>
+  </svg>
+
+  <!-- Botanical -->
+  <svg style="position:absolute;top:80px;left:80px;opacity:0.1;z-index:3;" width="110" height="200" viewBox="0 0 110 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M55 190 C55 148 32 118 12 72" stroke="#1a1714" stroke-width="0.7" fill="none"/>
+    <path d="M55 155 C55 115 78 92 98 55" stroke="#1a1714" stroke-width="0.7" fill="none"/>
+    <path d="M55 120 C44 98 25 85 6 65" stroke="#1a1714" stroke-width="0.5" fill="none"/>
+    <path d="M55 88 C66 68 84 56 104 36" stroke="#1a1714" stroke-width="0.5" fill="none"/>
+    <circle cx="12" cy="70" r="1.5" stroke="#1a1714" stroke-width="0.5" fill="none"/>
+    <circle cx="98" cy="53" r="1.5" stroke="#1a1714" stroke-width="0.5" fill="none"/>
+    <circle cx="6" cy="63" r="1.2" stroke="#1a1714" stroke-width="0.5" fill="none"/>
+  </svg>
+
+  <div class="logo">Культура</div>
+  <div class="slide-num">04 / 06</div>
+
+  <div class="content">
+    <div class="zone-label">Зона 03</div>
+    <h1 class="headline">Бикини</h1>
+    <div class="divider"></div>
+    <p class="body-text">
+      Зона чувствительная, но результат держится хорошо.<br><br>
+      Здесь волоски разные по структуре — в глубоких частях зоны могут потребоваться дополнительные сеансы.<br><br>
+      Гормональный фон влияет сильнее всего именно здесь, поэтому мастер смотрит на динамику и при необходимости адаптирует план 🤍
+    </p>
+    <div class="sessions-block">
+      <div style="display:flex;align-items:baseline;gap:12px;">
+        <span class="sessions-number">7–9</span>
+        <span class="sessions-label">сеансов</span>
+      </div>
+      <div class="sessions-detail">интервал 5–6 недель</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

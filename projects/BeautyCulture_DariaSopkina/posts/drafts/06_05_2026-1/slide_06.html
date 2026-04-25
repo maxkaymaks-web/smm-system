@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Raleway:wght@300;400;500&display=swap');
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 1080px;
+  height: 1350px;
+  overflow: hidden;
+}
+
+.slide {
+  position: relative;
+  width: 1080px;
+  height: 1350px;
+  background-color: #1a1714;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px;
+}
+
+.grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.logo {
+  position: absolute;
+  top: 80px;
+  right: 80px;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 16px;
+  letter-spacing: 0.25em;
+  color: #FFFFFF;
+  opacity: 0.5;
+  z-index: 20;
+}
+
+.slide-num {
+  position: absolute;
+  bottom: 80px;
+  right: 80px;
+  font-family: 'Raleway', sans-serif;
+  font-size: 14px;
+  color: #FFFFFF;
+  opacity: 0.5;
+  letter-spacing: 0.15em;
+  z-index: 20;
+}
+
+.content {
+  max-width: 860px;
+  z-index: 5;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.zone-label {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 300;
+  font-size: 13px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #c8aa8a;
+  opacity: 0.8;
+  margin-bottom: 32px;
+}
+
+.headline {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: 76px;
+  line-height: 1.0;
+  letter-spacing: 0.03em;
+  color: #FFFFFF;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background: #FFFFFF;
+  opacity: 0.12;
+  margin-bottom: 44px;
+}
+
+.body-text {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 1.75;
+  color: #FFFFFF;
+  opacity: 0.75;
+}
+
+/* CTA block */
+.cta-divider {
+  width: 100%;
+  height: 1px;
+  background: #FFFFFF;
+  opacity: 0.12;
+  margin: 52px 0 36px;
+}
+
+.cta-label {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 300;
+  font-size: 13px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #c8aa8a;
+  opacity: 0.7;
+  margin-bottom: 20px;
+}
+
+.cta-link {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: 28px;
+  color: #FFFFFF;
+  opacity: 0.9;
+  letter-spacing: 0.02em;
+  margin-bottom: 14px;
+}
+
+.cta-sub {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  color: #FFFFFF;
+  opacity: 0.5;
+  letter-spacing: 0.08em;
+}
+
+/* Decorative corner dots */
+.corner-deco {
+  position: absolute;
+  bottom: 80px;
+  left: 80px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  z-index: 5;
+}
+
+.corner-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #c8aa8a;
+  opacity: 0.4;
+}
+</style>
+</head>
+<body>
+<div class="slide">
+
+  <svg class="grain" xmlns="http://www.w3.org/2000/svg" width="1080" height="1350">
+    <filter id="grain-filter">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+    <rect width="100%" height="100%" filter="url(#grain-filter)" opacity="0.06"/>
+  </svg>
+
+  <!-- Botanical on dark -->
+  <svg style="position:absolute;top:80px;left:80px;opacity:0.08;z-index:3;" width="120" height="210" viewBox="0 0 120 210" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M60 200 C60 155 36 125 12 78" stroke="#FFFFFF" stroke-width="0.7" fill="none"/>
+    <path d="M60 165 C60 122 85 98 108 58" stroke="#FFFFFF" stroke-width="0.7" fill="none"/>
+    <path d="M60 130 C48 106 28 92 6 70" stroke="#FFFFFF" stroke-width="0.5" fill="none"/>
+    <path d="M60 95 C72 74 92 60 114 38" stroke="#FFFFFF" stroke-width="0.5" fill="none"/>
+    <circle cx="12" cy="76" r="1.5" stroke="#FFFFFF" stroke-width="0.5" fill="none"/>
+    <circle cx="108" cy="56" r="1.5" stroke="#FFFFFF" stroke-width="0.5" fill="none"/>
+    <circle cx="6" cy="68" r="1.2" stroke="#FFFFFF" stroke-width="0.4" fill="none"/>
+  </svg>
+
+  <svg style="position:absolute;bottom:160px;right:80px;opacity:0.07;z-index:3;transform:rotate(15deg);" width="70" height="130" viewBox="0 0 70 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M35 120 C35 88 18 65 4 38" stroke="#FFFFFF" stroke-width="0.6" fill="none"/>
+    <path d="M35 90 C35 58 52 42 66 16" stroke="#FFFFFF" stroke-width="0.6" fill="none"/>
+    <circle cx="4" cy="36" r="1.2" stroke="#FFFFFF" stroke-width="0.4" fill="none"/>
+    <circle cx="66" cy="14" r="1.2" stroke="#FFFFFF" stroke-width="0.4" fill="none"/>
+  </svg>
+
+  <div class="logo">Культура</div>
+  <div class="slide-num">06 / 06</div>
+
+  <!-- Corner decoration -->
+  <div class="corner-deco">
+    <div class="corner-dot"></div>
+    <div class="corner-dot" style="opacity:0.25;"></div>
+    <div class="corner-dot" style="opacity:0.15;"></div>
+  </div>
+
+  <div class="content">
+    <div class="zone-label">Итог</div>
+    <h1 class="headline">Программа<br>подбирается<br>под вас</h1>
+    <div class="divider"></div>
+    <p class="body-text">
+      Все цифры — ориентир, не приговор.<br><br>
+      Тип кожи, цвет волос, гормональный фон, история удаления — мастер учитывает всё это на консультации и составляет план именно для вас 🤍
+    </p>
+
+    <div class="cta-divider"></div>
+    <div class="cta-label">Запись</div>
+    <div class="cta-link">b539491.yclients.com</div>
+    <div class="cta-sub">или через администратора 💌</div>
+  </div>
+
+</div>
+</body>
+</html>
