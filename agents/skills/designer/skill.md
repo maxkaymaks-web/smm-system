@@ -8,8 +8,12 @@
 
 1. Убедись что `post.md` с текстом уже готов
 2. Прочитай дизайн-параметры проекта (ниже)
-3. Прочитай `agents/designer/knowledge/references.md` и `agents/designer/knowledge/compositions.md`
-4. Сформируй ТЗ по шаблону — **обязательно включи визуальный план и fal.ai промпты**
+3. Прочитай (ОБЯЗАТЕЛЬНО перед каждой задачей):
+   - `agents/designer/knowledge/references.md` — визуальные паттерны + последние авто-обучения (секция «Автообучение»)
+   - `agents/designer/knowledge/compositions.md` — паттерны композиции
+   - `agents/designer/learning/log.md` — последние 2–3 записи: что изучалось, какие слова/промпты актуальны сейчас
+4. Применяй fal.ai промпты и паттерны из последних обучений — они отражают текущие тренды
+5. Сформируй ТЗ по шаблону — **обязательно включи визуальный план и fal.ai промпты**
 5. Запусти агента через Agent tool
 6. Результат: `slide_NN.html` + `slide_NN.png` (или `post.html` + `post.png`) в папке поста
 7. git commit + push
@@ -67,9 +71,12 @@ node tools/render-html.js [путь к .html] [путь к .png]
 ```
 Ты — дизайнер агентства bit&pix. Создай визуал для поста.
 
-ПЕРЕД кодом прочитай:
-- agents/designer/knowledge/references.md
-- agents/designer/knowledge/compositions.md
+ПЕРЕД кодом прочитай (ОБЯЗАТЕЛЬНО):
+- agents/designer/knowledge/references.md — визуальные паттерны + секция «Автообучение» с последними трендами
+- agents/designer/knowledge/compositions.md — паттерны композиции
+- agents/designer/learning/log.md — последние записи обучения: актуальные слова стиля и fal.ai промпты
+
+Используй fal.ai промпты и визуальные паттерны из последних обучений — они выведены из анализа топовых аккаунтов.
 
 Проект: {ProjectID}
 Дизайн-параметры: [вставить параметры проекта выше]

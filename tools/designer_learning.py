@@ -165,21 +165,97 @@ def apify_run(usernames, limit=8):
         return json.loads(resp3.read().decode())
 
 # ── АНАЛИЗ ПАТТЕРНОВ ──────────────────────────────────────────────────────────
+
+STOPWORDS = {'the','a','an','and','or','but','in','on','at','to','for','of','with',
+             'is','are','was','were','be','been','have','has','had','do','does','did',
+             'not','no','so','if','as','by','up','it','its','we','our','you','your',
+             'i','my','me','this','that','they','their','them','from','will','can',
+             'just','all','get','got','out','how','what','when','who','new','now',
+             'more','one','your','into','also','about','like','use','make','used'}
+
+def top_words(texts, n=15):
+    """Самые частые значимые слова в каптайнах."""
+    freq = {}
+    for t in texts:
+        words = re.findall(r'[a-zа-яёÀ-ÿ]{4,}', t.lower())
+        for w in words:
+            if w not in STOPWORDS:
+                freq[w] = freq.get(w, 0) + 1
+    return sorted(freq.items(), key=lambda x: -x[1])[:n]
+
+def caption_structure(caption):
+    """Тип структуры каптайна."""
+    c = caption.strip()
+    if len(c) < 80:
+        return 'short'
+    if c.startswith(('✨','🔥','💡','⚡','🌸','✦','→','•')) or c[0].isupper():
+        return 'emoji_hook'
+    if '?' in c[:60]:
+        return 'question_hook'
+    return 'statement'
+
+def suggested_fal_prompts(style_key, top_words_list):
+    """Сгенерировать конкретные fal.ai промпты на основе найденных слов."""
+    word_set = {w for w, _ in top_words_list}
+
+    base = {
+        'нежность': [
+            'Extreme close-up of smooth bare female skin, soft golden hour light, film grain texture, warm cream tones, luxury beauty editorial, shot on 35mm film, ultra-detailed pores and texture',
+            'Delicate white flower petals on ivory linen fabric, soft diffused light, minimal, editorial beauty aesthetic, no text, warm cream tones',
+        ],
+        'технологичность': [
+            'Precision-engineered metal component, macro studio photography, monochrome, sharp edges, technical detail, clean white background, product photography',
+            'Abstract data flow visualization, glowing lines on dark background, deep navy and white, clean geometric, no people, tech aesthetic',
+        ],
+        'роскошь': [
+            'Close-up of black polished marble surface, gold veins, macro, luxury brand aesthetic, studio lighting, no text',
+            'Fine silk fabric draped elegantly, deep black, dramatic chiaroscuro lighting, fashion editorial, no people',
+        ],
+        'энергия': [
+            'Dynamic motion blur of human body in athletic movement, vibrant color, energetic, bold graphic composition, editorial sports photography',
+            'Bright saturated color background, bold graphic shapes, energetic lifestyle aesthetic, no text, high contrast',
+        ],
+    }
+
+    prompts = base.get(style_key, [])
+
+    # Адаптируем первый промпт под найденные слова
+    if word_set & {'glow', 'radiant', 'luminous'} and style_key == 'нежность':
+        prompts.insert(0, 'Glowing skin close-up, radiant complexion, golden light rays, beauty editorial, luxury skincare aesthetic, film photography look')
+    if word_set & {'innovation', 'future', 'smart'} and style_key == 'технологичность':
+        prompts.insert(0, 'Futuristic technology interface, clean lines, glowing UI elements, dark background, precision engineering aesthetic, macro')
+    if word_set & {'bold', 'power', 'energy'} and style_key == 'энергия':
+        prompts.insert(0, 'Bold high-energy motion, person in powerful pose, vibrant background, dynamic lighting, lifestyle photography')
+
+    return prompts[:3]
+
 def analyze_posts(posts, style_data):
-    """Извлечь паттерны из каптайнов и хэштегов."""
+    """Глубокий анализ каптайнов, хэштегов, вовлечённости."""
     all_text = []
     all_tags = []
     engagement = []
+    structures = {'short': 0, 'emoji_hook': 0, 'question_hook': 0, 'statement': 0}
 
     for p in posts:
         caption = (p.get('caption') or p.get('text') or '').lower()
         tags = p.get('hashtags') or []
         likes = p.get('like_count') or p.get('diggCount') or 0
         views = p.get('view_count') or p.get('play_count') or 0
+        comments = p.get('comment_count') or 0
+        username = p.get('ownerUsername') or p.get('username') or ''
         all_text.append(caption)
-        all_tags.extend([t.lower().replace('#','') for t in tags])
-        engagement.append({'caption': caption[:120], 'likes': likes, 'views': views,
-                           'url': p.get('reel_url') or p.get('url') or ''})
+        all_tags.extend([t.lower().replace('#', '') for t in tags])
+        structures[caption_structure(caption)] += 1
+        engagement.append({
+            'caption_full': caption[:200],
+            'caption_short': caption[:100],
+            'likes': likes,
+            'views': views,
+            'comments': comments,
+            'username': username,
+            'url': p.get('url') or p.get('reel_url') or '',
+            'score': likes * 2 + comments * 5 + views // 20,
+        })
 
     # Топ хэштеги
     tag_freq = {}
@@ -188,60 +264,121 @@ def analyze_posts(posts, style_data):
             tag_freq[t] = tag_freq.get(t, 0) + 1
     top_tags = sorted(tag_freq.items(), key=lambda x: -x[1])[:15]
 
-    # Сигнальные слова стиля в текстах
+    # Частые слова
+    tw = top_words(all_text)
+
+    # Сигнальные слова стиля
     found_signals = {}
     for word in style_data['signals']:
         count = sum(1 for t in all_text if word in t)
         if count > 0:
             found_signals[word] = count
 
-    # Топ посты по вовлечённости
-    top_posts = sorted(engagement, key=lambda x: x['likes'] + x['views']//10, reverse=True)[:3]
+    # Топ посты по скору
+    top_posts = sorted(engagement, key=lambda x: x['score'], reverse=True)[:5]
 
-    # Язык и тон (простой анализ)
-    avg_caption_len = sum(len(t) for t in all_text) // max(len(all_text), 1)
-    has_questions = sum(1 for t in all_text if '?' in t)
-    has_cta = sum(1 for t in all_text if any(w in t for w in ['shop','link','get','swipe','click','buy','order']))
+    # Паттерн длины каптайна
+    lengths = [len(t) for t in all_text if t]
+    avg_len = sum(lengths) // max(len(lengths), 1)
+    median_len = sorted(lengths)[len(lengths)//2] if lengths else 0
+
+    # CTA-паттерны
+    cta_patterns = {
+        'link_in_bio': sum(1 for t in all_text if 'link in bio' in t or 'link in profile' in t),
+        'shop_now': sum(1 for t in all_text if 'shop' in t or 'buy' in t),
+        'learn_more': sum(1 for t in all_text if 'learn more' in t or 'find out' in t or 'discover' in t),
+        'save_this': sum(1 for t in all_text if 'save' in t),
+        'follow': sum(1 for t in all_text if 'follow' in t),
+        'comment': sum(1 for t in all_text if 'comment' in t or 'tell us' in t),
+    }
+    top_cta = sorted(cta_patterns.items(), key=lambda x: -x[1])
+    top_cta = [(k, v) for k, v in top_cta if v > 0][:4]
+
+    # Топ аккаунт по среднему вовлечению
+    acc_stats = {}
+    for p in engagement:
+        u = p['username']
+        if u:
+            if u not in acc_stats:
+                acc_stats[u] = {'total': 0, 'count': 0}
+            acc_stats[u]['total'] += p['score']
+            acc_stats[u]['count'] += 1
+    top_accounts = sorted(acc_stats.items(), key=lambda x: -x[1]['total']//max(x[1]['count'],1))[:3]
 
     return {
         'top_tags': top_tags,
+        'top_words': tw,
         'signals_found': found_signals,
         'top_posts': top_posts,
-        'avg_caption_len': avg_caption_len,
-        'questions_pct': round(has_questions / max(len(all_text),1) * 100),
-        'cta_pct': round(has_cta / max(len(all_text),1) * 100),
+        'avg_len': avg_len,
+        'median_len': median_len,
+        'structures': structures,
+        'cta_patterns': top_cta,
+        'top_accounts': top_accounts,
         'total_posts': len(posts),
     }
 
 def generate_insights(style_key, style_data, analysis, accounts_used):
-    """Сформировать Markdown-запись для knowledge/references.md"""
+    """Подробная Markdown-запись для knowledge/references.md — используется агентом при работе."""
     today_str = date.today().strftime('%d.%m.%Y')
-    tag_str = ', '.join(f'#{t}' for t,_ in analysis['top_tags'][:8])
-    signal_str = ', '.join(f'{w}({c})' for w,c in sorted(analysis['signals_found'].items(), key=lambda x:-x[1])[:5])
+
+    tag_str   = ' '.join(f'`#{t}`' for t, _ in analysis['top_tags'][:10])
+    word_str  = ' '.join(f'`{w}`({c})' for w, c in analysis['top_words'][:12])
+    signal_str = ', '.join(f'**{w}** ×{c}' for w, c in sorted(analysis['signals_found'].items(), key=lambda x: -x[1])[:6])
+
+    struct = analysis['structures']
+    total  = max(sum(struct.values()), 1)
+    struct_str = (
+        f"emoji/hook-открытие {struct['emoji_hook']/total*100:.0f}% | "
+        f"вопрос-зацепка {struct['question_hook']/total*100:.0f}% | "
+        f"утверждение {struct['statement']/total*100:.0f}% | "
+        f"короткий {struct['short']/total*100:.0f}%"
+    )
+
+    cta_str = ' | '.join(f'`{k}` ×{v}' for k, v in analysis['cta_patterns']) or '— не обнаружены'
+
+    top_acc_str = ''
+    for acc, stat in analysis['top_accounts']:
+        avg = stat['total'] // max(stat['count'], 1)
+        top_acc_str += f"  - **@{acc}** — avg score {avg:,} по {stat['count']} постам\n"
 
     top_post_str = ''
-    for i, p in enumerate(analysis['top_posts'], 1):
-        top_post_str += f'  {i}. "{p["caption"][:80]}..." — 👍{p["likes"]:,}\n'
+    for i, p in enumerate(analysis['top_posts'][:3], 1):
+        top_post_str += (
+            f"  {i}. **@{p['username']}** — 👍{p['likes']:,} 👁{p['views']:,} 💬{p['comments']:,}\n"
+            f"     «{p['caption_short'].strip()[:90]}…»\n"
+        )
+
+    fal_prompts = suggested_fal_prompts(style_key, analysis['top_words'])
+    fal_str = '\n'.join(f"  - `{p}`" for p in fal_prompts)
 
     return f"""
 ### {style_data['name']} — авто-обучение {today_str}
-**Аккаунты:** {', '.join('@'+a for a in accounts_used)}
-**Постов проанализировано:** {analysis['total_posts']}
+> Аккаунты: {', '.join('@'+a for a in accounts_used)} | Постов: {analysis['total_posts']}
 
-**Топ хэштеги:**
+#### Словарь стиля (топ слова в каптайнах)
+{word_str}
+
+#### Сигналы стиля в текстах
+{signal_str if signal_str else '— сигнальные слова не встречаются'}
+
+#### Топ хэштеги
 {tag_str}
 
-**Сигнальные слова стиля:**
-{signal_str if signal_str else '— не найдены в текстах'}
+#### Структура каптайнов
+- Длина: avg {analysis['avg_len']} симв, медиана {analysis['median_len']} симв
+- Структуры: {struct_str}
+- CTA-паттерны: {cta_str}
 
-**Паттерны каптайнов:**
-- Средняя длина: {analysis['avg_caption_len']} символов
-- Вопросы в постах: {analysis['questions_pct']}%
-- CTA-слова: {analysis['cta_pct']}%
-
-**Топ посты по вовлечённости:**
+#### Самые вовлекающие аккаунты
+{top_acc_str}
+#### Топ посты по вовлечённости
 {top_post_str}
-**Фокус для дизайна:** {style_data['focus']}
+#### Дизайн-фокус: {style_data['focus']}
+
+#### Рекомендуемые fal.ai промпты (выведены из анализа)
+{fal_str}
+
 ---
 """
 
@@ -261,35 +398,86 @@ def pick_style():
     return random.choice(pool)
 
 def run_prompt_engineering():
-    """Направление E: анализ fal.ai и промпт-инжиниринг из открытых источников."""
+    """Направление E: анализ fal.ai, новые модели, техники промптинга."""
     print("  → Режим: промпт-инжиниринг")
-    # Скачиваем страницы fal.ai и ищем новые модели
-    insights_lines = []
-    for url in PROMPT_ENG['urls'][:2]:
+    today_str = date.today().strftime('%d.%m.%Y')
+
+    found_models = []
+    source_results = []
+
+    for url in PROMPT_ENG['urls'][:3]:
         try:
             r = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
             with urllib.request.urlopen(r, timeout=15) as resp:
                 html = resp.read().decode(errors='ignore')
-            # Ищем упоминания моделей
-            models = re.findall(r'fal-ai/[\w\-/]+', html)
-            unique_models = list(dict.fromkeys(models))[:10]
-            if unique_models:
-                insights_lines.append(f"**{url}** → модели: {', '.join(unique_models)}")
+            models = list(dict.fromkeys(re.findall(r'fal-ai/[\w\-]+(?:/[\w\-]+)*', html)))[:12]
+            found_models.extend(models)
+            # Пытаемся найти changelog-заголовки / названия моделей
+            titles = re.findall(r'<h[123][^>]*>([^<]{10,80})</h[123]>', html)[:5]
+            source_results.append({'url': url, 'models': models[:6], 'titles': titles[:3]})
         except Exception as e:
-            insights_lines.append(f"**{url}** → ошибка: {e}")
+            source_results.append({'url': url, 'models': [], 'titles': [], 'error': str(e)})
 
-    today_str = date.today().strftime('%d.%m.%Y')
+    unique_models = list(dict.fromkeys(found_models))[:15]
+
+    # Группируем модели по задачам
+    gen_models   = [m for m in unique_models if any(k in m for k in ['flux','imagen','stable','gen','create'])]
+    edit_models  = [m for m in unique_models if any(k in m for k in ['edit','inpaint','outpaint','remove','replace','erase'])]
+    video_models = [m for m in unique_models if any(k in m for k in ['video','animate','motion','kling','wan','mochi'])]
+    upscale_models = [m for m in unique_models if any(k in m for k in ['upscale','enhance','super','seedvr','esrgan'])]
+    other_models = [m for m in unique_models if m not in gen_models+edit_models+video_models+upscale_models]
+
+    def _src_line(s):
+        if 'error' in s:
+            return f"**{s['url']}** → ошибка: {s['error']}"
+        return f"**{s['url']}** → {len(s['models'])} моделей найдено"
+    sources_str = '\n'.join(_src_line(s) for s in source_results)
+    models_md = ''
+    if gen_models:   models_md += f"- Генерация: {', '.join(f'`{m}`' for m in gen_models[:5])}\n"
+    if edit_models:  models_md += f"- Редактирование: {', '.join(f'`{m}`' for m in edit_models[:5])}\n"
+    if video_models: models_md += f"- Видео/анимация: {', '.join(f'`{m}`' for m in video_models[:4])}\n"
+    if upscale_models: models_md += f"- Апскейл/улучшение: {', '.join(f'`{m}`' for m in upscale_models[:4])}\n"
+    if other_models: models_md += f"- Прочее: {', '.join(f'`{m}`' for m in other_models[:4])}\n"
+
+    # Telegram-текст
+    tg_models_str = ''
+    if gen_models:   tg_models_str += f"\n🖼 Генерация: {', '.join(gen_models[:3])}"
+    if edit_models:  tg_models_str += f"\n✂️ Редактура: {', '.join(edit_models[:3])}"
+    if video_models: tg_models_str += f"\n🎬 Видео: {', '.join(video_models[:2])}"
+    if upscale_models: tg_models_str += f"\n🔍 Апскейл: {', '.join(upscale_models[:2])}"
+
+    tg_text = (
+        f"🧠 <b>Дизайнер — Промпт-инжиниринг fal.ai</b> | {today_str}\n\n"
+        f"<b>Изучил:</b>\n"
+        f"• Документацию fal.ai: {len(source_results)} источника\n"
+        f"• Всего моделей обнаружено: {len(unique_models)}\n\n"
+        f"<b>Карта моделей по задачам:</b>"
+        f"{tg_models_str if tg_models_str else chr(10)+'— нет данных'}\n\n"
+        f"<b>Что важно для наших задач:</b>\n"
+        f"• Для фонов и текстур → flux/imagen модели\n"
+        f"• Для обрезки и правок → edit/inpaint модели\n"
+        f"• Для улучшения фото клиентов → upscale модели\n\n"
+        f"✅ Записано в knowledge/references.md"
+    )
+
     insight = f"""
 ### Промпт-инжиниринг fal.ai — авто-обучение {today_str}
-**Источники:** {', '.join(PROMPT_ENG['urls'][:2])}
 
-**Найденные модели:**
-{chr(10).join(insights_lines) if insights_lines else '— нет данных'}
+#### Источники
+{sources_str}
 
-**Фокус:** {PROMPT_ENG['focus']}
+#### Найденные модели fal.ai по задачам
+{models_md if models_md else '— нет данных'}
+
+#### Все уникальные модели
+{', '.join(f'`{m}`' for m in unique_models) if unique_models else '— не найдены'}
+
+#### Фокус для работы дизайнера
+{PROMPT_ENG['focus']}
+
 ---
 """
-    return insight, "Промпт-инжиниринг fal.ai", PROMPT_ENG['emoji'], []
+    return insight, "Промпт-инжиниринг fal.ai", PROMPT_ENG['emoji'], [], tg_text
 
 def main():
     print(f"\n🎓 Designer Learning — {date.today()}")
@@ -298,7 +486,7 @@ def main():
     style_key = pick_style()
 
     if style_key == '__prompt__':
-        insight_text, style_name, emoji, accounts_used = run_prompt_engineering()
+        insight_text, style_name, emoji, accounts_used, tg_report = run_prompt_engineering()
         analysis = None
     else:
         style_data = STYLES[style_key]
@@ -319,25 +507,90 @@ def main():
         analysis = analyze_posts(posts, style_data)
         insight_text = generate_insights(style_key, style_data, analysis, accounts_used)
 
+        # Строим детальный Telegram-отчёт
+        accounts_str = ', '.join('@'+a for a in accounts_used)
+        top_words_str = ' '.join(f'{w}({c})' for w, c in analysis['top_words'][:8])
+        top_tags_str  = ' '.join(f'#{t}' for t, _ in analysis['top_tags'][:6])
+        top_signals   = sorted(analysis['signals_found'].items(), key=lambda x: -x[1])[:4]
+        signals_str   = ' | '.join(f'{w} ×{c}' for w, c in top_signals) or '— не найдены'
+
+        struct = analysis['structures']
+        dominant_struct = max(struct, key=lambda k: struct[k])
+        struct_labels = {
+            'emoji_hook': 'открытие с emoji/hook',
+            'question_hook': 'вопрос-зацепка в начале',
+            'statement': 'утвердительное начало',
+            'short': 'короткий (<80 симв)',
+        }
+
+        top3 = analysis['top_posts'][:3]
+        top3_str = ''
+        for i, p in enumerate(top3, 1):
+            top3_str += f"\n{i}. @{p['username']} — 👍{p['likes']:,} 👁{p['views']:,}\n   «{p['caption_short'].strip()[:75]}…»"
+
+        fal_prompts = suggested_fal_prompts(style_key, analysis['top_words'])
+        fal_str = '\n'.join(f"• {pr[:120]}…" if len(pr) > 120 else f"• {pr}" for pr in fal_prompts[:2])
+
+        cta_str = ' | '.join(f'{k} ×{v}' for k, v in analysis['cta_patterns'][:3]) or '— не обнаружены'
+
+        top_acc_str = ''
+        for acc, stat in analysis['top_accounts'][:2]:
+            avg = stat['total'] // max(stat['count'], 1)
+            top_acc_str += f"\n• @{acc} — avg score {avg:,} ({stat['count']} постов)"
+
+        tg_report = (
+            f"{emoji} <b>Дизайнер учился: {style_name}</b> | {date.today().strftime('%d.%m')}\n\n"
+
+            f"📊 <b>Что изучил</b>\n"
+            f"Аккаунты: {accounts_str}\n"
+            f"Постов разобрано: {analysis['total_posts']}\n"
+            f"Длина каптайнов: avg {analysis['avg_len']} / медиана {analysis['median_len']} симв\n\n"
+
+            f"🔤 <b>Ключевые слова стиля</b>\n"
+            f"{top_words_str}\n\n"
+
+            f"🎯 <b>Сигналы бренд-голоса</b>\n"
+            f"{signals_str}\n\n"
+
+            f"🏷 <b>Топ хэштеги</b>\n"
+            f"{top_tags_str}\n\n"
+
+            f"📝 <b>Как строят каптайны</b>\n"
+            f"Доминирует: {struct_labels.get(dominant_struct, dominant_struct)}\n"
+            f"CTA-паттерны: {cta_str}\n\n"
+
+            f"🏆 <b>Самые вовлекающие аккаунты</b>{top_acc_str}\n\n"
+
+            f"🔥 <b>Топ посты</b>{top3_str}\n\n"
+
+            f"🤖 <b>Выведенные fal.ai промпты</b>\n"
+            f"{fal_str}\n\n"
+
+            f"✅ Всё записано → knowledge/references.md\n"
+            f"Дизайнер применит при следующей задаче."
+        )
+
     # ── Обновить references.md ─────────────────────────────────────────────
     print("  → Обновляю knowledge/references.md")
     ref_path = 'agents/designer/knowledge/references.md'
-    current = read_file(ref_path) or '# References — Designer Knowledge\n\n## Визуальные референсы и разборы\n\n'
-    if '## Визуальные референсы и разборы\n' in current:
-        updated = current.replace(
-            '## Визуальные референсы и разборы\n',
-            f'## Визуальные референсы и разборы\n{insight_text}'
-        )
+    current = read_file(ref_path) or '# References — Designer Knowledge\n\n## Автообучение (новые — сверху)\n\n'
+    marker = '## Автообучение (новые — сверху)\n'
+    if marker in current:
+        updated = current.replace(marker, f'{marker}{insight_text}')
     else:
-        updated = current + '\n' + insight_text
+        # Добавляем секцию если её нет
+        updated = current + f'\n\n## Автообучение (новые — сверху)\n{insight_text}'
     write_file(ref_path, updated)
 
     # ── Обновить log.md ────────────────────────────────────────────────────
     print("  → Обновляю learning/log.md")
     log_path = 'agents/designer/learning/log.md'
-    log_entry = f"## {date.today()} | {emoji} {style_name}\n{insight_text.strip()[:400]}...\n\n"
-    log_current = read_file(log_path) or '# Learning Log\n\n<!-- записи -->\n'
-    log_updated = log_current.replace('<!-- записи -->', f'<!-- записи -->\n{log_entry}')
+    log_entry = f"\n## {date.today()} | {emoji} {style_name}\n{insight_text.strip()}\n"
+    log_current = read_file(log_path) or '# Learning Log — Дизайнер\n\n> Автоматически дополняется скриптом `tools/designer_learning.py` каждый день.\n> Формат: дата | стиль | итог\n\n---\n\n<!-- Записи добавляются сверху (новые первые) -->\n'
+    log_updated = log_current.replace(
+        '<!-- Записи добавляются сверху (новые первые) -->',
+        f'<!-- Записи добавляются сверху (новые первые) -->{log_entry}'
+    )
     write_file(log_path, log_updated)
 
     # ── Git push ───────────────────────────────────────────────────────────
@@ -345,28 +598,7 @@ def main():
 
     # ── Telegram отчёт ─────────────────────────────────────────────────────
     print("  → Отправляю Telegram")
-    accounts_str = ', '.join('@'+a for a in accounts_used) if accounts_used else 'веб-источники'
-
-    if style_key == '__prompt__':
-        tg_text = (
-            f"🧠 <b>Обучение дизайнера — {date.today().strftime('%d.%m')}</b>\n\n"
-            f"Направление: <b>Промпт-инжиниринг fal.ai</b>\n\n"
-            f"Изучал: документация fal.ai, новые модели, техники промптинга\n\n"
-            f"Паттерны записаны → agents/designer/knowledge/references.md"
-        )
-    else:
-        top_tags_str = ' '.join(f'#{t}' for t,_ in analysis['top_tags'][:6])
-        tg_text = (
-            f"{emoji} <b>Обучение дизайнера — {date.today().strftime('%d.%m')}</b>\n\n"
-            f"Стиль: <b>{style_name}</b>\n"
-            f"Аккаунты: {accounts_str}\n"
-            f"Постов изучено: {analysis['total_posts']}\n\n"
-            f"<b>Топ хэштеги стиля:</b>\n{top_tags_str}\n\n"
-            f"<b>Фокус на дизайн:</b>\n{style_data['focus']}\n\n"
-            f"Паттерны → agents/designer/knowledge/references.md"
-        )
-
-    tg(tg_text)
+    tg(tg_report)
     print(f"  ✓ Готово. Стиль: {style_name}")
 
 if __name__ == '__main__':

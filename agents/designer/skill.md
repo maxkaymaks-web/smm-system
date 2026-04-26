@@ -213,7 +213,7 @@ node tools/render-html.js projects/{client}/posts/drafts/post-NN.html projects/{
 ```
 
 **Правила визуального планирования:**
-- Смотри `knowledge/references.md` и `knowledge/compositions.md` — выбирай паттерн осознанно
+- Смотри `knowledge/references.md` (секция «Автообучение» — последние тренды), `knowledge/compositions.md` и `learning/log.md` (последние 2–3 записи) — выбирай паттерн осознанно, применяй актуальные fal.ai промпты из обучений
 - Пустой фон с текстом — ЗАПРЕЩЕНО. Всегда либо fal.ai фото/текстура, либо Editorial с сильной типографикой + fal.ai деталь
 - Для beauty: крупный кроп кожи/лица/тела > студийный нейтральный фон
 - Для экспертного/инфографика: тёмная органическая текстура (fal.ai) под текстом = premium, не скучно
