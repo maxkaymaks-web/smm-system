@@ -2,6 +2,30 @@
 
 ## Визуальные референсы и разборы
 
+### Технологичность и Инновации — авто-обучение 26.04.2026
+**Аккаунты:** @figma, @dyson, @spacex
+**Постов проанализировано:** 36
+
+**Топ хэштеги:**
+#dyson, #dysonhome, #hushjetminicool, #dysoncleanwash, #cleaningtips, #petsofdyson, #dysonpencilvac, #figmamake
+
+**Сигнальные слова стиля:**
+clean(5), performance(2), engineered(1), innovation(1), system(1)
+
+**Паттерны каптайнов:**
+- Средняя длина: 193 символов
+- Вопросы в постах: 8%
+- CTA-слова: 14%
+
+**Топ посты по вовлечённости:**
+  1. "the dyson beauty pet range is perfect for all your insta-famous furry friends. 
+..." — 👍82,790
+  2. "meet the dyson hushjet™ mini cool fan. engineered with unique hushjet™ air proje..." — 👍39,779
+  3. "starship completed a long duration six-engine static fire and is undergoing fina..." — 👍110,045
+
+**Фокус для дизайна:** строгие сетки, монохром, bold sans-serif, цифры как акцент, инфографика
+---
+
 <!-- Пример записи:
 ### [Название / источник]
 **Ниша:** [beauty / food / fitness / ...]
