@@ -115,6 +115,42 @@ clean(5), performance(2), engineered(1), innovation(1), system(1)
 
 ## Автообучение (новые — сверху)
 
+### Нежность и Эстетика — авто-обучение 26.04.2026
+> Аккаунты: @laneige_us, @summer_fridays, @aesopskincare | Проанализировано изображений: 6
+
+#### Изученные посты
+  - **@mattheperson** (11,265 likes) — editorial | creamy beige, powder blue, soft rose, muted tones, gentle mo | centered subject, product focus placement, abundant negative
+  - **@laneige_us** (11,659 likes) — Editorial | Soft peach, dusty rose, pale mint green, creamy beige, mood: | Central placement, slight tilt, ample negative space around 
+  - **@laneige_us** (10,617 likes) — Editorial | Pastel Peach, Soft Lavender, Creamy Yellow, overall soft and | Diagonal, right quadrant, ample negative space
+  - **@laneige_us** (3,768 likes) — Lifestyle | Soft pink, creamy beige, muted grey, overall soft and gentle | Rule of thirds, product in foreground, significant negative 
+  - **@laneige_us** (4,365 likes) — Editorial | Creamy beige, soft rose, pale blue, neutral grey sky, serene | Centered, storefront focal point, significant negative space
+  - **@sephora** (2,515 likes) — Editorial | Soft cool blue, pale grey, metallic silver, gentle mood | Centered subject, moderate negative space, balanced
+
+#### Визуальные паттерны (синтез)
+1. Обильное негативное пространство
+2. Мягкое, рассеянное освещение
+3. Кремово-пудровые тона
+4. Средние и крупные планы сфокусированные на продукте или детали
+5. Легкая зернистость или чистые, матовые поверхности
+
+#### Цветовая палитра стиля
+Преобладают кремовые, пудровые, нежные розовые, бледно-голубые и лавандовые оттенки, часто с кремово-бежевой основой, создавая спокойное и воздушное настроение.
+
+#### Правила композиции
+Центральное расположение объекта или использование правила третей, с акцентом на продукт. Значительное количество пустого пространства вокруг ключевых элементов для создания ощущения воздушности и фокуса.
+
+#### Текстура и свет
+Чистые, матовые или гладкие поверхности, иногда с легкой текстурой дерева или ткани. Освещение мягкое, рассеянное, с низким контрастом, имитирующее естественный, нежный свет.
+
+#### fal.ai промпты для стиля (применять при генерации)
+  - `Minimalist beauty product shot, soft creamy beige gradient background, featured with delicate powder pink and pale mint. Airy composition, soft diffused light.`
+  - `Editorial beauty flat lay, showing lip balm trio on a gentle rose and pale lavender gradient. Abundant negative space, delicate serif typography.`
+  - `Close-up of hand gently holding a skincare jar against a soft, dreamy pastel background. Shallow depth of field, soft natural lighting.`
+
+#### Дизайн-фокус
+мягкие градиенты, кремово-пудровые тона, тонкий serif, воздух, editorial beauty кроп
+---
+
 ### Промпт-инжиниринг fal.ai — авто-обучение 26.04.2026
 
 #### Источники проверены
