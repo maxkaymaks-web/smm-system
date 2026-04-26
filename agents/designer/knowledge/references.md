@@ -115,6 +115,41 @@ clean(5), performance(2), engineered(1), innovation(1), system(1)
 
 ## Автообучение (новые — сверху)
 
+### Нежность и Эстетика — авто-обучение 26.04.2026
+> Аккаунты: @laneige_us, @aesopskincare, @tatcha | Проанализировано изображений: 5
+
+#### Изученные посты
+  - **@mattheperson** (11,265 likes) — Editorial | Creamy beige, soft sky blue, pale peach, muted white; serene | Centered subject with ample negative space above and around
+  - **@laneige_us** (11,654 likes) — Editorial | Soft Peach, Dusty Rose, Creamy Lavender, Mint Green; Serene  | Asymmetrical, Center-bottom focal point, Moderate negative s
+  - **@laneige_us** (10,616 likes) — Editorial | Creamy white, soft peach, pale pink, light lavender; gentle, | Diagonal, top-left, ample
+  - **@laneige_us** (3,768 likes) — Editorial | Soft pastel pink, muted beige, pale gold, subtle grey, gentl | Rule of thirds, product in foreground left, product in foreg
+  - **@laneige_us** (4,365 likes) — Editorial | Soft rose pink, cream, soft peach, pale blue; serene, gentle | Rule of thirds, left-aligned focal point, ample negative spa
+
+#### Визуальные паттерны (синтез)
+1. Умеренное или обильное использование негативного пространства
+2. Мягкое, рассеянное освещение с низким контрастом
+3. Теплые, приглушенные кремово-пудровые тона
+4. Акцент на чистых, гладких поверхностях и минималистичных деталях
+5. Крупный план или средний план объектов, часто с "editoral beauty crop"
+
+#### Цветовая палитра стиля
+Преобладают кремовые, пудровые, пастельные оттенки (бежевый, персиковый, пыльная роза, бледно-голубой, лавандовый), создающие ощущение нежности и воздушности.
+
+#### Правила композиции
+Часто используется правило третей или асимметричное расположение объектов, оставляя значительное пространство для "воздуха". Фокус смещен, чтобы избежать перегруженности.
+
+#### Текстура и свет
+Чистые, матовые или гладкие поверхности. Освещение мягкое, рассеянное, часто боковое или фронтальное, без резких теней, подчеркивающее нежность.
+
+#### fal.ai промпты для стиля (применять при генерации)
+  - `Editorial beauty shot of skincare products, creamy powder tones, soft diffused light, ample negative space, gentle serif typography overlay.`
+  - `Close-up of meticulously manicured hand holding a delicate makeup brush, against a soft gradient background, editorial beauty crop, pastel color palette.`
+  - `Asymmetrical composition featuring luxurious lip balm tubes, soft peach and rose hues, subtle serif details, airy aesthetic, low contrast lighting.`
+
+#### Дизайн-фокус
+мягкие градиенты, кремово-пудровые тона, тонкий serif, воздух, editorial beauty кроп
+---
+
 ### Энергия и Лайфстайл — авто-обучение 26.04.2026
 > Аккаунты: @frankbody, @gymshark, @oatly | Проанализировано изображений: 5
 

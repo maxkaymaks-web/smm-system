@@ -187,108 +187,25 @@ def get_top_posts_with_images(posts, n=6):
     return sorted(scored, key=lambda x: x['score'], reverse=True)[:n]
 
 def synthesize_analyses(analyses, style_data, accounts_used):
-    """
-    Отправить все описания в fal.ai → попросить синтез паттернов и fal.ai промпты.
-    Используем any-llm без изображений — только текстовый синтез.
-    """
-    FAL_KEY_file = Path.home() / '.claude' / '.env.fal'
-    FAL_KEY = ''
-    if FAL_KEY_file.exists():
-        m = re.search(r'FAL_KEY=(.+)', FAL_KEY_file.read_text())
-        if m:
-            FAL_KEY = m.group(1).strip()
+    """Вызвать synthesize-visual.mjs → получить JSON с паттернами и fal.ai промптами."""
+    tool = REPO_ROOT / 'tools' / 'synthesize-visual.mjs'
+    accounts_str = ', '.join('@'+a for a in accounts_used)
+    analyses_json = json.dumps(analyses)
 
-    descriptions = []
-    for i, a in enumerate(analyses, 1):
-        if a:
-            desc = (
-                f"Post {i} (@{a.get('username','')} | {a.get('likes',0):,} likes):\n"
-                f"  Composition: {a.get('composition','')}\n"
-                f"  Colors: {a.get('colors','')}\n"
-                f"  Texture: {a.get('texture','')}\n"
-                f"  Lighting: {a.get('lighting','')}\n"
-                f"  Subject: {a.get('subject','')}\n"
-                f"  Style: {a.get('style','')}"
-            )
-            descriptions.append(desc)
-
-    if not descriptions:
-        return None
-
-    prompt = f"""You are a visual design trainer for social media designers.
-
-Style being studied: {style_data['name']}
-Accounts analyzed: {', '.join('@'+a for a in accounts_used)}
-Design focus: {style_data['focus']}
-
-Here are visual analyses of {len(descriptions)} top Instagram posts from these accounts:
-
-{chr(10).join(descriptions)}
-
-Based on these analyses, provide:
-
-1. TOP 5 VISUAL PATTERNS (things that repeat across multiple posts — be specific)
-2. COLOR PALETTE (the dominant colors and combinations used in this style)
-3. COMPOSITION RULES (how these brands structure their visual layouts)
-4. TEXTURE & LIGHTING SIGNATURE (what makes the photos/visuals feel like this brand)
-5. THREE FAL.AI PROMPTS (in English, very detailed, 25-35 words each) that would generate images fitting this visual style perfectly
-
-Respond in Russian for sections 1-4, English for fal.ai prompts.
-Format strictly:
-PATTERN_1: [description]
-PATTERN_2: [description]
-PATTERN_3: [description]
-PATTERN_4: [description]
-PATTERN_5: [description]
-COLOR_PALETTE: [description]
-COMPOSITION_RULES: [description]
-TEXTURE_LIGHTING: [description]
-FAL_PROMPT_1: [prompt]
-FAL_PROMPT_2: [prompt]
-FAL_PROMPT_3: [prompt]"""
-
-    payload = {
-        'model': 'google/gemini-flash-1.5',
-        'prompt': prompt,
-    }
-    data = json.dumps(payload).encode()
-
-    # Submit
-    req = urllib.request.Request(
-        f'https://queue.fal.run/fal-ai/any-llm',
-        data=data,
-        headers={'Authorization': f'Key {FAL_KEY}', 'Content-Type': 'application/json'}
+    result = subprocess.run(
+        ['node', str(tool), analyses_json, style_data['name'], style_data['focus'], accounts_str],
+        capture_output=True, text=True, timeout=60,
+        cwd=str(REPO_ROOT)
     )
-    with urllib.request.urlopen(req, timeout=15) as resp:
-        sub = json.loads(resp.read().decode())
-    req_id = sub['request_id']
-
-    # Poll
-    for _ in range(15):
-        time.sleep(3)
-        status_r = urllib.request.Request(
-            f'https://queue.fal.run/fal-ai/any-llm/requests/{req_id}/status',
-            headers={'Authorization': f'Key {FAL_KEY}'}
-        )
-        with urllib.request.urlopen(status_r, timeout=10) as resp:
-            d = json.loads(resp.read().decode())
-        if d.get('status') == 'COMPLETED':
-            # Get output
-            out_r = urllib.request.Request(
-                f'https://queue.fal.run/fal-ai/any-llm/requests/{req_id}/status?logs=true',
-                headers={'Authorization': f'Key {FAL_KEY}'}
-            )
-            with urllib.request.urlopen(out_r, timeout=10) as resp:
-                out_d = json.loads(resp.read().decode())
-            logs = out_d.get('logs') or []
-            if logs:
-                for log in reversed(logs):
-                    msg = log.get('message', '')
-                    if msg.strip():
-                        return msg.strip()
-            break
-
-    return None
+    stdout = result.stdout.strip()
+    if not stdout:
+        print(f"    ⚠️  Синтез не вернул ответ: {result.stderr[:120]}")
+        return None
+    try:
+        return json.loads(stdout)
+    except Exception:
+        print(f"    ⚠️  JSON parse error синтеза: {stdout[:120]}")
+        return None
 
 def extract_field(text, field):
     m = re.search(rf'^{field}:\s*(.+)$', text, re.MULTILINE)
@@ -433,26 +350,19 @@ def main():
             if a.get('fal_prompt_2'): individual_prompts.append(a['fal_prompt_2'])
         unique_prompts = list(dict.fromkeys(individual_prompts))[:6]
 
-        # Синтезированные поля
+        # Синтезированные поля (synthesis — уже распарсенный JSON)
         synth_patterns = []
-        synth_fal = []
-        color_palette = ''
-        comp_rules = ''
-        texture_sig = ''
+        synth_fal      = []
+        color_palette  = ''
+        comp_rules     = ''
+        texture_sig    = ''
 
-        if synthesis:
-            for i in range(1, 6):
-                p = extract_field(synthesis, f'PATTERN_{i}')
-                if p: synth_patterns.append(p)
-            synth_fal = [
-                extract_field(synthesis, 'FAL_PROMPT_1'),
-                extract_field(synthesis, 'FAL_PROMPT_2'),
-                extract_field(synthesis, 'FAL_PROMPT_3'),
-            ]
-            synth_fal = [p for p in synth_fal if p]
-            color_palette = extract_field(synthesis, 'COLOR_PALETTE')
-            comp_rules    = extract_field(synthesis, 'COMPOSITION_RULES')
-            texture_sig   = extract_field(synthesis, 'TEXTURE_LIGHTING')
+        if synthesis and not synthesis.get('error'):
+            synth_patterns = synthesis.get('patterns', [])
+            synth_fal      = synthesis.get('fal_prompts', [])
+            color_palette  = synthesis.get('color_palette', '')
+            comp_rules     = synthesis.get('composition_rules', '')
+            texture_sig    = synthesis.get('texture_lighting', '')
 
         # Фолбэк промпты из индивидуальных анализов если синтез не дал
         all_fal_prompts = (synth_fal or unique_prompts[:3])
