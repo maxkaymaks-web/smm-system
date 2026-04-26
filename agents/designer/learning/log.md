@@ -6,6 +6,47 @@
 ---
 
 <!-- Записи добавляются сверху (новые первые) -->
+## 2026-04-26 | ✦ Роскошь и Премиум
+### Роскошь и Премиум — авто-обучение 26.04.2026
+> Аккаунты: @bottegaveneta, @dior, @chanelofficial | Постов: 24
+
+#### Словарь стиля (топ слова в каптайнах)
+`chanel`(16) `dior`(13) `skin`(11) `collection`(6) `bleu`(6) `chanelfragrance`(6) `makeup`(6) `diorbeauty`(6) `bleudechanel`(5) `discover`(5) `after`(5) `invisible`(5)
+
+#### Сигналы стиля в текстах
+**heritage** ×2
+
+#### Топ хэштеги
+`#chanelfragrance` `#diorbeauty` `#bleudechanel` `#diorskincare` `#diorskinessentials` `#j12` `#chanelwatches` `#watchesandwonders2026` `#jacobelordi` `#chanelcruise`
+
+#### Структура каптайнов
+- Длина: avg 289 симв, медиана 275 симв
+- Структуры: emoji/hook-открытие 0% | вопрос-зацепка 17% | утверждение 79% | короткий 4%
+- CTA-паттерны: `learn_more` ×4 | `link_in_bio` ×3
+
+#### Самые вовлекающие аккаунты
+
+#### Топ посты по вовлечённости
+  1. **@** — 👍165,346 👁1,216,460 💬1,668
+     «@sooyaaa__, @florencehunt_ and @akonchangkou embrace the warmth of spring with unparallele…»
+  2. **@** — 👍86,950 👁359,532 💬1,362
+     «the color of a personality.
+jacob elordi embodies the bleu de chanel man. 
+a deeply determ…»
+  3. **@** — 👍79,630 👁481,262 💬756
+     «la mousse off/on.
+the cleanser that turns cleansing into skincare.
+ 
+off: eliminates 99%* …»
+
+#### Дизайн-фокус: тёмные фоны, gold accent, крупный serif CAPS, пустое пространство как роскошь
+
+#### Рекомендуемые fal.ai промпты (выведены из анализа)
+  - `Close-up of black polished marble surface, gold veins, macro, luxury brand aesthetic, studio lighting, no text`
+  - `Fine silk fabric draped elegantly, deep black, dramatic chiaroscuro lighting, fashion editorial, no people`
+
+---
+
 ## 2026-04-26 | ⚡ Энергия и Лайфстайл
 ### Энергия и Лайфстайл — авто-обучение 26.04.2026
 > Аккаунты: @frankbody, @gymshark, @oatly | Постов: 24

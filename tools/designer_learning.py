@@ -122,6 +122,9 @@ def read_file(rel_path):
     return None
 
 def tg(text):
+    # Telegram hard limit = 4096 символов
+    if len(text) > 4000:
+        text = text[:3980] + '\n…[обрезано]'
     data = json.dumps({'chat_id': CID, 'text': text, 'parse_mode': 'HTML'}).encode()
     r = urllib.request.Request(
         f'https://api.telegram.org/bot{TG}/sendMessage',
@@ -526,7 +529,8 @@ def main():
         top3 = analysis['top_posts'][:3]
         top3_str = ''
         for i, p in enumerate(top3, 1):
-            top3_str += f"\n{i}. @{p['username']} — 👍{p['likes']:,} 👁{p['views']:,}\n   «{p['caption_short'].strip()[:75]}…»"
+            snippet = p['caption_short'].strip()[:55]
+            top3_str += f"\n{i}. @{p['username']} 👍{p['likes']:,} — «{snippet}…»"
 
         fal_prompts = suggested_fal_prompts(style_key, analysis['top_words'])
         fal_str = '\n'.join(f"• {pr[:120]}…" if len(pr) > 120 else f"• {pr}" for pr in fal_prompts[:2])
