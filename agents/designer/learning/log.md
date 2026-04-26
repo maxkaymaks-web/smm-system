@@ -6,6 +6,38 @@
 ---
 
 <!-- Записи добавляются сверху (новые первые) -->
+## 2026-04-26 | ⚡ Энергия и Лайфстайл
+### Энергия и Лайфстайл — авто-обучение 26.04.2026
+> Аккаунты: @frankbody, @gymshark, @oatly | Проанализировано изображений: 5
+
+#### Изученные посты
+  - **@gymshark** (189,773 likes) — Lifestyle | Deep purple, charcoal black, slate gray, a hint of electric  | Symmetrical grid, subjects centered, ample negative space in
+  - **@gymshark** (50,782 likes) — Lifestyle | Teal blue, black, bright pink, white, energetic and bold | Rule of thirds, right third, ample negative space
+  - **@gymshark** (43,153 likes) — lifestyle | deep black, charcoal grey, faint yellow highlight, muted moo | rule of thirds, off-center, minimal negative space
+  - **@gymshark** (28,495 likes) — lifestyle | bright orange, dark charcoal, white, energetic | rule of thirds, center, moderate
+  - **@gymshark** (26,349 likes) — Lifestyle | Mustard yellow, deep plum, mint green, charcoal grey, vibran | Rule of thirds, subject placed on the right third, ample neg
+
+#### Визуальные паттерны (синтез)
+— синтез не выполнен
+
+#### Цветовая палитра стиля
+— не определена
+
+#### Правила композиции
+— не определены
+
+#### Текстура и свет
+— не определены
+
+#### fal.ai промпты для стиля (применять при генерации)
+  - `Four muscular men in workout gear, moody lighting, gym background, dark tones with vibrant purple accents.`
+  - `Dynamic group posing, neon purple accents on black athletic wear, cinematic lighting, energetic gym atmosphere.`
+  - `Energetic man walks past bold graffiti wall, teal hue, high contrast, motion blur, lifestyle aesthetic.`
+
+#### Дизайн-фокус
+яркие контрастные цвета, oversized type, playful compositions, движение
+---
+
 ## 2026-04-26 | ✦ Роскошь и Премиум
 ### Роскошь и Премиум — авто-обучение 26.04.2026
 > Аккаунты: @bottegaveneta, @dior, @chanelofficial | Постов: 24
