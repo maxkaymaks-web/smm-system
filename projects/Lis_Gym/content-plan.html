@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Контент-план — lis.gym | bit&pix агент</title>
+<style>
+@font-face {
+  font-family: 'Nata Sans';
+  src: url('../../global/brand/NataSans-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+}
+
+@page { size: A4 portrait; margin: 10mm 12mm; }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #FEFEFF;
+  --bg-alt:  #F6FAFC;
+  --text:    #0B0B0B;
+  --accent:  #FF1E1E;
+  --border:  rgba(11,11,11,0.09);
+  --muted:   rgba(11,11,11,0.42);
+  --r:       10px;
+  --r-sm:    5px;
+  --r-pill:  20px;
+  --font:    'Nata Sans', -apple-system, sans-serif;
+}
+
+html { background: #e8e8e8; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  width: 760px;
+  margin: 32px auto;
+  padding: 36px 40px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  border-radius: 4px;
+}
+
+@media print {
+  html { background: var(--bg); }
+  body { margin: 0; border-radius: 0; padding: 0 28px; width: 100%; }
+}
+
+/* ── HEADER ── */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 28px;
+  border-bottom: 2px solid var(--text);
+  margin-bottom: 28px;
+}
+.header-left { flex: 1; }
+.header-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.header-title {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+.header-title span { color: var(--accent); }
+.header-sub {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 400;
+}
+.header-logo img { height: 52px; }
+
+/* ── STATS ROW ── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.stat-card {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px 16px;
+}
+.stat-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 5px;
+}
+.stat-value {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.5px;
+}
+.stat-value.accent { color: var(--accent); }
+.stat-sub { font-size: 10px; color: var(--muted); margin-top: 3px; }
+
+/* ── TABLE ── */
+.table-wrap {
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+thead tr { background: var(--text); color: #fff; }
+thead th {
+  padding: 10px 12px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-align: left;
+  white-space: nowrap;
+}
+tbody tr { border-bottom: 1px solid var(--border); }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--bg-alt); }
+tbody tr.week-row { background: #f0f4f8; }
+tbody tr.week-row td {
+  padding: 7px 12px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.week-label { display: flex; align-items: center; gap: 8px; }
+.week-label::before {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+}
+td { padding: 11px 12px; vertical-align: top; }
+.cell-num {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  width: 28px;
+}
+.cell-date { width: 52px; }
+.date-main { font-size: 12px; font-weight: 700; }
+.date-dow { font-size: 10px; color: var(--muted); }
+.cell-type { width: 110px; }
+.cell-hook { width: 90px; }
+.hook-text { font-size: 10.5px; color: var(--muted); }
+.topic-title { font-size: 12px; font-weight: 600; line-height: 1.3; }
+.cell-dur { width: 44px; text-align: center; }
+.dur-badge {
+  display: inline-block;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.cell-status { width: 90px; }
+
+/* ── TAGS ── */
+.tag {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: var(--r-pill);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+.tag-edu   { background: rgba(37,99,235,0.08);  color: #1d4ed8; }
+.tag-relat { background: rgba(234,88,12,0.08);  color: #c2410c; }
+.tag-aesth { background: rgba(126,34,206,0.08); color: #7c3aed; }
+.tag-viral { background: rgba(255,30,30,0.08);  color: #cc0000; }
+.tag-motiv { background: rgba(5,150,105,0.08);  color: #065f46; }
+
+/* ── STATUS ── */
+.status {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: var(--r-pill);
+  font-size: 9.5px;
+  font-weight: 600;
+}
+.status-draft    { background: rgba(11,11,11,0.05);  color: var(--muted); }
+.status-ready    { background: rgba(5,150,105,0.08); color: #065f46; }
+.status-review   { background: rgba(234,179,8,0.1);  color: #854d0e; }
+.status-done     { background: rgba(37,99,235,0.08); color: #1d4ed8; }
+.status-pub      { background: rgba(255,30,30,0.08); color: #cc0000; }
+
+/* ── FOOTER ── */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+.footer-note { font-size: 10px; color: var(--muted); }
+.footer-dot {
+  width: 6px; height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 6px;
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-left">
+    <div class="header-label">Контент-план · bit&pix агент</div>
+    <h1 class="header-title"><span>lis.gym</span> — Instagram Reels</h1>
+    <div class="header-sub">Май 2026 · 15 видео · ~3–4 в неделю · KPI: просмотры Reels</div>
+  </div>
+  <div class="header-logo">
+    <img src="https://psv4.userapi.com/s/v1/d2/dYRlYKKJUVTOqZadm-bayXP4cGkONsPo2ZakDh-hpoFIKIjyvb2JfXQZM7s_2AJomrgYxKYSBzMCRI_eq8ePwuFdbc7IqiJj1FvzdtHRQv_QXNiO0TTo7yAHUlBsN3kRGnRvEe0kAnuk/Logo_agent_1.png" alt="bit&pix агент">
+  </div>
+</header>
+
+<!-- STATS -->
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="stat-label">Видео в месяц</div>
+    <div class="stat-value accent">15</div>
+    <div class="stat-sub">~3–4 в неделю</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Текущая медиана</div>
+    <div class="stat-value">269</div>
+    <div class="stat-sub">просмотров @lis.gym</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Цель KPI</div>
+    <div class="stat-value">10K+</div>
+    <div class="stat-sub">просмотров на рилс</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Разрыв с нишей</div>
+    <div class="stat-value accent">518×</div>
+    <div class="stat-sub">топ ниши 139K медиана</div>
+  </div>
+</div>
+
+<!-- TABLE -->
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Дата</th>
+        <th>Тип</th>
+        <th>Хук</th>
+        <th>Тема</th>
+        <th>Хрон.</th>
+        <th>Статус</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <!-- WEEK 1 -->
+      <tr class="week-row"><td colspan="7"><span class="week-label">Неделя 1 · 1–7 мая</span></td></tr>
+
+      <tr>
+        <td class="cell-num">01</td>
+        <td class="cell-date"><div class="date-main">01 мая</div><div class="date-dow">Пт</div></td>
+        <td class="cell-type"><span class="tag tag-edu">Образовательный</span></td>
+        <td class="cell-hook"><span class="hook-text">Боль-вопрос</span></td>
+        <td><div class="topic-title">Почему не чувствуешь ягодицы в мостике — 3 причины</div></td>
+        <td class="cell-dur"><span class="dur-badge">12s</span></td>
+        <td class="cell-status"><span class="status status-ready">Готово</span></td>
+      </tr>
+
+      <tr>
+        <td class="cell-num">02</td>
+        <td class="cell-date"><div class="date-main">03 мая</div><div class="date-dow">Вс</div></td>
+        <td class="cell-type"><span class="tag tag-relat">Relatable</span></td>
+        <td class="cell-hook"><span class="hook-text">Узнай себя</span></td>
+        <td><div class="topic-title">Я планировала в зал vs я в зале (нарезка)</div></td>
+        <td class="cell-dur"><span class="dur-badge">8s</span></td>
+        <td class="cell-status"><span class="status status-draft">Черновик</span></td>
+      </tr>
+
+      <tr>
+        <td class="cell-num">03</td>
+        <td class="cell-date"><div class="date-main">05 мая</div><div class="date-dow">Вт</div></td>
+        <td class="cell-type"><span class="tag tag-aesth">Эстетика</span></td>
+        <td class="cell-hook"><span class="hook-text">Обещание</span></td>
+        <td><div class="topic-title">Утро. Зал. Кофе. — атмосфера до тренировки</div></td>
+        <td class="cell-dur"><span class="dur-badge">10s</span></td>
+        <td class="cell-status"><span class="status status-draft">Черновик</span></td>
+      </tr>
+
+      <!-- WEEK 2 -->
+      <tr class="week-row"><td colspan="7"><span class="week-label">Неделя 2 · 8–14 мая</span></td></tr>
+
+      <tr>
+        <td class="cell-num">04</td>
+        <td class="cell-date"><div class="date-main">08 мая</div><div class="date-dow">Пт</div></td>
+        <td class="cell-type"><span class="tag tag-viral">Вирусный</span></td>
+        <td class="cell-hook"><span class="hook-text">Отправь другу</span></td>
+        <td><div class="topic-title">Отправь подруге, которая «начнёт с понедельника»</div></td>
+        <td class="cell-dur"><span class="dur-badge">10s</span></td>
+        <td class="cell-status"><span class="status status-draft">Черновик</span></td>
+      </tr>
+
+      <tr>
+        <td class="cell-num">05</td>
+        <td class="cell-date"><div class="date-main">10 мая</div><div class="date-dow">Вс</div></td>
+        <td class="cell-type"><span class="tag tag-edu">Образовательный</span></td>
+        <td class="cell-hook"><span class="hook-text">Число</span></td>
+        <td><div class="topic-title">5 ошибок в тренировке ног — из-за которых нет прогресса</div></td>
+        <td class="cell-dur"><span class="dur-badge">15s</span></td>
+        <td class="cell-status"><span class="status status-draft">Черновик</span></td>
+      </tr>
+
+      <tr>
+        <td class="cell-num">06</td>
+        <td class="cell-date"><div class="date-main">12 мая</div><div class="date-dow">Вт</div></td>
+        <td class="cell-type"><span class="tag tag-relat">Relatable</span></td>
+        <td class="cell-hook"><span class="hook-text">Узнай себя</span></td>
+        <td><div class="topic-title">Лицо, когда тренер говорит «ещё один» 4-й раз подряд</div></td>
+        <td class="cell-dur"><span class="dur-badge">7s</span></td>
+        <td class="cell-status"><span class="status status-draft">Черновик</span></td>
+      </tr>
+
+      <tr>
+        <td class="cell-num">07</td>
+        <td class="cell-date"><div class="date-main">14 мая</div><div class="date-dow">Чт</div></td>
+        <td class="cell-type"><span class="tag tag-motiv">Мотивация</span></td>
+        <td class="cell-hook"><span class="hook-text">Триггер-фраза</span></td>
+        <td><div class="topic-title">Тот, кто знает разницу между болью и усталостью мышц</div></td>
+        <td class="cell-dur"><span class="dur-badge">8s</span></td>
+        <td class="cell-status"><span class="status status-draft">Черновик</span></td>
+      </tr>
+
+      <!-- WEEK 3 -->
+      <tr class="week-row"><td colspan="7"><span class="week-label">Неделя 3 · 15–21 мая</span></td></tr>
+
+      <tr>
+        <td class="cell-num">08</td>
+        <td class="cell-date"><div class="date-main">17 мая</div><div class="date-dow">Вс</div></td>
+        <td class="cell-type"><span class="tag tag-edu">Образовательный</span></td>
+        <td class="cell-hook"><span class="hook-text">Провокация</span></td>
+        <td><div class="topic-title">Лайфхак для ягодиц о котором не говорят — активация</div></td>
+        <td class="cell-dur"><span class="dur-badge">12s</span></td>
+        <td class="cell-status"><span class="status status-draft">Черновик</span></td>
+      </tr>
+
+      <tr>
+        <td class="cell-num">09</td>
+        <td class="cell-date"><div class="date-main">19 мая</div><div class="date-dow">Вт</div></td>
+        <td class="cell-type"><span class="tag tag-aesth">Эстетика</span></td>
+        <td class="cell-hook"><span class="hook-text">Обещание</span></td>
+        <td><div class="topic-title">Месяц работы — тихая трансформация без слов</div></td>
+        <td class="cell-dur"><span class="dur-badge">10s</span></td>
+        <td class="cell-status"><span class="status status-draft">Черновик</span></td>
+      </tr>
+
+      <tr>
+        <td class="cell-num">10</td>
+        <td class="cell-date"><div class="date-main">21 мая</div><div class="date-dow">Чт</div></td>
+        <td class="cell-type"><span class="tag tag-viral">Вирусный</span></td>
+        <td class="cell-hook"><span class="hook-text">Узнай себя</span></td>
+        <td><div class="topic-title">Когда пришла в зал после недельного перерыва</div></td>
+        <td class="cell-dur"><span class="dur-badge">8s</span></td>
+        <td class="cell-status"><span class="status status-draft">Черновик</span></td>
+      </tr>
+
+      <!-- WEEK 4 -->
+      <tr class="week-row"><td colspan="7"><span class="week-label">Неделя 4 · 22–28 мая</span></td></tr>
+
+      <tr>
+        <td class="cell-num">11</td>
+        <td class="cell-date"><div class="date-main">24 мая</div><div class="date-dow">Вс</div></td>
+        <td class="cell-type"><span class="tag tag-relat">Relatable</span></td>
+        <td class="cell-hook"><span class="hook-text">Закулисье</span></td>
+        <td><div class="topic-title">Как выглядит реальная подготовка к тренировке</div></td>
+        <td class="cell-dur"><span class="dur-badge">12s</span></td>
+        <td class="cell-status"><span class="status status-draft">Черновик</span></td>
+      </tr>
+
+      <tr>
+        <td class="cell-num">12</td>
+        <td class="cell-date"><div class="date-main">26 мая</div><div class="date-dow">Вт</div></td>
+        <td class="cell-type"><span class="tag tag-edu">Образовательный</span></td>
+        <td class="cell-hook"><span class="hook-text">Лайфхак</span></td>
+        <td><div class="topic-title">Что есть после тренировки — без занудства</div></td>
+        <td class="cell-dur"><span class="dur-badge">15s</span></td>
+        <td class="cell-status"><span class="status status-draft">Черновик</span></td>
+      </tr>
+
+      <tr>
+        <td class="cell-num">13</td>
+        <td class="cell-date"><div class="date-main">28 мая</div><div class="date-dow">Чт</div></td>
+        <td class="cell-type"><span class="tag tag-viral">Вирусный</span></td>
+        <td class="cell-hook"><span class="hook-text">Триггер-фраза</span></td>
+        <td><div class="topic-title">Она сделала правильный выбор (эстетика + подпись)</div></td>
+        <td class="cell-dur"><span class="dur-badge">8s</span></td>
+        <td class="cell-status"><span class="status status-draft">Черновик</span></td>
+      </tr>
+
+      <!-- WEEK 5 -->
+      <tr class="week-row"><td colspan="7"><span class="week-label">Неделя 5 · 29–31 мая</span></td></tr>
+
+      <tr>
+        <td class="cell-num">14</td>
+        <td class="cell-date"><div class="date-main">30 мая</div><div class="date-dow">Сб</div></td>
+        <td class="cell-type"><span class="tag tag-aesth">Эстетика</span></td>
+        <td class="cell-hook"><span class="hook-text">Настроение</span></td>
+        <td><div class="topic-title">Просто красивый зал — атмосферные кадры без слова</div></td>
+        <td class="cell-dur"><span class="dur-badge">12s</span></td>
+        <td class="cell-status"><span class="status status-draft">Черновик</span></td>
+      </tr>
+
+      <tr>
+        <td class="cell-num">15</td>
+        <td class="cell-date"><div class="date-main">31 мая</div><div class="date-dow">Вс</div></td>
+        <td class="cell-type"><span class="tag tag-motiv">Мотивация</span></td>
+        <td class="cell-hook"><span class="hook-text">Личная история</span></td>
+        <td><div class="topic-title">Год назад vs сейчас — я начала. Вот что изменилось.</div></td>
+        <td class="cell-dur"><span class="dur-badge">15s</span></td>
+        <td class="cell-status"><span class="status status-draft">Черновик</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-note">Обновлено: 26 апреля 2026</div>
+  <div class="footer-note"><span class="footer-dot"></span>bit&pix агент</div>
+</footer>
+
+</body>
+</html>
