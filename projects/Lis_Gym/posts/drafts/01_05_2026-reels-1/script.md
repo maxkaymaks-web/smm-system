@@ -46,11 +46,10 @@
 ## Музыка
 
 **Трек:** Izzamuzzic, Julien Marchal — Shootout
-**Ссылка:** https://open.spotify.com/track/4pTkDIlpFNoeWbahu8pVXW
-**Sped Up версия:** https://open.spotify.com/track/3r44Otr6SVUja3SYsCuhVY
+**Instagram Audio:** https://www.instagram.com/reels/audio/986446991943167/shootout/
 **Почему:** этот трек дал @__alenami__ 780 775 просмотров. Ненавязчивый ритм, не перебивает текст на экране.
 **Альтернатива:** Break My Stride — Matthew Wilder (сейчас в трендах Instagram, апрель 2026)
-https://open.spotify.com/track/1mCsF9Tw4AkIZOjvZbZZdT
+https://www.instagram.com/reels/audio/178869189444059/break-my-stride/
 
 ---
 
@@ -67,7 +66,7 @@ https://open.spotify.com/track/1mCsF9Tw4AkIZOjvZbZZdT
 ## Хэштеги
 
 ```
-#санктпетербург #тренажерка #ягодицы
+#тренажерка #ягодицы #мостик
 ```
 
 ---
@@ -76,4 +75,4 @@ https://open.spotify.com/track/1mCsF9Tw4AkIZOjvZbZZdT
 
 - **Время:** Пт 01 мая, 19:00–20:00
 - **Обложка:** кадр #3 — правильная техника в пике
-- **Геометка:** название зала / Санкт-Петербург
+- **Геометка:** название зала
