@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1080px;
+    height: 1080px;
+    overflow: hidden;
+    background: #1B1A24;
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+  }
+
+  .slide {
+    position: relative;
+    width: 1080px;
+    height: 1080px;
+    overflow: hidden;
+  }
+
+  /* Photo background */
+  .photo-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('file:///home/user/smm-system/projects/Bioprintex_Limatex/posts/inbox/23_04_2026-konferentsiya/photo_02.jpg');
+    background-size: cover;
+    background-position: center center;
+  }
+
+  /* Heavy dark overlay — photo becomes texture */
+  .overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(27,26,36,0.80);
+  }
+
+  /* Grain overlay */
+  .grain {
+    position: absolute;
+    inset: 0;
+    opacity: 0.04;
+  }
+
+  /* Pill tags */
+  .pill-left {
+    position: absolute;
+    top: 60px;
+    left: 80px;
+    border: 1.5px solid #418EF1;
+    color: #418EF1;
+    border-radius: 40px;
+    padding: 10px 24px;
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .pill-right {
+    position: absolute;
+    top: 60px;
+    right: 80px;
+    border: 1.5px solid #418EF1;
+    color: #418EF1;
+    border-radius: 40px;
+    padding: 10px 24px;
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* Section headline */
+  .section-headline {
+    position: absolute;
+    top: 140px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 40px;
+    font-weight: 800;
+    color: #5BADF7;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  /* Divider under headline */
+  .headline-divider {
+    position: absolute;
+    top: 200px;
+    left: 80px;
+    right: 80px;
+    height: 1px;
+    background: rgba(65,142,241,0.3);
+  }
+
+  /* Achievement grid - 2x2 layout */
+  .grid {
+    position: absolute;
+    top: 240px;
+    left: 80px;
+    right: 80px;
+    bottom: 100px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 1px;
+  }
+
+  /* Grid dividers */
+  .grid-v-line {
+    position: absolute;
+    top: 240px;
+    bottom: 100px;
+    left: 50%;
+    width: 1px;
+    background: rgba(255,255,255,0.15);
+  }
+
+  .grid-h-line {
+    position: absolute;
+    top: 50%;
+    left: 80px;
+    right: 80px;
+    height: 1px;
+    background: rgba(255,255,255,0.15);
+    margin-top: 70px; /* optical center */
+  }
+
+  /* Achievement block */
+  .achievement {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 50px;
+    text-align: center;
+  }
+
+  .achievement-icon {
+    margin-bottom: 16px;
+    opacity: 0.85;
+  }
+
+  .achievement-number {
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 52px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+
+  .achievement-number.green { color: #00AF50; }
+  .achievement-number.blue  { color: #5BADF7; }
+
+  .achievement-label {
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+  }
+
+  .achievement-sublabel {
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.05em;
+    margin-top: 4px;
+    text-transform: uppercase;
+  }
+
+  /* Logo mark */
+  .logo-mark {
+    position: absolute;
+    bottom: 60px;
+    right: 80px;
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #418EF1;
+    letter-spacing: 0.12em;
+    opacity: 0.7;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+
+  <!-- Photo background (Skolkovo award photo) -->
+  <div class="photo-bg"></div>
+
+  <!-- Heavy overlay — photo as dark texture -->
+  <div class="overlay"></div>
+
+  <!-- Grain -->
+  <svg class="grain" xmlns="http://www.w3.org/2000/svg">
+    <filter id="grain-filter">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+    <rect width="100%" height="100%" filter="url(#grain-filter)" opacity="1"/>
+  </svg>
+
+  <!-- Pill tags -->
+  <div class="pill-left">БИОПРИНТЕХ</div>
+  <div class="pill-right">КОМАНДА</div>
+
+  <!-- Section heading -->
+  <div class="section-headline">ДОСТИЖЕНИЯ</div>
+  <div class="headline-divider"></div>
+
+  <!-- Grid dividers -->
+  <div class="grid-v-line"></div>
+  <div class="grid-h-line"></div>
+
+  <!-- Achievement blocks - 2x2 grid -->
+  <div class="grid">
+
+    <!-- Block 1: Skolkovo -->
+    <div class="achievement">
+      <svg class="achievement-icon" width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22 4L26.5 15.5H39L29 23L32.5 35L22 28L11.5 35L15 23L5 15.5H17.5L22 4Z" stroke="#00AF50" stroke-width="1.5" fill="none"/>
+      </svg>
+      <div class="achievement-number green">2&nbsp;000&nbsp;000&nbsp;₽</div>
+      <div class="achievement-label">Победители акселератора<br>технологических стартапов</div>
+      <div class="achievement-sublabel">Сколково · ХМАО-Югра · 2021</div>
+    </div>
+
+    <!-- Block 2: Startup Village -->
+    <div class="achievement">
+      <svg class="achievement-icon" width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="22" cy="18" r="8" stroke="#5BADF7" stroke-width="1.5" fill="none"/>
+        <path d="M22 26 C22 26 10 34 10 40 H34 C34 34 22 26 22 26Z" stroke="#5BADF7" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+      </svg>
+      <div class="achievement-number blue">STARTUP<br>VILLAGE</div>
+      <div class="achievement-label">Представили прототип<br>аэратора экспертному сообществу</div>
+      <div class="achievement-sublabel">Международный форум</div>
+    </div>
+
+    <!-- Block 3: innofood -->
+    <div class="achievement">
+      <svg class="achievement-icon" width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="6" y="8" width="32" height="28" rx="3" stroke="#5BADF7" stroke-width="1.5" fill="none"/>
+        <line x1="14" y1="20" x2="30" y2="20" stroke="#5BADF7" stroke-width="1.5"/>
+        <line x1="14" y1="27" x2="24" y2="27" stroke="#5BADF7" stroke-width="1.5"/>
+        <path d="M14 8 V 4 M30 8 V 4" stroke="#5BADF7" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <div class="achievement-number blue">innofood</div>
+      <div class="achievement-label">Лауреаты конференции<br>благодарственное письмо</div>
+      <div class="achievement-sublabel">Инновации в пищевой отрасли</div>
+    </div>
+
+    <!-- Block 4: Patent -->
+    <div class="achievement">
+      <svg class="achievement-icon" width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22 4 L36 10 L36 24 C36 32 22 40 22 40 C22 40 8 32 8 24 L8 10 Z" stroke="#00AF50" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+        <path d="M16 22 L20 26 L28 18" stroke="#00AF50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="achievement-number green">ПАТЕНТ</div>
+      <div class="achievement-label">Патентная защита<br>разработок компании</div>
+      <div class="achievement-sublabel">Интеллектуальная собственность</div>
+    </div>
+
+  </div>
+
+  <!-- Logo mark -->
+  <div class="logo-mark">БП</div>
+
+</div>
+</body>
+</html>

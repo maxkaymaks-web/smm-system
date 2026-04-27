@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1080px;
+    height: 1080px;
+    overflow: hidden;
+    background: #1B1A24;
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+  }
+
+  .slide {
+    position: relative;
+    width: 1080px;
+    height: 1080px;
+    background: #1B1A24;
+    overflow: hidden;
+  }
+
+  /* PCB-style background via SVG pattern */
+  .pcb-bg {
+    position: absolute;
+    inset: 0;
+    background-color: #1B1A24;
+    background-image:
+      /* Horizontal traces */
+      linear-gradient(90deg, transparent 49%, rgba(4,79,186,0.18) 49%, rgba(4,79,186,0.18) 51%, transparent 51%),
+      linear-gradient(90deg, transparent 24%, rgba(65,142,241,0.1) 24%, rgba(65,142,241,0.1) 26%, transparent 26%),
+      linear-gradient(90deg, transparent 74%, rgba(65,142,241,0.1) 74%, rgba(65,142,241,0.1) 76%, transparent 76%),
+      /* Vertical traces */
+      linear-gradient(0deg, transparent 49%, rgba(4,79,186,0.14) 49%, rgba(4,79,186,0.14) 51%, transparent 51%),
+      linear-gradient(0deg, transparent 24%, rgba(65,142,241,0.08) 24%, rgba(65,142,241,0.08) 26%, transparent 26%),
+      linear-gradient(0deg, transparent 74%, rgba(65,142,241,0.08) 74%, rgba(65,142,241,0.08) 76%, transparent 76%);
+    background-size: 120px 120px;
+  }
+
+  /* SVG circuit grid overlay */
+  .circuit-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.22;
+  }
+
+  /* Glowing center radial */
+  .glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(4,79,186,0.22) 0%, rgba(27,26,36,0) 70%);
+  }
+
+  /* Grain overlay */
+  .grain {
+    position: absolute;
+    inset: 0;
+    opacity: 0.04;
+  }
+
+  /* Ghost watermark */
+  .ghost-watermark {
+    position: absolute;
+    bottom: 40px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 200px;
+    font-weight: 800;
+    color: white;
+    opacity: 0.07;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+    line-height: 1;
+  }
+
+  /* Pill tags */
+  .pill-left {
+    position: absolute;
+    top: 60px;
+    left: 80px;
+    border: 1.5px solid #418EF1;
+    color: #418EF1;
+    border-radius: 40px;
+    padding: 10px 24px;
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .pill-right {
+    position: absolute;
+    top: 60px;
+    right: 80px;
+    border: 1.5px solid #418EF1;
+    color: #418EF1;
+    border-radius: 40px;
+    padding: 10px 24px;
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* Main content center */
+  .content-center {
+    position: absolute;
+    top: 50%;
+    left: 80px;
+    right: 80px;
+    transform: translateY(-50%);
+    text-align: center;
+  }
+
+  .headline {
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 72px;
+    font-weight: 800;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    line-height: 1.05;
+    letter-spacing: 0.02em;
+    margin-bottom: 28px;
+  }
+
+  .divider-line {
+    width: 100%;
+    height: 1px;
+    background: #044FBA;
+    margin: 0 auto 28px auto;
+  }
+
+  .subtitle {
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: #5BADF7;
+    letter-spacing: 0.08em;
+    line-height: 1.5;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  /* Logo mark bottom-right */
+  .logo-mark {
+    position: absolute;
+    bottom: 60px;
+    right: 80px;
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #418EF1;
+    letter-spacing: 0.12em;
+    opacity: 0.7;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+
+  <!-- PCB-style CSS background -->
+  <div class="pcb-bg"></div>
+
+  <!-- SVG circuit board decorative elements -->
+  <svg class="circuit-svg" viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg">
+    <!-- Horizontal traces -->
+    <line x1="0" y1="200" x2="340" y2="200" stroke="#044FBA" stroke-width="1.5"/>
+    <line x1="400" y1="200" x2="600" y2="200" stroke="#044FBA" stroke-width="1"/>
+    <line x1="700" y1="200" x2="1080" y2="200" stroke="#044FBA" stroke-width="1.5"/>
+    <line x1="0" y1="880" x2="350" y2="880" stroke="#044FBA" stroke-width="1.5"/>
+    <line x1="450" y1="880" x2="700" y2="880" stroke="#044FBA" stroke-width="1"/>
+    <line x1="800" y1="880" x2="1080" y2="880" stroke="#044FBA" stroke-width="1.5"/>
+
+    <!-- Vertical traces -->
+    <line x1="200" y1="0" x2="200" y2="300" stroke="#418EF1" stroke-width="1"/>
+    <line x1="200" y1="400" x2="200" y2="1080" stroke="#418EF1" stroke-width="1"/>
+    <line x1="880" y1="0" x2="880" y2="350" stroke="#418EF1" stroke-width="1"/>
+    <line x1="880" y1="500" x2="880" y2="1080" stroke="#418EF1" stroke-width="1"/>
+
+    <!-- Corner circuit pads -->
+    <circle cx="200" cy="200" r="6" fill="none" stroke="#418EF1" stroke-width="1.5"/>
+    <circle cx="200" cy="200" r="3" fill="#418EF1" opacity="0.5"/>
+    <circle cx="880" cy="200" r="6" fill="none" stroke="#418EF1" stroke-width="1.5"/>
+    <circle cx="880" cy="200" r="3" fill="#418EF1" opacity="0.5"/>
+    <circle cx="200" cy="880" r="6" fill="none" stroke="#418EF1" stroke-width="1.5"/>
+    <circle cx="200" cy="880" r="3" fill="#418EF1" opacity="0.5"/>
+    <circle cx="880" cy="880" r="6" fill="none" stroke="#418EF1" stroke-width="1.5"/>
+    <circle cx="880" cy="880" r="3" fill="#418EF1" opacity="0.5"/>
+
+    <!-- Central circuit element -->
+    <rect x="460" y="460" width="160" height="160" fill="none" stroke="#044FBA" stroke-width="1" opacity="0.4"/>
+    <rect x="480" y="480" width="120" height="120" fill="none" stroke="#418EF1" stroke-width="0.5" opacity="0.3"/>
+
+    <!-- Cross traces from center -->
+    <line x1="540" y1="0" x2="540" y2="420" stroke="#044FBA" stroke-width="0.8" opacity="0.3"/>
+    <line x1="540" y1="660" x2="540" y2="1080" stroke="#044FBA" stroke-width="0.8" opacity="0.3"/>
+    <line x1="0" y1="540" x2="420" y2="540" stroke="#044FBA" stroke-width="0.8" opacity="0.3"/>
+    <line x1="660" y1="540" x2="1080" y2="540" stroke="#044FBA" stroke-width="0.8" opacity="0.3"/>
+
+    <!-- Small pads scattered -->
+    <circle cx="350" cy="350" r="4" fill="none" stroke="#5BADF7" stroke-width="1" opacity="0.4"/>
+    <circle cx="730" cy="350" r="4" fill="none" stroke="#5BADF7" stroke-width="1" opacity="0.4"/>
+    <circle cx="350" cy="730" r="4" fill="none" stroke="#5BADF7" stroke-width="1" opacity="0.4"/>
+    <circle cx="730" cy="730" r="4" fill="none" stroke="#5BADF7" stroke-width="1" opacity="0.4"/>
+
+    <!-- Top corner decorative traces -->
+    <path d="M 0 120 L 80 120 L 120 80 L 120 0" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.5"/>
+    <path d="M 1080 120 L 1000 120 L 960 80 L 960 0" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.5"/>
+    <path d="M 0 960 L 80 960 L 120 1000 L 120 1080" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.5"/>
+    <path d="M 1080 960 L 1000 960 L 960 1000 L 960 1080" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.5"/>
+  </svg>
+
+  <!-- Radial glow -->
+  <div class="glow"></div>
+
+  <!-- Grain overlay -->
+  <svg class="grain" xmlns="http://www.w3.org/2000/svg">
+    <filter id="grain-filter">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+    <rect width="100%" height="100%" filter="url(#grain-filter)" opacity="1"/>
+  </svg>
+
+  <!-- Ghost watermark -->
+  <div class="ghost-watermark">БИОПРИНТЕХ</div>
+
+  <!-- Pill tags -->
+  <div class="pill-left">БИОПРИНТЕХ</div>
+  <div class="pill-right">КОМАНДА</div>
+
+  <!-- Main content -->
+  <div class="content-center">
+    <div class="headline">Аэрация,<br>которая считается<br>в рублях — не в словах</div>
+    <div class="divider-line"></div>
+    <div class="subtitle">Биопринтех — разработчик газонасыщающих технологий<br>для аквакультуры и промышленных стоков</div>
+  </div>
+
+  <!-- Logo mark -->
+  <div class="logo-mark">БП</div>
+
+</div>
+</body>
+</html>

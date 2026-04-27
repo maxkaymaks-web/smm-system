@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1080px;
+    height: 1080px;
+    overflow: hidden;
+    background: #1B1A24;
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+  }
+
+  .slide {
+    position: relative;
+    width: 1080px;
+    height: 1080px;
+    overflow: hidden;
+  }
+
+  /* Full-bleed photo background */
+  .photo-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('file:///home/user/smm-system/projects/Bioprintex_Limatex/posts/inbox/23_04_2026-konferentsiya/photo_04.jpg');
+    background-size: cover;
+    background-position: center top;
+  }
+
+  /* Gradient overlay from bottom */
+  .overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(27,26,36,0.15) 0%,
+      rgba(27,26,36,0) 35%,
+      rgba(27,26,36,0.75) 65%,
+      rgba(27,26,36,0.92) 100%
+    );
+  }
+
+  /* Grain overlay */
+  .grain {
+    position: absolute;
+    inset: 0;
+    opacity: 0.04;
+  }
+
+  /* Pill tags */
+  .pill-left {
+    position: absolute;
+    top: 60px;
+    left: 80px;
+    border: 1.5px solid #418EF1;
+    color: #418EF1;
+    border-radius: 40px;
+    padding: 10px 24px;
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .pill-right {
+    position: absolute;
+    top: 60px;
+    right: 80px;
+    border: 1.5px solid #418EF1;
+    color: #418EF1;
+    border-radius: 40px;
+    padding: 10px 24px;
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* Text block at bottom */
+  .text-block {
+    position: absolute;
+    bottom: 80px;
+    left: 80px;
+    right: 80px;
+  }
+
+  /* Section label */
+  .section-label {
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #5BADF7;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+
+  /* Founder block */
+  .founder {
+    margin-bottom: 0;
+  }
+
+  .founder-name {
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    color: #FFFFFF;
+    letter-spacing: 0.01em;
+    line-height: 1.1;
+  }
+
+  .founder-role {
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: #5BADF7;
+    letter-spacing: 0.05em;
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+
+  /* Green separator */
+  .separator {
+    width: 60px;
+    height: 2px;
+    background: #00AF50;
+    margin: 24px 0;
+  }
+
+  /* Caption text */
+  .caption {
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.6;
+    margin-top: 24px;
+    max-width: 760px;
+  }
+
+  /* Ghost watermark */
+  .ghost-watermark {
+    position: absolute;
+    bottom: 40px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 180px;
+    font-weight: 800;
+    color: white;
+    opacity: 0.05;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+    line-height: 1;
+  }
+
+  /* Logo mark */
+  .logo-mark {
+    position: absolute;
+    bottom: 60px;
+    right: 80px;
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #418EF1;
+    letter-spacing: 0.12em;
+    opacity: 0.7;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+
+  <!-- Full-bleed photo -->
+  <div class="photo-bg"></div>
+
+  <!-- Dark gradient overlay -->
+  <div class="overlay"></div>
+
+  <!-- Grain -->
+  <svg class="grain" xmlns="http://www.w3.org/2000/svg">
+    <filter id="grain-filter">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+    <rect width="100%" height="100%" filter="url(#grain-filter)" opacity="1"/>
+  </svg>
+
+  <!-- Pill tags -->
+  <div class="pill-left">БИОПРИНТЕХ</div>
+  <div class="pill-right">КОМАНДА</div>
+
+  <!-- Text content at bottom -->
+  <div class="text-block">
+    <div class="section-label">Основатели</div>
+
+    <div class="founder">
+      <div class="founder-name">Анастасия</div>
+      <div class="founder-role">Технолог-учёный · разработка составов газонасыщения</div>
+    </div>
+
+    <div class="separator"></div>
+
+    <div class="founder">
+      <div class="founder-name">Валерий</div>
+      <div class="founder-role">Инженер-конструктор · аппаратная реализация</div>
+    </div>
+
+    <div class="caption">Вместе создали аэратор, который прошёл путь от прототипа до промышленного применения.</div>
+  </div>
+
+</div>
+</body>
+</html>

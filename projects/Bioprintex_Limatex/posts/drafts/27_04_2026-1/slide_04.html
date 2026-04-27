@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1080px;
+    height: 1080px;
+    overflow: hidden;
+    background: #1B1A24;
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+  }
+
+  .slide {
+    position: relative;
+    width: 1080px;
+    height: 1080px;
+    overflow: hidden;
+  }
+
+  /* Full-bleed photo background */
+  .photo-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('file:///home/user/smm-system/projects/Bioprintex_Limatex/posts/inbox/23_04_2026-konferentsiya/photo_01.jpg');
+    background-size: cover;
+    background-position: center center;
+  }
+
+  /* Gradient overlay */
+  .overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(27,26,36,0.2) 0%,
+      rgba(27,26,36,0) 28%,
+      rgba(27,26,36,0.85) 60%,
+      rgba(27,26,36,0.97) 100%
+    );
+  }
+
+  /* Grain overlay */
+  .grain {
+    position: absolute;
+    inset: 0;
+    opacity: 0.04;
+  }
+
+  /* Pill tags */
+  .pill-left {
+    position: absolute;
+    top: 60px;
+    left: 80px;
+    border: 1.5px solid #418EF1;
+    color: #418EF1;
+    border-radius: 40px;
+    padding: 10px 24px;
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .pill-right {
+    position: absolute;
+    top: 60px;
+    right: 80px;
+    border: 1.5px solid #418EF1;
+    color: #418EF1;
+    border-radius: 40px;
+    padding: 10px 24px;
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* Bottom floating text block */
+  .text-block {
+    position: absolute;
+    bottom: 80px;
+    left: 80px;
+    right: 80px;
+  }
+
+  /* Section label */
+  .section-label {
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #5BADF7;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+
+  /* Product headline */
+  .product-headline {
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 24px;
+  }
+
+  /* Two products side by side */
+  .products {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
+  }
+
+  .product-card {
+    border-left: 2px solid #044FBA;
+    padding-left: 16px;
+  }
+
+  .product-name {
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: #5BADF7;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+  }
+
+  .product-scope {
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.55);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+  }
+
+  .product-stat {
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.6;
+  }
+
+  .stat-accent {
+    color: #00AF50;
+    font-weight: 700;
+  }
+
+  /* Divider line */
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: rgba(4,79,186,0.5);
+    margin-bottom: 28px;
+  }
+
+  /* CTA row */
+  .cta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .cta-text {
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.5;
+    max-width: 600px;
+  }
+
+  .cta-button {
+    border: 1.5px solid #00AF50;
+    color: #00AF50;
+    padding: 12px 32px;
+    border-radius: 4px;
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-left: 24px;
+  }
+
+  /* Logo mark */
+  .logo-mark {
+    position: absolute;
+    top: 60px;
+    right: 80px;
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #418EF1;
+    letter-spacing: 0.12em;
+    opacity: 0.7;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+
+  <!-- Full-bleed photo (exhibition booth with aerator) -->
+  <div class="photo-bg"></div>
+
+  <!-- Gradient overlay -->
+  <div class="overlay"></div>
+
+  <!-- Grain -->
+  <svg class="grain" xmlns="http://www.w3.org/2000/svg">
+    <filter id="grain-filter">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+    <rect width="100%" height="100%" filter="url(#grain-filter)" opacity="1"/>
+  </svg>
+
+  <!-- Pill tags -->
+  <div class="pill-left">БИОПРИНТЕХ</div>
+  <!-- Note: logo-mark overlaps pill-right position — using only pill-left here -->
+
+  <!-- Text block at bottom -->
+  <div class="text-block">
+
+    <div class="section-label">Технология</div>
+    <div class="product-headline">Два продукта — две отрасли</div>
+
+    <div class="products">
+      <!-- Aerator ZG -->
+      <div class="product-card">
+        <div class="product-name">Аэратор ЗГ</div>
+        <div class="product-scope">Аквакультура</div>
+        <div class="product-stat">
+          Плотность посадки рыбы <span class="stat-accent">×3</span><br>
+          Энергозатраты <span class="stat-accent">−25%</span><br>
+          Кислород <span class="stat-accent">0,8 руб/м³</span> vs 3–5 руб<br>
+          Окупаемость — <span class="stat-accent">18 мес.</span>
+        </div>
+      </div>
+
+      <!-- Aerator MG -->
+      <div class="product-card">
+        <div class="product-name">Аэратор МГ</div>
+        <div class="product-scope">Промышленные стоки</div>
+        <div class="product-stat">
+          Очистка <span class="stat-accent">до 95%</span><br>
+          Оборотное водоснабжение <span class="stat-accent">+50%</span><br>
+          Экологические платежи <span class="stat-accent">−20%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="cta-row">
+      <div class="cta-text">Есть задача по газонасыщению — обсудим параметры вашего процесса</div>
+      <div class="cta-button">Напишите нам</div>
+    </div>
+
+  </div>
+
+</div>
+</body>
+</html>
