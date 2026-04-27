@@ -115,6 +115,42 @@ clean(5), performance(2), engineered(1), innovation(1), system(1)
 
 ## Автообучение (новые — сверху)
 
+### Роскошь и Премиум — авто-обучение 27.04.2026
+> Аккаунты: @bottegaveneta, @dior, @chanelofficial | Проанализировано изображений: 6
+
+#### Изученные посты
+  - **@diorbeauty** (166,318 likes) — Luxury | Fair skin tones, soft beige, natural dark hair, neutral mood | Rule of thirds, subject in the right third, ample negative s
+  - **@chanelofficial** (90,308 likes) — Luxury | Deep navy blue, slate grey, subtle electric blue, moody and  | Rule of thirds (left), substantial negative space, minimal s
+  - **@diorbeauty** (80,882 likes) — Luxury | Soft beige, stark white, pale pink, deep black; ethereal and | Centered subject, ample negative space, ruled by vertical li
+  - **@chanelofficial** (53,088 likes) — luxury | deep charcoal black, cool grey, subtle silver tones, moody a | rule of thirds, subject slightly off-center, significant neg
+  - **@chanelofficial** (51,914 likes) — Luxury | Deep Black, Soft Ivory, Subtle Blush Pink, Glimmering Gold,  | Rule of thirds, subject centered slightly off-axis, ample ne
+  - **@chanelofficial** (35,612 likes) — Editorial | Deep grays, black, and white — evoking a sophisticated, mono | Rule of thirds for placement of figure, ample negative space
+
+#### Визуальные паттерны (синтез)
+1. Тёмные, глубокие фоны
+2. Акценты золотого цвета (заметны в Post 5)
+3. Крупный шрифт с засечками (CAPS) (предполагается для текстовых элементов, хотя в этих постах текст отсутствует, стиль предполагает)
+4. Значительное количество пустого пространства (негативное пространство)
+5. Строгая, минималистичная эстетика
+
+#### Цветовая палитра стиля
+Доминируют тёмные, глубокие оттенки (чёрный, темно-синий, угольный серый) в сочетании с нейтральными (бежевый, белый, слоновая кость), акцентированные вспышками золота.
+
+#### Правила композиции
+Правило третей часто используется для размещения основного объекта, с большим количеством негативного пространства, создающего ощущение простора и фокуса.
+
+#### Текстура и свет
+Текстуры варьируются от гладких и чистых до зернистых и граненых, часто с использованием мягкого студийного или драматичного бокового освещения для создания контраста и глубины.
+
+#### fal.ai промпты для стиля (применять при генерации)
+  - `A luxurious portrait, subject on a dark background, with subtle gold accents, ample negative space, and a sophisticated serif font caption.`
+  - `High fashion editorial, a model against a rich dark backdrop, elegant pose, highlighted by soft light and surrounded by expansive white space, gold details.`
+  - `A still life of a luxury product, presented on a deep, dark velvet surface, accented with gleaming gold elements, emphasizing negative space and refined aesthetics.`
+
+#### Дизайн-фокус
+тёмные фоны, gold accent, крупный serif CAPS, пустое пространство как роскошь
+---
+
 ### Промпт-инжиниринг fal.ai — авто-обучение 27.04.2026
 
 #### Источники проверены
