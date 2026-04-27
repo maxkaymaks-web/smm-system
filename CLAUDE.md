@@ -68,3 +68,4 @@ git push origin main
 
 - `projects/Bioprintex_Limatex/` — B2B, промышленная экология
 - `projects/BeautyCulture_DariaSopkina/` — Студия красоты «Культура», СПб
+- `projects/Lis_Gym/` — Фитнес-зал, Instagram Reels, СПб
