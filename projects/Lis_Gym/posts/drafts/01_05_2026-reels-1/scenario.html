@@ -12,7 +12,6 @@
 }
 
 @page { size: A4 portrait; margin: 10mm 12mm; }
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
@@ -29,7 +28,6 @@
 }
 
 html { background: #e8e8e8; }
-
 body {
   font-family: var(--font);
   background: var(--bg);
@@ -41,339 +39,165 @@ body {
   -webkit-font-smoothing: antialiased;
   border-radius: 4px;
 }
-
 @media print {
   html { background: var(--bg); }
   body { margin: 0; border-radius: 0; padding: 0 28px; width: 100%; }
 }
 
-/* ── HEADER ── */
+/* HEADER */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding-bottom: 24px;
+  padding-bottom: 22px;
   border-bottom: 2px solid var(--text);
-  margin-bottom: 24px;
-}
-.header-label {
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 7px;
-}
-.header-title {
-  font-size: 24px;
-  font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -0.4px;
-  margin-bottom: 6px;
-}
-.header-title .accent { color: var(--accent); }
-.header-sub { font-size: 11.5px; color: var(--muted); }
-.header-logo img { height: 48px; }
-
-/* ── BADGES ── */
-.badges-row {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
   margin-bottom: 22px;
 }
+.header-label {
+  font-size: 9px; font-weight: 600; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 7px;
+}
+.header-title {
+  font-size: 22px; font-weight: 800; line-height: 1.2;
+  letter-spacing: -0.4px; margin-bottom: 5px;
+}
+.header-title .num { color: var(--accent); }
+.header-sub { font-size: 11px; color: var(--muted); }
+.header-logo img { height: 46px; }
+
+/* BADGES */
+.badges { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
 .badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 6px 13px;
-  border-radius: var(--r-pill);
-  border: 1.5px solid var(--border);
-  background: var(--bg-alt);
-  font-size: 11px;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 12px; border-radius: var(--r-pill);
+  border: 1.5px solid var(--border); background: var(--bg-alt); font-size: 11px;
 }
 .badge-label {
-  font-size: 8.5px;
-  font-weight: 700;
-  letter-spacing: 1.8px;
-  text-transform: uppercase;
-  color: var(--muted);
+  font-size: 8px; font-weight: 700; letter-spacing: 1.8px;
+  text-transform: uppercase; color: var(--muted);
 }
 .badge-value { font-weight: 700; }
-.badge.accent-badge {
-  border-color: rgba(255,30,30,0.25);
-  background: rgba(255,30,30,0.04);
-}
-.badge.accent-badge .badge-value { color: var(--accent); }
+.badge.red { border-color: rgba(255,30,30,0.2); background: rgba(255,30,30,0.03); }
+.badge.red .badge-value { color: var(--accent); }
 .badge a { color: inherit; text-decoration: none; }
 .badge a:hover { text-decoration: underline; }
 
-/* ── SECTION TITLE ── */
-.section-title {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 10px;
-  margin-top: 22px;
+/* SECTION TITLE */
+.stitle {
+  font-size: 9px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted);
+  margin-top: 22px; margin-bottom: 10px;
 }
 
-/* ── HOOK BLOCK ── */
-.hook-block {
+/* HOOK */
+.hook {
   background: rgba(255,30,30,0.03);
-  border: 1.5px solid rgba(255,30,30,0.2);
-  border-radius: var(--r);
-  padding: 18px 20px;
-  margin-bottom: 4px;
+  border: 1.5px solid rgba(255,30,30,0.18);
+  border-radius: var(--r); padding: 16px 20px;
 }
 .hook-type {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 8px;
+  font-size: 8.5px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 7px;
 }
 .hook-text {
-  font-size: 19px;
-  font-weight: 800;
-  line-height: 1.25;
-  letter-spacing: -0.3px;
-  margin-bottom: 12px;
+  font-size: 20px; font-weight: 800; line-height: 1.2;
+  letter-spacing: -0.3px; margin-bottom: 10px;
 }
-.hook-meta {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-.hook-meta-item { font-size: 11.5px; color: var(--muted); }
-.hook-meta-item strong { color: var(--text); font-weight: 600; }
+.hook-row { display: flex; gap: 24px; }
+.hook-item { font-size: 11.5px; color: var(--muted); }
+.hook-item strong { color: var(--text); font-weight: 600; }
 
-/* ── STORYBOARD ── */
-.storyboard { margin-top: 4px; }
+/* STORYBOARD */
 .shot {
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-  padding: 13px 0;
-  border-bottom: 1px solid var(--border);
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 14px 0; border-bottom: 1px solid var(--border);
 }
 .shot:last-child { border-bottom: none; }
 .shot-num {
-  width: 28px;
-  height: 28px;
-  background: var(--text);
-  color: #fff;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  font-weight: 800;
-  flex-shrink: 0;
-  margin-top: 1px;
+  width: 28px; height: 28px; background: var(--text); color: #fff;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; flex-shrink: 0; margin-top: 1px;
 }
 .shot-body { flex: 1; }
 .shot-time {
-  font-size: 9.5px;
-  font-weight: 700;
-  color: var(--accent);
-  letter-spacing: 0.5px;
-  margin-bottom: 3px;
+  font-size: 9px; font-weight: 700; color: var(--accent);
+  letter-spacing: 0.5px; margin-bottom: 4px;
 }
-.shot-visual {
-  font-size: 12.5px;
-  font-weight: 600;
-  line-height: 1.35;
-  margin-bottom: 5px;
+.shot-action {
+  font-size: 12.5px; font-weight: 600; line-height: 1.4; margin-bottom: 8px;
 }
-.shot-meta {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
+.shot-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.shot-tag {
+  font-size: 10.5px; padding: 3px 9px; border-radius: 4px;
+  border: 1px solid var(--border); background: var(--bg-alt); color: var(--muted);
 }
-.shot-meta-item { font-size: 11px; color: var(--muted); }
-.shot-meta-item strong { color: var(--text); font-weight: 600; }
+.shot-tag strong { color: var(--text); font-weight: 600; font-size: 9px;
+  text-transform: uppercase; letter-spacing: 1px; margin-right: 4px; }
 .shot-overlay {
-  display: inline-block;
-  background: rgba(11,11,11,0.06);
-  border-radius: 4px;
-  padding: 2px 7px;
-  font-size: 11px;
-  font-weight: 700;
-  margin-top: 5px;
-  font-family: monospace;
+  display: inline-block; background: var(--text); color: #fff;
+  border-radius: 4px; padding: 3px 9px; font-size: 11px; font-weight: 700;
+  margin-top: 7px; font-family: monospace; letter-spacing: 0;
 }
+.shot-tag.cta { background: rgba(255,30,30,0.05); border-color: rgba(255,30,30,0.2); }
+.shot-tag.cta strong { color: var(--accent); }
 
-/* ── HOW GRID ── */
+/* HOW GRID */
 .how-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1px;
-  background: var(--border);
-  border-radius: var(--r);
-  overflow: hidden;
-  margin-top: 4px;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1px; background: var(--border); border-radius: var(--r); overflow: hidden;
 }
-.how-cell {
-  background: var(--bg);
-  padding: 13px 16px;
-}
+.how-cell { background: var(--bg); padding: 12px 16px; }
 .how-cell.full { grid-column: 1 / -1; }
 .how-label {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 4px;
+  font-size: 8.5px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 4px;
 }
-.how-value { font-size: 12.5px; font-weight: 500; line-height: 1.4; }
+.how-value { font-size: 12px; font-weight: 500; line-height: 1.45; }
 
-/* ── MUSIC BLOCK ── */
-.music-block {
-  background: var(--bg-alt);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 16px 20px;
-  margin-top: 4px;
+/* MUSIC */
+.music {
+  background: var(--bg-alt); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 16px 20px;
 }
-.music-track {
-  font-size: 15px;
-  font-weight: 800;
-  margin-bottom: 4px;
+.music-name { font-size: 15px; font-weight: 800; margin-bottom: 3px; }
+.music-why { font-size: 11.5px; color: var(--muted); margin-bottom: 10px; line-height: 1.5; }
+.music-links { display: flex; gap: 8px; flex-wrap: wrap; }
+.music-link {
+  font-size: 10.5px; padding: 4px 11px; border-radius: 4px;
+  border: 1px solid var(--border); background: var(--bg); color: var(--muted);
+  text-decoration: none;
 }
-.music-why { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
-.music-alt { font-size: 11.5px; color: var(--muted); }
-.music-alt strong { color: var(--text); }
-.music-options { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
-.music-opt {
-  font-size: 10.5px;
-  padding: 4px 10px;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  background: var(--bg);
-  color: var(--muted);
-}
+.music-link:hover { color: var(--text); }
+.music-alt { font-size: 11.5px; color: var(--muted); margin-top: 12px; }
+.music-alt a { color: var(--text); }
 
-/* ── CAPTION BLOCK ── */
-.caption-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 4px;
-}
+/* CAPTION */
+.caption-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .caption-box {
-  background: var(--bg-alt);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 14px 16px;
+  background: var(--bg-alt); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 14px 16px;
 }
 .caption-label {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 8px;
+  font-size: 8.5px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 8px;
 }
-.caption-text {
-  font-size: 12.5px;
-  line-height: 1.6;
-  white-space: pre-line;
-}
-.hashtag-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 4px;
-}
+.caption-text { font-size: 12.5px; line-height: 1.65; white-space: pre-line; }
+.hashtag-wrap { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
 .hashtag {
-  background: rgba(37,99,235,0.07);
-  color: #1d4ed8;
-  padding: 4px 10px;
-  border-radius: var(--r-pill);
-  font-size: 11px;
-  font-weight: 600;
+  background: rgba(37,99,235,0.07); color: #1d4ed8;
+  padding: 4px 10px; border-radius: var(--r-pill);
+  font-size: 11px; font-weight: 600;
 }
 
-/* ── PUB SETTINGS ── */
-.pub-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1px;
-  background: var(--border);
-  border-radius: var(--r);
-  overflow: hidden;
-  margin-top: 4px;
-}
-
-/* ── CHECKLIST ── */
-.checklist { list-style: none; margin-top: 4px; }
-.checklist li {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 7px 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 12px;
-}
-.checklist li:last-child { border-bottom: none; }
-.check-icon {
-  width: 16px;
-  height: 16px;
-  border-radius: 3px;
-  border: 1.5px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  margin-top: 1px;
-  font-size: 10px;
-}
-.check-icon.done {
-  background: rgba(5,150,105,0.1);
-  border-color: rgba(5,150,105,0.3);
-  color: #065f46;
-}
-
-/* ── ANALOG TABLE ── */
-.analog-table { width: 100%; border-collapse: collapse; font-size: 11.5px; margin-top: 4px; }
-.analog-table th {
-  background: var(--bg-alt);
-  padding: 8px 12px;
-  text-align: left;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--muted);
-  border-bottom: 1px solid var(--border);
-}
-.analog-table td {
-  padding: 9px 12px;
-  border-bottom: 1px solid var(--border);
-  line-height: 1.4;
-}
-.analog-table tr:last-child td { border-bottom: none; }
-
-/* ── FOOTER ── */
+/* FOOTER */
 .footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 28px;
-  padding-top: 16px;
-  border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 26px; padding-top: 16px; border-top: 1px solid var(--border);
 }
 .footer-note { font-size: 10px; color: var(--muted); }
 .footer-dot {
-  width: 6px; height: 6px;
-  background: var(--accent);
-  border-radius: 50%;
-  display: inline-block;
-  margin-right: 6px;
+  width: 6px; height: 6px; background: var(--accent);
+  border-radius: 50%; display: inline-block; margin-right: 6px;
 }
 </style>
 </head>
@@ -381,10 +205,10 @@ body {
 
 <!-- HEADER -->
 <header class="header">
-  <div class="header-left">
+  <div>
     <div class="header-label">Сценарий Reels · lis.gym · bit&pix агент</div>
-    <h1 class="header-title"><span class="accent">#01</span> Почему не чувствуешь ягодицы в мостике</h1>
-    <div class="header-sub">01 мая 2026 · Пятница · Образовательный · 12–14 сек</div>
+    <h1 class="header-title"><span class="num">#01</span> Качаешь ягодицы, но не чувствуешь их?</h1>
+    <div class="header-sub">01 мая 2026 · Пятница · Образовательный · 11–13 сек</div>
   </div>
   <div class="header-logo">
     <img src="../../../../global/brand/logo.png" alt="bit&pix агент">
@@ -392,7 +216,7 @@ body {
 </header>
 
 <!-- BADGES -->
-<div class="badges-row">
+<div class="badges">
   <div class="badge">
     <span class="badge-label">Тип</span>
     <span class="badge-value">Образовательный</span>
@@ -401,106 +225,99 @@ body {
     <span class="badge-label">Хук</span>
     <span class="badge-value">Боль-вопрос</span>
   </div>
-  <div class="badge accent-badge">
+  <div class="badge red">
     <span class="badge-label">Хрон.</span>
-    <span class="badge-value">12–14s</span>
+    <span class="badge-value">11–13s</span>
   </div>
   <div class="badge">
     <span class="badge-label">Аналог</span>
-    <span class="badge-value"><a href="https://www.instagram.com/reel/DUfpULmgrda/" target="_blank">@mari_fittttttttt — 1 534 354 просмотров ↗</a></span>
+    <span class="badge-value">
+      <a href="https://www.instagram.com/reel/DUfpULmgrda/" target="_blank">@mari_fittttttttt — 1 534 354 просмотров ↗</a>
+    </span>
   </div>
 </div>
 
-<!-- IDEA -->
-<div class="section-title">Идея</div>
-<p style="font-size:13px; line-height:1.6; color:var(--muted); margin-bottom:4px;">
-  Самая частая боль ЦА — «качаю ягодицы, но не чувствую их». Разбираем 3 причины: неправильная точка включения, постановка ног и отсутствие пикового сжатия. Зритель узнаёт себя → досматривает → сохраняет.
-</p>
-
 <!-- HOOK -->
-<div class="section-title">Хук — первые 2 секунды</div>
-<div class="hook-block">
+<div class="stitle">Хук — первые 2 секунды</div>
+<div class="hook">
   <div class="hook-type">⚡ Боль-вопрос</div>
   <div class="hook-text">«Качаешь ягодицы, но не чувствуешь их?»</div>
-  <div class="hook-meta">
-    <div class="hook-meta-item"><strong>Визуал:</strong> крупный план ног в исходной позиции мостика, камера сбоку</div>
-    <div class="hook-meta-item"><strong>Аудио:</strong> chill-трек входит мягко, без голоса</div>
+  <div class="hook-row">
+    <div class="hook-item"><strong>Визуал:</strong> крупный план бёдер в исходной позиции мостика, камера сбоку</div>
+    <div class="hook-item"><strong>Аудио:</strong> трек входит с первой секунды</div>
   </div>
 </div>
 
 <!-- STORYBOARD -->
-<div class="section-title">Раскадровка</div>
-<div class="storyboard">
+<div class="stitle">Раскадровка</div>
 
-  <div class="shot">
-    <div class="shot-num">1</div>
-    <div class="shot-body">
-      <div class="shot-time">0 – 2s</div>
-      <div class="shot-visual">Ноги/бёдра лёжа, исходная позиция мостика. Камера сбоку, уровень бёдер.</div>
-      <div class="shot-meta">
-        <div class="shot-meta-item"><strong>Монтаж:</strong> статика, вход трека</div>
-        <div class="shot-meta-item"><strong>Аудио:</strong> трек входит мягко</div>
-      </div>
-      <div class="shot-overlay">«Качаешь ягодицы, но не чувствуешь их?»</div>
+<div class="shot">
+  <div class="shot-num">1</div>
+  <div class="shot-body">
+    <div class="shot-time">0 – 2s</div>
+    <div class="shot-action">Ноги лёжа на полу — исходная позиция мостика. Камера сбоку, уровень бёдер. Никакого движения.</div>
+    <div class="shot-tags">
+      <div class="shot-tag"><strong>монтаж</strong>статика</div>
+      <div class="shot-tag"><strong>аудио</strong>трек входит мягко</div>
     </div>
+    <div class="shot-overlay">«Качаешь ягодицы, но не чувствуешь их?»</div>
   </div>
+</div>
 
-  <div class="shot">
-    <div class="shot-num">2</div>
-    <div class="shot-body">
-      <div class="shot-time">2 – 5s</div>
-      <div class="shot-visual">Ошибка №1: мостик за счёт поясницы — спина дугой, ягодицы не включаются. Красная стрелка «❌ поясница».</div>
-      <div class="shot-meta">
-        <div class="shot-meta-item"><strong>Монтаж:</strong> cut + slow-mo в пике</div>
-        <div class="shot-meta-item"><strong>Аудио:</strong> трек</div>
-      </div>
-      <div class="shot-overlay">«1. Поясница берёт всё на себя»</div>
+<div class="shot">
+  <div class="shot-num">2</div>
+  <div class="shot-body">
+    <div class="shot-time">2 – 5s</div>
+    <div class="shot-action">Мостик с прогибом поясницы — спина дугой, ягодицы не сжаты, быстрый подъём и опускание. Снять сбоку — чтобы виден прогиб спины.</div>
+    <div class="shot-tags">
+      <div class="shot-tag"><strong>монтаж</strong>cut + slow-mo в пике</div>
+      <div class="shot-tag"><strong>аудио</strong>трек</div>
     </div>
+    <div class="shot-overlay">«1. Не сжимаешь ягодицы в верхней точке ❌»</div>
   </div>
+</div>
 
-  <div class="shot">
-    <div class="shot-num">3</div>
-    <div class="shot-body">
-      <div class="shot-time">5 – 8s</div>
-      <div class="shot-visual">Правильно: активация ягодиц снизу, пиковое сжатие наверху, задержка 1 секунду. Зелёная стрелка «✓ ягодицы».</div>
-      <div class="shot-meta">
-        <div class="shot-meta-item"><strong>Монтаж:</strong> slow-mo в точке сжатия</div>
-        <div class="shot-meta-item"><strong>Аудио:</strong> трек</div>
-      </div>
-      <div class="shot-overlay">«Сожми ягодицы в верхней точке — 1 сек»</div>
+<div class="shot">
+  <div class="shot-num">3</div>
+  <div class="shot-body">
+    <div class="shot-time">5 – 8s</div>
+    <div class="shot-action">Тот же мостик — правильно: медленный подъём, задержка 2 сек в пике с видимым напряжением ягодиц, медленный спуск. Сбоку.</div>
+    <div class="shot-tags">
+      <div class="shot-tag"><strong>монтаж</strong>slow-mo на пике (~50%)</div>
+      <div class="shot-tag"><strong>аудио</strong>трек</div>
     </div>
+    <div class="shot-overlay">«Задержись наверху — 2 сек ✓»</div>
   </div>
+</div>
 
-  <div class="shot">
-    <div class="shot-num">4</div>
-    <div class="shot-body">
-      <div class="shot-time">8 – 11s</div>
-      <div class="shot-visual">Ошибка №2: слишком широкие ноги → правильно: ширина таза. Два кадра подряд — неправильно / правильно.</div>
-      <div class="shot-meta">
-        <div class="shot-meta-item"><strong>Монтаж:</strong> cut × 2 быстро</div>
-        <div class="shot-meta-item"><strong>Аудио:</strong> трек</div>
-      </div>
-      <div class="shot-overlay">«2. Постановка ног решает всё» → «Ширина таза = базовая точка»</div>
+<div class="shot">
+  <div class="shot-num">4</div>
+  <div class="shot-body">
+    <div class="shot-time">8 – 10s</div>
+    <div class="shot-action">Ноги слишком широко → срезка → ноги на ширине таза. Два быстрых кадра сверху — разница в постановке должна быть очевидна.</div>
+    <div class="shot-tags">
+      <div class="shot-tag"><strong>монтаж</strong>cut × 2 быстро</div>
+      <div class="shot-tag"><strong>аудио</strong>трек</div>
     </div>
+    <div class="shot-overlay">«2. Постановка ног — ширина таза ✓»</div>
   </div>
+</div>
 
-  <div class="shot">
-    <div class="shot-num">5</div>
-    <div class="shot-body">
-      <div class="shot-time">11 – 14s</div>
-      <div class="shot-visual">Крупно — лицо в камеру, лёгкая улыбка. Неформально, как подруга после тренировки.</div>
-      <div class="shot-meta">
-        <div class="shot-meta-item"><strong>Монтаж:</strong> статика, fade out трека</div>
-        <div class="shot-meta-item"><strong>Аудио:</strong> fade out</div>
-      </div>
-      <div class="shot-overlay">«Попробуй сегодня — и напиши мне потом 😂»</div>
+<div class="shot">
+  <div class="shot-num">5</div>
+  <div class="shot-body">
+    <div class="shot-time">10 – 13s</div>
+    <div class="shot-action">Лицо в камеру крупно, лёгкая улыбка. Неформально — как после тренировки.</div>
+    <div class="shot-tags">
+      <div class="shot-tag"><strong>монтаж</strong>статика, fade out трека</div>
+      <div class="shot-tag cta"><strong>CTA</strong>буст сохранений</div>
     </div>
+    <div class="shot-overlay">«Сохрани чтобы не забыть 📌»</div>
   </div>
-
 </div>
 
 <!-- SHOOTING INSTRUCTIONS -->
-<div class="section-title">Инструкции по съёмке</div>
+<div class="stitle">Инструкции по съёмке</div>
 <div class="how-grid">
   <div class="how-cell">
     <div class="how-label">Ориентация</div>
@@ -508,73 +325,77 @@ body {
   </div>
   <div class="how-cell">
     <div class="how-label">Ракурс</div>
-    <div class="how-value">Сбоку (уровень бёдер) для кадров 1–4. Фронталь крупно — кадр 5.</div>
+    <div class="how-value">Сбоку (кадры 1–4, уровень бёдер). Сверху (кадр 4, постановка ног). Фронт крупно (кадр 5).</div>
   </div>
   <div class="how-cell">
     <div class="how-label">Камера</div>
-    <div class="how-value">Штатив для боковых кадров, из рук — финальный</div>
+    <div class="how-value">Штатив на уровне бёдер — боковые кадры. Из рук — финальный.</div>
   </div>
   <div class="how-cell">
     <div class="how-label">Свет</div>
-    <div class="how-value">Зальное + рядом с окном. Без жёсткого контраста.</div>
+    <div class="how-value">Рядом с окном или под хорошим светильником. Форма бёдер и ягодиц должна читаться чётко.</div>
   </div>
   <div class="how-cell">
     <div class="how-label">Одежда</div>
-    <div class="how-value">Однотонные леггинсы (форма читается чище), спортивный топ</div>
+    <div class="how-value">Однотонные леггинсы (форма тела видна), спортивный топ.</div>
   </div>
   <div class="how-cell">
     <div class="how-label">Монтаж</div>
-    <div class="how-value">Жёсткий cut между ошибкой и правильным. Slow-mo ~50% только в пиковом сжатии.</div>
+    <div class="how-value">Жёсткий cut без переходов. Slow-mo ~50% только в пике. Текст белый с тёмной обводкой, верхняя треть экрана.</div>
   </div>
   <div class="how-cell full">
-    <div class="how-label">Текст / стрелки</div>
-    <div class="how-value">Белый крупный текст с тёмной обводкой, верхняя треть экрана. Красные ❌ и зелёные ✓ стрелки в CapCut или редакторе Reels.</div>
+    <div class="how-label">CTA внутри видео</div>
+    <div class="how-value">Финальный кадр: <strong>«Сохрани чтобы не забыть 📌»</strong> — буст сохранений → буст дистрибуции алгоритмом.</div>
   </div>
 </div>
 
 <!-- MUSIC -->
-<div class="section-title">Музыка</div>
-<div class="music-block">
-  <div class="music-track">🎵 Izzamuzzic — Shootout (или аналог из Gym Phonk 2026)</div>
-  <div class="music-why">Ненавязчивый ритм не отвлекает от текста на экране, создаёт «тренировочное» настроение. Этот трек дал @__alenami__ 780k просмотров.</div>
-  <div class="music-options">
-    <div class="music-opt">Spotify: «Gym Phonk 2026»</div>
-    <div class="music-opt">Instagram: тапнуть трек у @mari_fittttttttt</div>
-    <div class="music-opt">Reels Trending Audio раздел</div>
+<div class="stitle">Музыка</div>
+<div class="music">
+  <div class="music-name">🎵 Izzamuzzic, Julien Marchal — Shootout</div>
+  <div class="music-why">Этот трек принёс @__alenami__ 780 775 просмотров. Ненавязчивый ритм — не перебивает текст на экране, создаёт «тренировочное» настроение.</div>
+  <div class="music-links">
+    <a class="music-link" href="https://open.spotify.com/track/4pTkDIlpFNoeWbahu8pVXW" target="_blank">Spotify — оригинал ↗</a>
+    <a class="music-link" href="https://open.spotify.com/track/3r44Otr6SVUja3SYsCuhVY" target="_blank">Spotify — Sped Up ↗</a>
   </div>
-  <div class="music-alt" style="margin-top:10px;"><strong>Альтернатива:</strong> Original Audio (тишина зала + звук упражнения) — работает у @ventus__florem без трека.</div>
+  <div class="music-alt">
+    <strong>Альтернатива:</strong> Break My Stride — Matthew Wilder (в трендах Instagram апрель 2026) —
+    <a href="https://open.spotify.com/track/1mCsF9Tw4AkIZOjvZbZZdT" target="_blank">Spotify ↗</a>
+  </div>
 </div>
 
 <!-- CAPTION + HASHTAGS -->
-<div class="section-title">Подпись и хэштеги</div>
+<div class="stitle">Подпись и хэштеги</div>
 <div class="caption-grid">
   <div class="caption-box">
-    <div class="caption-label">Подпись · Тест #1 — Короткий комментарий</div>
+    <div class="caption-label">Подпись · Тест #1 — Короткий + TG</div>
     <div class="caption-text">не чувствуешь ягодицы в мостике? скорее всего это 👆
 
-пиши в тг если нужна программа под тебя — ссылка в шапке</div>
+если хочешь программу под себя — пиши в @lisgym</div>
   </div>
   <div class="caption-box">
     <div class="caption-label">Хэштеги (3 шт — тест минимума)</div>
-    <div class="hashtag-list">
+    <div class="hashtag-wrap">
       <span class="hashtag">#санктпетербург</span>
       <span class="hashtag">#тренажерка</span>
       <span class="hashtag">#ягодицы</span>
     </div>
-    <div style="margin-top:12px; font-size:11px; color:var(--muted);">Убрали: #gym #gymgirl #fitness #motivation — конкуренты с 50k+ медианой без них работают лучше</div>
+    <div style="margin-top:10px; font-size:11px; color:var(--muted); line-height:1.5">
+      Убраны generic: #gym #gymgirl #fitness — у конкурентов с 50k+ медианой их нет
+    </div>
   </div>
 </div>
 
 <!-- PUBLICATION -->
-<div class="section-title">Публикация</div>
-<div class="pub-grid">
+<div class="stitle">Публикация</div>
+<div class="how-grid">
   <div class="how-cell">
-    <div class="how-label">День и время</div>
-    <div class="how-value">Пт 01 мая, 19:00–20:00 МСК</div>
+    <div class="how-label">Время</div>
+    <div class="how-value">Пт 01 мая, 19:00–20:00</div>
   </div>
   <div class="how-cell">
     <div class="how-label">Обложка (превью)</div>
-    <div class="how-value">Кадр #3 — правильная техника в пике, текст «✓ ягодицы» виден</div>
+    <div class="how-value">Кадр #3 — правильная техника в пике</div>
   </div>
   <div class="how-cell">
     <div class="how-label">Геометка</div>
@@ -585,52 +406,6 @@ body {
     <div class="how-value">Техника ягодичного мостика — ошибки и как их исправить</div>
   </div>
 </div>
-
-<!-- ANALOG COMPARISON -->
-<div class="section-title">Аналог → адаптация</div>
-<table class="analog-table">
-  <thead>
-    <tr>
-      <th>@mari_fittttttttt (1 534 354 просмотров)</th>
-      <th>@lis.gym (адаптация)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>«5 ошибок в тренировках на ягодицы»</td>
-      <td>3 причины — короче, меньше монтажа для старта</td>
-    </tr>
-    <tr>
-      <td>Нейтральный экспертный тон</td>
-      <td>Голос подруги, финальный кадр в камеру с улыбкой</td>
-    </tr>
-    <tr>
-      <td>Только демонстрация тела</td>
-      <td>Демонстрация + лицо в конце (личный бренд)</td>
-    </tr>
-    <tr>
-      <td>Хэштеги 80% постов</td>
-      <td>Минимум хэштегов — тест без generic</td>
-    </tr>
-    <tr>
-      <td>Подпись 493 символа</td>
-      <td>Короткая подпись — тест формата #1</td>
-    </tr>
-  </tbody>
-</table>
-
-<!-- CHECKLIST -->
-<div class="section-title">Чеклист</div>
-<ul class="checklist">
-  <li><div class="check-icon done">✓</div>Хук работает без звука — текст на экране в первые 2s</li>
-  <li><div class="check-icon done">✓</div>Длина ≤ 15s (цель 12–14s)</li>
-  <li><div class="check-icon done">✓</div>Адаптировано под tone of voice @lis.gym — подруга, без лекций</li>
-  <li><div class="check-icon done">✓</div>CTA ведёт в TG (ссылка в шапке)</li>
-  <li><div class="check-icon done">✓</div>Музыка конкретная — Izzamuzzic или поиск в Reels</li>
-  <li><div class="check-icon done">✓</div>Хэштеги только гео / нишевые</li>
-  <li><div class="check-icon" style="border-color:var(--border)"></div>Снято и смонтировано</li>
-  <li><div class="check-icon" style="border-color:var(--border)"></div>Проверено и загружено</li>
-</ul>
 
 <!-- FOOTER -->
 <footer class="footer">
