@@ -17,6 +17,6 @@
     "puppeteer": "^24.41.0"
   },
   "devDependencies": {
-    "@fal-ai/client": "^1.9.5"
+    "@fal-ai/client": "^1.10.0"
   }
 }
