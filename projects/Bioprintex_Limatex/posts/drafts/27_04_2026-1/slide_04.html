@@ -4,7 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=1080">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap');
+  @font-face { font-family: 'Manrope'; font-weight: 400; src: url('file:///home/user/smm-system/global/brand/fonts/Manrope-Latin-Regular.woff2') format('woff2'); unicode-range: U+0000-00FF; }
+  @font-face { font-family: 'Manrope'; font-weight: 400; src: url('file:///home/user/smm-system/global/brand/fonts/Manrope-Regular.woff2') format('woff2'); unicode-range: U+0400-04FF; }
+  @font-face { font-family: 'Manrope'; font-weight: 700; src: url('file:///home/user/smm-system/global/brand/fonts/Manrope-Latin-Bold.woff2') format('woff2'); unicode-range: U+0000-00FF; }
+  @font-face { font-family: 'Manrope'; font-weight: 700; src: url('file:///home/user/smm-system/global/brand/fonts/Manrope-Bold.woff2') format('woff2'); unicode-range: U+0400-04FF; }
+  @font-face { font-family: 'Manrope'; font-weight: 800; src: url('file:///home/user/smm-system/global/brand/fonts/Manrope-Latin-ExtraBold.woff2') format('woff2'); unicode-range: U+0000-00FF; }
+  @font-face { font-family: 'Manrope'; font-weight: 800; src: url('file:///home/user/smm-system/global/brand/fonts/Manrope-ExtraBold.woff2') format('woff2'); unicode-range: U+0400-04FF; }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -23,26 +28,21 @@
     overflow: hidden;
   }
 
-  /* Full-bleed photo background */
+  /* Dark tech background */
   .photo-bg {
     position: absolute;
     inset: 0;
-    background-image: url('file:///home/user/smm-system/projects/Bioprintex_Limatex/posts/inbox/23_04_2026-konferentsiya/photo_01.jpg');
-    background-size: cover;
-    background-position: center center;
+    background: #1B1A24;
+    background-image:
+      linear-gradient(90deg, transparent 49%, rgba(4,79,186,0.10) 49%, rgba(4,79,186,0.10) 51%, transparent 51%),
+      linear-gradient(0deg, transparent 49%, rgba(4,79,186,0.07) 49%, rgba(4,79,186,0.07) 51%, transparent 51%);
+    background-size: 160px 160px;
   }
 
-  /* Gradient overlay */
   .overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      to bottom,
-      rgba(27,26,36,0.2) 0%,
-      rgba(27,26,36,0) 28%,
-      rgba(27,26,36,0.85) 60%,
-      rgba(27,26,36,0.97) 100%
-    );
+    background: radial-gradient(ellipse 80% 40% at 50% 0%, rgba(4,79,186,0.20) 0%, rgba(27,26,36,0) 60%);
   }
 
   /* Grain overlay */

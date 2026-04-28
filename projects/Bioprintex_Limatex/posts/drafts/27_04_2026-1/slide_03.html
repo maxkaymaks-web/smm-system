@@ -4,7 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=1080">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap');
+  @font-face { font-family: 'Manrope'; font-weight: 400; src: url('file:///home/user/smm-system/global/brand/fonts/Manrope-Latin-Regular.woff2') format('woff2'); unicode-range: U+0000-00FF; }
+  @font-face { font-family: 'Manrope'; font-weight: 400; src: url('file:///home/user/smm-system/global/brand/fonts/Manrope-Regular.woff2') format('woff2'); unicode-range: U+0400-04FF; }
+  @font-face { font-family: 'Manrope'; font-weight: 700; src: url('file:///home/user/smm-system/global/brand/fonts/Manrope-Latin-Bold.woff2') format('woff2'); unicode-range: U+0000-00FF; }
+  @font-face { font-family: 'Manrope'; font-weight: 700; src: url('file:///home/user/smm-system/global/brand/fonts/Manrope-Bold.woff2') format('woff2'); unicode-range: U+0400-04FF; }
+  @font-face { font-family: 'Manrope'; font-weight: 800; src: url('file:///home/user/smm-system/global/brand/fonts/Manrope-Latin-ExtraBold.woff2') format('woff2'); unicode-range: U+0000-00FF; }
+  @font-face { font-family: 'Manrope'; font-weight: 800; src: url('file:///home/user/smm-system/global/brand/fonts/Manrope-ExtraBold.woff2') format('woff2'); unicode-range: U+0400-04FF; }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -23,20 +28,21 @@
     overflow: hidden;
   }
 
-  /* Photo background */
+  /* Dark tech background */
   .photo-bg {
     position: absolute;
     inset: 0;
-    background-image: url('file:///home/user/smm-system/projects/Bioprintex_Limatex/posts/inbox/23_04_2026-konferentsiya/photo_02.jpg');
-    background-size: cover;
-    background-position: center center;
+    background: #1B1A24;
+    background-image:
+      linear-gradient(90deg, transparent 49%, rgba(4,79,186,0.10) 49%, rgba(4,79,186,0.10) 51%, transparent 51%),
+      linear-gradient(0deg, transparent 49%, rgba(4,79,186,0.07) 49%, rgba(4,79,186,0.07) 51%, transparent 51%);
+    background-size: 160px 160px;
   }
 
-  /* Heavy dark overlay — photo becomes texture */
   .overlay {
     position: absolute;
     inset: 0;
-    background: rgba(27,26,36,0.80);
+    background: radial-gradient(ellipse 90% 60% at 50% 50%, rgba(4,79,186,0.12) 0%, rgba(27,26,36,0) 70%);
   }
 
   /* Grain overlay */
@@ -261,15 +267,15 @@
       <div class="achievement-sublabel">Инновации в пищевой отрасли</div>
     </div>
 
-    <!-- Block 4: Patent -->
+    <!-- Block 4: Страна Возможностей -->
     <div class="achievement">
       <svg class="achievement-icon" width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M22 4 L36 10 L36 24 C36 32 22 40 22 40 C22 40 8 32 8 24 L8 10 Z" stroke="#00AF50" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
-        <path d="M16 22 L20 26 L28 18" stroke="#00AF50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="22" cy="22" r="16" stroke="#00AF50" stroke-width="1.5" fill="none"/>
+        <path d="M14 22 L19 27 L30 16" stroke="#00AF50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      <div class="achievement-number green">ПАТЕНТ</div>
-      <div class="achievement-label">Патентная защита<br>разработок компании</div>
-      <div class="achievement-sublabel">Интеллектуальная собственность</div>
+      <div class="achievement-number green" style="font-size:28px;line-height:1.2">Нац. экол.<br>инициатива</div>
+      <div class="achievement-label">Лауреаты конкурса<br>«Страна Возможностей»</div>
+      <div class="achievement-sublabel">Таврида·Арт · Экология</div>
     </div>
 
   </div>
