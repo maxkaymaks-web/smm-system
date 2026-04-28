@@ -33,6 +33,11 @@ cp -r skills/* ~/.claude/skills/
 
 > **При обновлении системы** (`git pull`) — повторить команду выше, чтобы получить свежие скиллы.
 
+### Шаг 2а — Установить ключ fal.ai
+```bash
+cp global/.env.fal ~/.claude/.env.fal
+```
+
 ### Шаг 3 — Авторизация Claude Code
 ```bash
 claude
