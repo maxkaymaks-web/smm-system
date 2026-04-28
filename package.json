@@ -15,7 +15,8 @@
   "type": "commonjs",
   "dependencies": {
     "@fontsource/manrope": "^5.2.8",
-    "puppeteer": "^24.41.0"
+    "puppeteer": "^24.41.0",
+    "sharp": "^0.34.5"
   },
   "devDependencies": {
     "@fal-ai/client": "^1.10.0"
