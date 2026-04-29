@@ -11,9 +11,20 @@ from datetime import date
 from pathlib import Path
 import urllib.request
 
-# ── ТОКЕНЫ ───────────────────────────────────────────────────────────────────
-APIFY    = 'apify_api_wHEKyiSCmCenuk0blUPLdEJKZXM8j92Zci8f'
-GH       = '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'
+# ── ТОКЕНЫ (из .env, не хранить в git) ───────────────────────────────────────
+def _load_env():
+    env_path = Path(__file__).parent.parent / '.env'
+    result = {}
+    if env_path.exists():
+        for line in env_path.read_text().splitlines():
+            if '=' in line and not line.startswith('#'):
+                k, v = line.split('=', 1)
+                result[k.strip()] = v.strip()
+    return result
+
+_env     = _load_env()
+APIFY    = _env.get('APIFY_TOKEN', 'apify_api_wHEKyiSCmCenuk0blUPLdEJKZXM8j92Zci8f')
+GH       = _env.get('GITHUB_PAT', '')
 TG       = '8625487536:AAG0erfiGf1C6btYTAkzVqVfhsa9OGjfH90'
 CID      = 1791618146
 REPO     = 'maxkaymaks-web/smm-system'

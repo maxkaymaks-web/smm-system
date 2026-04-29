@@ -1,10 +1,22 @@
 #!/usr/bin/env python3
 """Daily SMM briefing — bit&pix. Uses only stdlib (no pip needed)."""
 
-import json, urllib.request, urllib.parse
+import json, urllib.request, urllib.parse, os
 from datetime import date
+from pathlib import Path
 
-GH    = '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'
+def _load_env():
+    env_path = Path(__file__).parent.parent / '.env'
+    result = {}
+    if env_path.exists():
+        for line in env_path.read_text().splitlines():
+            if '=' in line and not line.startswith('#'):
+                k, v = line.split('=', 1)
+                result[k.strip()] = v.strip()
+    return result
+
+_env = _load_env()
+GH    = _env.get('GITHUB_PAT', '')
 REPO  = 'maxkaymaks-web/smm-system'
 TG    = '8625487536:AAG0erfiGf1C6btYTAkzVqVfhsa9OGjfH90'
 CID   = 1791618146
