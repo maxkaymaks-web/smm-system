@@ -6,6 +6,41 @@
 ---
 
 <!-- Записи добавляются сверху (новые первые) -->
+## 2026-04-29 | ⚙️ Технологичность и Инновации
+### Технологичность и Инновации — авто-обучение 29.04.2026
+> Аккаунты: @linear_app, @notionhq, @spacex | Проанализировано изображений: 4
+
+#### Изученные посты
+  - **@spacex** (110,055 likes) — Bold | Deep space black, bright sky blue, fiery orange, smoky white | Centered, rocket occupies majority of frame, ample sky for n
+  - **@spacex** (52,786 likes) — bold | dark charcoal, fiery orange, smoky beige, overall intense an | rule of thirds, center, moderate
+  - **@spacex** (43,551 likes) — abstract | warm ochre, muted teal, dusky purple, overall industrial moo | radial, centered, minimal
+  - **@spacex** (47,478 likes) — Bold | Metallic Silver, Slate Grey, Sky Blue, Emerald Green, Indust | Symmetrical, Subject centered, Ample negative space in sky a
+
+#### Визуальные паттерны (синтез)
+1. Монохромная основа с яркими акцентами
+2. Четкая геометрия и строгие формы
+3. Акцент на цифры и технические элементы
+4. Использование инфографических элементов
+5. Футуристичные металлические текстуры
+
+#### Цветовая палитра стиля
+Преобладают черный, белый и оттенки серого, с редкими, но смелыми вкраплениями ярких цветов (оранжевый, синий, зеленый) для акцентов.
+
+#### Правила композиции
+Симметрия, правило третей, центрирование. Активное использование негативного пространства, особенно в виде неба или пустого пространства.
+
+#### Текстура и свет
+Гладкие, отражающие металлические поверхности; чистый, холодный свет или контрастное освещение, подчеркивающее объем и детали.
+
+#### fal.ai промпты для стиля (применять при генерации)
+  - `Minimalist tech poster, bold sans-serif font, stark monochrome grid, vibrant orange numerical accent, clean lines, digital aesthetic.`
+  - `High-tech infographic, abstract geometric shapes, prominent white numbers on dark grey background, subtle blue highlights, technological innovation theme.`
+  - `Futuristic cityscape with strict geometric architecture, dark grey palette with neon green accents, bold capitalized text, emphasis on structural design.`
+
+#### Дизайн-фокус
+строгие сетки, монохром, bold sans-serif, цифры как акцент, инфографика
+---
+
 ## 2026-04-29 | 🧠 Промпт-инжиниринг fal.ai
 ### Промпт-инжиниринг fal.ai — авто-обучение 29.04.2026
 
