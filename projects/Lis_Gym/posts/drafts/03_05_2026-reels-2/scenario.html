@@ -3,487 +3,464 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Сценарий Reels #02 — Lis_Gym</title>
+<title>Сценарий Reels #02 — lis.gym</title>
 <style>
-  @font-face {
-    font-family: 'Nata Sans';
-    src: url('../../../../../global/brand/NataSans-VariableFont_wght.ttf') format('truetype');
-    font-weight: 100 900;
-  }
+@font-face {
+  font-family: 'Nata Sans';
+  src: url('../../../../../global/brand/NataSans-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+}
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+@page { size: A4 portrait; margin: 10mm 12mm; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --bg: #FEFEFF;
-    --bg-alt: #F6FAFC;
-    --text: #0B0B0B;
-    --accent: #FF1E1E;
-    --border: rgba(11,11,11,0.09);
-    --muted: rgba(11,11,11,0.42);
-    --r: 10px;
-    --r-sm: 5px;
-    --r-pill: 20px;
-    --font: 'Nata Sans', -apple-system, sans-serif;
-  }
+:root {
+  --bg:      #FEFEFF;
+  --bg-alt:  #F6FAFC;
+  --text:    #0B0B0B;
+  --accent:  #FF1E1E;
+  --border:  rgba(11,11,11,0.09);
+  --muted:   rgba(11,11,11,0.42);
+  --r:       10px;
+  --r-sm:    5px;
+  --r-pill:  20px;
+  --font:    'Nata Sans', -apple-system, sans-serif;
+}
 
-  body {
-    font-family: var(--font);
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.5;
-    padding: 32px 16px;
-  }
+html { background: #e8e8e8; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  width: 760px;
+  margin: 32px auto;
+  padding: 36px 40px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  border-radius: 4px;
+}
+@media print {
+  html { background: var(--bg); }
+  body { margin: 0; border-radius: 0; padding: 0 28px; width: 100%; }
+}
 
-  .wrap { max-width: 780px; margin: 0 auto; }
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 22px;
+  border-bottom: 2px solid var(--text);
+  margin-bottom: 22px;
+}
+.header-label {
+  font-size: 9px; font-weight: 600; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 7px;
+}
+.header-title {
+  font-size: 22px; font-weight: 800; line-height: 1.2;
+  letter-spacing: -0.4px; margin-bottom: 5px;
+}
+.header-title .num { color: var(--accent); }
+.header-sub { font-size: 11px; color: var(--muted); }
+.header-logo img { height: 46px; }
 
-  /* HEADER */
-  .header {
-    background: var(--bg-alt);
-    border: 1px solid var(--border);
-    border-radius: var(--r);
-    padding: 28px 32px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 24px;
-    margin-bottom: 20px;
-  }
-  .header-left { flex: 1; }
-  .label {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 8px;
-  }
-  .header h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
-  .header .sub { font-size: 13px; color: var(--muted); }
-  .logo { height: 40px; flex-shrink: 0; }
+/* BADGES */
+.badges { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 12px; border-radius: var(--r-pill);
+  border: 1.5px solid var(--border); background: var(--bg-alt); font-size: 11px;
+}
+.badge-label {
+  font-size: 8px; font-weight: 700; letter-spacing: 1.8px;
+  text-transform: uppercase; color: var(--muted);
+}
+.badge-value { font-weight: 700; }
+.badge.red { border-color: rgba(255,30,30,0.2); background: rgba(255,30,30,0.03); }
+.badge.red .badge-value { color: var(--accent); }
+.badge a { color: inherit; text-decoration: none; }
+.badge a:hover { text-decoration: underline; }
 
-  /* BADGES */
-  .badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 20px;
-  }
-  .badge {
-    background: var(--bg-alt);
-    border: 1px solid var(--border);
-    border-radius: var(--r-pill);
-    padding: 5px 14px;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text);
-  }
-  .badge a { color: var(--accent); text-decoration: none; }
-  .badge a:hover { text-decoration: underline; }
+/* SECTION TITLE */
+.stitle {
+  font-size: 9px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted);
+  margin-top: 22px; margin-bottom: 10px;
+}
 
-  /* HOOK */
-  .hook-block {
-    border: 2px solid var(--accent);
-    border-radius: var(--r);
-    padding: 24px 28px;
-    margin-bottom: 20px;
-  }
-  .hook-block .section-label {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 12px;
-  }
-  .hook-text {
-    font-size: 26px;
-    font-weight: 800;
-    line-height: 1.2;
-    margin-bottom: 8px;
-  }
-  .hook-type {
-    font-size: 12px;
-    color: var(--muted);
-  }
-  .hook-visual {
-    margin-top: 10px;
-    font-size: 13px;
-    color: var(--muted);
-    border-top: 1px solid var(--border);
-    padding-top: 10px;
-  }
+/* HOOK */
+.hook {
+  background: rgba(255,30,30,0.03);
+  border: 1.5px solid rgba(255,30,30,0.18);
+  border-radius: var(--r); padding: 16px 20px;
+}
+.hook-type {
+  font-size: 8.5px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 7px;
+}
+.hook-text {
+  font-size: 20px; font-weight: 800; line-height: 1.2;
+  letter-spacing: -0.3px; margin-bottom: 10px;
+}
+.hook-row { display: flex; gap: 24px; }
+.hook-item { font-size: 11.5px; color: var(--muted); }
+.hook-item strong { color: var(--text); font-weight: 600; }
 
-  /* SECTION */
-  .section {
-    background: var(--bg-alt);
-    border: 1px solid var(--border);
-    border-radius: var(--r);
-    padding: 24px 28px;
-    margin-bottom: 16px;
-  }
-  .section-title {
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: .06em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 16px;
-  }
+/* RETENTION FACTOR */
+.retention {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--r); padding: 16px 20px;
+}
+.retention-row {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+}
+.retention-row:last-child { border-bottom: none; padding-bottom: 0; }
+.retention-row:first-child { padding-top: 0; }
+.retention-num {
+  width: 22px; height: 22px; background: var(--accent); color: #fff;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 800; flex-shrink: 0; margin-top: 1px;
+}
+.retention-body { flex: 1; }
+.retention-title { font-size: 12px; font-weight: 700; margin-bottom: 3px; }
+.retention-desc { font-size: 11.5px; color: var(--muted); line-height: 1.5; }
 
-  /* РАСКАДРОВКА */
-  .shots { display: flex; flex-direction: column; gap: 12px; }
-  .shot {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--r-sm);
-    padding: 16px 18px;
-    display: grid;
-    grid-template-columns: 40px 1fr;
-    gap: 0 16px;
-  }
-  .shot-num {
-    width: 34px;
-    height: 34px;
-    background: var(--text);
-    color: #fff;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    font-weight: 700;
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-  .shot-body { min-width: 0; }
-  .shot-time {
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: .05em;
-    margin-bottom: 6px;
-  }
-  .shot-action {
-    font-size: 14px;
-    font-weight: 500;
-    margin-bottom: 6px;
-    line-height: 1.4;
-  }
-  .shot-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 8px;
-  }
-  .shot-tag {
-    font-size: 11px;
-    padding: 3px 10px;
-    border-radius: var(--r-pill);
-    border: 1px solid var(--border);
-    background: var(--bg-alt);
-    color: var(--muted);
-  }
-  .shot-tag.screen {
-    background: #0B0B0B;
-    color: #fff;
-    border-color: transparent;
-    font-weight: 600;
-  }
-  .shot-tag.cut {
-    background: var(--accent);
-    color: #fff;
-    border-color: transparent;
-    font-weight: 600;
-  }
+/* STORYBOARD */
+.shot {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 14px 0; border-bottom: 1px solid var(--border);
+}
+.shot:last-child { border-bottom: none; }
+.shot-num {
+  width: 28px; height: 28px; background: var(--text); color: #fff;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; flex-shrink: 0; margin-top: 1px;
+}
+.shot-body { flex: 1; }
+.shot-time {
+  font-size: 9px; font-weight: 700; color: var(--accent);
+  letter-spacing: 0.5px; margin-bottom: 4px;
+}
+.shot-action {
+  font-size: 12.5px; font-weight: 600; line-height: 1.4; margin-bottom: 8px;
+}
+.shot-vo {
+  font-size: 12px; color: var(--muted); line-height: 1.4;
+  border-left: 2px solid var(--border); padding-left: 10px;
+  margin-bottom: 8px; font-style: italic;
+}
+.shot-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.shot-tag {
+  font-size: 10.5px; padding: 3px 9px; border-radius: 4px;
+  border: 1px solid var(--border); background: var(--bg-alt); color: var(--muted);
+}
+.shot-tag strong { color: var(--text); font-weight: 600; font-size: 9px;
+  text-transform: uppercase; letter-spacing: 1px; margin-right: 4px; }
+.shot-overlay {
+  display: inline-block; background: var(--text); color: #fff;
+  border-radius: 4px; padding: 3px 9px; font-size: 11px; font-weight: 700;
+  margin-top: 7px; font-family: monospace; letter-spacing: 0;
+}
+.shot-tag.cta { background: rgba(255,30,30,0.05); border-color: rgba(255,30,30,0.2); }
+.shot-tag.cta strong { color: var(--accent); }
+.shot-tag.cut { background: rgba(255,30,30,0.05); border-color: rgba(255,30,30,0.2); color: var(--accent); font-weight: 700; }
 
-  /* ИНСТРУКЦИИ — сетка */
-  .grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-  @media (max-width: 560px) { .grid-2 { grid-template-columns: 1fr; } }
-  .param {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--r-sm);
-    padding: 12px 14px;
-  }
-  .param-label {
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .07em;
-    color: var(--muted);
-    margin-bottom: 4px;
-  }
-  .param-val { font-size: 13px; line-height: 1.4; }
+/* HOW GRID */
+.how-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1px; background: var(--border); border-radius: var(--r); overflow: hidden;
+}
+.how-cell { background: var(--bg); padding: 12px 16px; }
+.how-cell.full { grid-column: 1 / -1; }
+.how-label {
+  font-size: 8.5px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 4px;
+}
+.how-value { font-size: 12px; font-weight: 500; line-height: 1.45; }
 
-  /* МУЗЫКА */
-  .music-primary {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--r-sm);
-    padding: 16px 18px;
-    margin-bottom: 10px;
-  }
-  .music-label {
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .07em;
-    color: var(--muted);
-    margin-bottom: 6px;
-  }
-  .music-track { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
-  .music-why { font-size: 13px; color: var(--muted); }
-  .music-why a { color: var(--accent); }
+/* MUSIC */
+.music {
+  background: var(--bg-alt); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 16px 20px;
+}
+.music-name { font-size: 15px; font-weight: 800; margin-bottom: 3px; }
+.music-why { font-size: 11.5px; color: var(--muted); margin-bottom: 10px; line-height: 1.5; }
+.music-links { display: flex; gap: 8px; flex-wrap: wrap; }
+.music-link {
+  font-size: 10.5px; padding: 4px 11px; border-radius: 4px;
+  border: 1px solid var(--border); background: var(--bg); color: var(--muted);
+  text-decoration: none;
+}
+.music-link:hover { color: var(--text); }
+.music-alt { font-size: 11.5px; color: var(--muted); margin-top: 12px; }
+.music-alt a { color: var(--text); }
 
-  /* ПОДПИСЬ + ХЭШТЕГИ */
-  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-  @media (max-width: 500px) { .two-col { grid-template-columns: 1fr; } }
-  .caption-box, .hashtag-box {
-    background: var(--bg-alt);
-    border: 1px solid var(--border);
-    border-radius: var(--r);
-    padding: 18px 20px;
-  }
-  .caption-format {
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .07em;
-    color: var(--muted);
-    margin-bottom: 8px;
-  }
-  .caption-text { font-size: 14px; line-height: 1.6; white-space: pre-line; }
-  .hashtags { display: flex; flex-wrap: wrap; gap: 6px; }
-  .ht {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--r-pill);
-    padding: 4px 12px;
-    font-size: 12px;
-    font-weight: 500;
-  }
+/* CAPTION */
+.caption-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.caption-box {
+  background: var(--bg-alt); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 14px 16px;
+}
+.caption-label {
+  font-size: 8.5px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 8px;
+}
+.caption-text { font-size: 12.5px; line-height: 1.65; white-space: pre-line; }
+.hashtag-wrap { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.hashtag {
+  background: rgba(37,99,235,0.07); color: #1d4ed8;
+  padding: 4px 10px; border-radius: var(--r-pill);
+  font-size: 11px; font-weight: 600;
+}
 
-  /* ПУБЛИКАЦИЯ */
-  .pub-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  @media (max-width: 500px) { .pub-grid { grid-template-columns: 1fr; } }
-  .pub-item {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--r-sm);
-    padding: 12px 14px;
-    text-align: center;
-  }
-  .pub-item .pub-label {
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .07em;
-    color: var(--muted);
-    margin-bottom: 5px;
-  }
-  .pub-item .pub-val { font-size: 13px; font-weight: 600; }
-
-  /* FOOTER */
-  .footer {
-    border-top: 1px solid var(--border);
-    margin-top: 32px;
-    padding-top: 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 12px;
-    color: var(--muted);
-  }
-  .footer a { color: var(--accent); text-decoration: none; }
+/* FOOTER */
+.footer {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 26px; padding-top: 16px; border-top: 1px solid var(--border);
+}
+.footer-note { font-size: 10px; color: var(--muted); }
+.footer-dot {
+  width: 6px; height: 6px; background: var(--accent);
+  border-radius: 50%; display: inline-block; margin-right: 6px;
+}
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <!-- HEADER -->
-  <div class="header">
-    <div class="header-left">
-      <div class="label">Lis_Gym · Сценарий Reels #02</div>
-      <h1>Я планировала в зал vs я в зале</h1>
-      <div class="sub">03 мая 2026 · Воскресенье · Relatable · 7–8 секунд</div>
-    </div>
-    <img class="logo"
-      src="https://raw.githubusercontent.com/maxkaymaks-web/smm-system/main/global/brand/logo.png"
-      alt="bit&pix агент">
+<!-- HEADER -->
+<header class="header">
+  <div>
+    <div class="header-label">Сценарий Reels · lis.gym · bit&pix агент</div>
+    <h1 class="header-title"><span class="num">#02</span> Я планировала в зал vs я в зале</h1>
+    <div class="header-sub">03 мая 2026 · Воскресенье · Relatable · 7–8 сек</div>
   </div>
-
-  <!-- BADGES -->
-  <div class="badges">
-    <span class="badge">Relatable</span>
-    <span class="badge">7–8s</span>
-    <span class="badge">Нарезка</span>
-    <span class="badge">Аналог: <a href="https://www.instagram.com/reel/DVxueFUDLup/" target="_blank">@km.ksss — 111 028 просм.</a></span>
+  <div class="header-logo">
+    <img src="https://raw.githubusercontent.com/maxkaymaks-web/smm-system/main/global/brand/logo.png" alt="bit&pix агент">
   </div>
+</header>
 
-  <!-- ХУК -->
-  <div class="hook-block">
-    <div class="section-label">⚡ ХУК — первые 2 секунды</div>
-    <div class="hook-text">«я планировала в зал»</div>
-    <div class="hook-type">Тип хука: Узнай себя</div>
-    <div class="hook-visual">Визуал: уверенная поза, прямой взгляд в камеру, плечи расправлены — будто сейчас покоришь мир. Светлый фон или зал на заднем плане.</div>
+<!-- BADGES -->
+<div class="badges">
+  <div class="badge">
+    <span class="badge-label">Тип</span>
+    <span class="badge-value">Relatable</span>
   </div>
-
-  <!-- РАСКАДРОВКА -->
-  <div class="section">
-    <div class="section-title">Раскадровка</div>
-    <div class="shots">
-
-      <div class="shot">
-        <div class="shot-num">1</div>
-        <div class="shot-body">
-          <div class="shot-time">0 – 2s</div>
-          <div class="shot-action">Уверенная поза в спортивной одежде — прямой взгляд в камеру, плечи расправлены, лёгкая улыбка. Светлый фон или зал на заднем плане.</div>
-          <div class="shot-meta">
-            <span class="shot-tag screen">«я планировала в зал» — крупно, по центру</span>
-            <span class="shot-tag">статика</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="shot">
-        <div class="shot-num">2</div>
-        <div class="shot-body">
-          <div class="shot-time">2 – 4s</div>
-          <div class="shot-action">Тот же образ — идеальный «план». Можно листать телефон с уверенным видом или поправлять хвост. Всё ещё «мечта».</div>
-          <div class="shot-meta">
-            <span class="shot-tag screen">«💪 бодрая. заряженная. план на 1,5 часа.»</span>
-            <span class="shot-tag">статика</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="shot">
-        <div class="shot-num">3</div>
-        <div class="shot-body">
-          <div class="shot-time">4 – 6s</div>
-          <div class="shot-action">Резкая смена — реальность. Та же ты, с сумкой в руке, слегка потерянный взгляд. Стоишь у входа в зал или в раздевалке. Без постановки — живо и натурально.</div>
-          <div class="shot-meta">
-            <span class="shot-tag screen">«я в зале 💀»</span>
-            <span class="shot-tag cut">ЖЁСТКИЙ КАТ</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="shot">
-        <div class="shot-num">4</div>
-        <div class="shot-body">
-          <div class="shot-time">6 – 8s</div>
-          <div class="shot-action">Лёгкое пожатие плечами или еле заметная улыбка в камеру — «ну и что, пришла же». Финальный кадр, freeze.</div>
-          <div class="shot-meta">
-            <span class="shot-tag screen">«но пришла же ❤️» — по центру</span>
-            <span class="shot-tag">статика + freeze</span>
-          </div>
-        </div>
-      </div>
-
-    </div>
+  <div class="badge">
+    <span class="badge-label">Хук</span>
+    <span class="badge-value">Узнай себя</span>
   </div>
-
-  <!-- ИНСТРУКЦИИ -->
-  <div class="section">
-    <div class="section-title">Инструкции по съёмке</div>
-    <div class="grid-2">
-      <div class="param">
-        <div class="param-label">Ориентация</div>
-        <div class="param-val">9:16 вертикаль</div>
-      </div>
-      <div class="param">
-        <div class="param-label">Ракурс</div>
-        <div class="param-val">Кадры 1–2: фронт, средний план. Кадр 3: сбоку или фронт, другая локация. Кадр 4: фронт, чуть крупнее.</div>
-      </div>
-      <div class="param">
-        <div class="param-label">Камера</div>
-        <div class="param-val">С рук или штатив — оба ок. Главное: без дрожи на кадрах 1–2.</div>
-      </div>
-      <div class="param">
-        <div class="param-label">Свет</div>
-        <div class="param-val">Кадры 1–2 — хорошее освещение, «план» выглядит чуть поставленнее. Кадры 3–4 — живее, менее идеально — ок.</div>
-      </div>
-      <div class="param">
-        <div class="param-label">Одежда</div>
-        <div class="param-val">Один и тот же комплект на всех кадрах — это критично, иначе смысл теряется.</div>
-      </div>
-      <div class="param">
-        <div class="param-label">Монтаж</div>
-        <div class="param-val">Жёсткий кат между кадром 2 и 3 — главный момент. Текст крупный, белый с тёмной обводкой. Никаких переходов, никакого slow-mo.</div>
-      </div>
-      <div class="param" style="grid-column: 1 / -1;">
-        <div class="param-label">CTA внутри видео</div>
-        <div class="param-val">Финальный кадр — «но пришла же ❤️» → провоцирует лайк и отправку подруге. Работает как узнавание + позитивный финал.</div>
-      </div>
-    </div>
+  <div class="badge red">
+    <span class="badge-label">Хрон.</span>
+    <span class="badge-value">7–8s</span>
   </div>
-
-  <!-- МУЗЫКА -->
-  <div class="section">
-    <div class="section-title">Музыка</div>
-    <div class="music-primary">
-      <div class="music-label">Рекомендуется — Original Audio</div>
-      <div class="music-track">Без музыки / ambient звук зала</div>
-      <div class="music-why">@km.ksss использует original audio без трека на relatable-постах → 111k просмотров. Тишина + текст на экране работает сильнее, чем заглушающая музыка.</div>
-    </div>
-    <div class="music-primary">
-      <div class="music-label">Альтернатива — если нужна музыка</div>
-      <div class="music-track">Дора — Дорадура (инструментал)</div>
-      <div class="music-why">Лёгкая, самоироничная, хорошо знакома русскоязычной аудитории — усиливает «план vs реальность» без слов.
-        <br>Spotify: <a href="https://open.spotify.com/track/4uLU6hMCjMI75M1A2tKUQC" target="_blank">open.spotify.com/track/4uLU6hMCjMI75M1A2tKUQC</a>
-      </div>
-    </div>
+  <div class="badge">
+    <span class="badge-label">Аналог</span>
+    <span class="badge-value">
+      <a href="https://www.instagram.com/reel/DVxueFUDLup/" target="_blank">@km.ksss — 111 028 просмотров ↗</a>
+    </span>
   </div>
-
-  <!-- ПОДПИСЬ + ХЭШТЕГИ -->
-  <div class="two-col">
-    <div class="caption-box">
-      <div class="caption-format">Формат подписи: Вопрос к аудитории</div>
-      <div class="caption-text">это каждый раз, да? 😭
-
-а ты в зале сегодня? пиши в комменты</div>
-    </div>
-    <div class="hashtag-box">
-      <div class="caption-format">Хэштеги</div>
-      <div class="hashtags">
-        <span class="ht">#тренажерка</span>
-        <span class="ht">#зал</span>
-        <span class="ht">#санктпетербург</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- ПУБЛИКАЦИЯ -->
-  <div class="section">
-    <div class="section-title">Публикация</div>
-    <div class="pub-grid">
-      <div class="pub-item">
-        <div class="pub-label">Время</div>
-        <div class="pub-val">Вс 03.05, 18:00–19:00</div>
-      </div>
-      <div class="pub-item">
-        <div class="pub-label">Обложка</div>
-        <div class="pub-val">Кадр #1 — уверенная поза, «план»</div>
-      </div>
-      <div class="pub-item">
-        <div class="pub-label">Геометка</div>
-        <div class="pub-val">Название зала</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- FOOTER -->
-  <div class="footer">
-    <span>Lis_Gym · Сценарий Reels #02 · 29.04.2026</span>
-    <span>bit&pix агент</span>
-  </div>
-
 </div>
+
+<!-- HOOK -->
+<div class="stitle">Хук — первые 2 секунды</div>
+<div class="hook">
+  <div class="hook-type">⚡ Узнай себя</div>
+  <div class="hook-text">«я планировала в зал»</div>
+  <div class="hook-row">
+    <div class="hook-item"><strong>Визуал:</strong> стоишь прямо, смотришь в камеру, уверенная поза, одна рука на бедре</div>
+    <div class="hook-item"><strong>Аудио:</strong> голос за кадром входит одновременно с первым кадром</div>
+  </div>
+</div>
+
+<!-- RETENTION FACTOR -->
+<div class="stitle">Фактор держания — почему досмотрят до конца</div>
+<div class="retention">
+  <div class="retention-row">
+    <div class="retention-num">1</div>
+    <div class="retention-body">
+      <div class="retention-title">Незакрытая петля</div>
+      <div class="retention-desc">Хук «я планировала в зал» — заявка без ответа. Мозг автоматически ждёт продолжения: а что было на самом деле? Пока ответ не получен, зритель не уходит.</div>
+    </div>
+  </div>
+  <div class="retention-row">
+    <div class="retention-num">2</div>
+    <div class="retention-body">
+      <div class="retention-title">Паттерн-прерывание на 4-й секунде</div>
+      <div class="retention-desc">Кадры 1–2 — уверенный «план», зритель читает структуру и ждёт продолжения в том же тоне. Жёсткий кат на кадре 3 ломает ожидание без предупреждения. Это пик удержания — там не уходят.</div>
+    </div>
+  </div>
+  <div class="retention-row">
+    <div class="retention-num">3</div>
+    <div class="retention-body">
+      <div class="retention-title">Узнавание в первые 3 секунды</div>
+      <div class="retention-desc">«Я планировала в зал» — универсальная ситуация для ЦА. Зритель понимает «это про меня» ещё до кадра с реальностью. После узнавания человек не уходит: хочет убедиться, что финал тоже его.</div>
+    </div>
+  </div>
+  <div class="retention-row">
+    <div class="retention-num">4</div>
+    <div class="retention-body">
+      <div class="retention-title">Позитивный финал как триггер репоста</div>
+      <div class="retention-desc">«Но пришла же ❤️» даёт разрешение на несовершенство — эмоциональная награда за досмотр. После неё хочется отправить подруге. Репост = буст дистрибуции.</div>
+    </div>
+  </div>
+</div>
+
+<!-- STORYBOARD -->
+<div class="stitle">Раскадровка</div>
+
+<div class="shot">
+  <div class="shot-num">1</div>
+  <div class="shot-body">
+    <div class="shot-time">0 – 2s</div>
+    <div class="shot-action">Стоишь прямо, ноги на ширине плеч, камера строго спереди на уровне груди. Смотришь в объектив. Плечи расправлены, подбородок слегка приподнят. Уверенный нейтральный взгляд — не улыбаешься. Одна рука на бедре.</div>
+    <div class="shot-vo">Голос за кадром: «так, сегодня ноги, потом плечи, потом кардио...» — уверенно, как читаешь список вслух</div>
+    <div class="shot-tags">
+      <div class="shot-tag"><strong>монтаж</strong>статика</div>
+      <div class="shot-tag"><strong>аудио</strong>голос входит с кадром</div>
+    </div>
+    <div class="shot-overlay">«я планировала в зал»</div>
+  </div>
+</div>
+
+<div class="shot">
+  <div class="shot-num">2</div>
+  <div class="shot-body">
+    <div class="shot-time">2 – 4s</div>
+    <div class="shot-action">Тот же кадр, тот же ракурс. Взгляд уходит чуть в сторону — как будто мысленно составляешь план тренировки. Тело не двигается. Поза не меняется.</div>
+    <div class="shot-vo">Голос за кадром (тихо, внутренний монолог): «никакого телефона. только тренировка»</div>
+    <div class="shot-tags">
+      <div class="shot-tag"><strong>монтаж</strong>статика</div>
+      <div class="shot-tag"><strong>аудио</strong>голос тише</div>
+    </div>
+    <div class="shot-overlay">«💪 бодрая. заряженная. план на 1,5 часа.»</div>
+  </div>
+</div>
+
+<div class="shot">
+  <div class="shot-num">3</div>
+  <div class="shot-body">
+    <div class="shot-time">4 – 6s</div>
+    <div class="shot-action">ЖЁСТКИЙ КАТ. Другая точка в зале: вход или раздевалка. Стоишь с сумкой в руке, опущенной вниз. Плечи чуть опущены. Взгляд мимо камеры — пустой, никуда. Рот слегка приоткрыт. Ничего не делаешь — просто стоишь и существуешь.</div>
+    <div class="shot-vo">Голос за кадром (монотонно, без интонации): «одну зону. сделаю одну зону и домой»</div>
+    <div class="shot-tags">
+      <div class="shot-tag cut">⚡ жёсткий кат</div>
+      <div class="shot-tag"><strong>аудио</strong>голос монотонно</div>
+    </div>
+    <div class="shot-overlay">«я в зале 💀»</div>
+  </div>
+</div>
+
+<div class="shot">
+  <div class="shot-num">4</div>
+  <div class="shot-body">
+    <div class="shot-time">6 – 8s</div>
+    <div class="shot-action">Одно медленное пожатие одним плечом — правым или левым, не обоими. Потом взгляд прямо в камеру и маленькая улыбка. Freeze на улыбке 0.5–1 сек.</div>
+    <div class="shot-tags">
+      <div class="shot-tag"><strong>монтаж</strong>статика → freeze</div>
+      <div class="shot-tag cta"><strong>CTA</strong>буст лайков + репостов</div>
+    </div>
+    <div class="shot-overlay">«но пришла же ❤️»</div>
+  </div>
+</div>
+
+<!-- SHOOTING INSTRUCTIONS -->
+<div class="stitle">Инструкции по съёмке</div>
+<div class="how-grid">
+  <div class="how-cell">
+    <div class="how-label">Ориентация</div>
+    <div class="how-value">9:16 вертикаль</div>
+  </div>
+  <div class="how-cell">
+    <div class="how-label">Ракурс</div>
+    <div class="how-value">Средний план (пояс–макушка) на всех четырёх кадрах. Камера строго на уровне груди. Кадр 3 — другая локация, но тот же ракурс и кадрирование.</div>
+  </div>
+  <div class="how-cell">
+    <div class="how-label">Камера</div>
+    <div class="how-value">Штатив или ровная поверхность на нужной высоте. Кадры 1–2 и 3–4 снимать отдельно — главное совпадение ракурса между группами.</div>
+  </div>
+  <div class="how-cell">
+    <div class="how-label">Свет</div>
+    <div class="how-value">Одинаковый на всех кадрах. Выбрать одно место в зале с постоянным светом, снять все 4 кадра там.</div>
+  </div>
+  <div class="how-cell">
+    <div class="how-label">Одежда</div>
+    <div class="how-value">Один и тот же комплект на всех четырёх кадрах. Без этого «план vs реальность» не считывается.</div>
+  </div>
+  <div class="how-cell">
+    <div class="how-label">Монтаж</div>
+    <div class="how-value">Жёсткий кат между кадром 2 и 3 — без перехода, без fade. Скорость нормальная на всех кадрах. Freeze в конце 0.5–1 сек. Текст появляется одновременно с кадром.</div>
+  </div>
+  <div class="how-cell full">
+    <div class="how-label">CTA внутри видео</div>
+    <div class="how-value">Финальный кадр: <strong>«но пришла же ❤️»</strong> — провоцирует лайк (узнавание + позитивный финал) и репост подруге.</div>
+  </div>
+</div>
+
+<!-- MUSIC -->
+<div class="stitle">Музыка</div>
+<div class="music">
+  <div class="music-name">🎙 Original Audio — голос за кадром</div>
+  <div class="music-why">@km.ksss использует этот формат на relatable-постах → 111 028 просмотров. Голос за кадром делает контент персональным и заменяет трек — алгоритм засчитывает как original audio.</div>
+  <div class="music-links">
+    <a class="music-link" href="https://www.instagram.com/reel/DVxueFUDLup/" target="_blank">Аналог @km.ksss ↗</a>
+  </div>
+  <div class="music-alt">
+    <strong>Альтернатива:</strong> Дора — Дорадура — пустить тихо на фон, чтобы не перебивала голос —
+    <a href="https://open.spotify.com/track/4uLU6hMCjMI75M1A2tKUQC" target="_blank">Spotify ↗</a>
+  </div>
+</div>
+
+<!-- CAPTION + HASHTAGS -->
+<div class="stitle">Подпись и хэштеги</div>
+<div class="caption-grid">
+  <div class="caption-box">
+    <div class="caption-label">Подпись · Вопрос к аудитории</div>
+    <div class="caption-text">это каждый раз, да? 😭
+
+пиши в комменты — сколько зон в итоге сделала</div>
+  </div>
+  <div class="caption-box">
+    <div class="caption-label">Хэштеги (3 шт — гео + ниша)</div>
+    <div class="hashtag-wrap">
+      <span class="hashtag">#тренажерка</span>
+      <span class="hashtag">#зал</span>
+      <span class="hashtag">#санктпетербург</span>
+    </div>
+    <div style="margin-top:10px; font-size:11px; color:var(--muted); line-height:1.5">
+      Generic (#gym #gymgirl) убраны — у конкурентов с 50k+ медианой их нет
+    </div>
+  </div>
+</div>
+
+<!-- PUBLICATION -->
+<div class="stitle">Публикация</div>
+<div class="how-grid">
+  <div class="how-cell">
+    <div class="how-label">Время</div>
+    <div class="how-value">Вс 03 мая, 18:00–19:00</div>
+  </div>
+  <div class="how-cell">
+    <div class="how-label">Обложка (превью)</div>
+    <div class="how-value">Кадр #1 — уверенная поза, «план»</div>
+  </div>
+  <div class="how-cell">
+    <div class="how-label">Геометка</div>
+    <div class="how-value">Название зала</div>
+  </div>
+  <div class="how-cell">
+    <div class="how-label">Alt-текст</div>
+    <div class="how-value">Планировала в зал — реальность vs ожидания</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-note">lis.gym · Сценарий #02 · 03 мая 2026</div>
+  <div class="footer-note"><span class="footer-dot"></span>bit&pix агент</div>
+</footer>
+
 </body>
 </html>
