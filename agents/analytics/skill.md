@@ -10,17 +10,23 @@
 
 ## Инструменты
 
-### Apify — единственный инструмент парсинга
+### Инструменты по платформам — обзор
 
-Все платформы (Instagram, VK, TikTok, Telegram, YouTube) — через Apify.
+| Платформа | Инструмент | Примечание |
+|-----------|-----------|------------|
+| Instagram | Apify `eO62VlcRQs1OfFwHW` | через scraper.py или напрямую |
+| TikTok | Apify `clockworks/tiktok-scraper` | через scraper.py |
+| Telegram | Apify актор (вручную) | два актора — см. ниже |
+| VK | Прямой VK API | Apify-акторы не работают с wall.get |
+| YouTube | не протестировано | — |
 
-**Конфигурация:**
+**Apify конфигурация:**
 - Токен: `.env` → `APIFY_TOKEN`
 - User ID: `.env` → `APIFY_USER_ID`
 - Скрипт: `tools/apify/scraper.py`
 - venv: `tools/apify/.venv`
 
-**Запуск парсинга:**
+**Запуск через scraper.py (Instagram / TikTok):**
 ```bash
 cd smm-system
 tools/apify/.venv/bin/python3 tools/apify/scraper.py \
@@ -29,7 +35,9 @@ tools/apify/.venv/bin/python3 tools/apify/scraper.py \
   --limit 50
 ```
 
-Платформы: `instagram`, `tiktok`, `vk`. Telegram — через актор вручную (см. ниже).
+⚠️ **VK и Telegram — не через scraper.py.** Вызывать напрямую (см. секции ниже).
+
+⚠️ **Месячный лимит Apify:** на Free-плане $5/мес. При большом числе запросов — лимит кончается. Проверять баланс перед крупными задачами.
 
 ---
 
@@ -84,20 +92,32 @@ GET https://api.apify.com/v2/key-value-stores/{storeId}/records/OUTPUT
 ## Инструменты по платформам (протестировано)
 
 ### Instagram — `eO62VlcRQs1OfFwHW` (Fast Instagram Profile Reels Scraper)
+
+**Один аккаунт:**
 ```python
 payload = {
     'instagramUsernames': ['username'],
     'maxReels': 10,
 }
 ```
+
+**Батч нескольких аккаунтов (один запуск, один датасет):**
+```python
+payload = {
+    'instagramUsernames': ['user1', 'user2', 'user3'],  # до ~10-15 за раз
+    'maxReels': 10,  # per account
+}
+```
+Результаты в одном датасете, разделять по полю `owner`.
+
 **Поля вывода:** `taken_at`, `play_count`, `view_count`, `like_count`, `comment_count`,
 `video_url` (прямой .mp4), `image` (превью), `caption`, `hashtags`,
 `clips_music_attribution_info` (artist_name, song_name, uses_original_audio),
-`video_duration`, `reel_url`, `shortcode`
+`video_duration`, `reel_url`, `shortcode`, `owner` (username аккаунта)
 
-Скачать превью:
+Скачать превью/видео (CDN требует заголовок):
 ```python
-requests.get(image_url, headers={'Referer': 'https://www.instagram.com/', 'User-Agent': '...'})
+requests.get(image_url, headers={'Referer': 'https://www.instagram.com/', 'User-Agent': 'Mozilla/5.0'})
 ```
 
 ---
@@ -144,15 +164,33 @@ urls = re.findall(r"url\('(https?://[^']+)'\)", css_string)
 ---
 
 ### VK — прямой VK API (не Apify)
+
+Apify-акторы для VK не поддерживают `wall.get` → использовать VK API напрямую.
+
+**Получить посты группы:**
 ```python
 requests.get('https://api.vk.com/method/wall.get', params={
-    'domain': 'group_name',
+    'domain': 'group_name',  # без @, без vk.com/
     'count': 50,
     'v': '5.131',
     'access_token': VK_SERVICE_TOKEN,   # .env → VK_SERVICE_TOKEN
     'extended': 1,
 })
 ```
+
+**Получить инфо по домену группы:**
+```python
+requests.get('https://api.vk.com/method/groups.getById', params={
+    'group_id': 'group_name',
+    'v': '5.131',
+    'access_token': VK_SERVICE_TOKEN,
+})
+```
+
+⚠️ **Ограничения сервисного токена:**
+- `groups.search` — **недоступен** (ошибка 1051). Для поиска конкурентов — вручную или через `groups.getById` по известному домену.
+- `newsfeed.search` — недоступен с сервисным токеном.
+
 **Поля вывода:** `text`, `date` (unix), `likes.count`, `views.count`, `reposts.count`,
 `attachments[].type` (photo/video/doc), фото → `attachments[].photo.sizes[-1].url`,
 видео → `https://vk.com/video{owner_id}_{id}`
@@ -224,7 +262,7 @@ open('/tmp/reel.mp4', 'wb').write(resp.content)
 
 ## Нормализованный формат данных
 
-Все платформы → единая структура (выдаёт `scraper.py`):
+Целевая структура при сохранении/анализе (scraper.py нормализует Instagram/TikTok; VK и Telegram — нормализовать вручную):
 
 ```json
 {
@@ -260,7 +298,12 @@ open('/tmp/reel.mp4', 'wb').write(resp.content)
 ### Процесс
 
 1. Определи платформу каждого аккаунта (Instagram / VK / TikTok / Telegram)
-2. Запарси последние 30–50 постов через `tools/apify/scraper.py`
+2. Запарси последние 30–50 постов:
+   - **Instagram:** `eO62VlcRQs1OfFwHW` (батч до 15 аккаунтов за раз)
+   - **TikTok:** `clockworks/tiktok-scraper` через scraper.py
+   - **Telegram (текст/метрики):** `automation-lab/telegram-scraper`
+   - **Telegram (медиа):** `GEHKCq8O4orlPjLFf`
+   - **VK:** прямой VK API `wall.get`
 3. Для каждого аккаунта зафиксируй:
    - Частота постинга (постов/неделю)
    - Форматы: фото / видео / карусели / reels / текст — доли
