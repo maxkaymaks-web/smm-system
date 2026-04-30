@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Контент-план · Sparta · Май 2026</title>
+<style>
+  @font-face {
+    font-family: 'Nata Sans';
+    src: url('../../global/brand/NataSans-VariableFont_wght.ttf') format('truetype');
+    font-weight: 100 900;
+  }
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #FEFEFF;
+    --bg-alt: #F6FAFC;
+    --text: #0B0B0B;
+    --accent: #FF1E1E;
+    --border: rgba(11,11,11,0.10);
+    --radius: 12px;
+    --radius-sm: 6px;
+    --radius-pill: 20px;
+  }
+
+  body {
+    font-family: 'Nata Sans', 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 40px 20px;
+  }
+
+  .page {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32px;
+  }
+  .header-left .label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .header-left h1 {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  .header-left .sub {
+    font-size: 13px;
+    color: rgba(11,11,11,0.45);
+  }
+  .header-right img {
+    height: 40px;
+    opacity: 0.85;
+  }
+
+  /* Stats */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .stat-card {
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+  }
+  .stat-card .val {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-card .key {
+    font-size: 11px;
+    color: rgba(11,11,11,0.45);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* Table wrapper */
+  .table-wrap {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  thead th {
+    background: var(--bg-alt);
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: rgba(11,11,11,0.45);
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--bg-alt); }
+
+  /* Week separator */
+  .week-sep td {
+    background: var(--bg-alt);
+    padding: 6px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: rgba(11,11,11,0.35);
+    border-bottom: 1px solid var(--border);
+  }
+
+  td {
+    padding: 12px 14px;
+    vertical-align: top;
+  }
+
+  .num {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(11,11,11,0.35);
+    white-space: nowrap;
+  }
+  .date {
+    white-space: nowrap;
+    font-weight: 500;
+    font-size: 13px;
+  }
+  .day {
+    font-size: 12px;
+    color: rgba(11,11,11,0.4);
+  }
+  .topic {
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .format {
+    font-size: 12px;
+    color: rgba(11,11,11,0.5);
+    white-space: nowrap;
+  }
+
+  /* Tags */
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: var(--radius-pill);
+    white-space: nowrap;
+  }
+  .tag-team   { background: #0B0B0B; color: #fff; }
+  .tag-tech   { background: rgba(255,30,30,0.08); color: #c0000a; }
+  .tag-rd     { background: #fff; color: #0B0B0B; border: 1.5px solid var(--accent); }
+  .tag-industry { background: #fff; color: rgba(11,11,11,0.6); border: 1.5px solid var(--border); }
+  .tag-event  { background: #0B0B0B; color: #fff; position: relative; padding-left: 16px; }
+  .tag-event::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  /* Statuses */
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0;
+    white-space: nowrap;
+  }
+  .status::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .status-draft   { color: rgba(11,11,11,0.40); }
+  .status-draft::before   { background: rgba(11,11,11,0.15); }
+  .status-review  { color: #8a6000; }
+  .status-review::before  { background: #F1C40F; }
+  .status-waiting { color: #a05800; }
+  .status-waiting::before { background: #FF8C00; }
+  .status-done    { color: #1a7a3e; }
+  .status-done::before    { background: #2ECC71; }
+
+  /* Needs */
+  .needs { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px; }
+  .need {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+    background: rgba(255,140,0,0.10);
+    color: #a05800;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 32px;
+    text-align: right;
+    font-size: 11px;
+    color: rgba(11,11,11,0.30);
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="label">Контент-план</div>
+      <h1>Sparta Technology</h1>
+      <div class="sub">Telegram · Май 2026 · 3 поста/нед</div>
+    </div>
+    <div class="header-right">
+      <img src="../../global/brand/logo.png" alt="bit&pix">
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat-card">
+      <div class="val">12</div>
+      <div class="key">Постов</div>
+    </div>
+    <div class="stat-card">
+      <div class="val">02–30.05</div>
+      <div class="key">Период</div>
+    </div>
+    <div class="stat-card">
+      <div class="val">3/нед</div>
+      <div class="key">Частота</div>
+    </div>
+    <div class="stat-card">
+      <div class="val">Telegram</div>
+      <div class="key">Платформа</div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Дата</th>
+          <th>Рубрика</th>
+          <th>Тема поста</th>
+          <th>Формат</th>
+          <th>Статус</th>
+          <th>Заметки</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- Неделя 1 -->
+        <tr class="week-sep"><td colspan="7">Неделя 1 — 2 мая</td></tr>
+
+        <tr>
+          <td class="num">01</td>
+          <td class="date">02.05<br><span class="day">Пт</span></td>
+          <td><span class="tag tag-team">E1 · Авторский разбор</span></td>
+          <td class="topic">Открывающий пост: зачем Sparta в Telegram и что здесь будет</td>
+          <td class="format">Текст</td>
+          <td><span class="status status-draft">Черновик</span></td>
+          <td></td>
+        </tr>
+
+        <!-- Неделя 2 -->
+        <tr class="week-sep"><td colspan="7">Неделя 2 — 5–7 мая</td></tr>
+
+        <tr>
+          <td class="num">02</td>
+          <td class="date">05.05<br><span class="day">Пн</span></td>
+          <td><span class="tag tag-rd">E3 · Принцип работы</span></td>
+          <td class="topic">Почему стратегическая сессия без одного элемента — просто встреча</td>
+          <td class="format">Текст</td>
+          <td><span class="status status-draft">Черновик</span></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td class="num">03</td>
+          <td class="date">07.05<br><span class="day">Ср</span></td>
+          <td><span class="tag tag-industry">N1 · Дашборд лидера #1</span></td>
+          <td class="topic">3 тренда в технологическом предпринимательстве: май 2026</td>
+          <td class="format">Текст</td>
+          <td><span class="status status-draft">Черновик</span></td>
+          <td></td>
+        </tr>
+
+        <!-- Неделя 3 -->
+        <tr class="week-sep"><td colspan="7">Неделя 3 — 12–16 мая</td></tr>
+
+        <tr>
+          <td class="num">04</td>
+          <td class="date">12.05<br><span class="day">Пн</span></td>
+          <td><span class="tag tag-event">M1 · Мероприятие</span></td>
+          <td class="topic">Анонс тренинга — город 1</td>
+          <td class="format">Текст + фото</td>
+          <td><span class="status status-waiting">Ждём материалы</span></td>
+          <td>
+            <div class="needs">
+              <span class="need">↗ город и дата</span>
+              <span class="need">↗ фото</span>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="num">05</td>
+          <td class="date">14.05<br><span class="day">Ср</span></td>
+          <td><span class="tag tag-team">E1 · Авторский разбор</span></td>
+          <td class="topic">Я провёл [N] стратсессий в вузах — одна вещь, которая встречалась везде</td>
+          <td class="format">Текст</td>
+          <td><span class="status status-draft">Черновик</span></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td class="num">06</td>
+          <td class="date">16.05<br><span class="day">Пт</span></td>
+          <td><span class="tag tag-tech">E2 · ИИ в управлении</span></td>
+          <td class="topic">ИИ обучает управленцев в Китае. Что это значит для российских вузов</td>
+          <td class="format">Текст</td>
+          <td><span class="status status-draft">Черновик</span></td>
+          <td></td>
+        </tr>
+
+        <!-- Неделя 4 -->
+        <tr class="week-sep"><td colspan="7">Неделя 4 — 19–23 мая</td></tr>
+
+        <tr>
+          <td class="num">07</td>
+          <td class="date">19.05<br><span class="day">Пн</span></td>
+          <td><span class="tag tag-industry">N1 · Дашборд лидера #2</span></td>
+          <td class="topic">3 тренда в технологическом предпринимательстве: вторая неделя мая</td>
+          <td class="format">Текст</td>
+          <td><span class="status status-draft">Черновик</span></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td class="num">08</td>
+          <td class="date">21.05<br><span class="day">Ср</span></td>
+          <td><span class="tag tag-rd">E3 · Принцип работы</span></td>
+          <td class="topic">3 признака, что акселератор провалится ещё до старта</td>
+          <td class="format">Текст</td>
+          <td><span class="status status-draft">Черновик</span></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td class="num">09</td>
+          <td class="date">23.05<br><span class="day">Пт</span></td>
+          <td><span class="tag tag-event">M1 · Мероприятие</span></td>
+          <td class="topic">Анонс тренинга (город 2) или репорт со стратсессии в вузе</td>
+          <td class="format">Текст + фото</td>
+          <td><span class="status status-waiting">Ждём материалы</span></td>
+          <td>
+            <div class="needs">
+              <span class="need">↗ город и дата</span>
+              <span class="need">↗ фото/видео</span>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Неделя 5 -->
+        <tr class="week-sep"><td colspan="7">Неделя 5 — 26–30 мая</td></tr>
+
+        <tr>
+          <td class="num">10</td>
+          <td class="date">26.05<br><span class="day">Пн</span></td>
+          <td><span class="tag tag-team">E1 · Авторский разбор</span></td>
+          <td class="topic">Кадровый кризис в науке: что реально работает, а что — видимость</td>
+          <td class="format">Текст</td>
+          <td><span class="status status-draft">Черновик</span></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td class="num">11</td>
+          <td class="date">28.05<br><span class="day">Ср</span></td>
+          <td><span class="tag tag-tech">E2 · ИИ в управлении</span></td>
+          <td class="topic">ИИ-агент vs стратегический консультант: честное сравнение</td>
+          <td class="format">Текст</td>
+          <td><span class="status status-draft">Черновик</span></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td class="num">12</td>
+          <td class="date">30.05<br><span class="day">Пт</span></td>
+          <td><span class="tag tag-industry">N1 · Дашборд лидера #3</span></td>
+          <td class="topic">3 тренда в технологическом предпринимательстве: итоги мая</td>
+          <td class="format">Текст</td>
+          <td><span class="status status-draft">Черновик</span></td>
+          <td></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">Обновлено: 30.04.2026</div>
+
+</div>
+</body>
+</html>
