@@ -6,6 +6,14 @@
 
 ---
 
+## 30.04.2026 (обновление 2)
+
+- **Новый проект: Black_Apple** — розничная продажа iPhone, федеральная сеть 9 городов, платформа ВКонтакте (blackapplemsk). Папка `projects/Black_Apple/`. Заполнены: `context.md` (полный бриф), `analytics/competitors.md` (MSK vs Kursk 8× разрыв + конкуренты), `strategy.md` (рубрикатор 7 рубрик S1/S2/S3/X1/E1/E2/V1, воронка 60/40, правило геолокации «Москва. Black Apple»), `content-plan.md` + `content-plan.html` (12 постов, май 2026, пропущен 9 мая). Дизайн: dark luxury + fal.ai 3D-рендеры, без участия клиента в съёмке.
+
+- **Новый проект: Lakmoda** — салон красоты, Люберцы, платформа ВКонтакте (lakmoda_nail). Папка `projects/Lakmoda/`. Заполнены: `context.md` (бриф полный + визитка дизайн-система), `analytics/competitors.md` (4 конкурента + 3 ориентира), `strategy.md` (рубрикатор P1/P2/E1/E2/S1/V1), `content-plan.md` + `content-plan.html` (12 постов, май 2026, пропущены 1 и 9 мая). Бренд: #2f4150 + #fecabd, Bebas Neue + Raleway, пудровый минимализм.
+
+---
+
 ## 30.04.2026
 
 - **Новый проект: Sparta** — стратегический консалтинг B2B+B2G, платформа Telegram. Папка `projects/Sparta/`. Заполнены: `context.md` (бриф полный), `analytics/competitors.md` (4 VK + 3 TG аккаунта, медианы), `strategy.md` (рубрикатор E1/E2/E3/N1/M1), `content-plan.md` + `content-plan.html` (12 постов, май 2026). Бренд-ассеты: Gilroy + Gotham шрифты, логотипы в `assets/brand/`. Ключевое отличие стратегии: авторский голос от первого лица — ни один конкурент этого не делает.
