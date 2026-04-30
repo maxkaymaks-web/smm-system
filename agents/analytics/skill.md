@@ -102,7 +102,29 @@ requests.get(image_url, headers={'Referer': 'https://www.instagram.com/', 'User-
 
 ---
 
-### Telegram — `GEHKCq8O4orlPjLFf` (Telegram Scraper)
+### Telegram — два актора (выбирать по задаче)
+
+#### ✅ Текстовый анализ / метрики — `automation-lab/telegram-scraper` (ДЕШЁВЫЙ)
+**Цена:** $0.005 старт + $0.002 канал + **$0.001/сообщение** → 50 сообщений ≈ $0.06
+
+```python
+payload = {
+    'channels': ['channelname'],   # без @, без https://
+    'maxMessages': 50,
+    'includeChannelInfo': True,
+}
+```
+**Поля вывода:** `messageId`, `channelUsername`, `channelTitle`, `text`, `date` (ISO),
+`views` (integer), `viewsRaw` ("5.29M"), `mediaType`, `videoUrl`, `videoDuration`,
+`reactions` (массив: emoji + count), `isEdited`, `isForwarded`, `url`, `scrapedAt`
+
+Ограничение: только публичные каналы (t.me/s/channel). До 5000 сообщений/запуск.
+
+---
+
+#### Визуальный анализ (медиа, CDN-ссылки) — `GEHKCq8O4orlPjLFf` (ДОРОГОЙ, ~$1-2/запуск)
+Использовать **только** когда нужно скачать фото/видео для анализа через fal.ai.
+
 ```python
 payload = {
     'profiles': ['https://t.me/channelname'],
@@ -116,7 +138,7 @@ payload = {
 Извлечение URL из CSS:
 ```python
 import re
-urls = re.findall(r"url\('(https?://[^']+)'\", css_string)
+urls = re.findall(r"url\('(https?://[^']+)'\)", css_string)
 ```
 
 ---
