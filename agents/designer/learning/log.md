@@ -6,6 +6,43 @@
 ---
 
 <!-- Записи добавляются сверху (новые первые) -->
+## 2026-05-03 | 🌸 Нежность и Эстетика
+### Нежность и Эстетика — авто-обучение 03.05.2026
+> Аккаунты: @laneige_us, @aesopskincare, @summer_fridays | Проанализировано изображений: 6
+
+#### Изученные посты
+  - **@mattheperson** (11,331 likes) — editorial | creamy beige, soft powder blue, pale peach, muted ivory, moo | centered subject, lower third focal point, ample negative sp
+  - **@laneige_us** (14,078 likes) — Editorial | Soft lavender, dusty rose, pale peach, muted sage green, ove | Centered bag, balanced distribution of lip products, signifi
+  - **@laneige_us** (11,378 likes) — Editorial | Soft peach, dusty rose, pale lilac, creamy ivory, pastel moo | Diagonal layout, product rows, ample negative space
+  - **@laneige_us** (4,380 likes) — Lifestyle | Soft pink blush, creamy off-white, pale sky blue, warm wood  | Rule of thirds, store entrance as focal point, ample negativ
+  - **@sephora** (2,857 likes) — [product] | [pale blue, cool grey, silver, muted white, sterile and calm | [center-weighted, focus on middle product, moderate negative
+  - **@laneige_us** (3,013 likes) —  |  | 
+
+#### Визуальные паттерны (синтез)
+1. Мягкие, приглушенные градиенты
+2. Преобладание пастельных, пудровых оттенков
+3. Большое количество "воздуха" (негативного пространства)
+4. Фокус на продукте или детализированном крупном плане
+5. Деликатное использование тонких шрифтов (где применимо)
+
+#### Цветовая палитра стиля
+Кремово-пудровые тона (бежевый, пыльная роза, лавандовый, персиковый) с акцентами пастельного синего или зеленого, создающие нежную, спокойную атмосферу.
+
+#### Правила композиции
+Централизованный или следуя правилу третей, с размещением фокусной точки в нижней трети или центре, оставляя много негативного пространства сверху или вокруг.
+
+#### Текстура и свет
+Чистые, гладкие фоны с минимальным количеством текстуры (например, легкая древесная фактура или матовая поверхность), освещенные мягким, рассеянным светом с низкой контрастностью.
+
+#### fal.ai промпты для стиля (применять при генерации)
+  - `Editorial beauty shot of skincare products arranged on a clean surface, featuring soft creamy beige and pale peach gradients, surrounded by ample negative space.`
+  - `A close-up editorial crop of delicate lip gloss tubes, bathed in soft lavender and dusty rose light, with a smooth matte background and plenty of air.`
+  - `A serene lifestyle image showcasing a storefront entrance with creamy off-white and pale sky blue tones, soft diffused daylight, and significant negative space.`
+
+#### Дизайн-фокус
+мягкие градиенты, кремово-пудровые тона, тонкий serif, воздух, editorial beauty кроп
+---
+
 ## 2026-05-03 | 🧠 Промпт-инжиниринг fal.ai
 ### Промпт-инжиниринг fal.ai — авто-обучение 03.05.2026
 
