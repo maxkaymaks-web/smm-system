@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<style>
+  @font-face { font-family: 'Manrope'; font-weight: 400; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Regular.woff2') format('woff2'); }
+  @font-face { font-family: 'Manrope'; font-weight: 700; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Bold.woff2') format('woff2'); }
+  @font-face { font-family: 'Manrope'; font-weight: 800; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-ExtraBold.woff2') format('woff2'); }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1080px; height: 1080px;
+    overflow: hidden;
+    background: #1B1A24;
+    font-family: 'Manrope', 'Tahoma', sans-serif;
+  }
+
+  .slide {
+    position: relative;
+    width: 1080px; height: 1080px;
+    background: #1B1A24;
+    overflow: hidden;
+  }
+
+  .pcb-bg {
+    position: absolute; inset: 0;
+    background-color: #1B1A24;
+    background-image:
+      linear-gradient(90deg, transparent 49%, rgba(4,79,186,0.12) 49%, rgba(4,79,186,0.12) 51%, transparent 51%),
+      linear-gradient(0deg, transparent 49%, rgba(4,79,186,0.08) 49%, rgba(4,79,186,0.08) 51%, transparent 51%);
+    background-size: 120px 120px;
+  }
+
+  /* Оранжевое свечение — проблема */
+  .glow {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 55% 45% at 50% 55%, rgba(197,90,17,0.14) 0%, rgba(27,26,36,0) 70%);
+  }
+
+  .grain {
+    position: absolute; inset: 0; opacity: 0.04;
+  }
+
+  .ghost-num {
+    position: absolute;
+    bottom: -30px; right: 40px;
+    font-size: 340px; font-weight: 800;
+    color: #C55A11; opacity: 0.07;
+    line-height: 1; pointer-events: none;
+  }
+
+  .header {
+    position: absolute;
+    top: 60px; left: 80px; right: 80px;
+    display: flex; align-items: center;
+    justify-content: space-between;
+  }
+  .pill {
+    border: 1.5px solid #C55A11; color: #C55A11;
+    border-radius: 40px; padding: 10px 24px;
+    font-size: 15px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .slide-num {
+    font-size: 15px; font-weight: 700;
+    color: rgba(65,142,241,0.45);
+    letter-spacing: 0.12em;
+  }
+
+  .slide-title {
+    position: absolute;
+    top: 152px; left: 80px; right: 80px;
+  }
+  .slide-title h2 {
+    font-size: 42px; font-weight: 800;
+    color: #FFFFFF; text-transform: uppercase;
+    letter-spacing: 0.04em; line-height: 1.1;
+    margin-bottom: 12px;
+  }
+  .title-line {
+    width: 60px; height: 3px;
+    background: linear-gradient(90deg, #C55A11, rgba(197,90,17,0.3));
+  }
+
+  /* Большая цифра — центр внимания */
+  .big-number-block {
+    position: absolute;
+    top: 255px; left: 80px;
+    width: 400px;
+  }
+  .big-num {
+    font-size: 110px; font-weight: 800;
+    color: #C55A11;
+    line-height: 1; letter-spacing: -0.02em;
+  }
+  .big-num-unit {
+    font-size: 36px; font-weight: 700;
+    color: rgba(197,90,17,0.70);
+    display: block; margin-top: -8px;
+    letter-spacing: 0.04em;
+  }
+  .big-num-label {
+    margin-top: 16px;
+    font-size: 16px; font-weight: 400;
+    color: rgba(91,173,247,0.70);
+    line-height: 1.5; max-width: 340px;
+  }
+
+  /* Пузырь-диаграмма справа */
+  .bubble-diagram {
+    position: absolute;
+    top: 245px; right: 80px;
+    width: 430px; height: 320px;
+  }
+
+  /* Проблемы-список */
+  .problems {
+    position: absolute;
+    bottom: 68px; left: 80px; right: 80px;
+  }
+  .problems-title {
+    font-size: 13px; font-weight: 700;
+    color: rgba(65,142,241,0.45);
+    letter-spacing: 0.14em; text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .prob-list {
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .prob-item {
+    display: flex; align-items: flex-start; gap: 18px;
+    padding: 18px 24px;
+    background: rgba(197,90,17,0.07);
+    border: 1px solid rgba(197,90,17,0.22);
+    border-radius: 10px;
+  }
+  .prob-icon {
+    width: 36px; height: 36px; flex-shrink: 0;
+    border: 1.5px solid rgba(197,90,17,0.50);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 800; color: #C55A11;
+  }
+  .prob-text {
+    font-size: 16px; font-weight: 400;
+    color: rgba(255,255,255,0.82);
+    line-height: 1.45;
+  }
+  .prob-text strong {
+    color: #C55A11; font-weight: 700;
+  }
+
+  .logo-mark {
+    position: absolute; bottom: 28px; right: 80px;
+    font-size: 18px; font-weight: 700;
+    color: #418EF1; letter-spacing: 0.12em; opacity: 0.7;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+
+  <div class="pcb-bg"></div>
+  <div class="glow"></div>
+
+  <svg class="grain" xmlns="http://www.w3.org/2000/svg">
+    <filter id="g"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+    <rect width="100%" height="100%" filter="url(#g)"/>
+  </svg>
+
+  <div class="ghost-num">03</div>
+
+  <div class="header">
+    <div class="pill">ПРОБЛЕМА</div>
+    <div class="slide-num">03 / 04</div>
+  </div>
+
+  <div class="slide-title">
+    <h2>Почему стандартная аэрация<br>неэффективна</h2>
+    <div class="title-line"></div>
+  </div>
+
+  <!-- Большая цифра kLa -->
+  <div class="big-number-block">
+    <div class="big-num">2–5
+      <span class="big-num-unit">ч⁻¹   kLa</span>
+    </div>
+    <div class="big-num-label">
+      Типичный коэффициент переноса<br>стандартного аэратора с крупными пузырями
+    </div>
+  </div>
+
+  <!-- Диаграмма: крупный пузырь vs площадь контакта -->
+  <svg style="position:absolute;top:248px;right:80px;width:430px;height:310px" viewBox="0 0 430 310" xmlns="http://www.w3.org/2000/svg">
+
+    <!-- Крупный пузырь — стандарт -->
+    <circle cx="120" cy="155" r="90" fill="rgba(197,90,17,0.10)" stroke="#C55A11" stroke-width="2" stroke-dasharray="8,4"/>
+    <text x="120" y="148" text-anchor="middle" font-family="Tahoma,sans-serif" font-size="13" fill="#C55A11" opacity="0.9">Ø 3–5 мм</text>
+    <text x="120" y="168" text-anchor="middle" font-family="Tahoma,sans-serif" font-size="11" fill="rgba(197,90,17,0.65)">стандартный</text>
+    <text x="120" y="185" text-anchor="middle" font-family="Tahoma,sans-serif" font-size="11" fill="rgba(197,90,17,0.65)">пузырь</text>
+    <!-- Стрелка вверх — всплывает быстро -->
+    <line x1="120" y1="58" x2="120" y2="20" stroke="rgba(197,90,17,0.5)" stroke-width="1.5"/>
+    <polygon points="120,14 115,24 125,24" fill="rgba(197,90,17,0.5)"/>
+    <text x="132" y="42" font-family="Tahoma,sans-serif" font-size="11" fill="rgba(197,90,17,0.6)">всплывает за 1–2 с</text>
+
+    <!-- Разделитель -->
+    <line x1="230" y1="20" x2="230" y2="290" stroke="rgba(65,142,241,0.15)" stroke-width="1" stroke-dasharray="4,4"/>
+
+    <!-- Мелкие пузыри — потенциал -->
+    <circle cx="310" cy="105" r="22" fill="rgba(0,175,80,0.08)" stroke="#00AF50" stroke-width="1.5" opacity="0.8"/>
+    <circle cx="355" cy="155" r="18" fill="rgba(0,175,80,0.08)" stroke="#00AF50" stroke-width="1.5" opacity="0.8"/>
+    <circle cx="300" cy="180" r="26" fill="rgba(0,175,80,0.08)" stroke="#00AF50" stroke-width="1.5" opacity="0.8"/>
+    <circle cx="370" cy="218" r="15" fill="rgba(0,175,80,0.08)" stroke="#00AF50" stroke-width="1.5" opacity="0.7"/>
+    <circle cx="330" cy="235" r="20" fill="rgba(0,175,80,0.08)" stroke="#00AF50" stroke-width="1.5" opacity="0.7"/>
+    <text x="335" y="275" text-anchor="middle" font-family="Tahoma,sans-serif" font-size="11" fill="rgba(0,175,80,0.80)">× больше площадь</text>
+    <text x="335" y="291" text-anchor="middle" font-family="Tahoma,sans-serif" font-size="11" fill="rgba(0,175,80,0.80)">контакта</text>
+
+    <!-- Подписи снизу -->
+    <text x="120" y="295" text-anchor="middle" font-family="Tahoma,sans-serif" font-size="12" font-weight="700" fill="rgba(197,90,17,0.70)" letter-spacing="1">СТАНДАРТ</text>
+    <text x="335" y="305" text-anchor="middle" font-family="Tahoma,sans-serif" font-size="12" font-weight="700" fill="rgba(0,175,80,0.70)" letter-spacing="1">ПОТЕНЦИАЛ</text>
+  </svg>
+
+  <!-- Список проблем -->
+  <div class="problems">
+    <div class="problems-title">Три причины низкой эффективности</div>
+    <div class="prob-list">
+      <div class="prob-item">
+        <div class="prob-icon">1</div>
+        <div class="prob-text"><strong>Крупные пузыри</strong> — диаметр 3–5 мм даёт площадь контакта ~0,03 м²/л. Пузырь всплывает за 1–2 с, O₂ не успевает перейти в воду.</div>
+      </div>
+      <div class="prob-item">
+        <div class="prob-icon">2</div>
+        <div class="prob-text"><strong>Низкое kLa = 2–5 ч⁻¹</strong> — при нужных 10+ ч⁻¹ система потребляет в разы больше энергии для достижения того же результата.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="logo-mark">БП</div>
+
+</div>
+</body>
+</html>
