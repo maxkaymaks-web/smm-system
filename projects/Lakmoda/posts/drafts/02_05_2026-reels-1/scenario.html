@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Сценарий Reels #01 — LAKMODA</title>
+<style>
+@font-face {
+  font-family: 'Nata Sans';
+  src: url('../../../../../global/brand/NataSans-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+}
+
+@page { size: A4 portrait; margin: 10mm 12mm; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #FEFEFF;
+  --bg-alt:  #fdf7f5;
+  --text:    #0B0B0B;
+  --accent:  #c9806a;
+  --border:  rgba(11,11,11,0.09);
+  --muted:   rgba(11,11,11,0.42);
+  --r:       10px;
+  --r-sm:    5px;
+  --r-pill:  20px;
+  --font:    'Nata Sans', -apple-system, sans-serif;
+}
+
+html { background: #e8e8e8; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  width: 760px;
+  margin: 32px auto;
+  padding: 36px 40px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  border-radius: 4px;
+}
+@media print {
+  html { background: var(--bg); }
+  body { margin: 0; border-radius: 0; padding: 0 28px; width: 100%; }
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 22px;
+  border-bottom: 2px solid var(--text);
+  margin-bottom: 22px;
+}
+.header-label {
+  font-size: 9px; font-weight: 600; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 7px;
+}
+.header-title {
+  font-size: 22px; font-weight: 800; line-height: 1.2;
+  letter-spacing: -0.4px; margin-bottom: 5px;
+}
+.header-title .num { color: var(--accent); }
+.header-sub { font-size: 11px; color: var(--muted); }
+.header-logo img { height: 46px; }
+
+/* BADGES */
+.badges { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 12px; border-radius: var(--r-pill);
+  border: 1.5px solid var(--border); background: var(--bg-alt); font-size: 11px;
+}
+.badge-label {
+  font-size: 8px; font-weight: 700; letter-spacing: 1.8px;
+  text-transform: uppercase; color: var(--muted);
+}
+.badge-value { font-weight: 700; }
+.badge.rose { border-color: rgba(201,128,106,0.25); background: rgba(201,128,106,0.04); }
+.badge.rose .badge-value { color: var(--accent); }
+.badge a { color: inherit; text-decoration: none; }
+.badge a:hover { text-decoration: underline; }
+
+/* SECTION TITLE */
+.stitle {
+  font-size: 9px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted);
+  margin-top: 22px; margin-bottom: 10px;
+}
+
+/* HOOK */
+.hook {
+  background: rgba(201,128,106,0.04);
+  border: 1.5px solid rgba(201,128,106,0.22);
+  border-radius: var(--r); padding: 16px 20px;
+}
+.hook-type {
+  font-size: 8.5px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 7px;
+}
+.hook-text {
+  font-size: 20px; font-weight: 800; line-height: 1.2;
+  letter-spacing: -0.3px; margin-bottom: 10px;
+}
+.hook-row { display: flex; gap: 24px; }
+.hook-item { font-size: 11.5px; color: var(--muted); }
+.hook-item strong { color: var(--text); font-weight: 600; }
+
+/* RETENTION FACTOR */
+.retention {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--r); padding: 16px 20px;
+}
+.retention-row {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+}
+.retention-row:last-child { border-bottom: none; padding-bottom: 0; }
+.retention-row:first-child { padding-top: 0; }
+.retention-num {
+  width: 22px; height: 22px; background: var(--accent); color: #fff;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 800; flex-shrink: 0; margin-top: 1px;
+}
+.retention-body { flex: 1; }
+.retention-title { font-size: 12px; font-weight: 700; margin-bottom: 3px; }
+.retention-desc { font-size: 11.5px; color: var(--muted); line-height: 1.5; }
+
+/* STORYBOARD */
+.shot {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 14px 0; border-bottom: 1px solid var(--border);
+}
+.shot:last-child { border-bottom: none; }
+.shot-num {
+  width: 28px; height: 28px; background: var(--text); color: #fff;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; flex-shrink: 0; margin-top: 1px;
+}
+.shot-body { flex: 1; }
+.shot-time {
+  font-size: 9px; font-weight: 700; color: var(--accent);
+  letter-spacing: 0.5px; margin-bottom: 4px;
+}
+.shot-action {
+  font-size: 12.5px; font-weight: 600; line-height: 1.4; margin-bottom: 8px;
+}
+.shot-vo {
+  font-size: 12px; color: var(--muted); line-height: 1.4;
+  border-left: 2px solid var(--border); padding-left: 10px;
+  margin-bottom: 8px; font-style: italic;
+}
+.shot-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.shot-tag {
+  font-size: 10.5px; padding: 3px 9px; border-radius: 4px;
+  border: 1px solid var(--border); background: var(--bg-alt); color: var(--muted);
+}
+.shot-tag strong { color: var(--text); font-weight: 600; font-size: 9px;
+  text-transform: uppercase; letter-spacing: 1px; margin-right: 4px; }
+.shot-overlay {
+  display: inline-block; background: var(--text); color: #fff;
+  border-radius: 4px; padding: 3px 9px; font-size: 11px; font-weight: 700;
+  margin-top: 7px; font-family: monospace; letter-spacing: 0;
+}
+.shot-tag.cta { background: rgba(201,128,106,0.05); border-color: rgba(201,128,106,0.25); }
+.shot-tag.cta strong { color: var(--accent); }
+.shot-tag.cut { background: rgba(201,128,106,0.05); border-color: rgba(201,128,106,0.25); color: var(--accent); font-weight: 700; }
+
+/* HOW GRID */
+.how-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1px; background: var(--border); border-radius: var(--r); overflow: hidden;
+}
+.how-cell { background: var(--bg); padding: 12px 16px; }
+.how-cell.full { grid-column: 1 / -1; }
+.how-label {
+  font-size: 8.5px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 4px;
+}
+.how-value { font-size: 12px; font-weight: 500; line-height: 1.45; }
+
+/* MUSIC */
+.music {
+  background: var(--bg-alt); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 16px 20px;
+}
+.music-name { font-size: 15px; font-weight: 800; margin-bottom: 3px; }
+.music-why { font-size: 11.5px; color: var(--muted); margin-bottom: 10px; line-height: 1.5; }
+.music-links { display: flex; gap: 8px; flex-wrap: wrap; }
+.music-link {
+  font-size: 10.5px; padding: 4px 11px; border-radius: 4px;
+  border: 1px solid var(--border); background: var(--bg); color: var(--muted);
+  text-decoration: none;
+}
+.music-link:hover { color: var(--text); }
+.music-alt { font-size: 11.5px; color: var(--muted); margin-top: 12px; }
+.music-alt a { color: var(--text); }
+
+/* CAPTION */
+.caption-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.caption-box {
+  background: var(--bg-alt); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 14px 16px;
+}
+.caption-label {
+  font-size: 8.5px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 8px;
+}
+.caption-text { font-size: 12.5px; line-height: 1.65; white-space: pre-line; }
+.caption-note { font-size: 11px; color: var(--muted); line-height: 1.5; margin-top: 10px; }
+
+/* FOOTER */
+.footer {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 26px; padding-top: 16px; border-top: 1px solid var(--border);
+}
+.footer-note { font-size: 10px; color: var(--muted); }
+.footer-dot {
+  width: 6px; height: 6px; background: var(--accent);
+  border-radius: 50%; display: inline-block; margin-right: 6px;
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div>
+    <div class="header-label">Сценарий Reels · LAKMODA · bit&pix агент</div>
+    <h1 class="header-title"><span class="num">#01</span> Открываем май: весенние работы мастеров</h1>
+    <div class="header-sub">02 мая 2026 · Пятница · P1 Портфолио · 10–12 сек</div>
+  </div>
+  <div class="header-logo">
+    <img src="https://raw.githubusercontent.com/maxkaymaks-web/smm-system/main/global/brand/logo.png" alt="bit&pix агент">
+  </div>
+</header>
+
+<!-- BADGES -->
+<div class="badges">
+  <div class="badge">
+    <span class="badge-label">Тип</span>
+    <span class="badge-value">Портфолио</span>
+  </div>
+  <div class="badge">
+    <span class="badge-label">Хук</span>
+    <span class="badge-value">Остановка скролла</span>
+  </div>
+  <div class="badge rose">
+    <span class="badge-label">Хрон.</span>
+    <span class="badge-value">10–12s</span>
+  </div>
+  <div class="badge">
+    <span class="badge-label">Аналог</span>
+    <span class="badge-value">
+      <a href="https://www.instagram.com/nails_studio_aesthetic" target="_blank">@nails_studio_aesthetic — портфолио нейл-студии ↗</a>
+    </span>
+  </div>
+</div>
+
+<!-- HOOK -->
+<div class="stitle">Хук — первые 2 секунды</div>
+<div class="hook">
+  <div class="hook-type">✨ Остановка скролла</div>
+  <div class="hook-text">Крупный план: идеальный весенний маникюр — пастель, цветы, свет</div>
+  <div class="hook-row">
+    <div class="hook-item"><strong>Визуал:</strong> нежные ногти с весенним дизайном на нейтральном фоне. Руки спокойно сложены. Никакого движения — красота говорит сама за себя.</div>
+    <div class="hook-item"><strong>Аудио:</strong> лёгкая музыка входит с первым кадром. Без голоса, без шумов. Атмосфера.</div>
+  </div>
+</div>
+
+<!-- RETENTION FACTOR -->
+<div class="stitle">Фактор держания — почему досмотрят до конца</div>
+<div class="retention">
+  <div class="retention-row">
+    <div class="retention-num">1</div>
+    <div class="retention-body">
+      <div class="retention-title">Смена образов удерживает взгляд</div>
+      <div class="retention-desc">Каждый кат — новая работа, новый цвет, новый дизайн. Зритель не успевает насмотреться на один образ и сразу получает следующий. Мозг хочет увидеть все — и досматривает до конца.</div>
+    </div>
+  </div>
+  <div class="retention-row">
+    <div class="retention-num">2</div>
+    <div class="retention-body">
+      <div class="retention-title">Весенняя палитра создаёт желание</div>
+      <div class="retention-desc">Пастельные тона, нюды, цветочные акценты — это именно то, что аудитория хочет сделать прямо сейчас. Рилс продаёт не маникюр, а ощущение весны на своих руках.</div>
+    </div>
+  </div>
+  <div class="retention-row">
+    <div class="retention-num">3</div>
+    <div class="retention-body">
+      <div class="retention-title">Процесс как доказательство мастерства</div>
+      <div class="retention-desc">Кадр с кистью мастера — деталь, которая добавляет доверие. Зритель видит не только результат, но и аккуратность работы. Это особенно важно для новой аудитории.</div>
+    </div>
+  </div>
+  <div class="retention-row">
+    <div class="retention-num">4</div>
+    <div class="retention-body">
+      <div class="retention-title">Финальный CTA не прерывает атмосферу</div>
+      <div class="retention-desc">Логотип и ссылка появляются тихо на последнем кадре. Человек в состоянии «хочу так же» видит «lakmoda.ru» — и уже готов к переходу. Конверсия без давления.</div>
+    </div>
+  </div>
+</div>
+
+<!-- STORYBOARD -->
+<div class="stitle">Раскадровка</div>
+
+<div class="shot">
+  <div class="shot-num">1</div>
+  <div class="shot-body">
+    <div class="shot-time">0 – 2s</div>
+    <div class="shot-action">Крупно: нежные ногти с весенним дизайном — пастельный розовый, лиловый или белый с цветочным акцентом. Руки аккуратно сложены на нейтральном фоне. Полная статика. Мягкий рассеянный свет.</div>
+    <div class="shot-tags">
+      <div class="shot-tag"><strong>монтаж</strong>fade in 0.3s</div>
+      <div class="shot-tag"><strong>ракурс</strong>крупный план</div>
+      <div class="shot-tag"><strong>аудио</strong>музыка входит с кадром</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot">
+  <div class="shot-num">2</div>
+  <div class="shot-body">
+    <div class="shot-time">2 – 4s</div>
+    <div class="shot-action">Жёсткий кат. Другая работа другого мастера — нюдовый или персиковый гель-лак, безупречная форма. Руки слегка в движении — будто раскладывают что-то или держат предмет. Акцент на цвете и форме ногтей.</div>
+    <div class="shot-tags">
+      <div class="shot-tag cut">⚡ жёсткий кат</div>
+      <div class="shot-tag"><strong>ракурс</strong>крупный план</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot">
+  <div class="shot-num">3</div>
+  <div class="shot-body">
+    <div class="shot-time">4 – 6.5s</div>
+    <div class="shot-action">Жёсткий кат. Процесс: крупно — кисть мастера уверенно наносит покрытие на ноготь. Видна аккуратность движения. Чистый фон. Только рука мастера и рука клиента — больше ничего.</div>
+    <div class="shot-tags">
+      <div class="shot-tag cut">⚡ жёсткий кат</div>
+      <div class="shot-tag"><strong>ракурс</strong>крупный план, детальная съёмка</div>
+    </div>
+    <div class="shot-vo">Показывает мастерство и аккуратность — главный аргумент для новых клиентов</div>
+  </div>
+</div>
+
+<div class="shot">
+  <div class="shot-num">4</div>
+  <div class="shot-body">
+    <div class="shot-time">6.5 – 8.5s</div>
+    <div class="shot-action">Жёсткий кат. Готовая работа другого мастера — весенняя палитра: пудровый, мятный или лавандовый. Руки красиво положены на тёмный стол или мраморную поверхность. Небольшой реквизит рядом: цветок, кольцо.</div>
+    <div class="shot-tags">
+      <div class="shot-tag cut">⚡ жёсткий кат</div>
+      <div class="shot-tag"><strong>ракурс</strong>крупный план, флэтлей</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot">
+  <div class="shot-num">5</div>
+  <div class="shot-body">
+    <div class="shot-time">8.5 – 10.5s</div>
+    <div class="shot-action">Жёсткий кат. Финал: идеальные ногти крупным планом на нейтральном фоне — идеальная форма, глянцевый блеск. Freeze. Логотип «LAKMODA» плавно появляется сверху или снизу. Ссылка «lakmoda.ru» — маленьким шрифтом.</div>
+    <div class="shot-tags">
+      <div class="shot-tag cut">⚡ жёсткий кат</div>
+      <div class="shot-tag"><strong>монтаж</strong>статика → freeze</div>
+      <div class="shot-tag cta"><strong>CTA</strong>логотип + ссылка</div>
+    </div>
+    <div class="shot-overlay">LAKMODA · lakmoda.ru</div>
+  </div>
+</div>
+
+<!-- SHOOTING INSTRUCTIONS -->
+<div class="stitle">Инструкции по съёмке</div>
+<div class="how-grid">
+  <div class="how-cell">
+    <div class="how-label">Ориентация</div>
+    <div class="how-value">9:16 вертикаль</div>
+  </div>
+  <div class="how-cell">
+    <div class="how-label">Ракурс</div>
+    <div class="how-value">Кадры 1, 2, 4, 5 — крупный план ногтей сверху. Кадр 3 — детальная съёмка процесса, угол 30–45°.</div>
+  </div>
+  <div class="how-cell">
+    <div class="how-label">Свет</div>
+    <div class="how-value">Мягкий рассеянный. Кольцевой свет или дневной у окна. Никаких жёстких теней. Одинаковая температура на всех кадрах — тёплая или нейтральная.</div>
+  </div>
+  <div class="how-cell">
+    <div class="how-label">Фон</div>
+    <div class="how-value">Нейтральный: белая или пудровая поверхность, тёмный стол, мраморная текстура. Ничего яркого, что отвлечёт от ногтей.</div>
+  </div>
+  <div class="how-cell">
+    <div class="how-label">Руки</div>
+    <div class="how-value">Ухоженные кожа и кутикула. Без колец или с одним аккуратным кольцом. Позиция — спокойная, не напряжённая.</div>
+  </div>
+  <div class="how-cell">
+    <div class="how-label">Реквизит</div>
+    <div class="how-value">Кадр 4: 1–2 предмета рядом — сухой цветок, маленький камень, кольцо. Натурально, не постановочно. Не перегружать кадр.</div>
+  </div>
+  <div class="how-cell">
+    <div class="how-label">Монтаж</div>
+    <div class="how-value">Fade in на кадре 1. Жёсткий кат между остальными. Нормальная скорость. Freeze на финале 1.5 сек. Логотип появляется плавно — opacity 0 → 1 за 0.5 сек.</div>
+  </div>
+  <div class="how-cell">
+    <div class="how-label">Цветокоррекция</div>
+    <div class="how-value">Тёплая, чуть приглушённая. Лёгкая десатурация. Фильтр Lo-Fi или Clarendon 30–40% в Instagram. Все кадры в одном стиле.</div>
+  </div>
+</div>
+
+<!-- MUSIC -->
+<div class="stitle">Музыка</div>
+<div class="music">
+  <div class="music-name">🎵 Трендовое ambient / light pop, 80–95 bpm</div>
+  <div class="music-why">Лёгкая, тёплая музыка без слов или с очень лёгким вокалом. Создаёт атмосферу весны и спокойствия — зритель «погружается» в кадр, а не отвлекается на текст песни. Нейл-аккаунты с 30k+ используют этот формат стабильно.</div>
+  <div class="music-links">
+    <a class="music-link" href="https://www.instagram.com/explore/tags/nailsaesthetic/" target="_blank">#nailsaesthetic — посмотреть аналоги ↗</a>
+    <a class="music-link" href="https://www.instagram.com/explore/tags/springnails/" target="_blank">#springnails — аналоги весна 2026 ↗</a>
+  </div>
+  <div class="music-alt">
+    <strong>Как выбрать:</strong> зайди в Instagram Reels → поиск → «spring nails aesthetic» → смотри, какой трек повторяется чаще всего в нише → использовать его. Темп 80–95 bpm, без агрессии.
+  </div>
+</div>
+
+<!-- CAPTION + HASHTAGS -->
+<div class="stitle">Подпись к посту</div>
+<div class="caption-grid">
+  <div class="caption-box">
+    <div class="caption-label">Подпись · Поэтика + CTA</div>
+    <div class="caption-text">весна на кончиках пальцев. ✨
+
+открываем май работами наших мастеров — смотрите, какие цвета ждут вас в этом месяце.
+
+запись: lakmoda.ru</div>
+  </div>
+  <div class="caption-box">
+    <div class="caption-label">Хэштеги</div>
+    <div class="caption-note">P1 — Портфолио. Хэштеги не используются согласно стратегии бренда.</div>
+  </div>
+</div>
+
+<!-- PUBLICATION -->
+<div class="stitle">Публикация</div>
+<div class="how-grid">
+  <div class="how-cell">
+    <div class="how-label">Время</div>
+    <div class="how-value">Пт 02 мая, 10:00–12:00 — дневной пик активности у аудитории</div>
+  </div>
+  <div class="how-cell">
+    <div class="how-label">Обложка (превью)</div>
+    <div class="how-value">Кадр #1 — самая красивая работа, весенний дизайн, чистый фон</div>
+  </div>
+  <div class="how-cell">
+    <div class="how-label">Геометка</div>
+    <div class="how-value">LAKMODA · Люберцы</div>
+  </div>
+  <div class="how-cell">
+    <div class="how-label">Alt-текст</div>
+    <div class="how-value">Весенний маникюр — работы мастеров LAKMODA, май 2026</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-note">LAKMODA · Сценарий #01 · 02 мая 2026</div>
+  <div class="footer-note"><span class="footer-dot"></span>bit&pix агент</div>
+</footer>
+
+</body>
+</html>
