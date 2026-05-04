@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Запрос материалов #01 — LAKMODA</title>
+<style>
+@font-face {
+  font-family: 'Nata Sans';
+  src: url('../../../../../global/brand/NataSans-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+}
+
+@page { size: A4 portrait; margin: 10mm 12mm; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #FEFEFF;
+  --bg-alt:  #fdf7f5;
+  --text:    #0B0B0B;
+  --accent:  #c9806a;
+  --border:  rgba(11,11,11,0.09);
+  --muted:   rgba(11,11,11,0.42);
+  --r:       10px;
+  --r-pill:  20px;
+  --font:    'Nata Sans', -apple-system, sans-serif;
+}
+
+html { background: #e8e8e8; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  width: 760px;
+  margin: 32px auto;
+  padding: 36px 40px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  border-radius: 4px;
+}
+@media print {
+  html { background: var(--bg); }
+  body { margin: 0; border-radius: 0; padding: 0 28px; width: 100%; }
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 22px;
+  border-bottom: 2px solid var(--text);
+  margin-bottom: 22px;
+}
+.header-label {
+  font-size: 9px; font-weight: 600; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 7px;
+}
+.header-title {
+  font-size: 22px; font-weight: 800; line-height: 1.2;
+  letter-spacing: -0.4px; margin-bottom: 5px;
+}
+.header-title .num { color: var(--accent); }
+.header-sub { font-size: 11px; color: var(--muted); }
+.header-logo img { height: 46px; }
+
+/* INTRO */
+.intro {
+  background: rgba(201,128,106,0.05);
+  border: 1.5px solid rgba(201,128,106,0.22);
+  border-radius: var(--r);
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+.intro-label {
+  font-size: 8.5px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 6px;
+}
+.intro-text { font-size: 13px; color: var(--text); line-height: 1.6; }
+
+/* SECTION TITLE */
+.stitle {
+  font-size: 9px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted);
+  margin-top: 22px; margin-bottom: 10px;
+}
+
+/* MATERIAL CARD */
+.mat {
+  display: flex; gap: 16px; align-items: flex-start;
+  padding: 16px 0; border-bottom: 1px solid var(--border);
+}
+.mat:last-child { border-bottom: none; }
+.mat-num {
+  width: 32px; height: 32px; background: var(--text); color: #fff;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800; flex-shrink: 0; margin-top: 2px;
+}
+.mat-num.process { background: var(--accent); }
+.mat-body { flex: 1; }
+.mat-type {
+  font-size: 8.5px; font-weight: 700; letter-spacing: 1.8px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 5px;
+}
+.mat-type span { color: var(--accent); }
+.mat-title {
+  font-size: 14px; font-weight: 800; line-height: 1.3; margin-bottom: 8px;
+}
+.mat-specs {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;
+}
+.spec {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 10px; border-radius: var(--r-pill);
+  border: 1px solid var(--border); background: var(--bg-alt);
+  font-size: 10.5px;
+}
+.spec strong {
+  font-size: 8.5px; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: var(--muted); margin-right: 2px;
+}
+.spec.red { border-color: rgba(201,128,106,0.25); background: rgba(201,128,106,0.04); }
+.spec.red strong { color: var(--accent); }
+.mat-desc {
+  font-size: 12px; color: var(--muted); line-height: 1.55;
+}
+.mat-desc em { color: var(--text); font-style: normal; font-weight: 600; }
+
+/* REQUIREMENTS GRID */
+.req-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1px; background: var(--border); border-radius: var(--r); overflow: hidden;
+}
+.req-cell { background: var(--bg); padding: 12px 16px; }
+.req-cell.full { grid-column: 1 / -1; }
+.req-label {
+  font-size: 8.5px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 4px;
+}
+.req-value { font-size: 12px; font-weight: 500; line-height: 1.5; }
+.req-value strong { font-weight: 700; }
+.req-value .bad { color: #cc0000; font-weight: 600; }
+
+/* DEADLINE */
+.deadline {
+  background: var(--bg-alt); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 14px 20px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.deadline-label { font-size: 9px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
+.deadline-val { font-size: 16px; font-weight: 800; }
+.deadline-note { font-size: 11px; color: var(--muted); }
+
+/* FOOTER */
+.footer {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 26px; padding-top: 16px; border-top: 1px solid var(--border);
+}
+.footer-note { font-size: 10px; color: var(--muted); }
+.footer-dot {
+  width: 6px; height: 6px; background: var(--accent);
+  border-radius: 50%; display: inline-block; margin-right: 6px;
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div>
+    <div class="header-label">Запрос материалов · LAKMODA · bit&pix агент</div>
+    <h1 class="header-title"><span class="num">#01</span> Открываем май: весенние работы мастеров</h1>
+    <div class="header-sub">Публикация: 02 мая 2026, Пт · Reel · 10–12 сек · P1 Портфолио</div>
+  </div>
+  <div class="header-logo">
+    <img src="https://raw.githubusercontent.com/maxkaymaks-web/smm-system/main/global/brand/logo.png" alt="bit&pix агент">
+  </div>
+</header>
+
+<!-- INTRO -->
+<div class="intro">
+  <div class="intro-label">Для чего эти материалы</div>
+  <div class="intro-text">Reel-подборка весенних работ мастеров LAKMODA. Монтаж: 4–5 коротких клипов, сменяющих друг друга. Никакого текста на экране — только ногти, свет, цвет. В конце появляется логотип и ссылка lakmoda.ru.</div>
+</div>
+
+<!-- MATERIALS LIST -->
+<div class="stitle">Что нужно снять — 5 клипов</div>
+
+<div class="mat">
+  <div class="mat-num">1</div>
+  <div class="mat-body">
+    <div class="mat-type">Клип · <span>Готовая работа — хук</span></div>
+    <div class="mat-title">Крупный план: весенний дизайн ногтей</div>
+    <div class="mat-specs">
+      <div class="spec red"><strong>Длина</strong>3–4 сек</div>
+      <div class="spec"><strong>Движение</strong>статика, без движения</div>
+      <div class="spec"><strong>Ракурс</strong>сверху, крупный план</div>
+    </div>
+    <div class="mat-desc">
+      Снять готовую работу: <em>пастельный маникюр</em> — розовый, лиловый, белый с цветочным акцентом или французский с весенней деталью. Руки аккуратно сложены, пальцы вместе. Ничего лишнего в кадре. Фон — нейтральный (белый стол, мрамор, пудровая поверхность).
+    </div>
+  </div>
+</div>
+
+<div class="mat">
+  <div class="mat-num">2</div>
+  <div class="mat-body">
+    <div class="mat-type">Клип · <span>Готовая работа — другой мастер</span></div>
+    <div class="mat-title">Нюдовый или персиковый гель-лак</div>
+    <div class="mat-specs">
+      <div class="spec red"><strong>Длина</strong>3–4 сек</div>
+      <div class="spec"><strong>Движение</strong>лёгкое — руки чуть шевелятся</div>
+      <div class="spec"><strong>Ракурс</strong>сверху или 30°, крупный план</div>
+    </div>
+    <div class="mat-desc">
+      Другая работа, другой мастер. <em>Нюдовый, телесный или персиковый</em> цвет. Безупречная форма. Руки можно чуть сдвинуть в кадре — как будто достают что-то или поправляют. Один небольшой жест — не статика.
+    </div>
+  </div>
+</div>
+
+<div class="mat">
+  <div class="mat-num process">3</div>
+  <div class="mat-body">
+    <div class="mat-type">Клип · <span>Процесс — съёмка за работой</span></div>
+    <div class="mat-title">Кисть мастера наносит покрытие</div>
+    <div class="mat-specs">
+      <div class="spec red"><strong>Длина</strong>4–5 сек</div>
+      <div class="spec"><strong>Движение</strong>реальный процесс нанесения</div>
+      <div class="spec"><strong>Ракурс</strong>сбоку или 45°, детальный</div>
+    </div>
+    <div class="mat-desc">
+      <em>Снять момент работы мастера:</em> кисть уверенно и аккуратно наносит покрытие на ноготь. В кадре — только рука мастера и рука клиента. Никакого лица, никакого фона — чистый белый или нейтральный. Подчёркивает аккуратность и мастерство.
+    </div>
+  </div>
+</div>
+
+<div class="mat">
+  <div class="mat-num">4</div>
+  <div class="mat-body">
+    <div class="mat-type">Клип · <span>Готовая работа — флэтлей</span></div>
+    <div class="mat-title">Весенняя палитра на тёмной поверхности</div>
+    <div class="mat-specs">
+      <div class="spec red"><strong>Длина</strong>3–4 сек</div>
+      <div class="spec"><strong>Движение</strong>статика</div>
+      <div class="spec"><strong>Ракурс</strong>строго сверху</div>
+    </div>
+    <div class="mat-desc">
+      Третья работа, третий мастер. <em>Пудровый, мятный, лавандовый или sage</em> — весенняя палитра. Руки красиво лежат на тёмном столе или тёмном фоне. Можно добавить рядом один небольшой реквизит: <em>сухой цветок, маленький камень или кольцо</em>. Не перегружать.
+    </div>
+  </div>
+</div>
+
+<div class="mat">
+  <div class="mat-num">5</div>
+  <div class="mat-body">
+    <div class="mat-type">Клип · <span>Финальный кадр — для логотипа</span></div>
+    <div class="mat-title">Идеальные ногти крупно, нейтральный фон</div>
+    <div class="mat-specs">
+      <div class="spec red"><strong>Длина</strong>3–4 сек</div>
+      <div class="spec"><strong>Движение</strong>статика</div>
+      <div class="spec"><strong>Ракурс</strong>сверху, крупный план</div>
+    </div>
+    <div class="mat-desc">
+      Самая сильная работа — лучший результат месяца. <em>Идеальная форма, глянцевый или матовый блеск.</em> Чистый нейтральный фон, много воздуха в кадре — поверх этого кадра монтажёр поставит логотип LAKMODA и ссылку. Статика, ничего не движется.
+    </div>
+  </div>
+</div>
+
+<!-- TECHNICAL REQUIREMENTS -->
+<div class="stitle">Технические требования — одинаково для всех клипов</div>
+<div class="req-grid">
+  <div class="req-cell">
+    <div class="req-label">Ориентация</div>
+    <div class="req-value"><strong>Вертикаль 9:16</strong> — снимать телефон стоя</div>
+  </div>
+  <div class="req-cell">
+    <div class="req-label">Разрешение</div>
+    <div class="req-value"><strong>4K или 1080p</strong> — максимальное качество камеры</div>
+  </div>
+  <div class="req-cell">
+    <div class="req-label">Свет</div>
+    <div class="req-value"><strong>Мягкий, рассеянный</strong> — кольцевой свет или дневной у окна. <span class="bad">Без жёстких теней.</span> Одна и та же лампа на все клипы.</div>
+  </div>
+  <div class="req-cell">
+    <div class="req-label">Фон</div>
+    <div class="req-value">Нейтральный: <strong>белый стол, мраморная текстура, тёмная поверхность</strong>. Ничего яркого, пёстрого, отвлекающего.</div>
+  </div>
+  <div class="req-cell">
+    <div class="req-label">Руки</div>
+    <div class="req-value">Ухоженная кожа, <strong>убрать кутикулу</strong> перед съёмкой. Без колец или одно аккуратное кольцо. Позиция спокойная, не напряжённая.</div>
+  </div>
+  <div class="req-cell">
+    <div class="req-label">Что прислать</div>
+    <div class="req-value">Оригинальные файлы — <strong>не обрезанные, без фильтров</strong>. Фильтры и цветокоррекцию сделаем сами при монтаже.</div>
+  </div>
+  <div class="req-cell full">
+    <div class="req-label">Важно — чего не делать</div>
+    <div class="req-value"><span class="bad">✗ Не снимать горизонтально</span> · <span class="bad">✗ Не применять фильтры/эффекты в телефоне</span> · <span class="bad">✗ Не обрезать в Stories-формат</span> · <span class="bad">✗ Не снимать при флуоресцентном потолочном свете</span></div>
+  </div>
+</div>
+
+<!-- DEADLINE -->
+<div class="stitle">Дедлайн</div>
+<div class="deadline">
+  <div>
+    <div class="deadline-label">Прислать материалы до</div>
+    <div class="deadline-val">30 апреля 2026, чт</div>
+  </div>
+  <div class="deadline-note">Публикация: 02 мая, пт · Монтаж занимает 1 день</div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-note">LAKMODA · Запрос материалов #01 · bit&pix агент</div>
+  <div class="footer-note"><span class="footer-dot"></span>Вопросы: передать менеджеру</div>
+</footer>
+
+</body>
+</html>
