@@ -6,6 +6,41 @@
 ---
 
 <!-- Записи добавляются сверху (новые первые) -->
+## 2026-05-04 | 🌸 Нежность и Эстетика
+### Нежность и Эстетика — авто-обучение 04.05.2026
+> Аккаунты: @tatcha, @byhumankind, @aesopskincare | Проанализировано изображений: 4
+
+#### Изученные посты
+  - **@tatcha** (2,876 likes) — editorial | taupe, coral pink, vibrant red, soft lavender, serene mood | symmetrical, central, ample
+  - **@tatcha** (1,031 likes) — [editorial] | [soft cream, gentle beige, subtle peach tones, overall seren | [centered couple, faces as focal points, ample negative spac
+  - **@tatcha** (932 likes) — editorial | soft lavender, warm beige, deep brown, muted grey, delicate  | portrait, subject off-center to the right, large negative sp
+  - **@byhumankind** (736 likes) — Editorial | Soft mint green, earthy orange, cream white, overall light a | Overlapping objects, centered focal point, ample negative sp
+
+#### Визуальные паттерны (синтез)
+1. editorial beauty crop
+2. soft, diffused lighting
+3. ample negative space
+4. кремово-пудровые тона
+5. чистые, гладкие поверхности
+
+#### Цветовая палитра стиля
+кремово-пудровые тона, мягкие пастельные оттенки, разбавленные натуральными цветами (коралловый, персиковый, лавандовый, мятный)
+
+#### Правила композиции
+симметричное или слегка асимметричное размещение с акцентом на центральный объект, широко используемое негативное пространство для создания "воздуха"
+
+#### Текстура и свет
+чистые, гладкие поверхности продуктов и фона, мягкое, рассеянное студийное или естественное освещение с низким контрастом и нежными тенями
+
+#### fal.ai промпты для стиля (применять при генерации)
+  - `Editorial beauty flat lay, soft pastel gradient background, carefully arranged skincare products, serene mood, soft diffused lighting, ample negative space.`
+  - `Editorial beauty portrait, close-up of a woman's face with soft focus, muted creamy colors, gentle shadows, serene atmosphere, natural light.`
+  - `Editorial beauty product shot, elegant perfume bottle on a soft fabric surface, creamy taupe and rose gold tones, subtle shadows, studio lighting.`
+
+#### Дизайн-фокус
+мягкие градиенты, кремово-пудровые тона, тонкий serif, воздух, editorial beauty кроп
+---
+
 ## 2026-05-03 | 🌸 Нежность и Эстетика
 ### Нежность и Эстетика — авто-обучение 03.05.2026
 > Аккаунты: @laneige_us, @aesopskincare, @summer_fridays | Проанализировано изображений: 6
