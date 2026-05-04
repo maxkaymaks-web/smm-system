@@ -7,3 +7,4 @@ tools/apify/.venv/
 __pycache__/
 *.pyc
 *.pyo
+.idea/

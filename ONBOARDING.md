@@ -104,6 +104,41 @@ smm-system/
 
 ---
 
+## Конвертация HTML → PDF
+
+Все визуальные документы системы (контент-планы, сценарии, карусели) создаются в HTML.
+Для получения PDF — два инструмента в папке `tools/`.
+
+### Документы и сценарии (один HTML → один PDF)
+
+```bash
+node tools/html-to-pdf.js <файл.html> [выход.pdf]
+```
+
+Примеры:
+```bash
+node tools/html-to-pdf.js projects/Lis_Gym/content-plan.html
+node tools/html-to-pdf.js projects/Bioprintex_Limatex/posts/inbox/23_04_2026-konferentsiya/scenario.html scenario.pdf
+```
+
+Если `[выход.pdf]` не указан — PDF сохраняется рядом с HTML под тем же именем.
+
+### Карусели-слайды (папка с HTML → один PDF)
+
+```bash
+node tools/slides-to-pdf.js <папка> [выход.pdf] [--quality 90] [--scale 2]
+```
+
+Примеры:
+```bash
+node tools/slides-to-pdf.js projects/BeautyCulture_DariaSopkina/posts/drafts/22_04_2026-1/
+node tools/slides-to-pdf.js projects/Bioprintex_Limatex/posts/drafts/29_04_2026-1/ carousel.pdf --quality 85
+```
+
+Если `[выход.pdf]` не указан — PDF сохраняется в папке со слайдами как `slides.pdf`.
+
+---
+
 ## Важно
 
 - Ежедневный брифинг приходит **автоматически в 9:00** в Telegram @bitandpixbot

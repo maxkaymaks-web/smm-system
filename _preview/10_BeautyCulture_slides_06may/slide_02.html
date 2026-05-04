@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Raleway:wght@300;400;500;600&display=swap');
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1350px; overflow: hidden; background: #1a1714; }
+
+  .slide { position: relative; width: 1080px; height: 1350px; overflow: hidden; }
+
+  .bg {
+    position: absolute; inset: 0;
+    background-image: url('../../../assets/images/post03-slide-02.jpg');
+    background-size: cover; background-position: center top; filter: brightness(0.45);
+  }
+
+  .overlay {
+    position: absolute; inset: 0; z-index: 2;
+    background: linear-gradient(
+      to top,
+      rgba(26,23,20,0.97) 0%,
+      rgba(26,23,20,0.88) 40%,
+      rgba(26,23,20,0.40) 75%,
+      rgba(26,23,20,0.05) 100%
+    );
+  }
+
+  .grain { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+
+  .brand {
+    position: absolute; top: 52px; right: 60px; z-index: 10;
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 16px; color: rgba(245,240,234,0.5); letter-spacing: 0.1em;
+  }
+  .slide-num {
+    position: absolute; bottom: 56px; right: 60px; z-index: 10;
+    font-family: 'Raleway', sans-serif; font-size: 14px; font-weight: 400;
+    color: rgba(245,240,234,0.4); letter-spacing: 0.15em;
+  }
+
+  /* Zone label top-left */
+  .zone-tag {
+    position: absolute; top: 52px; left: 60px; z-index: 10;
+    font-family: 'Raleway', sans-serif; font-size: 13px; font-weight: 500;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: rgba(245,240,234,0.45);
+  }
+
+  /* Big number — visual anchor */
+  .big-number {
+    position: absolute;
+    bottom: 560px;
+    left: 64px;
+    z-index: 10;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 190px;
+    line-height: 1;
+    color: rgba(245,240,234,0.12);
+    letter-spacing: -0.02em;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* Zone headline — upper area */
+  .zone-headline {
+    position: absolute;
+    top: 130px;
+    left: 64px;
+    right: 64px;
+    z-index: 10;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 96px;
+    line-height: 0.9;
+    color: #F5F0EA;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+  }
+
+  /* Sessions number — prominent */
+  .sessions-wrap {
+    position: absolute;
+    top: 420px;
+    left: 64px;
+    z-index: 10;
+  }
+  .sessions-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 180px;
+    line-height: 0.85;
+    color: #F5F0EA;
+    letter-spacing: -0.03em;
+    display: block;
+  }
+  .sessions-label {
+    font-family: 'Raleway', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #8a6e52;
+    margin-top: 16px;
+    display: block;
+  }
+
+  /* Divider accent */
+  .divider {
+    position: absolute;
+    top: 680px;
+    left: 64px;
+    width: 56px;
+    height: 1.5px;
+    background: #8a6e52;
+    z-index: 10;
+    opacity: 0.8;
+  }
+
+  /* Body text bottom */
+  .body {
+    position: absolute;
+    bottom: 110px;
+    left: 64px;
+    right: 64px;
+    z-index: 10;
+  }
+  .interval {
+    font-family: 'Raleway', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: #8a6e52;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .body-text {
+    font-family: 'Raleway', sans-serif;
+    font-size: 24px;
+    font-weight: 300;
+    line-height: 1.8;
+    color: rgba(245,240,234,0.85);
+  }
+  .note {
+    font-family: 'Raleway', sans-serif;
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 1.6;
+    color: rgba(245,240,234,0.55);
+    margin-top: 20px;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+
+  <div class="bg"></div>
+  <svg class="grain" xmlns="http://www.w3.org/2000/svg" width="1080" height="1350">
+    <filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+    <rect width="100%" height="100%" filter="url(#n)" opacity="0.05"/>
+  </svg>
+  <div class="overlay"></div>
+
+  <div class="brand">Культура</div>
+  <div class="slide-num">02 / 06</div>
+  <div class="zone-tag">Зона 01</div>
+
+  <div class="zone-headline">ЛИЦО И<br>ВЕРХНЯЯ<br>ГУБА</div>
+
+  <div class="sessions-wrap">
+    <span class="sessions-num">6–8</span>
+    <span class="sessions-label">сеансов</span>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="body">
+    <div class="interval">Интервал 4–6 недель</div>
+    <div class="body-text">
+      Зона с тонкими и светлыми волосками —<br>
+      одна из самых капризных. Лазер работает<br>
+      только по активной фазе роста, а на лице<br>
+      цикл обновления волос короче.
+    </div>
+    <div class="note">Если были гормональные изменения —<br>мастер скорректирует программу 🤍</div>
+  </div>
+
+</div>
+</body>
+</html>
