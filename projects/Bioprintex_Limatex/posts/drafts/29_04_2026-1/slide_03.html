@@ -61,8 +61,8 @@
   }
   .pill {
     border: 1.5px solid #C55A11; color: #C55A11;
-    border-radius: 40px; padding: 10px 24px;
-    font-size: 15px; font-weight: 700;
+    border-radius: 40px; padding: 12px 28px;
+    font-size: 22px; font-weight: 700;
     letter-spacing: 0.08em; text-transform: uppercase;
   }
   .slide-num {
@@ -76,7 +76,7 @@
     top: 152px; left: 80px; right: 80px;
   }
   .slide-title h2 {
-    font-size: 42px; font-weight: 800;
+    font-size: 54px; font-weight: 800;
     color: #FFFFFF; text-transform: uppercase;
     letter-spacing: 0.04em; line-height: 1.1;
     margin-bottom: 12px;
@@ -93,21 +93,21 @@
     width: 400px;
   }
   .big-num {
-    font-size: 110px; font-weight: 800;
-    color: #C55A11;
+    font-size: 130px; font-weight: 800;
+    color: #FF7A1F;
     line-height: 1; letter-spacing: -0.02em;
   }
   .big-num-unit {
-    font-size: 36px; font-weight: 700;
-    color: rgba(197,90,17,0.70);
+    font-size: 48px; font-weight: 700;
+    color: rgba(255,122,31,0.85);
     display: block; margin-top: -8px;
     letter-spacing: 0.04em;
   }
   .big-num-label {
     margin-top: 16px;
-    font-size: 16px; font-weight: 400;
-    color: rgba(91,173,247,0.70);
-    line-height: 1.5; max-width: 340px;
+    font-size: 26px; font-weight: 400;
+    color: rgba(91,173,247,0.85);
+    line-height: 1.45; max-width: 380px;
   }
 
   /* Пузырь-диаграмма справа */
@@ -123,35 +123,35 @@
     bottom: 140px; left: 80px; right: 80px;
   }
   .problems-title {
-    font-size: 13px; font-weight: 700;
-    color: rgba(65,142,241,0.45);
+    font-size: 20px; font-weight: 700;
+    color: rgba(65,142,241,0.65);
     letter-spacing: 0.14em; text-transform: uppercase;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
   }
   .prob-list {
-    display: flex; flex-direction: column; gap: 14px;
+    display: flex; flex-direction: column; gap: 12px;
   }
   .prob-item {
     display: flex; align-items: flex-start; gap: 18px;
-    padding: 18px 24px;
-    background: rgba(197,90,17,0.07);
-    border: 1px solid rgba(197,90,17,0.22);
+    padding: 16px 22px;
+    background: rgba(255,100,0,0.10);
+    border: 1px solid rgba(255,100,0,0.35);
     border-radius: 10px;
   }
   .prob-icon {
-    width: 36px; height: 36px; flex-shrink: 0;
-    border: 1.5px solid rgba(197,90,17,0.50);
+    width: 44px; height: 44px; flex-shrink: 0;
+    border: 2px solid rgba(255,122,31,0.75);
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 16px; font-weight: 800; color: #C55A11;
+    font-size: 22px; font-weight: 800; color: #FF7A1F;
   }
   .prob-text {
-    font-size: 16px; font-weight: 400;
-    color: rgba(255,255,255,0.82);
-    line-height: 1.45;
+    font-size: 22px; font-weight: 400;
+    color: rgba(255,255,255,0.90);
+    line-height: 1.4;
   }
   .prob-text strong {
-    color: #C55A11; font-weight: 700;
+    color: #FF7A1F; font-weight: 700;
   }
 
   .logo-mark {
@@ -197,30 +197,30 @@
   <svg style="position:absolute;top:248px;right:80px;width:430px;height:310px" viewBox="0 0 430 310" xmlns="http://www.w3.org/2000/svg">
 
     <!-- Крупный пузырь — стандарт -->
-    <circle cx="120" cy="155" r="90" fill="rgba(197,90,17,0.10)" stroke="#C55A11" stroke-width="2" stroke-dasharray="8,4"/>
-    <text x="120" y="148" text-anchor="middle" font-family="Tahoma,sans-serif" font-size="13" fill="#C55A11" opacity="0.9">Ø 3–5 мм</text>
-    <text x="120" y="168" text-anchor="middle" font-family="Tahoma,sans-serif" font-size="11" fill="rgba(197,90,17,0.65)">стандартный</text>
-    <text x="120" y="185" text-anchor="middle" font-family="Tahoma,sans-serif" font-size="11" fill="rgba(197,90,17,0.65)">пузырь</text>
+    <circle cx="120" cy="155" r="90" fill="rgba(255,100,0,0.18)" stroke="#FF7A1F" stroke-width="2.5" stroke-dasharray="8,4"/>
+    <text x="120" y="148" text-anchor="middle" font-family="Tahoma,sans-serif" font-size="18" fill="#FF7A1F" opacity="1">Ø 3–5 мм</text>
+    <text x="120" y="170" text-anchor="middle" font-family="Tahoma,sans-serif" font-size="15" fill="rgba(255,140,50,0.90)">стандартный</text>
+    <text x="120" y="188" text-anchor="middle" font-family="Tahoma,sans-serif" font-size="15" fill="rgba(255,140,50,0.90)">пузырь</text>
     <!-- Стрелка вверх — всплывает быстро -->
-    <line x1="120" y1="58" x2="120" y2="20" stroke="rgba(197,90,17,0.5)" stroke-width="1.5"/>
-    <polygon points="120,14 115,24 125,24" fill="rgba(197,90,17,0.5)"/>
-    <text x="132" y="42" font-family="Tahoma,sans-serif" font-size="11" fill="rgba(197,90,17,0.6)">всплывает за 1–2 с</text>
+    <line x1="120" y1="58" x2="120" y2="20" stroke="rgba(255,122,31,0.75)" stroke-width="2"/>
+    <polygon points="120,14 115,24 125,24" fill="rgba(255,122,31,0.75)"/>
+    <text x="132" y="42" font-family="Tahoma,sans-serif" font-size="15" fill="rgba(255,140,50,0.85)">всплывает за 1–2 с</text>
 
     <!-- Разделитель -->
-    <line x1="230" y1="20" x2="230" y2="290" stroke="rgba(65,142,241,0.15)" stroke-width="1" stroke-dasharray="4,4"/>
+    <line x1="230" y1="20" x2="230" y2="290" stroke="rgba(65,142,241,0.25)" stroke-width="1" stroke-dasharray="4,4"/>
 
     <!-- Мелкие пузыри — потенциал -->
-    <circle cx="310" cy="105" r="22" fill="rgba(0,175,80,0.08)" stroke="#00AF50" stroke-width="1.5" opacity="0.8"/>
-    <circle cx="355" cy="155" r="18" fill="rgba(0,175,80,0.08)" stroke="#00AF50" stroke-width="1.5" opacity="0.8"/>
-    <circle cx="300" cy="180" r="26" fill="rgba(0,175,80,0.08)" stroke="#00AF50" stroke-width="1.5" opacity="0.8"/>
-    <circle cx="370" cy="218" r="15" fill="rgba(0,175,80,0.08)" stroke="#00AF50" stroke-width="1.5" opacity="0.7"/>
-    <circle cx="330" cy="235" r="20" fill="rgba(0,175,80,0.08)" stroke="#00AF50" stroke-width="1.5" opacity="0.7"/>
-    <text x="335" y="275" text-anchor="middle" font-family="Tahoma,sans-serif" font-size="11" fill="rgba(0,175,80,0.80)">× больше площадь</text>
-    <text x="335" y="291" text-anchor="middle" font-family="Tahoma,sans-serif" font-size="11" fill="rgba(0,175,80,0.80)">контакта</text>
+    <circle cx="310" cy="105" r="22" fill="rgba(0,175,80,0.20)" stroke="#00E065" stroke-width="2" opacity="0.95"/>
+    <circle cx="355" cy="155" r="18" fill="rgba(0,175,80,0.20)" stroke="#00E065" stroke-width="2" opacity="0.95"/>
+    <circle cx="300" cy="180" r="26" fill="rgba(0,175,80,0.20)" stroke="#00E065" stroke-width="2" opacity="0.95"/>
+    <circle cx="370" cy="218" r="15" fill="rgba(0,175,80,0.20)" stroke="#00E065" stroke-width="2" opacity="0.90"/>
+    <circle cx="330" cy="235" r="20" fill="rgba(0,175,80,0.20)" stroke="#00E065" stroke-width="2" opacity="0.90"/>
+    <text x="335" y="272" text-anchor="middle" font-family="Tahoma,sans-serif" font-size="16" fill="rgba(0,224,101,0.95)">× больше площадь</text>
+    <text x="335" y="291" text-anchor="middle" font-family="Tahoma,sans-serif" font-size="16" fill="rgba(0,224,101,0.95)">контакта</text>
 
     <!-- Подписи снизу -->
-    <text x="120" y="295" text-anchor="middle" font-family="Tahoma,sans-serif" font-size="12" font-weight="700" fill="rgba(197,90,17,0.70)" letter-spacing="1">СТАНДАРТ</text>
-    <text x="335" y="305" text-anchor="middle" font-family="Tahoma,sans-serif" font-size="12" font-weight="700" fill="rgba(0,175,80,0.70)" letter-spacing="1">ПОТЕНЦИАЛ</text>
+    <text x="120" y="307" text-anchor="middle" font-family="Tahoma,sans-serif" font-size="16" font-weight="700" fill="rgba(255,122,31,0.90)" letter-spacing="1">СТАНДАРТ</text>
+    <text x="335" y="307" text-anchor="middle" font-family="Tahoma,sans-serif" font-size="16" font-weight="700" fill="rgba(0,224,101,0.90)" letter-spacing="1">ПОТЕНЦИАЛ</text>
   </svg>
 
   <!-- Список проблем -->
