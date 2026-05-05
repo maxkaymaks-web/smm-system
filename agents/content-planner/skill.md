@@ -19,10 +19,21 @@
 
 ## Что выдаёшь
 
-Два файла в `projects/{ProjectID}/`:
+Три файла в `projects/{ProjectID}/`:
 
 1. **`content-plan.html`** — брендированный документ для согласования и мониторинга
 2. **`content-plan.md`** — машиночитаемая таблица для агентов системы
+3. **`content-plan.pdf`** — PDF-версия для отправки клиенту
+
+**После создания HTML — всегда генерировать PDF:**
+```bash
+node tools/html-to-pdf.js projects/{ProjectID}/content-plan.html
+```
+
+Аналогично для сценариев (`scenario.html`):
+```bash
+node tools/html-to-pdf.js projects/{ProjectID}/posts/drafts/{папка}/scenario.html
+```
 
 ---
 

@@ -6,6 +6,13 @@
 
 ---
 
+## 05.05.2026
+
+- **HTML → PDF: обязательный шаг** для всех контент-планов и сценариев. Инструмент: `node tools/html-to-pdf.js <файл.html>`. PDF сохраняется рядом с HTML. Скилл `контент-план.md` обновлён — шаг PDF добавлен в "Что выдаёшь". Сгенерированы PDF: `Black_Apple/content-plan.pdf`, `Lakmoda/content-plan.pdf`, `Sparta/content-plan.pdf`.
+- **Lakmoda: платформа изменена ВКонтакте → Instagram** (@lakmoda). Аналитика Instagram собрана (`analytics/instagram.md`). Обновлены: `context.md` (добавлен IG-аккаунт), `strategy.md` (Reel-форматы, хэштеги 0/1-2, TOV с формулой капшна, @sodanails неактивен на IG), `content-plan.md/.html` (форматы Карусель/Фото → Reel).
+
+---
+
 ## 30.04.2026 (обновление 2)
 
 - **Новый проект: Black_Apple** — розничная продажа iPhone, федеральная сеть 9 городов, платформа ВКонтакте (blackapplemsk). Папка `projects/Black_Apple/`. Заполнены: `context.md` (полный бриф), `analytics/competitors.md` (MSK vs Kursk 8× разрыв + конкуренты), `strategy.md` (рубрикатор 7 рубрик S1/S2/S3/X1/E1/E2/V1, воронка 60/40, правило геолокации «Москва. Black Apple»), `content-plan.md` + `content-plan.html` (12 постов, май 2026, пропущен 9 мая). Дизайн: dark luxury + fal.ai 3D-рендеры, без участия клиента в съёмке.
