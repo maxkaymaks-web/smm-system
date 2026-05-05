@@ -6,6 +6,42 @@
 ---
 
 <!-- Записи добавляются сверху (новые первые) -->
+## 2026-05-05 | ⚙️ Технологичность и Инновации
+### Технологичность и Инновации — авто-обучение 05.05.2026
+> Аккаунты: @spacex, @dyson, @figma | Проанализировано изображений: 5
+
+#### Изученные посты
+  - **@dysonbeauty** (84,050 likes) — bold | salmon pink background, deep black subject, dark brown eyes, | centered subject, eye level focal point, liberal negative sp
+  - **@spacex** (110,023 likes) — bold | deep blue sky, metallic charcoal, bright orange fire, white  | rule of thirds, rocket bottom left, moderate negative space
+  - **@spacex** (70,456 likes) — Bold | Deep cosmic blue (sky), dark steel grey (structures), bright | Rule of thirds, rocket (off-center), ample negative space in
+  - **@dyson** (40,402 likes) — Product | Charcoal grey, deep blue, slate, muted grey, futuristic, sub | Centered, product focused, significant negative space
+  - **@spacex** (52,772 likes) — bold | deep black, fiery orange, smoky beige, intense yellow, drama | asymmetrical balance, center-right focal point, moderate neg
+
+#### Визуальные паттерны (синтез)
+1. Использование большого количества негативного пространства
+2. Чистые, гладкие текстуры поверхностей
+3. Высокий контраст в освещении
+4. Яркие, контрастные цвета (особенно оранжевый, синий, черный)
+5. Сильная, модульная композиция, часто с элементами по правилу третей
+
+#### Цветовая палитра стиля
+Контрастные сочетания темных (черный, темно-синий, серый) и ярких (оранжевый, белый) цветов, создающие футуристическое и мощное настроение.
+
+#### Правила композиции
+Композиция строится вокруг четкого центрального объекта или использования правила третей, с акцентом на визуальную иерархию и сильное фокусное внимание.
+
+#### Текстура и свет
+Гладкие, чистые, часто металлические или градиентные текстуры, с драматическим, высококонтрастным освещением, которое подчеркивает формы и создает ощущение глубины.
+
+#### fal.ai промпты для стиля (применять при генерации)
+  - `Futuristic rocket launch at night, deep cosmic blue sky, bright orange engine glow, stark lines, high contrast, bold sans-serif typography overlay, minimalist infographic style.`
+  - `Sleek, monochrome robotic arm in a dark laboratory, illuminated by a single bright light source, sharp edges, clean metallic texture, bold typography, infographic aesthetic.`
+  - `Close-up of an abstract, geometric data visualization with glowing lines against a black background, dynamic energy, sharp angles, bold numbers as accents, high contrast.`
+
+#### Дизайн-фокус
+строгие сетки, монохром, bold sans-serif, цифры как акцент, инфографика
+---
+
 ## 2026-05-04 | 🌸 Нежность и Эстетика
 ### Нежность и Эстетика — авто-обучение 04.05.2026
 > Аккаунты: @tatcha, @byhumankind, @aesopskincare | Проанализировано изображений: 4
