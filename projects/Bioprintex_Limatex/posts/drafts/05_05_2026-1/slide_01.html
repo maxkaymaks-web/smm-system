@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<style>
+  @font-face { font-family: 'Manrope'; font-weight: 400; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Regular.woff2') format('woff2'); }
+  @font-face { font-family: 'Manrope'; font-weight: 700; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Bold.woff2') format('woff2'); }
+  @font-face { font-family: 'Manrope'; font-weight: 800; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-ExtraBold.woff2') format('woff2'); }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1080px; height: 1080px; overflow: hidden; background: #1B1A24; font-family: 'Manrope', 'Tahoma', sans-serif; }
+
+  .slide { position: relative; width: 1080px; height: 1080px; background: #1B1A24; overflow: hidden; }
+
+  .pcb-bg {
+    position: absolute; inset: 0;
+    background-color: #1B1A24;
+    background-image:
+      linear-gradient(90deg, transparent 49%, rgba(4,79,186,0.18) 49%, rgba(4,79,186,0.18) 51%, transparent 51%),
+      linear-gradient(90deg, transparent 24%, rgba(65,142,241,0.10) 24%, rgba(65,142,241,0.10) 26%, transparent 26%),
+      linear-gradient(90deg, transparent 74%, rgba(65,142,241,0.10) 74%, rgba(65,142,241,0.10) 76%, transparent 76%),
+      linear-gradient(0deg, transparent 49%, rgba(4,79,186,0.14) 49%, rgba(4,79,186,0.14) 51%, transparent 51%),
+      linear-gradient(0deg, transparent 24%, rgba(65,142,241,0.08) 24%, rgba(65,142,241,0.08) 26%, transparent 26%),
+      linear-gradient(0deg, transparent 74%, rgba(65,142,241,0.08) 74%, rgba(65,142,241,0.08) 76%, transparent 76%);
+    background-size: 120px 120px;
+  }
+  .glow {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 50% 45%, rgba(0,175,80,0.14) 0%, rgba(27,26,36,0) 70%);
+  }
+  .grain { position: absolute; inset: 0; opacity: 0.04; }
+
+  .ghost-watermark {
+    position: absolute; bottom: 20px; left: 0; right: 0;
+    text-align: center; font-size: 96px; font-weight: 800;
+    color: white; opacity: 0.05; letter-spacing: 0.06em;
+    white-space: nowrap; pointer-events: none; line-height: 1;
+  }
+
+  .pill-left {
+    position: absolute; top: 60px; left: 80px;
+    border: 1.5px solid #418EF1; color: #418EF1;
+    border-radius: 40px; padding: 12px 28px;
+    font-size: 22px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .pill-right {
+    position: absolute; top: 60px; right: 80px;
+    border: 1.5px solid #00AF50; color: #00AF50;
+    border-radius: 40px; padding: 12px 28px;
+    font-size: 22px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+
+  .content-center {
+    position: absolute; top: 50%; left: 80px; right: 80px;
+    transform: translateY(-62%); text-align: center;
+  }
+  .label { font-size: 26px; font-weight: 700; color: #5BADF7; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 24px; }
+  .headline { font-size: 110px; font-weight: 800; color: #FFFFFF; text-transform: uppercase; line-height: 1.0; letter-spacing: 0.02em; margin-bottom: 16px; }
+  .headline span { color: #00AF50; }
+  .divider-line { width: 120px; height: 3px; background: linear-gradient(90deg, #044FBA, #00AF50); margin: 0 auto 32px auto; }
+  .subtitle { font-size: 34px; font-weight: 400; color: #5BADF7; letter-spacing: 0.02em; line-height: 1.4; max-width: 860px; margin: 0 auto; }
+
+  .metrics-bar {
+    position: absolute; bottom: 190px; left: 80px; right: 80px;
+    display: flex; align-items: stretch; gap: 0;
+    border-top: 1px solid rgba(65,142,241,0.25); padding-top: 28px;
+    justify-content: center;
+  }
+  .metric-item { text-align: center; padding: 0 44px; border-right: 1px solid rgba(65,142,241,0.18); }
+  .metric-item:last-child { border-right: none; }
+  .m-val { font-size: 72px; font-weight: 800; color: #00AF50; letter-spacing: -0.02em; line-height: 1; margin-bottom: 8px; }
+  .m-label { font-size: 24px; font-weight: 400; color: rgba(91,173,247,0.70); letter-spacing: 0.06em; text-transform: uppercase; }
+
+  .logo-mark { position: absolute; bottom: 28px; right: 80px; font-size: 18px; font-weight: 700; color: #418EF1; letter-spacing: 0.12em; opacity: 0.7; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="pcb-bg"></div>
+
+  <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:0.20" viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg">
+    <line x1="0" y1="200" x2="300" y2="200" stroke="#044FBA" stroke-width="1.5"/>
+    <line x1="780" y1="200" x2="1080" y2="200" stroke="#044FBA" stroke-width="1.5"/>
+    <line x1="0" y1="880" x2="310" y2="880" stroke="#044FBA" stroke-width="1.5"/>
+    <line x1="770" y1="880" x2="1080" y2="880" stroke="#044FBA" stroke-width="1.5"/>
+    <line x1="200" y1="0" x2="200" y2="260" stroke="#418EF1" stroke-width="1"/>
+    <line x1="200" y1="360" x2="200" y2="1080" stroke="#418EF1" stroke-width="1"/>
+    <line x1="880" y1="0" x2="880" y2="290" stroke="#418EF1" stroke-width="1"/>
+    <line x1="880" y1="390" x2="880" y2="1080" stroke="#418EF1" stroke-width="1"/>
+    <circle cx="200" cy="200" r="6" fill="none" stroke="#00AF50" stroke-width="1.5"/>
+    <circle cx="200" cy="200" r="3" fill="#00AF50" opacity="0.5"/>
+    <circle cx="880" cy="200" r="6" fill="none" stroke="#00AF50" stroke-width="1.5"/>
+    <circle cx="880" cy="200" r="3" fill="#00AF50" opacity="0.5"/>
+    <circle cx="200" cy="880" r="6" fill="none" stroke="#418EF1" stroke-width="1.5"/>
+    <circle cx="200" cy="880" r="3" fill="#418EF1" opacity="0.5"/>
+    <circle cx="880" cy="880" r="6" fill="none" stroke="#418EF1" stroke-width="1.5"/>
+    <circle cx="880" cy="880" r="3" fill="#418EF1" opacity="0.5"/>
+    <path d="M 0 120 L 80 120 L 120 80 L 120 0" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.5"/>
+    <path d="M 1080 120 L 1000 120 L 960 80 L 960 0" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.5"/>
+    <path d="M 0 960 L 80 960 L 120 1000 L 120 1080" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.5"/>
+    <path d="M 1080 960 L 1000 960 L 960 1000 L 960 1080" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.5"/>
+  </svg>
+
+  <div class="glow"></div>
+  <svg class="grain" xmlns="http://www.w3.org/2000/svg">
+    <filter id="g"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+    <rect width="100%" height="100%" filter="url(#g)"/>
+  </svg>
+
+  <div class="ghost-watermark">АЭРАТОР ЗГ</div>
+  <div class="pill-left">БИОПРИНТЕХ</div>
+  <div class="pill-right">ПРОДУКТ</div>
+
+  <div class="content-center">
+    <div class="label">Аквакультура · УЗВ · Рыбоводство</div>
+    <div class="headline">Аэратор <span>ЗГ</span></div>
+    <div class="divider-line"></div>
+    <div class="subtitle">Как утроить плотность посадки рыбы<br>без увеличения площади бассейна</div>
+  </div>
+
+  <div class="metrics-bar">
+    <div class="metric-item">
+      <div class="m-val">×3</div>
+      <div class="m-label">Плотность посадки</div>
+    </div>
+    <div class="metric-item">
+      <div class="m-val">−25%</div>
+      <div class="m-label">Энергозатраты</div>
+    </div>
+    <div class="metric-item">
+      <div class="m-val">18</div>
+      <div class="m-label">мес. окупаемость</div>
+    </div>
+  </div>
+
+  <div class="logo-mark">БП</div>
+</div>
+</body>
+</html>

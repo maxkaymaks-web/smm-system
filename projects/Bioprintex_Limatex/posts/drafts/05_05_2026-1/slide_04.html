@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<style>
+  @font-face { font-family: 'Manrope'; font-weight: 400; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Regular.woff2') format('woff2'); }
+  @font-face { font-family: 'Manrope'; font-weight: 700; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Bold.woff2') format('woff2'); }
+  @font-face { font-family: 'Manrope'; font-weight: 800; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-ExtraBold.woff2') format('woff2'); }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1080px; height: 1080px; overflow: hidden; background: #1B1A24; font-family: 'Manrope', 'Tahoma', sans-serif; }
+  .slide { position: relative; width: 1080px; height: 1080px; background: #1B1A24; overflow: hidden; }
+
+  .pcb-bg {
+    position: absolute; inset: 0; background-color: #1B1A24;
+    background-image:
+      linear-gradient(90deg, transparent 49%, rgba(4,79,186,0.14) 49%, rgba(4,79,186,0.14) 51%, transparent 51%),
+      linear-gradient(0deg, transparent 49%, rgba(4,79,186,0.10) 49%, rgba(4,79,186,0.10) 51%, transparent 51%);
+    background-size: 120px 120px;
+  }
+  .glow { position: absolute; inset: 0; background: radial-gradient(ellipse 65% 55% at 50% 45%, rgba(0,175,80,0.12) 0%, rgba(27,26,36,0) 70%); }
+  .grain { position: absolute; inset: 0; opacity: 0.04; }
+
+  .ghost-watermark {
+    position: absolute; bottom: 20px; left: 0; right: 0;
+    text-align: center; font-size: 96px; font-weight: 800;
+    color: #00AF50; opacity: 0.06; letter-spacing: 0.06em;
+    white-space: nowrap; pointer-events: none; line-height: 1;
+  }
+
+  .header { position: absolute; top: 60px; left: 80px; right: 80px; display: flex; align-items: center; justify-content: space-between; }
+  .pill { border: 1.5px solid #00AF50; color: #00AF50; border-radius: 40px; padding: 12px 28px; font-size: 22px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  .slide-title { position: absolute; top: 152px; left: 80px; right: 80px; }
+  .slide-title h2 { font-size: 54px; font-weight: 800; color: #FFFFFF; text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.1; margin-bottom: 12px; }
+  .title-line { width: 60px; height: 3px; background: linear-gradient(90deg, #00AF50, rgba(0,175,80,0.2)); }
+
+  .metrics {
+    position: absolute; top: 296px; left: 80px; right: 80px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+  }
+  .metric-card {
+    background: rgba(0,175,80,0.07); border: 1px solid rgba(0,175,80,0.25);
+    border-radius: 14px; padding: 22px 24px 18px 24px;
+    position: relative; overflow: hidden;
+  }
+  .metric-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, #00AF50, rgba(0,175,80,0.2));
+  }
+  .m-val { font-size: 78px; font-weight: 800; color: #00AF50; line-height: 1; letter-spacing: -0.02em; margin-bottom: 8px; }
+  .m-unit { font-size: 32px; font-weight: 700; color: rgba(0,175,80,0.80); }
+  .m-label { font-size: 22px; font-weight: 700; color: #FFFFFF; letter-spacing: 0.02em; margin-bottom: 6px; }
+  .m-desc { font-size: 18px; font-weight: 400; color: rgba(91,173,247,0.75); line-height: 1.45; }
+
+  .cta-block {
+    position: absolute; bottom: 140px; left: 80px; right: 80px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 28px 36px;
+    background: rgba(4,79,186,0.12); border: 1px solid rgba(65,142,241,0.25);
+    border-radius: 14px;
+  }
+  .cta-text { font-size: 26px; font-weight: 400; color: rgba(255,255,255,0.85); line-height: 1.45; }
+  .cta-text strong { color: #FFFFFF; font-weight: 700; }
+  .cta-link { font-size: 24px; font-weight: 700; color: #418EF1; letter-spacing: 0.04em; white-space: nowrap; padding: 16px 32px; border: 1.5px solid #418EF1; border-radius: 40px; flex-shrink: 0; }
+
+  .logo-mark { position: absolute; bottom: 28px; right: 80px; font-size: 18px; font-weight: 700; color: #418EF1; letter-spacing: 0.12em; opacity: 0.7; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="pcb-bg"></div>
+  <div class="glow"></div>
+  <svg class="grain" xmlns="http://www.w3.org/2000/svg">
+    <filter id="g"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+    <rect width="100%" height="100%" filter="url(#g)"/>
+  </svg>
+
+  <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:0.18" viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg">
+    <path d="M 0 120 L 80 120 L 120 80 L 120 0" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.5"/>
+    <path d="M 1080 120 L 1000 120 L 960 80 L 960 0" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.5"/>
+    <path d="M 0 960 L 80 960 L 120 1000 L 120 1080" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.5"/>
+    <path d="M 1080 960 L 1000 960 L 960 1000 L 960 1080" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.5"/>
+    <line x1="0" y1="200" x2="200" y2="200" stroke="#044FBA" stroke-width="1.5"/>
+    <line x1="880" y1="200" x2="1080" y2="200" stroke="#044FBA" stroke-width="1.5"/>
+    <circle cx="200" cy="200" r="5" fill="none" stroke="#00AF50" stroke-width="1.5"/>
+    <circle cx="880" cy="200" r="5" fill="none" stroke="#00AF50" stroke-width="1.5"/>
+  </svg>
+
+  <div class="ghost-watermark">БИОПРИНТЕХ</div>
+
+  <div class="header">
+    <div class="pill">РЕЗУЛЬТАТ</div>
+  </div>
+
+  <div class="slide-title">
+    <h2>Аэратор ЗГ: экономика в цифрах</h2>
+    <div class="title-line"></div>
+  </div>
+
+  <div class="metrics">
+    <div class="metric-card">
+      <div class="m-val">×3 <span class="m-unit"></span></div>
+      <div class="m-label">Плотность посадки</div>
+      <div class="m-desc">150+ кг/м³ против 50–80 кг/м³ при стандартной аэрации — без расширения площади</div>
+    </div>
+    <div class="metric-card">
+      <div class="m-val">0,8 <span class="m-unit">руб/м³</span></div>
+      <div class="m-label">Стоимость O₂</div>
+      <div class="m-desc">Против 3–5 руб/м³ у стандартных систем — снижение в 4–6 раз</div>
+    </div>
+    <div class="metric-card">
+      <div class="m-val">45–55 <span class="m-unit">%</span></div>
+      <div class="m-label">Рентабельность</div>
+      <div class="m-desc">Рост с 25% при стандартной аэрации — за счёт снижения OPEX и роста выхода продукции</div>
+    </div>
+    <div class="metric-card">
+      <div class="m-val">18 <span class="m-unit">мес.</span></div>
+      <div class="m-label">Окупаемость</div>
+      <div class="m-desc">При средней загрузке УЗВ. Энергозатраты −25%, выживаемость малька +40%</div>
+    </div>
+  </div>
+
+  <div class="cta-block">
+    <div class="cta-text">
+      <strong>Запросить расчёт под вашу систему</strong><br>
+      УЗВ, рыбоводные пруды, садковые хозяйства
+    </div>
+    <div class="cta-link">limatech86.ru</div>
+  </div>
+
+  <div class="logo-mark">БП</div>
+</div>
+</body>
+</html>

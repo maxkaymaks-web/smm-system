@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<style>
+  @font-face { font-family: 'Manrope'; font-weight: 400; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Regular.woff2') format('woff2'); }
+  @font-face { font-family: 'Manrope'; font-weight: 700; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Bold.woff2') format('woff2'); }
+  @font-face { font-family: 'Manrope'; font-weight: 800; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-ExtraBold.woff2') format('woff2'); }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1080px; height: 1080px; overflow: hidden; background: #1B1A24; font-family: 'Manrope', 'Tahoma', sans-serif; }
+  .slide { position: relative; width: 1080px; height: 1080px; background: #1B1A24; overflow: hidden; }
+
+  .pcb-bg {
+    position: absolute; inset: 0; background-color: #1B1A24;
+    background-image:
+      linear-gradient(90deg, transparent 49%, rgba(4,79,186,0.12) 49%, rgba(4,79,186,0.12) 51%, transparent 51%),
+      linear-gradient(0deg, transparent 49%, rgba(4,79,186,0.08) 49%, rgba(4,79,186,0.08) 51%, transparent 51%);
+    background-size: 120px 120px;
+  }
+  .grain { position: absolute; inset: 0; opacity: 0.04; }
+
+  .ghost-num {
+    position: absolute; bottom: 20px; left: 0; right: 0;
+    text-align: center; font-size: 96px; font-weight: 800;
+    color: #C55A11; opacity: 0.07; letter-spacing: 0.06em;
+    white-space: nowrap; pointer-events: none; line-height: 1;
+  }
+
+  .header { position: absolute; top: 60px; left: 80px; right: 80px; display: flex; align-items: center; justify-content: space-between; }
+  .pill { border: 1.5px solid #C55A11; color: #C55A11; border-radius: 40px; padding: 12px 28px; font-size: 22px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  .slide-title { position: absolute; top: 152px; left: 80px; right: 80px; }
+  .slide-title h2 { font-size: 56px; font-weight: 800; color: #FFFFFF; text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.1; margin-bottom: 12px; }
+  .title-line { width: 60px; height: 3px; background: linear-gradient(90deg, #C55A11, rgba(197,90,17,0.3)); }
+
+  /* Большая цифра */
+  .big-stat {
+    position: absolute; top: 320px; left: 80px; width: 440px;
+  }
+  .big-val { font-size: 120px; font-weight: 800; color: #FF7A1F; line-height: 1; letter-spacing: -0.03em; }
+  .big-unit { font-size: 38px; font-weight: 700; color: rgba(255,122,31,0.80); display: block; margin-top: 2px; }
+  .big-label { margin-top: 18px; font-size: 28px; font-weight: 400; color: rgba(91,173,247,0.85); line-height: 1.4; max-width: 420px; }
+
+  /* Барьеры — три пункта справа */
+  .barriers {
+    position: absolute; top: 300px; right: 80px; width: 440px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .barrier-item {
+    display: flex; align-items: flex-start; gap: 16px;
+    padding: 18px 22px;
+    background: rgba(255,100,0,0.08);
+    border: 1px solid rgba(255,100,0,0.30);
+    border-radius: 10px;
+  }
+  .barrier-icon {
+    width: 40px; height: 40px; flex-shrink: 0;
+    border: 2px solid rgba(255,122,31,0.65);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 800; color: #FF7A1F;
+  }
+  .barrier-text { font-size: 22px; font-weight: 400; color: rgba(255,255,255,0.88); line-height: 1.4; }
+  .barrier-text strong { color: #FF7A1F; font-weight: 700; }
+
+  /* Нижняя полоса с выводом */
+  .conclusion {
+    position: absolute; bottom: 130px; left: 80px; right: 80px;
+    padding: 24px 32px;
+    background: rgba(197,90,17,0.10);
+    border: 1px solid rgba(197,90,17,0.35);
+    border-radius: 12px;
+  }
+  .conclusion-label { font-size: 19px; font-weight: 700; color: rgba(65,142,241,0.65); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px; }
+  .conclusion-text { font-size: 26px; font-weight: 400; color: rgba(255,255,255,0.90); line-height: 1.45; }
+  .conclusion-text strong { color: #FFFFFF; font-weight: 700; }
+
+  .logo-mark { position: absolute; bottom: 28px; right: 80px; font-size: 18px; font-weight: 700; color: #418EF1; letter-spacing: 0.12em; opacity: 0.7; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="pcb-bg"></div>
+  <svg class="grain" xmlns="http://www.w3.org/2000/svg">
+    <filter id="g"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+    <rect width="100%" height="100%" filter="url(#g)"/>
+  </svg>
+  <div class="ghost-num">АЭРАЦИЯ</div>
+
+  <div class="header">
+    <div class="pill">ПРОБЛЕМА</div>
+  </div>
+
+  <div class="slide-title">
+    <h2>Аэрация в УЗВ —<br>40–60% операционных затрат</h2>
+    <div class="title-line"></div>
+  </div>
+
+  <div class="big-stat">
+    <div class="big-val">25%<span class="big-unit">рентабельность</span></div>
+    <div class="big-label">Потолок аквакультуры<br>при стандартной аэрации</div>
+  </div>
+
+  <div class="barriers">
+    <div class="barrier-item">
+      <div class="barrier-icon">1</div>
+      <div class="barrier-text"><strong>Крупные пузыри</strong> — диаметр 3–5 мм, всплывают за 1–2 с. O₂ не успевает перейти в воду. kLa = 2–5 ч⁻¹</div>
+    </div>
+    <div class="barrier-item">
+      <div class="barrier-icon">2</div>
+      <div class="barrier-text"><strong>Потери малька</strong> — при кислородных заморах 20–30%. Дефицит O₂ = прямые убытки</div>
+    </div>
+    <div class="barrier-item">
+      <div class="barrier-icon">3</div>
+      <div class="barrier-text"><strong>Цена кислорода</strong> — 3–5 руб/м³ при стандартных аэраторах. Ограничивает плотность посадки</div>
+    </div>
+  </div>
+
+  <div class="conclusion">
+    <div class="conclusion-label">Следствие</div>
+    <div class="conclusion-text">При kLa 2–5 ч⁻¹ невозможно достичь плотности посадки выше <strong>50–80 кг/м³</strong> — физический предел стандартной аэрации</div>
+  </div>
+
+  <div class="logo-mark">БП</div>
+</div>
+</body>
+</html>
