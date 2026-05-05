@@ -119,16 +119,16 @@ function Clip({ file, startFrom, playbackRate, caption }) {
 
       {/* Caption — bottom, long display */}
       <div style={{
-        position: 'absolute', bottom: 96, left: 48, right: 48,
+        position: 'absolute', bottom: 96, left: 40, right: 40,
         opacity: captionOpacity,
         fontFamily: '"Raleway", "Georgia", serif',
-        fontWeight: 300,
-        fontSize: 36,
+        fontWeight: 400,
+        fontSize: 58,
         color: WHITE,
-        letterSpacing: '0.06em',
+        letterSpacing: '0.04em',
         textAlign: 'center',
-        textShadow: '0 2px 14px rgba(0,0,0,0.55)',
-        lineHeight: 1.3,
+        textShadow: '0 2px 18px rgba(0,0,0,0.65)',
+        lineHeight: 1.25,
       }}>
         {caption}
       </div>
@@ -309,7 +309,7 @@ export function LakmodaReel() {
         <TitleCard />
       </Sequence>
 
-      <Audio src={staticFile('music.wav')} />
+      <Audio src={staticFile('music.wav')} loop />
     </AbsoluteFill>
   );
 }
