@@ -6,7 +6,6 @@ import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Load FAL key
 const envContent = fs.readFileSync(
   path.join(process.env.USERPROFILE || process.env.HOME, ".claude", ".env.fal"),
   "utf-8"
@@ -25,18 +24,86 @@ async function download(url, dest) {
   });
 }
 
+const BG = `Background: deep black at the very top and side edges, transitioning into a rich vivid saturated crimson-red radial glow emanating from the lower-center area of the image, like a warm red theater spotlight or fire glow from below — the red is intense, deep, warm, and gradually fades to pure black towards the corners and top. This dark-red gradient background is the dominant visual element.`;
+
+const IPHONES = `At the very bottom of the image: three iPhone 17 smartphones displayed side by side in a slight 3D perspective tilt — one in warm gold/titanium color on the left, one in space black in the center (screen facing forward showing a portrait photo wallpaper), one in natural green on the right. Photo-realistic 3D renders, slightly overlapping, partially cut off by the bottom edge.`;
+
 const slides = [
   {
     name: "slide1_cover",
-    prompt: `Premium Apple tech store advertisement poster, vertical format. Brand name "BLACK APPLE" in large bold white sans-serif uppercase letters at top center, small subtitle "магазин техники" below it. Deep black background with vivid crimson red radial glow/gradient emanating from the center-left area, dramatic cinematic lighting. Center: dark semi-transparent rounded rectangle card with white text "IPHONE 17 — КАТАЛОГ МАЯ" in clean uppercase. Bottom half: three iPhone 17 smartphones displayed side by side in 3D perspective — titanium, black and natural titanium colors, photo-realistic renders. Bottom of card: small icons for credit card, shopping bag and delivery truck with labels. Luxury minimalist tech advertisement, no borders, no clipart, premium dark aesthetic. 9:16 vertical`
+    prompt: `Apple tech store promotional poster, vertical 9:16 format.
+
+${BG}
+
+TOP SECTION — white text on dark background:
+- Very large bold uppercase latin text "BLACK APPLE" centered at top (huge, heavy weight, white)
+- Below it in smaller regular white Russian Cyrillic: "магазин техники"
+
+MIDDLE SECTION:
+- Large dark semi-transparent rounded rectangle card in the center
+- Inside the card, centered white Russian Cyrillic bold heading: "iPhone 17 — КАТАЛОГ МАЯ"
+- Below: white Russian Cyrillic text "Новые и б/у модели в наличии"
+- Bottom of card: three small emoji icons spaced evenly — credit card emoji, shopping bags emoji, red truck emoji — with Russian Cyrillic labels underneath: "Любой способ оплаты", "Рассрочка", "Бесплатная доставка"
+
+${IPHONES}
+
+Style: luxury premium tech store, minimal, clean, no clipart borders, no decorative elements except the gradient.`
   },
   {
     name: "slide2_price",
-    prompt: `Premium Apple store price list poster, vertical format. Brand name "BLACK APPLE" bold white uppercase at top, subtitle "магазин техники". Deep black background with dark crimson red radial glow from center, dramatic moody lighting. Center: large dark rounded rectangle card with white text listing iPhone models and prices: "IPHONE 17 НОВЫЕ" as header, then rows: "17  128 GB  от 89 990 ₽", "17  256 GB  от 99 990 ₽", "17 Plus  256 GB  от 109 990 ₽", "17 Pro  256 GB  от 119 990 ₽", "17 Pro Max  256 GB  от 129 990 ₽". Clean monospaced white text, neat table layout. Bottom of card: three icons — credit card, shopping bags, delivery truck with captions "Любой способ оплаты", "Рассрочка", "Бесплатная доставка". Two iPhone 17 renders peeking at very bottom. Luxury dark premium tech poster aesthetic. 9:16 vertical`
+    prompt: `Apple tech store price list poster, vertical 9:16 format.
+
+${BG}
+
+TOP SECTION — white text on dark background:
+- Very large bold uppercase latin text "BLACK APPLE" centered at top
+- Below: smaller regular white Russian Cyrillic text "магазин техники"
+
+MIDDLE SECTION:
+- Large dark semi-transparent rounded rectangle card occupying most of the center
+- Card header in white: "IPHONE 17 НОВЫЕ"
+- Inside card, clean white Cyrillic and numeric text in three columns (left: model name, center: storage, right: price):
+  "17          128 GB       от 89 990 ₽"
+  "17          256 GB       от 99 990 ₽"
+  (blank line)
+  "17 Plus    256 GB       от 109 990 ₽"
+  "17 Plus    512 GB       от 119 990 ₽"
+  (blank line)
+  "17 Pro     256 GB       от 129 990 ₽"
+  "17 Pro     512 GB       от 144 990 ₽"
+  (blank line)
+  "17 Pro Max 256 GB      от 149 990 ₽"
+  "17 Pro Max 512 GB      от 164 990 ₽"
+- Bottom of card: three small emoji icons — credit card, shopping bags, truck — with Russian Cyrillic captions: "Любой способ оплаты", "Рассрочка", "Бесплатная доставка"
+
+${IPHONES}
+
+Style: luxury premium dark tech store poster, minimal, no borders, clean typography.`
   },
   {
     name: "slide3_benefits",
-    prompt: `Premium Apple tech store benefits poster, vertical format. Brand name "BLACK APPLE" bold white uppercase at top, "магазин техники" subtitle. Deep black background with rich crimson red radial glow, luxury moody atmosphere. Center: dark rounded rectangle card, white heading "ПОЧЕМУ ВЫБИРАЮТ НАС", then four bullet points with checkmark icons: "Гарантия до 1 года", "Рассрочка без переплат", "Трейд-ин — сдай старый", "Доставка в день заказа". Clean minimal white text, generous spacing. Bottom: glowing Apple logo subtly embedded. Two iPhone 17 Pro models at very bottom in titanium and space black. CTA button style element "Написать нам → vk.me/blackapplemsk". Premium luxury dark tech aesthetic, no clipart. 9:16 vertical`
+    prompt: `Apple tech store advantages poster, vertical 9:16 format.
+
+${BG}
+
+TOP SECTION — white text on dark background:
+- Very large bold uppercase latin text "BLACK APPLE" centered at top
+- Below: smaller regular white Russian Cyrillic text "магазин техники"
+
+MIDDLE SECTION:
+- Large dark semi-transparent rounded rectangle card in center
+- Card heading in white bold Russian Cyrillic: "ПОЧЕМУ ВЫБИРАЮТ НАС"
+- Four benefit rows with green checkmark icons, white Russian Cyrillic text:
+  ✓ "Гарантия до 1 года на всю технику"
+  ✓ "Рассрочка — без переплат"
+  ✓ "Трейд-ин — сдайте старый, получите новый"
+  ✓ "Доставка по Москве в день заказа"
+- Below benefits: white Russian Cyrillic text "Напишите нам: vk.me/blackapplemsk"
+- Bottom of card: three small emoji icons — credit card, shopping bags, truck — with Russian Cyrillic captions: "Любой способ оплаты", "Рассрочка", "Бесплатная доставка"
+
+${IPHONES}
+
+Style: luxury premium dark tech poster, clean, minimal, no clip art.`
   }
 ];
 
@@ -45,12 +112,13 @@ const outputDir = path.join(__dirname);
 for (const slide of slides) {
   console.log(`\n🎨 Генерирую: ${slide.name}...`);
   try {
-    const result = await fal.run("fal-ai/ideogram/v3", {
+    const result = await fal.run("fal-ai/nano-banana-2", {
       input: {
         prompt: slide.prompt,
-        aspect_ratio: "ASPECT_9_16",
-        style: "DESIGN",
-        rendering_speed: "QUALITY",
+        aspect_ratio: "9:16",
+        resolution: "2K",
+        output_format: "jpeg",
+        thinking_level: "high",
       },
     });
 
@@ -68,4 +136,4 @@ for (const slide of slides) {
   }
 }
 
-console.log("\n✅ Генерация завершена!");
+console.log("\n✅ Готово!");
