@@ -6,6 +6,43 @@
 ---
 
 <!-- Записи добавляются сверху (новые первые) -->
+## 2026-05-06 | ⚙️ Технологичность и Инновации
+### Технологичность и Инновации — авто-обучение 06.05.2026
+> Аккаунты: @linear_app, @figma, @dyson | Проанализировано изображений: 6
+
+#### Изученные посты
+  - **@dysonbeauty** (84,153 likes) — Editorial | Deep black, pale rose, subtle brown tones, sophisticated and | Centered subject, minimal negative space, portrait aspect ra
+  - **@dyson** (40,470 likes) — Product | Deep navy, electric blue, charcoal gray, muted silver, futur | Rule of thirds, centered focal point, ample negative space
+  - **@bykatiemai** (54,182 likes) — abstract | muted green, sage green, pale yellow, soft pink, whimsical | off-center, lower third, minimal
+  - **@dyson** (8,523 likes) — Bold | Deep crimson, dark scarlet, black, moody, intense | Centered subject, minimal negative space, close-up crop
+  - **@dyson** (9,825 likes) — Product | Cool grey, off-white, muted beige, neutral - professional, c | Rule of thirds, off-center focal point, ample negative space
+  - **@dyson** (6,362 likes) — Product | Charcoal gray, warm wood, muted beige, cool green/red accent | Rule of thirds, bottom center, ample
+
+#### Визуальные паттерны (синтез)
+1. Преобладание монохромной или ограниченной цветовой палитры
+2. Использование строгих, чистых линий и четких форм
+3. Акцент на цифровых текстурах или гладких, современных поверхностях
+4. Минималистичное использование негативного пространства
+5. Цифровые или графические элементы, подчеркивающие технологичность
+
+#### Цветовая палитра стиля
+Основные цвета - глубокий черный, угольно-серый, темно-синий, с редкими акцентами электрического синего или бледно-розового. Часто используются нейтральные оттенки как фон.
+
+#### Правила композиции
+Использование правила третей, центрированная композиция с ощутимым негативным пространством, крупные планы с фокусом на деталях продукта или концепции.
+
+#### Текстура и свет
+Гладкие, матовые или слегка зернистые поверхности, часто с эффектом мягкого, рассеянного студийного света, создающего низкий контраст и подчеркивающего форму.
+
+#### fal.ai промпты для стиля (применять при генерации)
+  - `Ultra-minimalist tech ad, stark black and electric blue palette, bold sans-serif typography, precise geometric grid, crisp product shot of futuristic interface.`
+  - `Sleek device close-up, deep navy and muted silver, rendered on a strict grid, abstract digital textures, highlighting innovative design elements.`
+  - `Monochromatic infographic detailing a technological process, bold sans-serif numbers as accents, clean lines, dark gray and white, professional and abstract.`
+
+#### Дизайн-фокус
+строгие сетки, монохром, bold sans-serif, цифры как акцент, инфографика
+---
+
 ## 2026-05-05 | ⚙️ Технологичность и Инновации
 ### Технологичность и Инновации — авто-обучение 05.05.2026
 > Аккаунты: @spacex, @dyson, @figma | Проанализировано изображений: 5
