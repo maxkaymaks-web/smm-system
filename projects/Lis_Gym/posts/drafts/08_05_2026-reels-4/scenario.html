@@ -107,7 +107,7 @@ body {
 .hook-item { font-size: 11.5px; color: var(--muted); }
 .hook-item strong { color: var(--text); font-weight: 600; }
 
-/* RETENTION FACTOR */
+/* RETENTION */
 .retention {
   background: var(--bg-alt);
   border: 1px solid var(--border);
@@ -117,8 +117,8 @@ body {
   display: flex; gap: 12px; align-items: flex-start;
   padding: 10px 0; border-bottom: 1px solid var(--border);
 }
-.retention-row:last-child { border-bottom: none; padding-bottom: 0; }
 .retention-row:first-child { padding-top: 0; }
+.retention-row:last-child { border-bottom: none; padding-bottom: 0; }
 .retention-num {
   width: 22px; height: 22px; background: var(--accent); color: #fff;
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
@@ -147,11 +147,6 @@ body {
 .shot-action {
   font-size: 12.5px; font-weight: 600; line-height: 1.4; margin-bottom: 8px;
 }
-.shot-vo {
-  font-size: 12px; color: var(--muted); line-height: 1.4;
-  border-left: 2px solid var(--border); padding-left: 10px;
-  margin-bottom: 8px; font-style: italic;
-}
 .shot-tags { display: flex; gap: 8px; flex-wrap: wrap; }
 .shot-tag {
   font-size: 10.5px; padding: 3px 9px; border-radius: 4px;
@@ -166,7 +161,6 @@ body {
 }
 .shot-tag.cta { background: rgba(255,30,30,0.05); border-color: rgba(255,30,30,0.2); }
 .shot-tag.cta strong { color: var(--accent); }
-.shot-tag.cut { background: rgba(255,30,30,0.05); border-color: rgba(255,30,30,0.2); color: var(--accent); font-weight: 700; }
 
 /* HOW GRID */
 .how-grid {
@@ -215,13 +209,6 @@ body {
   padding: 4px 10px; border-radius: var(--r-pill);
   font-size: 11px; font-weight: 600;
 }
-
-/* PUBLISH */
-.pub-grid {
-  display: grid; grid-template-columns: 1fr 1fr 1fr;
-  gap: 1px; background: var(--border); border-radius: var(--r); overflow: hidden;
-}
-.pub-cell { background: var(--bg); padding: 12px 16px; }
 
 /* FOOTER */
 .footer {
@@ -277,7 +264,7 @@ body {
   <div class="hook-type">⚡ Отправь другу</div>
   <div class="hook-text">«отправь подруге которая начнёт с понедельника 👆»</div>
   <div class="hook-row">
-    <div class="hook-item"><strong>Визуал:</strong> съёмка сзади или снизу — идёшь к тренажёру / кладёшь гантель. Движение, зал за спиной. Лицо не обязательно.</div>
+    <div class="hook-item"><strong>Визуал:</strong> съёмка сзади или снизу — идёшь к тренажёру / кладёшь гантель. Движение в кадре, зал за спиной. Лицо не обязательно.</div>
     <div class="hook-item"><strong>Аудио:</strong> трендовый трек входит одновременно с первым кадром.</div>
   </div>
 </div>
@@ -295,7 +282,7 @@ body {
   <div class="retention-row">
     <div class="retention-num">2</div>
     <div class="retention-body">
-      <div class="retention-title">Цепочка «заезженных» отмазок — узнавание</div>
+      <div class="retention-title">Цепочка «заезженных» отмазок — нарастающее узнавание</div>
       <div class="retention-desc">«Январь ❌», «с весны ❌», «каждый понедельник ❌» — три удара по рефлексу. Зритель смеётся, узнавая подругу или себя. Каждая перечёркнутая дата — маленькая шутка с нарастающим ритмом. Уйти нельзя — ещё не все ударили.</div>
     </div>
   </div>
@@ -303,14 +290,14 @@ body {
     <div class="retention-num">3</div>
     <div class="retention-body">
       <div class="retention-title">Пауза «подруга.» как разрыв ритма</div>
-      <div class="retention-desc">После трёх быстрых катов — стоп. Прямой взгляд в камеру, одно слово. Это момент контакта. Зритель ощущает, что обращаются именно к ней. Пик удержания — здесь.</div>
+      <div class="retention-desc">После трёх быстрых катов — стоп. Прямой взгляд в камеру, одно слово. Это момент личного контакта. Зритель ощущает, что обращаются именно к ней. Пик удержания — здесь.</div>
     </div>
   </div>
   <div class="retention-row">
     <div class="retention-num">4</div>
     <div class="retention-body">
-      <div class="retention-title">«Заходи 🤍» как снятие вины</div>
-      <div class="retention-desc">Финал — не «ты тормозишь», а «тут хорошо». Разрешение, не осуждение. После такого конца хочется отправить — потому что посыл добрый, а не колкий. Репост = буст дистрибуции.</div>
+      <div class="retention-title">«Заходи 🤍» как снятие вины — триггер репоста</div>
+      <div class="retention-desc">Финал — не «ты тормозишь», а «тут хорошо». Разрешение, не осуждение. После такого конца хочется отправить подруге — потому что посыл добрый. Репост = буст дистрибуции.</div>
     </div>
   </div>
 </div>
@@ -337,8 +324,8 @@ body {
     <div class="shot-time">2 – 3.5s</div>
     <div class="shot-action">Статика: крупный план — гантельная стойка, штанга или тренажёр. Предметный кадр, без людей. Ровно, никаких движений.</div>
     <div class="shot-tags">
-      <div class="shot-tag cut">⚡ жёсткий кат</div>
-      <div class="shot-tag"><strong>аудио</strong>трек продолжается</div>
+      <div class="shot-tag"><strong>монтаж</strong>жёсткий кат</div>
+      <div class="shot-tag"><strong>аудио</strong>трек</div>
     </div>
     <div class="shot-overlay">«январь ❌»</div>
   </div>
@@ -350,8 +337,8 @@ body {
     <div class="shot-time">3.5 – 5s</div>
     <div class="shot-action">Статика: другой угол зала — зеркало, скамья или пол с дорожкой. Другой кадр, тот же быстрый ритм.</div>
     <div class="shot-tags">
-      <div class="shot-tag cut">⚡ жёсткий кат</div>
-      <div class="shot-tag"><strong>аудио</strong>трек продолжается</div>
+      <div class="shot-tag"><strong>монтаж</strong>жёсткий кат</div>
+      <div class="shot-tag"><strong>аудио</strong>трек</div>
     </div>
     <div class="shot-overlay">«с весны ❌»</div>
   </div>
@@ -361,10 +348,10 @@ body {
   <div class="shot-num">4</div>
   <div class="shot-body">
     <div class="shot-time">5 – 6.5s</div>
-    <div class="shot-action">Статика или полный план спиной: стоишь у зеркала / стойки. Можно снова предметный кадр — главное другой угол. Ритм не сбавляем.</div>
+    <div class="shot-action">Статика или полный план спиной: стоишь у зеркала или у стойки. Можно снова предметный кадр — главное другой угол. Ритм не сбавляем.</div>
     <div class="shot-tags">
-      <div class="shot-tag cut">⚡ жёсткий кат</div>
-      <div class="shot-tag"><strong>аудио</strong>трек продолжается</div>
+      <div class="shot-tag"><strong>монтаж</strong>жёсткий кат</div>
+      <div class="shot-tag"><strong>аудио</strong>трек</div>
     </div>
     <div class="shot-overlay">«каждый понедельник ❌»</div>
   </div>
@@ -374,9 +361,9 @@ body {
   <div class="shot-num">5</div>
   <div class="shot-body">
     <div class="shot-time">6.5 – 8.5s</div>
-    <div class="shot-action">СТОП. Средний план: стоишь лицом к камере, грудь–макушка. Смотришь прямо. Пауза. Ничего не происходит — просто взгляд. Это и есть момент контакта.</div>
+    <div class="shot-action">СТОП. Средний план: стоишь лицом к камере, грудь–макушка. Смотришь прямо. Пауза. Ничего не происходит — просто взгляд. Музыка чуть тише.</div>
     <div class="shot-tags">
-      <div class="shot-tag cut">⚡ жёсткий кат</div>
+      <div class="shot-tag"><strong>монтаж</strong>жёсткий кат</div>
       <div class="shot-tag"><strong>аудио</strong>музыка тише</div>
     </div>
     <div class="shot-overlay">«подруга.»</div>
@@ -387,9 +374,9 @@ body {
   <div class="shot-num">6</div>
   <div class="shot-body">
     <div class="shot-time">8.5 – 10s</div>
-    <div class="shot-action">Та же точка. Маленькая улыбка — можно чуть наклонить голову. Freeze на улыбке 0.5–1 сек. Это финал — тёплый, не поучающий.</div>
+    <div class="shot-action">Та же точка. Маленькая улыбка — можно чуть наклонить голову. Freeze на улыбке 0.5–1 сек.</div>
     <div class="shot-tags">
-      <div class="shot-tag"><strong>монтаж</strong>freeze 0.5–1 сек</div>
+      <div class="shot-tag"><strong>монтаж</strong>статика → freeze 0.5–1 сек</div>
       <div class="shot-tag cta"><strong>CTA</strong>триггер репоста подруге</div>
     </div>
     <div class="shot-overlay">«тут хорошо. заходи 🤍»</div>
@@ -404,20 +391,16 @@ body {
     <div class="how-value">9:16 вертикаль</div>
   </div>
   <div class="how-cell">
-    <div class="how-label">Кадр 1</div>
-    <div class="how-value">Движение — снимает подруга или штатив с wide-angle / таймер. Лицо не нужно. Ракурс: сзади или снизу.</div>
+    <div class="how-label">Ракурс</div>
+    <div class="how-value">Кадр 1 — сзади или снизу, лицо не нужно. Кадры 2–4 — предметные, статика. Кадры 5–6 — средний план фронт, грудь–макушка.</div>
   </div>
   <div class="how-cell">
-    <div class="how-label">Кадры 2–4</div>
-    <div class="how-value">Статичные предметные. Штатив или ровная поверхность. Тебя в кадре нет, или ты размыто на фоне.</div>
-  </div>
-  <div class="how-cell">
-    <div class="how-label">Кадры 5–6</div>
-    <div class="how-value">Средний план, грудь–макушка, строго фронт. Штатив. Одна точка, камера не двигается.</div>
+    <div class="how-label">Камера</div>
+    <div class="how-value">Кадр 1 — снимает подруга или таймер с wide-angle. Кадры 2–6 — штатив или ровная поверхность на нужной высоте.</div>
   </div>
   <div class="how-cell">
     <div class="how-label">Свет</div>
-    <div class="how-value">Равномерный. Кадры 5–6 — хороший свет на лицо, без теней снизу.</div>
+    <div class="how-value">Равномерный на всех кадрах. Кадры 5–6 — хороший свет на лицо, без теней снизу.</div>
   </div>
   <div class="how-cell">
     <div class="how-label">Одежда</div>
@@ -429,64 +412,73 @@ body {
   </div>
   <div class="how-cell full">
     <div class="how-label">Текст «❌» на кадрах 2–4</div>
-    <div class="how-value">Добавить в Instagram-редакторе или CapCut — большой белый шрифт, по центру экрана. Выглядит как мем-текст, не как субтитры.</div>
+    <div class="how-value">Добавить в Instagram-редакторе или CapCut — <strong>большой белый шрифт, по центру экрана.</strong> Выглядит как мем-текст, не как субтитры.</div>
   </div>
 </div>
 
 <!-- MUSIC -->
 <div class="stitle">Музыка</div>
 <div class="music">
-  <div class="music-name">Trending audio — ищи в Instagram «отправь подруге» / «gym girl» / «monday»</div>
-  <div class="music-why">Использовать звук, который уже крутится под похожим форматом. Алгоритм буcтит контент на trending audio. Формат «отправь другу» работает лучше с весёлым ритмом — не драматичным.</div>
+  <div class="music-name">🎵 Trending audio — ищи в Instagram «отправь подруге» / «gym girl» / «monday»</div>
+  <div class="music-why">Использовать звук, который уже крутится под похожим форматом — алгоритм буcтит контент на trending audio. Формат «отправь другу» работает лучше с весёлым быстрым ритмом, не драматичным.</div>
   <div class="music-links">
     <span class="music-link">Zivert — Beverly (speed up)</span>
     <span class="music-link">Дора — Дорадура (speed up)</span>
     <span class="music-link">Любой speed-up с чётким битом</span>
   </div>
-  <div class="music-alt">Почему speed up: быстрый ритм совпадает с жёсткими катами кадров 2–4 и усиливает комедийный эффект «цепочки отмазок». Пауза на кадре 5 («подруга.») на этом фоне бьёт сильнее.</div>
+  <div class="music-alt">
+    <strong>Почему speed up:</strong> быстрый ритм совпадает с жёсткими катами кадров 2–4 и усиливает комедийный эффект «цепочки отмазок». Пауза на кадре 5 («подруга.») на этом фоне бьёт сильнее.
+  </div>
 </div>
 
-<!-- CAPTION -->
+<!-- CAPTION + HASHTAGS -->
 <div class="stitle">Подпись и хэштеги</div>
 <div class="caption-grid">
   <div class="caption-box">
-    <div class="caption-label">Подпись</div>
+    <div class="caption-label">Подпись · Тест #1 — Короткий + самоирония</div>
     <div class="caption-text">отправь подруге, которая начнёт с понедельника 👆
 
 (может, это ты 🙂)</div>
   </div>
   <div class="caption-box">
-    <div class="caption-label">Хэштеги</div>
+    <div class="caption-label">Хэштеги (3 шт — тест минимума)</div>
     <div class="hashtag-wrap">
       <span class="hashtag">#тренажерка</span>
       <span class="hashtag">#зал</span>
       <span class="hashtag">#санктпетербург</span>
+    </div>
+    <div style="margin-top:10px; font-size:11px; color:var(--muted); line-height:1.5">
+      Убраны generic: #gym #gymgirl #fitness — у конкурентов с 50k+ медианой их нет
     </div>
   </div>
 </div>
 
 <!-- PUBLICATION -->
 <div class="stitle">Публикация</div>
-<div class="pub-grid">
-  <div class="pub-cell">
-    <div class="how-label">Дата и время</div>
-    <div class="how-value">Пт 08 мая · 18:00–20:00<br><span style="color:var(--muted);font-size:11px">пятница вечер — пиковый репост-трафик в ЦА</span></div>
+<div class="how-grid">
+  <div class="how-cell">
+    <div class="how-label">Время</div>
+    <div class="how-value">Пт 08 мая, 18:00–20:00</div>
   </div>
-  <div class="pub-cell">
-    <div class="how-label">Обложка</div>
+  <div class="how-cell">
+    <div class="how-label">Обложка (превью)</div>
     <div class="how-value">Кадр 1 — движение в зале, текст хука виден на превью</div>
   </div>
-  <div class="pub-cell">
+  <div class="how-cell">
     <div class="how-label">Геометка</div>
     <div class="how-value">Название зала</div>
+  </div>
+  <div class="how-cell">
+    <div class="how-label">Alt-текст</div>
+    <div class="how-value">Девушка в зале — отправь подруге, которая откладывает тренировки</div>
   </div>
 </div>
 
 <!-- FOOTER -->
-<div class="footer">
-  <div class="footer-note"><span class="footer-dot"></span>bit&pix · агент · lis.gym · Reels #04 · 08.05.2026</div>
-  <div class="footer-note">Статус: черновик</div>
-</div>
+<footer class="footer">
+  <div class="footer-note">lis.gym · Сценарий #04 · 08 мая 2026</div>
+  <div class="footer-note"><span class="footer-dot"></span>bit&pix агент</div>
+</footer>
 
 </body>
 </html>
