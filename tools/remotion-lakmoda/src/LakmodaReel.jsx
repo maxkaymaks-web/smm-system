@@ -317,7 +317,8 @@ export function LakmodaReel() {
         <TitleCard />
       </Sequence>
 
-      <Audio src={staticFile('music.wav')} loop />
+      {/* music_full.wav = music.wav зациклен до 18.5s + fade-out 1.5s */}
+      <Audio src={staticFile('music_full.wav')} />
     </AbsoluteFill>
   );
 }
