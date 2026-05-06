@@ -93,11 +93,11 @@ function Clip({ file, startFrom, playbackRate, caption }) {
         pointerEvents: 'none',
       }} />
 
-      {/* Dark gradient bottom */}
+      {/* Dark gradient bottom — higher to cover text area */}
       <div style={{
         position: 'absolute', bottom: 0, left: 0, right: 0,
-        height: 360,
-        background: 'linear-gradient(to top, rgba(0,0,0,0.62) 0%, transparent 100%)',
+        height: 520,
+        background: 'linear-gradient(to top, rgba(0,0,0,0.68) 0%, rgba(0,0,0,0.25) 55%, transparent 100%)',
       }} />
 
       {/* LAKMODA badge — top right */}
@@ -117,18 +117,26 @@ function Clip({ file, startFrom, playbackRate, caption }) {
         LAKMODA
       </div>
 
-      {/* Caption — bottom, long display */}
+      {/* Caption — raised higher, styled with stroke + glow */}
       <div style={{
-        position: 'absolute', bottom: 96, left: 40, right: 40,
+        position: 'absolute', bottom: 260, left: 40, right: 40,
         opacity: captionOpacity,
         fontFamily: '"Raleway", "Georgia", serif',
-        fontWeight: 400,
+        fontWeight: 600,
         fontSize: 58,
         color: WHITE,
-        letterSpacing: '0.04em',
+        letterSpacing: '0.05em',
         textAlign: 'center',
-        textShadow: '0 2px 18px rgba(0,0,0,0.65)',
-        lineHeight: 1.25,
+        lineHeight: 1.3,
+        // Black stroke for sharpness
+        WebkitTextStroke: '1.5px rgba(0,0,0,0.9)',
+        // Layered shadows: warm powder glow + crisp drop shadow
+        textShadow: [
+          `0 0 24px ${POWDER}bb`,
+          `0 0 48px ${POWDER}55`,
+          `0 3px 10px rgba(0,0,0,0.9)`,
+          `0 1px 3px rgba(0,0,0,1)`,
+        ].join(', '),
       }}>
         {caption}
       </div>
