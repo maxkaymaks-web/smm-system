@@ -13,7 +13,7 @@ const envContent = fs.readFileSync(
 const falKey = envContent.match(/FAL_KEY=(.+)/)?.[1]?.trim();
 fal.config({ credentials: falKey });
 
-const proxyUrl = process.env.HTTPS_PROXY || process.env.https_proxy || "http://127.0.0.1:10809";
+const proxyUrl = "http://127.0.0.1:10809";
 setGlobalDispatcher(new ProxyAgent(proxyUrl));
 console.log(`🔗 Прокси: ${proxyUrl}`);
 
@@ -26,30 +26,34 @@ async function download(url, dest) {
   return dest;
 }
 
-// Точное описание айфонов — как на слайде 3 (там получилось правильно)
-// LEFT = спиной, чуть наклонён влево
-// CENTER = экраном к зрителю, прямо
-// RIGHT = спиной, чуть наклонён вправо
-// Между каждым — видимый зазор, телефоны НЕ касаются друг друга
+// Все три айфона смотрят в правую диагональ —
+// вид как будто камера стоит слева и немного сзади,
+// все телефоны повёрнуты так что экран (или задняя крышка) уходит вправо под углом ~30-40°.
+// Между телефонами — чёткий видимый зазор.
 
-const IPHONE_LAYOUT = (left, center, right) => `
-BOTTOM OF IMAGE — three iPhones arranged exactly like this:
-- They stand upright in a row with a CLEAR VISIBLE GAP between each phone (phones do NOT touch or overlap)
-- LEFT phone: ${left} — showing the BACK of the phone with camera, body tilted slightly to the LEFT away from center
-- CENTER phone: ${center} — screen facing DIRECTLY toward the viewer, upright, no tilt
-- RIGHT phone: ${right} — showing the BACK of the phone with camera, body tilted slightly to the RIGHT away from center
-- All three phones are the same height
-- They are partially cropped by the bottom edge of the image
-- Photo-realistic 3D renders, same lighting as the background`;
+const IPHONES_RIGHT_DIAGONAL = (left, center, right) => `
+BOTTOM OF IMAGE — three iPhones arranged in a row at the bottom, partially cut off by the bottom edge:
+
+CRITICAL — ALL THREE PHONES ARE ANGLED TO THE RIGHT DIAGONAL (about 30-40 degrees).
+The camera viewpoint is from slightly to the left and above, so all phones appear to lean/face to the right.
+None of the phones face directly toward the viewer.
+
+- LEFT phone: ${left}. Angled to the right diagonal, showing the LEFT SIDE and BACK of the phone, camera block visible.
+- CENTER phone: ${center}. ALSO angled to the right diagonal (same angle as the others), screen visible from a 30-40° side angle — NOT facing straight at the viewer.
+- RIGHT phone: ${right}. Angled to the right diagonal, mostly showing the BACK with camera block.
+
+SPACING: There is a CLEAR VISIBLE GAP between each phone — they do NOT touch or overlap. Each phone stands independently with empty space between them.
+
+All three phones are the same height. Photo-realistic 3D renders.`;
 
 const BG_1 = `BACKGROUND: Deep near-black base. Rich crimson-red gradient flows diagonally from the upper-right corner downward, and another red glow comes in from the lower-left. Multiple angular red streaks across the image — NOT a single circle. Clean dark black in the center-top area.`;
 
 const BG_2 = `BACKGROUND: Deep near-black base. Dark crimson-red gradient bleeds in strongly from the right side as diagonal angular streaks, and a warm red glow in the lower-left corner. The red patterns are spread across multiple areas asymmetrically. Clean dark area in the upper-left.`;
 
-const HEADER = `TOP: "BLACK APPLE" in extra-large heavy bold white uppercase latin text, centered. Below it: "магазин техники" in small regular white Russian Cyrillic text, centered.`;
+const HEADER = `TOP: "BLACK APPLE" in extra-large heavy bold white uppercase latin text, centered. Below: "магазин техники" in small regular white Russian Cyrillic, centered.`;
 
 const FOOTER = `Bottom row inside card — three equally spaced items:
-[credit card emoji] "Любой способ оплаты" | [shopping bags emoji] "Рассрочка" | [red truck emoji] "Бесплатная доставка"
+[credit card emoji] "Любой способ оплаты"  |  [shopping bags emoji] "Рассрочка"  |  [red truck emoji] "Бесплатная доставка"
 (white Russian Cyrillic labels under each emoji)`;
 
 const slides = [
@@ -67,9 +71,9 @@ Inside card:
 - Regular white Russian: "Новые и б/у модели в наличии"
 - ${FOOTER}
 
-${IPHONE_LAYOUT(
+${IPHONES_RIGHT_DIAGONAL(
   "iPhone 17 in warm Gold color",
-  "iPhone 17 in Deep Black with a portrait photo on screen",
+  "iPhone 17 in Deep Black",
   "iPhone 17 in Teal/Mint color"
 )}
 
@@ -84,25 +88,25 @@ ${BG_2}
 ${HEADER}
 
 MIDDLE: large dark semi-transparent rounded rectangle card.
-Card header: "IPHONE 17 НОВЫЕ" (white bold)
+Card header: "IPHONE 17 НОВЫЕ" (white bold centered)
 Price table (white text, three columns — model | storage | price):
-  17          | 128 GB | от 89 990 ₽
-  17          | 256 GB | от 99 990 ₽
-  ─────────────────────────────────
-  17 Plus   | 256 GB | от 109 990 ₽
-  17 Plus   | 512 GB | от 119 990 ₽
-  ─────────────────────────────────
-  17 Pro     | 256 GB | от 129 990 ₽
-  17 Pro     | 512 GB | от 144 990 ₽
-  ─────────────────────────────────
-  17 Pro Max | 256 GB | от 149 990 ₽
-  17 Pro Max | 512 GB | от 164 990 ₽
+  17             | 128 GB | от 89 990 ₽
+  17             | 256 GB | от 99 990 ₽
+  ─────────────────────────────────────
+  17 Plus       | 256 GB | от 109 990 ₽
+  17 Plus       | 512 GB | от 119 990 ₽
+  ─────────────────────────────────────
+  17 Pro         | 256 GB | от 129 990 ₽
+  17 Pro         | 512 GB | от 144 990 ₽
+  ─────────────────────────────────────
+  17 Pro Max   | 256 GB | от 149 990 ₽
+  17 Pro Max   | 512 GB | от 164 990 ₽
 ${FOOTER}
 
-${IPHONE_LAYOUT(
+${IPHONES_RIGHT_DIAGONAL(
   "iPhone 17 Pro in Desert Titanium (warm beige-gold)",
-  "iPhone 17 Pro in Black Titanium with a dark wallpaper on screen",
-  "iPhone 17 Pro in White/Natural Titanium — BACK of the phone visible, camera block facing viewer, tilted to the RIGHT"
+  "iPhone 17 Pro in Black Titanium — screen visible at a 35° right-diagonal angle, NOT facing straight at the viewer",
+  "iPhone 17 Pro in White/Natural Titanium"
 )}
 
 Style: luxury dark premium tech poster, minimal, clean typography.`
