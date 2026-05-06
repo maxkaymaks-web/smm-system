@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Сценарий Reels #04 — lis.gym</title>
+<style>
+@font-face {
+  font-family: 'Nata Sans';
+  src: url('../../../../../global/brand/NataSans-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+}
+
+@page { size: A4 portrait; margin: 10mm 12mm; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #FEFEFF;
+  --bg-alt:  #F6FAFC;
+  --text:    #0B0B0B;
+  --accent:  #FF1E1E;
+  --border:  rgba(11,11,11,0.09);
+  --muted:   rgba(11,11,11,0.42);
+  --r:       10px;
+  --r-sm:    5px;
+  --r-pill:  20px;
+  --font:    'Nata Sans', -apple-system, sans-serif;
+}
+
+html { background: #e8e8e8; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  width: 760px;
+  margin: 32px auto;
+  padding: 36px 40px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  border-radius: 4px;
+}
+@media print {
+  html { background: var(--bg); }
+  body { margin: 0; border-radius: 0; padding: 0 28px; width: 100%; }
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 22px;
+  border-bottom: 2px solid var(--text);
+  margin-bottom: 22px;
+}
+.header-label {
+  font-size: 9px; font-weight: 600; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 7px;
+}
+.header-title {
+  font-size: 22px; font-weight: 800; line-height: 1.2;
+  letter-spacing: -0.4px; margin-bottom: 5px;
+}
+.header-title .num { color: var(--accent); }
+.header-sub { font-size: 11px; color: var(--muted); }
+.header-logo img { height: 46px; }
+
+/* BADGES */
+.badges { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 12px; border-radius: var(--r-pill);
+  border: 1.5px solid var(--border); background: var(--bg-alt); font-size: 11px;
+}
+.badge-label {
+  font-size: 8px; font-weight: 700; letter-spacing: 1.8px;
+  text-transform: uppercase; color: var(--muted);
+}
+.badge-value { font-weight: 700; }
+.badge.red { border-color: rgba(255,30,30,0.2); background: rgba(255,30,30,0.03); }
+.badge.red .badge-value { color: var(--accent); }
+.badge a { color: inherit; text-decoration: none; }
+.badge a:hover { text-decoration: underline; }
+
+/* SECTION TITLE */
+.stitle {
+  font-size: 9px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted);
+  margin-top: 22px; margin-bottom: 10px;
+}
+
+/* HOOK */
+.hook {
+  background: rgba(255,30,30,0.03);
+  border: 1.5px solid rgba(255,30,30,0.18);
+  border-radius: var(--r); padding: 16px 20px;
+}
+.hook-type {
+  font-size: 8.5px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 7px;
+}
+.hook-text {
+  font-size: 20px; font-weight: 800; line-height: 1.2;
+  letter-spacing: -0.3px; margin-bottom: 10px;
+}
+.hook-row { display: flex; gap: 24px; }
+.hook-item { font-size: 11.5px; color: var(--muted); }
+.hook-item strong { color: var(--text); font-weight: 600; }
+
+/* RETENTION FACTOR */
+.retention {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--r); padding: 16px 20px;
+}
+.retention-row {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+}
+.retention-row:last-child { border-bottom: none; padding-bottom: 0; }
+.retention-row:first-child { padding-top: 0; }
+.retention-num {
+  width: 22px; height: 22px; background: var(--accent); color: #fff;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 800; flex-shrink: 0; margin-top: 1px;
+}
+.retention-body { flex: 1; }
+.retention-title { font-size: 12px; font-weight: 700; margin-bottom: 3px; }
+.retention-desc { font-size: 11.5px; color: var(--muted); line-height: 1.5; }
+
+/* STORYBOARD */
+.shot {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 14px 0; border-bottom: 1px solid var(--border);
+}
+.shot:last-child { border-bottom: none; }
+.shot-num {
+  width: 28px; height: 28px; background: var(--text); color: #fff;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; flex-shrink: 0; margin-top: 1px;
+}
+.shot-body { flex: 1; }
+.shot-time {
+  font-size: 9px; font-weight: 700; color: var(--accent);
+  letter-spacing: 0.5px; margin-bottom: 4px;
+}
+.shot-action {
+  font-size: 12.5px; font-weight: 600; line-height: 1.4; margin-bottom: 8px;
+}
+.shot-vo {
+  font-size: 12px; color: var(--muted); line-height: 1.4;
+  border-left: 2px solid var(--border); padding-left: 10px;
+  margin-bottom: 8px; font-style: italic;
+}
+.shot-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.shot-tag {
+  font-size: 10.5px; padding: 3px 9px; border-radius: 4px;
+  border: 1px solid var(--border); background: var(--bg-alt); color: var(--muted);
+}
+.shot-tag strong { color: var(--text); font-weight: 600; font-size: 9px;
+  text-transform: uppercase; letter-spacing: 1px; margin-right: 4px; }
+.shot-overlay {
+  display: inline-block; background: var(--text); color: #fff;
+  border-radius: 4px; padding: 3px 9px; font-size: 11px; font-weight: 700;
+  margin-top: 7px; font-family: monospace; letter-spacing: 0;
+}
+.shot-tag.cta { background: rgba(255,30,30,0.05); border-color: rgba(255,30,30,0.2); }
+.shot-tag.cta strong { color: var(--accent); }
+.shot-tag.cut { background: rgba(255,30,30,0.05); border-color: rgba(255,30,30,0.2); color: var(--accent); font-weight: 700; }
+
+/* HOW GRID */
+.how-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1px; background: var(--border); border-radius: var(--r); overflow: hidden;
+}
+.how-cell { background: var(--bg); padding: 12px 16px; }
+.how-cell.full { grid-column: 1 / -1; }
+.how-label {
+  font-size: 8.5px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 4px;
+}
+.how-value { font-size: 12px; font-weight: 500; line-height: 1.45; }
+
+/* MUSIC */
+.music {
+  background: var(--bg-alt); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 16px 20px;
+}
+.music-name { font-size: 15px; font-weight: 800; margin-bottom: 3px; }
+.music-why { font-size: 11.5px; color: var(--muted); margin-bottom: 10px; line-height: 1.5; }
+.music-links { display: flex; gap: 8px; flex-wrap: wrap; }
+.music-link {
+  font-size: 10.5px; padding: 4px 11px; border-radius: 4px;
+  border: 1px solid var(--border); background: var(--bg); color: var(--muted);
+  text-decoration: none;
+}
+.music-link:hover { color: var(--text); }
+.music-alt { font-size: 11.5px; color: var(--muted); margin-top: 12px; }
+.music-alt a { color: var(--text); }
+
+/* CAPTION */
+.caption-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.caption-box {
+  background: var(--bg-alt); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 14px 16px;
+}
+.caption-label {
+  font-size: 8.5px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 8px;
+}
+.caption-text { font-size: 12.5px; line-height: 1.65; white-space: pre-line; }
+.hashtag-wrap { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.hashtag {
+  background: rgba(37,99,235,0.07); color: #1d4ed8;
+  padding: 4px 10px; border-radius: var(--r-pill);
+  font-size: 11px; font-weight: 600;
+}
+
+/* PUBLISH */
+.pub-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px; background: var(--border); border-radius: var(--r); overflow: hidden;
+}
+.pub-cell { background: var(--bg); padding: 12px 16px; }
+
+/* FOOTER */
+.footer {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 26px; padding-top: 16px; border-top: 1px solid var(--border);
+}
+.footer-note { font-size: 10px; color: var(--muted); }
+.footer-dot {
+  width: 6px; height: 6px; background: var(--accent);
+  border-radius: 50%; display: inline-block; margin-right: 6px;
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div>
+    <div class="header-label">Сценарий Reels · lis.gym · bit&pix агент</div>
+    <h1 class="header-title"><span class="num">#04</span> Отправь подруге, которая начнёт с понедельника</h1>
+    <div class="header-sub">08 мая 2026 · Пятница · Вирусный · 9–10 сек</div>
+  </div>
+  <div class="header-logo">
+    <img src="https://raw.githubusercontent.com/maxkaymaks-web/smm-system/main/global/brand/logo.png" alt="bit&pix агент">
+  </div>
+</header>
+
+<!-- BADGES -->
+<div class="badges">
+  <div class="badge">
+    <span class="badge-label">Тип</span>
+    <span class="badge-value">Вирусный</span>
+  </div>
+  <div class="badge">
+    <span class="badge-label">Хук</span>
+    <span class="badge-value">Отправь другу</span>
+  </div>
+  <div class="badge red">
+    <span class="badge-label">Хрон.</span>
+    <span class="badge-value">9–10s</span>
+  </div>
+  <div class="badge">
+    <span class="badge-label">Аналог</span>
+    <span class="badge-value">
+      <a href="https://www.instagram.com/r.minnushina_/" target="_blank">@r.minnushina_ — 1M+ просмотров ↗</a>
+    </span>
+  </div>
+</div>
+
+<!-- HOOK -->
+<div class="stitle">Хук — первые 2 секунды</div>
+<div class="hook">
+  <div class="hook-type">⚡ Отправь другу</div>
+  <div class="hook-text">«отправь подруге которая начнёт с понедельника 👆»</div>
+  <div class="hook-row">
+    <div class="hook-item"><strong>Визуал:</strong> съёмка сзади или снизу — идёшь к тренажёру / кладёшь гантель. Движение, зал за спиной. Лицо не обязательно.</div>
+    <div class="hook-item"><strong>Аудио:</strong> трендовый трек входит одновременно с первым кадром.</div>
+  </div>
+</div>
+
+<!-- RETENTION FACTOR -->
+<div class="stitle">Фактор держания — почему досмотрят до конца</div>
+<div class="retention">
+  <div class="retention-row">
+    <div class="retention-num">1</div>
+    <div class="retention-body">
+      <div class="retention-title">Немедленная активация «получателя»</div>
+      <div class="retention-desc">Хук не описывает ситуацию — он называет конкретного человека. В первые 0.5 секунды у зрителя уже есть имя в голове. Желание действовать (репост / тег) возникает ещё до того, как видео досмотрено.</div>
+    </div>
+  </div>
+  <div class="retention-row">
+    <div class="retention-num">2</div>
+    <div class="retention-body">
+      <div class="retention-title">Цепочка «заезженных» отмазок — узнавание</div>
+      <div class="retention-desc">«Январь ❌», «с весны ❌», «каждый понедельник ❌» — три удара по рефлексу. Зритель смеётся, узнавая подругу или себя. Каждая перечёркнутая дата — маленькая шутка с нарастающим ритмом. Уйти нельзя — ещё не все ударили.</div>
+    </div>
+  </div>
+  <div class="retention-row">
+    <div class="retention-num">3</div>
+    <div class="retention-body">
+      <div class="retention-title">Пауза «подруга.» как разрыв ритма</div>
+      <div class="retention-desc">После трёх быстрых катов — стоп. Прямой взгляд в камеру, одно слово. Это момент контакта. Зритель ощущает, что обращаются именно к ней. Пик удержания — здесь.</div>
+    </div>
+  </div>
+  <div class="retention-row">
+    <div class="retention-num">4</div>
+    <div class="retention-body">
+      <div class="retention-title">«Заходи 🤍» как снятие вины</div>
+      <div class="retention-desc">Финал — не «ты тормозишь», а «тут хорошо». Разрешение, не осуждение. После такого конца хочется отправить — потому что посыл добрый, а не колкий. Репост = буст дистрибуции.</div>
+    </div>
+  </div>
+</div>
+
+<!-- STORYBOARD -->
+<div class="stitle">Раскадровка</div>
+
+<div class="shot">
+  <div class="shot-num">1</div>
+  <div class="shot-body">
+    <div class="shot-time">0 – 2s</div>
+    <div class="shot-action">Съёмка сзади или снизу — идёшь к тренажёру или кладёшь гантель на стойку. Движение в кадре. Зал на заднем плане. Лицо не нужно — спина, ноги, силуэт.</div>
+    <div class="shot-tags">
+      <div class="shot-tag"><strong>монтаж</strong>вход с первым битом трека</div>
+      <div class="shot-tag"><strong>аудио</strong>трек входит сразу</div>
+    </div>
+    <div class="shot-overlay">«отправь подруге которая начнёт с понедельника 👆»</div>
+  </div>
+</div>
+
+<div class="shot">
+  <div class="shot-num">2</div>
+  <div class="shot-body">
+    <div class="shot-time">2 – 3.5s</div>
+    <div class="shot-action">Статика: крупный план — гантельная стойка, штанга или тренажёр. Предметный кадр, без людей. Ровно, никаких движений.</div>
+    <div class="shot-tags">
+      <div class="shot-tag cut">⚡ жёсткий кат</div>
+      <div class="shot-tag"><strong>аудио</strong>трек продолжается</div>
+    </div>
+    <div class="shot-overlay">«январь ❌»</div>
+  </div>
+</div>
+
+<div class="shot">
+  <div class="shot-num">3</div>
+  <div class="shot-body">
+    <div class="shot-time">3.5 – 5s</div>
+    <div class="shot-action">Статика: другой угол зала — зеркало, скамья или пол с дорожкой. Другой кадр, тот же быстрый ритм.</div>
+    <div class="shot-tags">
+      <div class="shot-tag cut">⚡ жёсткий кат</div>
+      <div class="shot-tag"><strong>аудио</strong>трек продолжается</div>
+    </div>
+    <div class="shot-overlay">«с весны ❌»</div>
+  </div>
+</div>
+
+<div class="shot">
+  <div class="shot-num">4</div>
+  <div class="shot-body">
+    <div class="shot-time">5 – 6.5s</div>
+    <div class="shot-action">Статика или полный план спиной: стоишь у зеркала / стойки. Можно снова предметный кадр — главное другой угол. Ритм не сбавляем.</div>
+    <div class="shot-tags">
+      <div class="shot-tag cut">⚡ жёсткий кат</div>
+      <div class="shot-tag"><strong>аудио</strong>трек продолжается</div>
+    </div>
+    <div class="shot-overlay">«каждый понедельник ❌»</div>
+  </div>
+</div>
+
+<div class="shot">
+  <div class="shot-num">5</div>
+  <div class="shot-body">
+    <div class="shot-time">6.5 – 8.5s</div>
+    <div class="shot-action">СТОП. Средний план: стоишь лицом к камере, грудь–макушка. Смотришь прямо. Пауза. Ничего не происходит — просто взгляд. Это и есть момент контакта.</div>
+    <div class="shot-tags">
+      <div class="shot-tag cut">⚡ жёсткий кат</div>
+      <div class="shot-tag"><strong>аудио</strong>музыка тише</div>
+    </div>
+    <div class="shot-overlay">«подруга.»</div>
+  </div>
+</div>
+
+<div class="shot">
+  <div class="shot-num">6</div>
+  <div class="shot-body">
+    <div class="shot-time">8.5 – 10s</div>
+    <div class="shot-action">Та же точка. Маленькая улыбка — можно чуть наклонить голову. Freeze на улыбке 0.5–1 сек. Это финал — тёплый, не поучающий.</div>
+    <div class="shot-tags">
+      <div class="shot-tag"><strong>монтаж</strong>freeze 0.5–1 сек</div>
+      <div class="shot-tag cta"><strong>CTA</strong>триггер репоста подруге</div>
+    </div>
+    <div class="shot-overlay">«тут хорошо. заходи 🤍»</div>
+  </div>
+</div>
+
+<!-- SHOOTING INSTRUCTIONS -->
+<div class="stitle">Инструкции по съёмке</div>
+<div class="how-grid">
+  <div class="how-cell">
+    <div class="how-label">Ориентация</div>
+    <div class="how-value">9:16 вертикаль</div>
+  </div>
+  <div class="how-cell">
+    <div class="how-label">Кадр 1</div>
+    <div class="how-value">Движение — снимает подруга или штатив с wide-angle / таймер. Лицо не нужно. Ракурс: сзади или снизу.</div>
+  </div>
+  <div class="how-cell">
+    <div class="how-label">Кадры 2–4</div>
+    <div class="how-value">Статичные предметные. Штатив или ровная поверхность. Тебя в кадре нет, или ты размыто на фоне.</div>
+  </div>
+  <div class="how-cell">
+    <div class="how-label">Кадры 5–6</div>
+    <div class="how-value">Средний план, грудь–макушка, строго фронт. Штатив. Одна точка, камера не двигается.</div>
+  </div>
+  <div class="how-cell">
+    <div class="how-label">Свет</div>
+    <div class="how-value">Равномерный. Кадры 5–6 — хороший свет на лицо, без теней снизу.</div>
+  </div>
+  <div class="how-cell">
+    <div class="how-label">Одежда</div>
+    <div class="how-value">Один комплект на всё видео.</div>
+  </div>
+  <div class="how-cell">
+    <div class="how-label">Монтаж</div>
+    <div class="how-value">Жёсткий кат везде без исключений. Текст появляется вместе с кадром. Freeze в конце 0.5–1 сек.</div>
+  </div>
+  <div class="how-cell full">
+    <div class="how-label">Текст «❌» на кадрах 2–4</div>
+    <div class="how-value">Добавить в Instagram-редакторе или CapCut — большой белый шрифт, по центру экрана. Выглядит как мем-текст, не как субтитры.</div>
+  </div>
+</div>
+
+<!-- MUSIC -->
+<div class="stitle">Музыка</div>
+<div class="music">
+  <div class="music-name">Trending audio — ищи в Instagram «отправь подруге» / «gym girl» / «monday»</div>
+  <div class="music-why">Использовать звук, который уже крутится под похожим форматом. Алгоритм буcтит контент на trending audio. Формат «отправь другу» работает лучше с весёлым ритмом — не драматичным.</div>
+  <div class="music-links">
+    <span class="music-link">Zivert — Beverly (speed up)</span>
+    <span class="music-link">Дора — Дорадура (speed up)</span>
+    <span class="music-link">Любой speed-up с чётким битом</span>
+  </div>
+  <div class="music-alt">Почему speed up: быстрый ритм совпадает с жёсткими катами кадров 2–4 и усиливает комедийный эффект «цепочки отмазок». Пауза на кадре 5 («подруга.») на этом фоне бьёт сильнее.</div>
+</div>
+
+<!-- CAPTION -->
+<div class="stitle">Подпись и хэштеги</div>
+<div class="caption-grid">
+  <div class="caption-box">
+    <div class="caption-label">Подпись</div>
+    <div class="caption-text">отправь подруге, которая начнёт с понедельника 👆
+
+(может, это ты 🙂)</div>
+  </div>
+  <div class="caption-box">
+    <div class="caption-label">Хэштеги</div>
+    <div class="hashtag-wrap">
+      <span class="hashtag">#тренажерка</span>
+      <span class="hashtag">#зал</span>
+      <span class="hashtag">#санктпетербург</span>
+    </div>
+  </div>
+</div>
+
+<!-- PUBLICATION -->
+<div class="stitle">Публикация</div>
+<div class="pub-grid">
+  <div class="pub-cell">
+    <div class="how-label">Дата и время</div>
+    <div class="how-value">Пт 08 мая · 18:00–20:00<br><span style="color:var(--muted);font-size:11px">пятница вечер — пиковый репост-трафик в ЦА</span></div>
+  </div>
+  <div class="pub-cell">
+    <div class="how-label">Обложка</div>
+    <div class="how-value">Кадр 1 — движение в зале, текст хука виден на превью</div>
+  </div>
+  <div class="pub-cell">
+    <div class="how-label">Геометка</div>
+    <div class="how-value">Название зала</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-note"><span class="footer-dot"></span>bit&pix · агент · lis.gym · Reels #04 · 08.05.2026</div>
+  <div class="footer-note">Статус: черновик</div>
+</div>
+
+</body>
+</html>
