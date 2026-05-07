@@ -41,13 +41,15 @@ const CARD_FOOTER = `Bottom row of card — three items spaced evenly in one row
   "Любой способ оплаты"        "Рассрочка"                   "Бесплатная доставка"
   (white Russian Cyrillic, small text under each icon)`;
 
-// Правило iPhone — одинаковое на всех слайдах
-const IPHONE_RULE = `BOTTOM SECTION — three iPhones standing upright with CLEARLY VISIBLE GAPS between them (not touching, not overlapping):
-- ALL THREE phones tilted at 30–40 degrees to the right diagonal, camera positioned slightly from the left side
-- LEFT: iPhone in Deep Black color, showing the back camera panel, tilted right diagonal
-- CENTER: iPhone in Blue Titanium color, screen facing forward at right diagonal showing settings menu
-- RIGHT: iPhone in Natural Silver/White color, showing the back camera panel, tilted right diagonal
-Each phone has a clear empty space on both sides. They are partially cut off by the bottom edge. Photo-realistic 3D renders. Noticeable gap between each phone.`;
+// Правило iPhone — одинаковое на всех слайдах (единое положение, полностью видны, читаемый экран)
+const IPHONE_RULE = `BOTTOM SECTION — three iPhones arranged in a fixed identical layout (same position on ALL slides in this series):
+LAYOUT: all three phones placed in the lower 35% of the image, centered horizontally as a group, FULLY VISIBLE from top to bottom — NOT cropped, NOT cut off by edges. All phones are fully inside the frame.
+ARRANGEMENT: three phones side by side with a clear visible gap between each phone (not touching).
+TILT: all three phones tilted at 30–35 degrees to the right diagonal, viewed from slightly left-front angle.
+- LEFT phone: iPhone 15 in Deep Black, back panel facing viewer, camera bump visible, full phone in frame
+- CENTER phone: iPhone 15 in Blue color, screen facing viewer, screen shows the iOS Settings app in RUSSIAN language — clean readable white Russian text: "Настройки" as the app title, list items "Основные", "Аккумулятор", "Face ID и код" in clear Russian Cyrillic — NO random symbols, NO hieroglyphs, NO unreadable glyphs
+- RIGHT phone: iPhone 15 in Silver/White, back panel facing viewer, camera bump visible, full phone in frame
+All three phones are completely inside the image boundaries. Photo-realistic 3D product renders. Clean reflective surfaces.`;
 
 const slides = [
   {
