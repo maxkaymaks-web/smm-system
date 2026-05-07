@@ -26,57 +26,65 @@ async function download(url, dest) {
   return dest;
 }
 
-// Подвал карточки
 const CARD_FOOTER = `Bottom row of card — three items spaced evenly in one row:
-  [credit card emoji]          [shopping bags emoji]         [truck emoji]
-  "Любой способ оплаты"        "Рассрочка"                   "Бесплатная доставка"
+  [credit card emoji]  [shopping bags emoji]  [truck emoji]
+  "Любой способ оплаты"  "Рассрочка"  "Бесплатная доставка"
   (white Russian Cyrillic, small text under each icon)`;
 
-// iPhone блок — все три телефона полностью в кадре, одинаковая позиция
-// Экран CENTER телефона — ТОЛЬКО одно слово, белым на тёмном фоне
-const IPHONE_RULE = `BOTTOM SECTION — three iPhones, identical layout on all slides in this series:
-- All three phones placed in the lower 35% of the image, centered as a group, COMPLETELY FULLY VISIBLE — not cropped, not cut off at the bottom or sides
-- Clear visible gap between each phone, phones do not touch each other
-- All three phones tilted at 30 degrees to the right diagonal
-- LEFT phone: iPhone 15 Pro in Black Titanium, showing the BACK of the phone, full phone visible
-- CENTER phone: iPhone 15 Pro in Blue Titanium, showing the FRONT screen, full phone visible. The screen shows ONLY: a plain very dark navy background, and in the upper portion of the screen one single Russian word "НАСТРОЙКИ" written in clean white sans-serif Latin-style letters — just this one word, nothing else, no other text, no icons, no lines, no symbols, no UI elements. The word must be clearly readable Russian Cyrillic: Н-А-С-Т-Р-О-Й-К-И.
-- RIGHT phone: iPhone 15 Pro in White Titanium, showing the BACK of the phone, full phone visible
-All three phones are photorealistic 3D product renders. All phones are completely inside the image frame.`;
+// iPhone блок — ТОЧНО как слайд 1: правая диагональ, полностью в кадре
+// Экран CENTER: iOS Настройки на русском языке
+const IPHONE_RULE = `BOTTOM SECTION — three iPhones in identical layout as slide 1 of this series:
+POSITION: lower third of the image, all three fully visible inside the frame, not cropped.
+TILT: all three phones angled to the RIGHT diagonal — the right edge of each phone is closer to the viewer, the left edge recedes away. This is a classic 3D product shot from a slightly elevated left-front viewpoint. Same exact perspective angle as slide 1.
+SPACING: clear visible gap between each phone, they do not touch.
+
+- LEFT phone: iPhone 15 Pro in Black Titanium — showing the BACK of the phone, right-diagonal tilt, triple camera visible, full phone in frame
+- CENTER phone: iPhone 15 Pro in Blue Titanium — showing the FRONT screen, right-diagonal tilt, full phone in frame.
+  SCREEN CONTENT (critical): the screen displays the Apple iOS Settings app in RUSSIAN language, light grey iOS background.
+  The screen shows a vertical list of Russian settings menu items in standard iOS style — dark grey text on light background, each item separated by a thin line:
+  "Основные"
+  "Аккумулятор"
+  "Режим питания"
+  "Face ID и код"
+  "Зарядка"
+  All text is in Russian Cyrillic only. Clean iOS list design. NO random symbols. NO hieroglyphs. NO Latin letters on the screen.
+- RIGHT phone: iPhone 15 Pro in White Titanium — showing the BACK of the phone, right-diagonal tilt, camera bump visible, full phone in frame
+
+All three phones are photorealistic 3D product renders with clean reflective surfaces. All completely inside image boundaries.`;
 
 const slides = [
   {
     name: "slide2_battery_faceid",
     prompt: `Apple resale store checklist poster, vertical 9:16 format.
 
-BACKGROUND: Deep midnight navy base. Electric blue gradients in multiple areas — NOT a single center circle. Blue flows as: (1) electric-blue from lower-left corner, (2) diagonal deep-blue streak from right side going up-left, (3) faint cyan along upper-left edge. No round vignette. Clean dark navy at top-center.
+BACKGROUND: Deep midnight navy base. Electric blue gradients in multiple areas — NOT a center circle. Blue flows as: (1) electric-blue from lower-left corner, (2) diagonal deep-blue streak from right going up-left, (3) faint cyan along upper-left edge. No round vignette. Clean dark navy at top-center.
 
 TOP SECTION — identical size and position on all slides in this series:
 - "BLACK APPLE" in extra-large heavy bold uppercase white sans-serif text, centered at top, massive letters, font weight 900
 - Directly below: "магазин техники" in small regular white Russian Cyrillic, centered
 
 MIDDLE SECTION:
-- Large dark semi-transparent rounded rectangle card
-- Two clearly separated blocks inside the card, all text white Russian Cyrillic:
+- Large dark semi-transparent rounded rectangle card, all text white Russian Cyrillic:
 
-BLOCK 1 — battery emoji + bold white uppercase Russian: "БАТАРЕЯ"
-  Row with blue checkmark ✓: "Настройки → Аккумулятор → Состояние"
-  Row with blue checkmark ✓: "Норма: 80% и выше"
-  Row with red X ✗: "Ниже 80% — скоро замена"
+BLOCK 1 — battery emoji + bold white uppercase: "БАТАРЕЯ"
+  ✓ blue checkmark: "Настройки → Аккумулятор → Состояние"
+  ✓ blue checkmark: "Норма: 80% и выше"
+  ✗ red X: "Ниже 80% — скоро нужна замена"
 
-BLOCK 2 — face ID emoji + bold white uppercase Russian: "FACE ID"
-  Row with blue checkmark ✓: "Настройки → Face ID и код"
-  Row with blue checkmark ✓: "Добавьте лицо заново — проверьте"
-  Row with red X ✗: "Сбоит или не срабатывает — датчик сломан"
+BLOCK 2 — face emoji + bold white uppercase: "FACE ID"
+  ✓ blue checkmark: "Настройки → Face ID и код"
+  ✓ blue checkmark: "Добавьте лицо заново и проверьте"
+  ✗ red X: "Сбоит или не срабатывает — датчик сломан"
 
 ${CARD_FOOTER}
 
 ${IPHONE_RULE}
 
-Style: dark premium tech checklist poster, minimal, clean. All Russian Cyrillic text perfectly readable.`
+Style: dark premium tech checklist poster, minimal, clean.`
   },
   {
     name: "slide3_imei_cta",
-    prompt: `Apple resale store IMEI and CTA poster, vertical 9:16 format.
+    prompt: `Apple resale store IMEI check and CTA poster, vertical 9:16 format.
 
 BACKGROUND: Deep midnight navy base. Electric blue and cyan gradients — NOT a circular vignette. Blue appears as: (1) electric-blue in lower-right corner, (2) diagonal steel-blue from bottom-left going up-right, (3) subtle cyan along left edge. Clean dark navy at center-top.
 
@@ -85,26 +93,26 @@ TOP SECTION — identical size and position on all slides in this series:
 - Directly below: "магазин техники" in small regular white Russian Cyrillic, centered
 
 MIDDLE SECTION:
-- Dark semi-transparent rounded rectangle card, background gradient slightly visible through
+- Dark semi-transparent rounded rectangle card, all text white Russian Cyrillic:
 
-BLOCK — signal emoji + bold white uppercase Russian: "IMEI — ЧИСТОТА ТЕЛЕФОНА"
-  Step 1: "Наберите *#06# — запишите номер"
-  Step 2: "Проверьте на сайте imei.info"
-  Step 3: "Телефон не должен быть заблокирован"
+signal emoji + bold white uppercase: "IMEI — ЧИСТОТА ТЕЛЕФОНА"
+  1. "Наберите *#06# — запишите номер"
+  2. "Проверьте на сайте imei.info"
+  3. "Телефон не должен быть заблокирован"
 
-Thin horizontal divider line.
+Thin horizontal divider.
 
-Green checkmark + bold white Russian: "У нас в Black Apple"
-Smaller white Russian text: "Все б/у iPhone проверены — батарея, Face ID, IMEI"
+✅ + bold white: "У нас в Black Apple"
+Smaller white text: "Все б/у iPhone проверены — батарея, Face ID, IMEI"
 
 Blue rounded button with bold white Russian text: "Смотреть б/у в наличии →"
-Small muted white text below: "vk.me/blackapplemsk"
+Small muted white text: "vk.me/blackapplemsk"
 
 ${CARD_FOOTER}
 
 ${IPHONE_RULE}
 
-Style: dark premium tech CTA poster, minimal, clean. All Russian Cyrillic text perfectly readable.`
+Style: dark premium tech CTA poster, minimal, clean.`
   }
 ];
 
