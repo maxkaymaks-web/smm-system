@@ -66,6 +66,9 @@ git push origin main
 
 ## Проекты (если добавляются новые проекты, добавь сюда)
 
-- `projects/Bioprintex_Limatex/` — B2B, промышленная экология
-- `projects/BeautyCulture_DariaSopkina/` — Студия красоты «Культура», СПб
+- `projects/Bioprintex_Limatex/` — B2B, промышленная экология (ВКонтакте)
+- `projects/BeautyCulture_DariaSopkina/` — Студия красоты «Культура», СПб (ВКонтакте)
 - `projects/Lis_Gym/` — Фитнес-зал, Instagram Reels, СПб
+- `projects/Black_Apple/` — Розничная сеть iPhone, 9 городов (ВКонтакте)
+- `projects/Lakmoda/` — Салон красоты, Люберцы (Instagram)
+- `projects/Sparta/` — B2B/B2G стратегический консалтинг (Telegram)
