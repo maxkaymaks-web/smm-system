@@ -39,15 +39,24 @@ TILT: all three phones angled to the RIGHT diagonal — the right edge of each p
 SPACING: clear visible gap between each phone, they do not touch.
 
 - LEFT phone: iPhone 15 Pro in Black Titanium — right-diagonal tilt, showing the BACK of the phone, triple camera visible, full phone in frame
-- CENTER phone: iPhone 15 Pro in Blue Titanium — SAME right-diagonal tilt as the left and right phones, the screen faces toward the viewer but the phone body is rotated at the same right-diagonal angle as the others. Full phone in frame.
-  SCREEN CONTENT (critical): the screen displays the Apple iOS Settings app in RUSSIAN language, light grey iOS background.
-  The screen shows a vertical list of Russian settings menu items in standard iOS style — dark Cyrillic text on light background, each row separated by a thin line:
-  "Основные"
-  "Аккумулятор"
-  "Режим питания"
-  "Face ID и код"
-  "Зарядка"
-  All text is Russian Cyrillic only. Clean iOS list. NO random symbols. NO hieroglyphs. NO Latin on screen.
+- CENTER phone: iPhone 15 Pro in Blue Titanium — SAME right-diagonal tilt as the left and right phones, the phone body rotated at the same right-diagonal angle as the others, screen visible to the viewer. Full phone in frame.
+  SCREEN CONTENT (critical): the screen shows the Apple iOS Settings app exactly as it looks on a real iPhone, in RUSSIAN language, iOS light mode (white and light grey background).
+  Top status bar: "20:10" on left, signal/wifi/battery icons on right.
+  Page title centered: "Настройки" in bold black Russian text.
+  Below: a scrollable list of settings rows. Each row has: a small colored rounded-square icon on the left, Russian text label in the center-left, a grey chevron arrow "›" on the right. Thin grey separator lines between rows. Exactly like real iOS Settings:
+  Row 1: purple moon icon — "Фокусирование"
+  Row 2: teal hourglass icon — "Экранное время"
+  [thin section gap]
+  Row 3: grey gear icon — "Основные"
+  Row 4: grey sliders icon — "Пункт управления"
+  Row 5: blue sun icon — "Экран и яркость"
+  Row 6: grey grid icon — "Экран «Домой»"
+  Row 7: blue accessibility icon — "Универсальный доступ"
+  [thin section gap]
+  Row 8: green face icon — "Face ID и код-пароль"
+  Row 9: red SOS icon — "Экстренный вызов — SOS"
+  Row 10: green battery icon — "Аккумулятор"
+  All text is Russian Cyrillic only. NO random symbols. NO hieroglyphs. NO unreadable glyphs. Pixel-perfect iOS interface.
 - RIGHT phone: iPhone 15 Pro in White Titanium — right-diagonal tilt, showing the BACK of the phone, camera bump visible, full phone in frame
 
 All three phones are photorealistic 3D product renders with clean reflective surfaces. All completely inside image boundaries.`;
