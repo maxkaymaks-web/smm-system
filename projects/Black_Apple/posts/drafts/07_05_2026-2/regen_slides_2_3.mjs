@@ -38,17 +38,17 @@ POSITION: lower third of the image, all three fully visible inside the frame, no
 TILT: all three phones angled to the RIGHT diagonal — the right edge of each phone is closer to the viewer, the left edge recedes away. This is a classic 3D product shot from a slightly elevated left-front viewpoint. Same exact perspective angle as slide 1.
 SPACING: clear visible gap between each phone, they do not touch.
 
-- LEFT phone: iPhone 15 Pro in Black Titanium — showing the BACK of the phone, right-diagonal tilt, triple camera visible, full phone in frame
-- CENTER phone: iPhone 15 Pro in Blue Titanium — showing the FRONT screen, right-diagonal tilt, full phone in frame.
+- LEFT phone: iPhone 15 Pro in Black Titanium — right-diagonal tilt, showing the BACK of the phone, triple camera visible, full phone in frame
+- CENTER phone: iPhone 15 Pro in Blue Titanium — SAME right-diagonal tilt as the left and right phones, the screen faces toward the viewer but the phone body is rotated at the same right-diagonal angle as the others. Full phone in frame.
   SCREEN CONTENT (critical): the screen displays the Apple iOS Settings app in RUSSIAN language, light grey iOS background.
-  The screen shows a vertical list of Russian settings menu items in standard iOS style — dark grey text on light background, each item separated by a thin line:
+  The screen shows a vertical list of Russian settings menu items in standard iOS style — dark Cyrillic text on light background, each row separated by a thin line:
   "Основные"
   "Аккумулятор"
   "Режим питания"
   "Face ID и код"
   "Зарядка"
-  All text is in Russian Cyrillic only. Clean iOS list design. NO random symbols. NO hieroglyphs. NO Latin letters on the screen.
-- RIGHT phone: iPhone 15 Pro in White Titanium — showing the BACK of the phone, right-diagonal tilt, camera bump visible, full phone in frame
+  All text is Russian Cyrillic only. Clean iOS list. NO random symbols. NO hieroglyphs. NO Latin on screen.
+- RIGHT phone: iPhone 15 Pro in White Titanium — right-diagonal tilt, showing the BACK of the phone, camera bump visible, full phone in frame
 
 All three phones are photorealistic 3D product renders with clean reflective surfaces. All completely inside image boundaries.`;
 
