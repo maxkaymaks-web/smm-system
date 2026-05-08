@@ -64,31 +64,22 @@
     text-transform: uppercase; color: rgba(232,84,4,0.75); z-index: 10;
   }
 
-  /* Главный заголовок — левая колонка */
+  /* Главный заголовок — две строки на одном уровне */
   .main-quote {
-    position: absolute; top: 202px; left: 72px; right: 560px;
-    font-size: 82px; font-weight: 800; color: #FFFFFF;
-    line-height: 0.90; letter-spacing: -0.03em; z-index: 10;
+    position: absolute; top: 202px; left: 72px; right: 72px;
+    font-size: 76px; font-weight: 800; color: #FFFFFF;
+    line-height: 1.0; letter-spacing: -0.03em; z-index: 10;
   }
   .main-quote .accent { color: #E85404; }
 
   /* Разделитель */
   .section-divider {
-    position: absolute; top: 920px; left: 72px; right: 72px;
+    position: absolute; top: 820px; left: 72px; right: 72px;
     height: 1px; background: rgba(232,84,4,0.20); z-index: 10;
   }
 
-  /* Подзаголовок — после разделителя */
-  .quote-sub {
-    position: absolute; top: 950px; left: 72px; right: 72px;
-    font-size: 27px; font-weight: 400; color: rgba(255,255,255,0.50);
-    line-height: 1.50; z-index: 10;
-    padding-left: 24px;
-    border-left: 3px solid rgba(232,84,4,0.50);
-  }
-
   /* Три пункта */
-  .tracks { position: absolute; top: 1080px; left: 72px; right: 72px; z-index: 10; }
+  .tracks { position: absolute; top: 850px; left: 72px; right: 72px; z-index: 10; }
   .tracks-label {
     font-size: 20px; font-weight: 700; letter-spacing: 0.26em;
     text-transform: uppercase; color: #E85404; margin-bottom: 16px;
@@ -114,11 +105,11 @@
 
   /* Лист бумаги */
   .paper-wrap {
-    position: absolute; top: 1390px; left: 72px; right: 72px; z-index: 10;
+    position: absolute; top: 1460px; left: 140px; right: 140px; z-index: 10;
   }
   .paper {
     background: #F5F2EC;
-    padding: 36px 46px 42px;
+    padding: 22px 36px 28px;
     position: relative;
     box-shadow: 0 6px 32px rgba(0,0,0,0.60);
   }
@@ -195,18 +186,11 @@
   <div class="eyebrow">Стратегическая сессия</div>
 
   <div class="main-quote">
-    Думать<br>
-    вместе —<br>
-    <span class="accent">≠ решать<br>вместе</span>
+    Думать вместе —<br>
+    <span class="accent">≠ решать вместе</span>
   </div>
 
   <div class="section-divider"></div>
-
-  <div class="quote-sub">
-    Два дня работы, флипчарты исписаны —<br>
-    участники расходятся с ощущением прорыва.<br>
-    Через месяц ничего не изменилось.
-  </div>
 
   <div class="tracks">
     <div class="tracks-label">Что происходит без ответственного</div>
@@ -247,11 +231,6 @@
       </div>
       <div class="tape-bottom"></div>
     </div>
-  </div>
-
-  <div class="bottom-text">
-    Финальный этап сессии — всегда одно:<br>
-    кто, что и когда — с именами, не дорожная карта на слайде
   </div>
 
   <div class="kto-block">
