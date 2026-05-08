@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<style>
+  @font-face { font-family: 'Manrope'; font-weight: 400; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Regular.woff2') format('woff2'); }
+  @font-face { font-family: 'Manrope'; font-weight: 700; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Bold.woff2') format('woff2'); }
+  @font-face { font-family: 'Manrope'; font-weight: 800; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-ExtraBold.woff2') format('woff2'); }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1080px; height: 1080px; overflow: hidden; background: #0D0D0D; font-family: 'Manrope', 'Tahoma', sans-serif; }
+  .slide { position: relative; width: 1080px; height: 1080px; background: #0D0D0D; overflow: hidden; }
+
+  /* Тонкая сетка */
+  .grid-bg {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(232,93,4,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(232,93,4,0.05) 1px, transparent 1px);
+    background-size: 90px 90px;
+  }
+
+  /* Оранжевое свечение — правый верх */
+  .glow {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 55% 40% at 95% 5%, rgba(232,93,4,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 35% 25% at 5% 95%, rgba(232,93,4,0.10) 0%, transparent 55%);
+  }
+
+  /* Угловые декоры */
+  .corner { position: absolute; width: 48px; height: 48px; }
+  .corner-tl { top: 0; left: 0; border-top: 2px solid rgba(232,93,4,0.60); border-left: 2px solid rgba(232,93,4,0.60); }
+  .corner-tr { top: 0; right: 0; border-top: 2px solid rgba(232,93,4,0.25); border-right: 2px solid rgba(232,93,4,0.25); }
+  .corner-bl { bottom: 0; left: 0; border-bottom: 2px solid rgba(232,93,4,0.25); border-left: 2px solid rgba(232,93,4,0.25); }
+  .corner-br { bottom: 0; right: 0; border-bottom: 2px solid rgba(232,93,4,0.20); border-right: 2px solid rgba(232,93,4,0.20); }
+
+  /* Шапка */
+  .header {
+    position: absolute; top: 64px; left: 80px; right: 80px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .brand { font-size: 20px; font-weight: 800; letter-spacing: 0.24em; text-transform: uppercase; color: rgba(255,255,255,0.85); }
+  .brand em { color: #E85D04; font-style: normal; }
+  .tag { font-size: 15px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; color: rgba(232,93,4,0.75); border: 1.5px solid rgba(232,93,4,0.35); border-radius: 30px; padding: 8px 22px; }
+
+  /* Горизонтальная линия под шапкой */
+  .header-line {
+    position: absolute; top: 126px; left: 80px; right: 80px;
+    height: 1px; background: linear-gradient(90deg, #E85D04, rgba(232,93,4,0.08));
+  }
+
+  /* Главный заголовок */
+  .title-block {
+    position: absolute; top: 162px; left: 80px; right: 80px;
+  }
+  .eyebrow { font-size: 16px; font-weight: 700; letter-spacing: 0.20em; text-transform: uppercase; color: rgba(232,93,4,0.65); margin-bottom: 18px; }
+  .main-title { font-size: 96px; font-weight: 800; color: #E85D04; line-height: 0.95; letter-spacing: -0.02em; }
+  .main-sub { font-size: 34px; font-weight: 400; color: rgba(255,255,255,0.55); letter-spacing: 0.04em; margin-top: 14px; }
+
+  /* Разделитель */
+  .divider {
+    position: absolute; top: 430px; left: 80px; right: 80px;
+    height: 1px; background: rgba(255,255,255,0.08);
+  }
+
+  /* Три пункта повестки */
+  .agenda {
+    position: absolute; top: 460px; left: 80px; right: 80px;
+  }
+  .agenda-label { font-size: 14px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(232,93,4,0.55); margin-bottom: 28px; }
+  .agenda-items { display: flex; flex-direction: column; gap: 24px; }
+  .agenda-item { display: flex; align-items: flex-start; gap: 22px; }
+  .agenda-num {
+    width: 36px; height: 36px; flex-shrink: 0;
+    border: 1.5px solid rgba(232,93,4,0.50);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800; color: #E85D04;
+  }
+  .agenda-text { font-size: 28px; font-weight: 400; color: rgba(255,255,255,0.80); line-height: 1.35; }
+  .agenda-text strong { color: #FFFFFF; font-weight: 700; }
+
+  /* Нижняя полоса */
+  .footer-line {
+    position: absolute; bottom: 108px; left: 80px; right: 80px;
+    height: 1px; background: rgba(255,255,255,0.08);
+  }
+  .footer {
+    position: absolute; bottom: 56px; left: 80px; right: 80px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-date { font-size: 15px; font-weight: 700; letter-spacing: 0.12em; color: rgba(255,255,255,0.28); text-transform: uppercase; }
+  .footer-site { font-size: 15px; font-weight: 700; letter-spacing: 0.08em; color: rgba(232,93,4,0.55); }
+
+  /* Иконка — схематичная фигура университета справа */
+  .univ-icon {
+    position: absolute; top: 168px; right: 80px;
+    opacity: 0.12;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="grid-bg"></div>
+  <div class="glow"></div>
+  <div class="corner corner-tl"></div>
+  <div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div>
+  <div class="corner corner-br"></div>
+
+  <!-- Схематичная иконка университета -->
+  <svg class="univ-icon" width="280" height="220" viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg">
+    <rect x="90" y="80" width="100" height="130" fill="none" stroke="#E85D04" stroke-width="3"/>
+    <polygon points="140,10 20,80 260,80" fill="none" stroke="#E85D04" stroke-width="3"/>
+    <rect x="110" y="130" width="60" height="80" fill="none" stroke="#E85D04" stroke-width="2"/>
+    <rect x="30" y="100" width="40" height="110" fill="none" stroke="#E85D04" stroke-width="2"/>
+    <rect x="210" y="100" width="40" height="110" fill="none" stroke="#E85D04" stroke-width="2"/>
+    <line x1="140" y1="10" x2="140" y2="0" stroke="#E85D04" stroke-width="2"/>
+    <circle cx="140" cy="0" r="6" fill="#E85D04"/>
+  </svg>
+
+  <div class="header">
+    <div class="brand">SPARTA<em>.</em></div>
+    <div class="tag">Дайджест · Май 2026</div>
+  </div>
+  <div class="header-line"></div>
+
+  <div class="title-block">
+    <div class="eyebrow">Национальный проект</div>
+    <div class="main-title">НПТЛ</div>
+    <div class="main-sub">для университетов — что в повестке</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="agenda">
+    <div class="agenda-label">Ключевые треки мая</div>
+    <div class="agenda-items">
+      <div class="agenda-item">
+        <div class="agenda-num">01</div>
+        <div class="agenda-text"><strong>Актуализация программ развития</strong> — дедлайн май–июнь по большинству треков</div>
+      </div>
+      <div class="agenda-item">
+        <div class="agenda-num">02</div>
+        <div class="agenda-text"><strong>Технологическое предпринимательство</strong> — вывод студпроектов на реальный рынок</div>
+      </div>
+      <div class="agenda-item">
+        <div class="agenda-num">03</div>
+        <div class="agenda-text"><strong>Синхронизация с «Приоритет 2030»</strong> — дублирующая отчётность, разные метрики</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-line"></div>
+  <div class="footer">
+    <div class="footer-date">07 мая 2026</div>
+    <div class="footer-site">sparta-tech.ru</div>
+  </div>
+</div>
+</body>
+</html>
