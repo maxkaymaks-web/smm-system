@@ -14,26 +14,25 @@
 
   .bg {
     position: absolute; inset: 0;
-    background: url('file:///C:/Users/Пользователь/клод/projects/Sparta/posts/drafts/07_05_2026-1/image4.jpg') center center / cover no-repeat;
+    background: url('file:///C:/Users/Пользователь/клод/projects/Sparta/posts/drafts/07_05_2026-1/image2.jpg') center center / cover no-repeat;
   }
 
   .overlay-top {
-    position: absolute; top: 0; left: 0; right: 0; height: 860px;
+    position: absolute; top: 0; left: 0; right: 0; height: 640px;
     background: linear-gradient(to bottom,
-      rgba(4,4,4,0.97) 0%,
-      rgba(4,4,4,0.93) 40%,
-      rgba(4,4,4,0.72) 68%,
-      rgba(4,4,4,0.20) 88%,
+      rgba(8,8,8,0.97) 0%,
+      rgba(8,8,8,0.92) 50%,
+      rgba(8,8,8,0.55) 80%,
       transparent 100%
     );
   }
 
   .overlay-bottom {
-    position: absolute; bottom: 0; left: 0; right: 0; height: 500px;
+    position: absolute; bottom: 0; left: 0; right: 0; height: 680px;
     background: linear-gradient(to top,
-      rgba(4,4,4,0.97) 0%,
-      rgba(4,4,4,0.88) 40%,
-      rgba(4,4,4,0.40) 72%,
+      rgba(8,8,8,0.98) 0%,
+      rgba(8,8,8,0.92) 45%,
+      rgba(8,8,8,0.55) 75%,
       transparent 100%
     );
   }
@@ -45,38 +44,90 @@
     position: absolute; top: 54px; left: 72px; right: 72px;
     display: flex; align-items: center; justify-content: space-between;
   }
-  .brand { font-size: 26px; font-weight: 800; letter-spacing: 0.28em; text-transform: uppercase; color: #FFFFFF; }
+  .brand { font-size: 36px; font-weight: 800; letter-spacing: 0.28em; text-transform: uppercase; color: #FFFFFF; }
   .brand em { color: #E85404; font-style: normal; }
-  .tag { font-size: 13px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #E85404; border: 2px solid #E85404; padding: 9px 20px; }
+  .tag { font-size: 22px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #E85404; border: 2px solid #E85404; padding: 12px 26px; }
   .header-line { position: absolute; top: 124px; left: 72px; right: 72px; height: 1px; background: rgba(232,84,4,0.22); }
 
   .main-title {
-    position: absolute; top: 192px; left: 72px;
-    font-size: 178px; font-weight: 800; color: #FFFFFF;
+    position: absolute; top: 156px; left: 72px;
+    font-size: 210px; font-weight: 800; color: #FFFFFF;
     line-height: 0.86; letter-spacing: -0.04em;
   }
   .main-title span { color: #E85404; }
 
-  .main-sub {
-    position: absolute; top: 554px; left: 72px; right: 72px;
-    font-size: 27px; font-weight: 400; color: rgba(255,255,255,0.50); line-height: 1.40;
+  .top-right-block {
+    position: absolute; top: 200px; right: 72px;
+    width: 380px;
+    text-align: right;
+  }
+  .top-right-label {
+    font-size: 26px; font-weight: 800; letter-spacing: 0.18em;
+    text-transform: uppercase; color: #0D0D0D;
+    background: #E85404;
+    display: inline-block;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+  }
+  .top-right-title {
+    font-size: 46px; font-weight: 800; color: #FFFFFF;
+    line-height: 1.10; margin-bottom: 16px;
+  }
+  .top-right-sub {
+    font-size: 28px; font-weight: 400; color: rgba(255,255,255,0.52);
+    line-height: 1.45;
+  }
+  .top-right-block::before {
+    content: '';
+    position: absolute; left: -24px; top: 32px;
+    width: 2px; height: 120px;
+    background: #E85404;
+    opacity: 0.60;
   }
 
-  .tracks { position: absolute; bottom: 110px; left: 72px; right: 72px; }
-  .tracks-label { font-size: 12px; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(232,84,4,0.50); margin-bottom: 20px; }
-  .track { display: flex; align-items: flex-start; gap: 20px; padding: 26px 0; border-bottom: 1px solid rgba(255,255,255,0.07); }
-  .track:first-child { border-top: 1px solid rgba(255,255,255,0.07); }
-  .track-num { font-size: 12px; font-weight: 800; letter-spacing: 0.14em; color: #E85404; width: 44px; flex-shrink: 0; padding-top: 4px; }
-  .track-title { font-size: 25px; font-weight: 800; color: #FFFFFF; text-transform: uppercase; letter-spacing: 0.02em; line-height: 1.15; margin-bottom: 6px; }
-  .track-desc { font-size: 19px; font-weight: 400; color: rgba(255,255,255,0.38); line-height: 1.40; }
+  .tracks {
+    position: absolute; bottom: 100px; left: 72px; right: 72px;
+  }
+  .tracks-label {
+    font-size: 22px; font-weight: 700; letter-spacing: 0.22em;
+    text-transform: uppercase; color: #E85404;
+    margin-bottom: 28px; margin-top: 20px;
+  }
+  .track {
+    display: flex; align-items: flex-start; gap: 24px;
+    padding: 32px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .track:first-child { border-top: 1px solid rgba(255,255,255,0.08); }
 
-  .footer { position: absolute; bottom: 44px; left: 72px; right: 72px; display: flex; align-items: center; justify-content: space-between; }
-  .footer-date { font-size: 13px; font-weight: 700; letter-spacing: 0.16em; color: rgba(255,255,255,0.25); text-transform: uppercase; }
-  .footer-site { font-size: 15px; font-weight: 700; letter-spacing: 0.10em; color: #E85404; }
+  .track-num {
+    font-size: 40px; font-weight: 800; letter-spacing: 0.08em;
+    color: #E85404; width: 80px; flex-shrink: 0; padding-top: 2px;
+  }
+  .track-title {
+    font-size: 34px; font-weight: 800; color: #FFFFFF;
+    text-transform: uppercase; letter-spacing: 0.02em;
+    line-height: 1.15; margin-bottom: 12px;
+  }
+  .track-desc {
+    font-size: 26px; font-weight: 400;
+    color: rgba(255,255,255,0.55); line-height: 1.45;
+  }
+
+  .footer {
+    position: absolute; bottom: 44px; left: 72px; right: 72px;
+    display: flex; align-items: center; justify-content: flex-end;
+  }
+  .footer-site {
+    font-size: 22px; font-weight: 800; letter-spacing: 0.10em; color: #0D0D0D;
+    background: #E85404;
+    padding: 12px 28px;
+  }
 </style>
 </head>
 <body>
 <div class="slide">
+
   <div class="bg"></div>
   <div class="overlay-top"></div>
   <div class="overlay-bottom"></div>
@@ -85,12 +136,16 @@
 
   <div class="header">
     <div class="brand">SPARTA<em>.</em></div>
-    <div class="tag">Май 2026</div>
   </div>
   <div class="header-line"></div>
 
   <div class="main-title">НП<br><span>ТЛ</span></div>
-  <div class="main-sub">для университетов —<br>что в повестке мая</div>
+
+  <div class="top-right-block">
+    <div class="top-right-label">В повестке мая</div>
+    <div class="top-right-title">для университетов</div>
+    <div class="top-right-sub">Что происходит прямо сейчас — дедлайны сходятся по всем трекам одновременно</div>
+  </div>
 
   <div class="tracks">
     <div class="tracks-label">Ключевые треки</div>
@@ -118,9 +173,9 @@
   </div>
 
   <div class="footer">
-    <div class="footer-date">07 мая 2026</div>
     <div class="footer-site">sparta-tech.ru</div>
   </div>
+
 </div>
 </body>
 </html>
