@@ -14,7 +14,7 @@
     width: 1080px;
     height: 1920px;
     overflow: hidden;
-    background: #0D0D0D;
+    background: #0A0A0A;
     font-family: 'Manrope', 'Arial', sans-serif;
   }
 
@@ -22,54 +22,126 @@
     position: relative;
     width: 1080px;
     height: 1920px;
-    background: #0D0D0D;
+    background: #0A0A0A;
     overflow: hidden;
   }
 
-  /* ─── Геометрические плоские блоки ─── */
+  /* ─── ФОНОВЫЙ СЛОЙ: крупные геометрические плоские блоки ─── */
 
-  /* Оранжевый прямоугольник — верхний акцент */
-  .block-top {
+  /* Диагональный тёмный блок — большой, угловой, правый верх */
+  .geo-block-1 {
     position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 8px;
-    background: #E85404;
+    top: -100px; right: -80px;
+    width: 640px; height: 900px;
+    background: #131313;
+    transform: rotate(-12deg);
+    transform-origin: top right;
   }
 
-  /* Оранжевый вертикальный блок — левый край */
-  .block-left {
+  /* Второй блок — нижний левый */
+  .geo-block-2 {
     position: absolute;
-    top: 0; left: 0;
-    width: 8px; height: 100%;
+    bottom: -60px; left: -100px;
+    width: 680px; height: 600px;
+    background: #111111;
+    transform: rotate(-8deg);
+    transform-origin: bottom left;
+  }
+
+  /* Оранжевая геометрическая полоса — наискосок через весь слайд */
+  .geo-stripe-1 {
+    position: absolute;
+    top: 580px; left: -200px;
+    width: 1400px; height: 3px;
+    background: #E85404;
+    transform: rotate(-12deg);
+    transform-origin: left center;
+  }
+
+  /* Вторая оранжевая полоса — параллельная, смещена */
+  .geo-stripe-2 {
+    position: absolute;
+    top: 600px; left: -200px;
+    width: 1400px; height: 1px;
+    background: #E85404;
+    opacity: 0.30;
+    transform: rotate(-12deg);
+    transform-origin: left center;
+  }
+
+  /* Тонкая сетка точек (flat dot grid) */
+  .dot-grid {
+    position: absolute; inset: 0;
+    background-image: radial-gradient(circle, #1E1E1E 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  /* Крупная оранжевая рамка — угловой акцент верх-право */
+  .corner-frame {
+    position: absolute;
+    top: 60px; right: 60px;
+    width: 120px; height: 120px;
+    border-top: 3px solid #E85404;
+    border-right: 3px solid #E85404;
+  }
+
+  /* Крупная оранжевая рамка — угловой акцент низ-лево */
+  .corner-frame-bl {
+    position: absolute;
+    bottom: 60px; left: 60px;
+    width: 80px; height: 80px;
+    border-bottom: 3px solid #E85404;
+    border-left: 3px solid #E85404;
+  }
+
+  /* Горизонтальный блок — чёрный плоский прямоугольник внутри */
+  .mid-block {
+    position: absolute;
+    top: 430px; left: 0; right: 0;
+    height: 6px;
     background: #E85404;
   }
 
   /* Большой оранжевый прямоугольник-фон заголовка */
   .title-bg {
     position: absolute;
-    top: 440px; left: 0;
-    width: 100%; height: 340px;
+    top: 436px; left: 0;
+    width: 100%; height: 360px;
     background: #E85404;
   }
 
-  /* Тонкая горизонтальная линия */
-  .line-h {
+  /* Вертикальная оранжевая полоса слева */
+  .block-left {
     position: absolute;
-    left: 80px; right: 80px;
-    height: 1px;
+    top: 0; left: 0;
+    width: 6px; height: 100%;
     background: #E85404;
   }
-  .line-h.dim {
-    background: rgba(255,255,255,0.08);
+
+  /* Горизонтальная полоса сверху */
+  .block-top {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: #E85404;
+  }
+
+  /* Горизонтальная полоса снизу */
+  .block-bottom {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 6px;
+    background: #E85404;
   }
 
   /* ─── Шапка ─── */
   .header {
     position: absolute;
-    top: 80px; left: 80px; right: 80px;
+    top: 72px; left: 80px; right: 80px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    z-index: 10;
   }
 
   .brand {
@@ -82,102 +154,104 @@
   .brand em { color: #E85404; font-style: normal; }
 
   .tag {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: #E85404;
     border: 2px solid #E85404;
-    padding: 10px 24px;
+    padding: 10px 22px;
   }
 
   /* ─── Надпись над заголовком ─── */
   .eyebrow {
     position: absolute;
-    top: 380px; left: 80px;
-    font-size: 16px;
+    top: 370px; left: 80px;
+    font-size: 15px;
     font-weight: 700;
-    letter-spacing: 0.30em;
+    letter-spacing: 0.32em;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.40);
+    color: rgba(255,255,255,0.35);
+    z-index: 10;
   }
 
   /* ─── Главный заголовок (на оранжевом фоне) ─── */
   .main-title {
     position: absolute;
-    top: 440px; left: 80px; right: 80px;
-    padding-top: 48px;
-    font-size: 220px;
+    top: 436px; left: 80px;
+    padding-top: 44px;
+    font-size: 230px;
     font-weight: 800;
-    color: #0D0D0D;
+    color: #0A0A0A;
     line-height: 0.82;
     letter-spacing: -0.04em;
+    z-index: 10;
   }
 
-  /* ─── Подзаголовок под оранжевым блоком ─── */
+  /* ─── Подзаголовок ─── */
   .main-sub {
     position: absolute;
-    top: 800px; left: 80px; right: 80px;
+    top: 818px; left: 80px; right: 80px;
     font-size: 36px;
     font-weight: 400;
-    color: rgba(255,255,255,0.65);
+    color: rgba(255,255,255,0.60);
     line-height: 1.35;
-    letter-spacing: 0.01em;
+    z-index: 10;
   }
 
   /* ─── Разделитель ─── */
   .divider {
     position: absolute;
-    top: 980px; left: 80px; right: 80px;
+    top: 1010px; left: 80px; right: 80px;
     height: 1px;
-    background: rgba(255,255,255,0.08);
+    background: #1E1E1E;
+    z-index: 10;
   }
   .divider::after {
     content: '';
     position: absolute;
     left: 0; top: 0;
-    width: 80px; height: 1px;
+    width: 64px; height: 1px;
     background: #E85404;
   }
 
   /* ─── Метка секции ─── */
   .section-label {
     position: absolute;
-    top: 1020px; left: 80px;
-    font-size: 13px;
+    top: 1048px; left: 80px;
+    font-size: 12px;
     font-weight: 700;
-    letter-spacing: 0.28em;
+    letter-spacing: 0.30em;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.20);
+    z-index: 10;
   }
 
   /* ─── Три пункта ─── */
   .agenda {
     position: absolute;
-    top: 1080px; left: 80px; right: 80px;
+    top: 1108px; left: 80px; right: 80px;
     display: flex;
     flex-direction: column;
-    gap: 0;
+    z-index: 10;
   }
 
   .agenda-item {
     display: flex;
-    align-items: stretch;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-    padding: 44px 0;
+    align-items: flex-start;
+    border-bottom: 1px solid #1A1A1A;
+    padding: 42px 0;
   }
-  .agenda-item:first-child {
-    border-top: 1px solid rgba(255,255,255,0.07);
-  }
+  .agenda-item:first-child { border-top: 1px solid #1A1A1A; }
 
   .agenda-num {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 800;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
     color: #E85404;
     width: 56px;
     flex-shrink: 0;
-    padding-top: 6px;
+    padding-top: 7px;
   }
 
   .agenda-content { flex: 1; }
@@ -195,51 +269,53 @@
   .agenda-desc {
     font-size: 22px;
     font-weight: 400;
-    color: rgba(255,255,255,0.45);
+    color: rgba(255,255,255,0.38);
     line-height: 1.45;
   }
 
-  /* ─── Нижний блок ─── */
+  /* ─── Футер ─── */
   .footer {
     position: absolute;
-    bottom: 80px; left: 80px; right: 80px;
+    bottom: 72px; left: 80px; right: 80px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    z-index: 10;
   }
 
   .footer-date {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
     letter-spacing: 0.18em;
-    color: rgba(255,255,255,0.20);
+    color: rgba(255,255,255,0.18);
     text-transform: uppercase;
   }
 
   .footer-site {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 700;
     letter-spacing: 0.10em;
     color: #E85404;
-  }
-
-  /* Маленький оранжевый прямоугольник — нижний акцент */
-  .block-bottom {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 8px;
-    background: #E85404;
   }
 </style>
 </head>
 <body>
 <div class="slide">
 
-  <!-- Плоские геометрические блоки -->
-  <div class="block-top"></div>
+  <!-- Фоновый слой: плоские геометрические блоки -->
+  <div class="dot-grid"></div>
+  <div class="geo-block-1"></div>
+  <div class="geo-block-2"></div>
+  <div class="geo-stripe-1"></div>
+  <div class="geo-stripe-2"></div>
+
+  <!-- Структурные элементы -->
   <div class="block-left"></div>
+  <div class="block-top"></div>
   <div class="block-bottom"></div>
   <div class="title-bg"></div>
+  <div class="corner-frame"></div>
+  <div class="corner-frame-bl"></div>
 
   <!-- Шапка -->
   <div class="header">
