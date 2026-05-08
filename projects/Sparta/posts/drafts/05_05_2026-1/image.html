@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<style>
+  @font-face { font-family: 'Manrope'; font-weight: 400; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Regular.woff2') format('woff2'); }
+  @font-face { font-family: 'Manrope'; font-weight: 700; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Bold.woff2') format('woff2'); }
+  @font-face { font-family: 'Manrope'; font-weight: 800; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-ExtraBold.woff2') format('woff2'); }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1080px; height: 1080px; overflow: hidden; background: #0D0D0D; font-family: 'Manrope', 'Tahoma', sans-serif; }
+  .slide { position: relative; width: 1080px; height: 1080px; background: #0D0D0D; overflow: hidden; }
+
+  /* Фоновый паттерн — тонкая сетка */
+  .grid-bg {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(232,93,4,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(232,93,4,0.06) 1px, transparent 1px);
+    background-size: 80px 80px;
+  }
+
+  /* Оранжевое свечение снизу-слева */
+  .glow {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 70% 50% at 10% 90%, rgba(232,93,4,0.22) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 30% at 90% 15%, rgba(232,93,4,0.08) 0%, transparent 55%);
+  }
+
+  /* Вертикальная оранжевая полоса слева */
+  .left-bar {
+    position: absolute; top: 0; left: 0; width: 6px; height: 100%;
+    background: linear-gradient(180deg, transparent 0%, #E85D04 30%, #E85D04 70%, transparent 100%);
+  }
+
+  /* Шапка */
+  .top { position: absolute; top: 64px; left: 80px; right: 80px; display: flex; align-items: center; justify-content: space-between; }
+  .brand { font-size: 22px; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.90); }
+  .brand span { color: #E85D04; }
+  .tag { font-size: 16px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(232,93,4,0.80); border: 1.5px solid rgba(232,93,4,0.40); border-radius: 30px; padding: 8px 22px; }
+
+  /* Основной текст — верхняя часть */
+  .content { position: absolute; top: 200px; left: 80px; right: 80px; }
+  .pre-label { font-size: 18px; font-weight: 700; color: rgba(232,93,4,0.70); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 36px; }
+
+  .quote-block { margin-bottom: 48px; }
+  .quote-line { font-size: 68px; font-weight: 800; line-height: 1.05; letter-spacing: -0.01em; color: #FFFFFF; }
+  .quote-line.orange { color: #E85D04; }
+  .quote-line.dim { color: rgba(255,255,255,0.40); font-size: 44px; font-weight: 400; margin-top: 12px; }
+
+  /* Разделитель */
+  .divider { width: 100%; height: 1px; background: linear-gradient(90deg, #E85D04, rgba(232,93,4,0.10)); margin: 48px 0; }
+
+  /* Три пункта */
+  .points { display: flex; flex-direction: column; gap: 20px; }
+  .point { display: flex; align-items: flex-start; gap: 20px; }
+  .point-dot { width: 8px; height: 8px; border-radius: 50%; background: #E85D04; flex-shrink: 0; margin-top: 11px; }
+  .point-text { font-size: 30px; font-weight: 400; color: rgba(255,255,255,0.72); line-height: 1.4; }
+  .point-text strong { color: rgba(255,255,255,0.95); font-weight: 700; }
+
+  /* Нижний блок КТО · ЧТО · КОГДА */
+  .bottom-rule {
+    position: absolute; bottom: 64px; left: 80px; right: 80px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .rule-label { font-size: 14px; font-weight: 700; color: rgba(255,255,255,0.35); letter-spacing: 0.14em; text-transform: uppercase; }
+  .rule-items { display: flex; align-items: center; gap: 0; }
+  .rule-item { font-size: 26px; font-weight: 800; letter-spacing: 0.10em; text-transform: uppercase; color: #E85D04; padding: 0 20px; border-right: 1px solid rgba(232,93,4,0.30); }
+  .rule-item:last-child { border-right: none; }
+  .site { font-size: 16px; font-weight: 700; color: rgba(255,255,255,0.30); letter-spacing: 0.08em; }
+
+  /* Угловые декоры */
+  .corner-tl { position: absolute; top: 0; left: 0; width: 40px; height: 40px; border-top: 2px solid rgba(232,93,4,0.50); border-left: 2px solid rgba(232,93,4,0.50); }
+  .corner-tr { position: absolute; top: 0; right: 0; width: 40px; height: 40px; border-top: 2px solid rgba(232,93,4,0.20); border-right: 2px solid rgba(232,93,4,0.20); }
+  .corner-br { position: absolute; bottom: 0; right: 0; width: 40px; height: 40px; border-bottom: 2px solid rgba(232,93,4,0.20); border-right: 2px solid rgba(232,93,4,0.20); }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="grid-bg"></div>
+  <div class="glow"></div>
+  <div class="left-bar"></div>
+  <div class="corner-tl"></div>
+  <div class="corner-tr"></div>
+  <div class="corner-br"></div>
+
+  <div class="top">
+    <div class="brand">SPARTA<span>.</span></div>
+    <div class="tag">Принцип работы</div>
+  </div>
+
+  <div class="content">
+    <div class="pre-label">Стратегическая сессия</div>
+    <div class="quote-block">
+      <div class="quote-line">Думать вместе</div>
+      <div class="quote-line">и решать вместе —</div>
+      <div class="quote-line orange">принципиально</div>
+      <div class="quote-line orange">разные вещи</div>
+      <div class="quote-line dim">без назначенного ответственного</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="points">
+      <div class="point">
+        <div class="point-dot"></div>
+        <div class="point-text">Все согласились — <strong>никто не отвечает</strong></div>
+      </div>
+      <div class="point">
+        <div class="point-dot"></div>
+        <div class="point-text">Первый барьер — <strong>непонятно, кто его снимает</strong></div>
+      </div>
+      <div class="point">
+        <div class="point-dot"></div>
+        <div class="point-text">На следующей встрече: <strong>«это было на вас»</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-rule">
+    <div class="rule-label">Финальный этап каждой сессии</div>
+    <div class="rule-items">
+      <div class="rule-item">КТО</div>
+      <div class="rule-item">ЧТО</div>
+      <div class="rule-item">КОГДА</div>
+    </div>
+    <div class="site">sparta-tech.ru</div>
+  </div>
+</div>
+</body>
+</html>
