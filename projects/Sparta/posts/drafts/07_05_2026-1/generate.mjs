@@ -26,25 +26,21 @@ async function download(url, dest) {
   return dest;
 }
 
-const prompt = `Highly detailed vertical social media illustration, premium luxury style, 9:16 format.
+const prompt = `Vertical 9:16 professional editorial photograph, 8K quality, cinematic.
 
-BACKGROUND: Deep dark navy-blue background with brushed metal texture — subtle horizontal grain like polished titanium, very dark, almost black with cold blue undertones. Soft geometric light reflections on the floor forming diamond and hexagonal patterns.
+SCENE: Dark matte black background (#111111). The blurred background shows a university meeting room or vice-rector's office — dark leather chairs barely visible, edge of a long conference table, closed laptop in deep shadow. No people anywhere.
 
-CENTER — MAIN ELEMENT: Monumental futuristic golden Spartan warrior helmet (ancient Greek Corinthian helmet style), front-facing, centered and dominant. The helmet is semi-transparent and constructed from glowing golden neural network lines — interconnected nodes and edges forming the helmet's surface, like a startup ecosystem map or circuit schematic. Inside the helmet, visible through the translucent mesh: a floating 3D bar chart growth graph rising steeply, glowing amber-gold, suggesting an accelerator program trajectory.
+FOREGROUND: On the dark table surface, several sheets of white paper with printed text and simple bar charts and data graphs — slightly scattered, as if just reviewed. One sheet clearly shows a table with rows and columns. On top of the papers — an orange adhesive sticky note with the handwritten text "дедлайн: май–июнь" in neat black handwriting. Beside the papers — an orange marker pen, uncapped, lying diagonally.
 
-BOTTOM: A black polished marble pedestal below the helmet. Standing on it — miniature photorealistic business figures in dark suits, 4-5 people, viewed from slightly above. They examine holographic schemes and a glowing tablet displaying the text "НПТЛ · ПРИОРИТЕТ 2030" in clean white sans-serif.
+LIGHTING: Single warm orange-tinted spotlight from directly above, tight beam, illuminating only the papers and marker on the table. Everything else — the chairs, the background, the table edges — fades into deep dark shadow. Dramatic chiaroscuro, high contrast.
 
-LEFT: A stylized Ionic column rendered in dark stone, its capital replaced by a glowing monitor screen showing the text "Технологическое лидерство" in Russian, bright amber glow.
+MOOD: Strict, urgent, analytical, corporate. No fantasy, no ancient elements, no people, no game elements.
 
-RIGHT: Floating golden gears of different sizes, interlocked, and a glowing diploma/scroll symbol above them, representing education and science.
+COLOR PALETTE: Deep black #111111, matte dark surfaces, warm orange #D9540D accent light on documents, white paper, dark shadows everywhere else.
 
-LIGHTING: Cinematic softbox lighting from above, strong rim lighting on the helmet edges creating golden halos, dramatic shadows below. Floor has soft specular reflections of geometric shapes labeled "стратсессия", "акселератор", "тренинг" — subtle, almost hidden in the floor texture.
+STYLE: Real photographic quality, 8K, sharp focus on documents, shallow depth of field with background blurred. Shot from slightly above at 40-degree angle looking down at the table. Ultra-realistic, no CGI look, no cartoon, no illustration — pure photography.`;
 
-COLOR PALETTE: Deep navy #0A0E1A background, gold #C9A84C and amber #E8840A for glowing elements, cold white highlights on metal surfaces, subtle orange rim light.
-
-STYLE: Ultra-realistic CGI render, 8K quality, octane render look, luxury brand aesthetic, cinematic composition, no text overlays except those on the in-scene screens.`;
-
-console.log("🎨 Генерирую изображение для НПТЛ поста...");
+console.log("🎨 Генерирую изображение...");
 
 try {
   const result = await fal.run("fal-ai/nano-banana-2", {

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<style>
+  @font-face { font-family: 'Manrope'; font-weight: 400; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Regular.woff2') format('woff2'); }
+  @font-face { font-family: 'Manrope'; font-weight: 700; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Bold.woff2') format('woff2'); }
+  @font-face { font-family: 'Manrope'; font-weight: 800; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-ExtraBold.woff2') format('woff2'); }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1080px; height: 1920px; overflow: hidden; font-family: 'Manrope', 'Arial', sans-serif; }
+  .slide { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
+
+  .bg {
+    position: absolute; inset: 0;
+    background: url('file:///C:/Users/Пользователь/клод/projects/Sparta/posts/drafts/07_05_2026-1/image2.jpg') center center / cover no-repeat;
+  }
+
+  .overlay-top {
+    position: absolute; top: 0; left: 0; right: 0; height: 640px;
+    background: linear-gradient(to bottom,
+      rgba(8,8,8,0.97) 0%,
+      rgba(8,8,8,0.92) 50%,
+      rgba(8,8,8,0.55) 80%,
+      transparent 100%
+    );
+  }
+
+  .overlay-bottom {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 680px;
+    background: linear-gradient(to top,
+      rgba(8,8,8,0.98) 0%,
+      rgba(8,8,8,0.92) 45%,
+      rgba(8,8,8,0.55) 75%,
+      transparent 100%
+    );
+  }
+
+  .bar-top    { position: absolute; top: 0; left: 0; right: 0; height: 6px; background: #E85404; }
+  .bar-bottom { position: absolute; bottom: 0; left: 0; right: 0; height: 6px; background: #E85404; }
+
+  /* ── Шапка ── */
+  .header {
+    position: absolute; top: 54px; left: 72px; right: 72px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .brand { font-size: 26px; font-weight: 800; letter-spacing: 0.28em; text-transform: uppercase; color: #FFFFFF; }
+  .brand em { color: #E85404; font-style: normal; }
+  .tag { font-size: 13px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #E85404; border: 2px solid #E85404; padding: 9px 20px; }
+  .header-line { position: absolute; top: 124px; left: 72px; right: 72px; height: 1px; background: rgba(232,84,4,0.22); }
+
+  /* ── Левый блок: НПТЛ ── */
+  .eyebrow {
+    position: absolute; top: 156px; left: 72px;
+    font-size: 13px; font-weight: 700; letter-spacing: 0.30em;
+    text-transform: uppercase; color: rgba(232,84,4,0.65);
+  }
+  .main-title {
+    position: absolute; top: 192px; left: 72px;
+    font-size: 178px; font-weight: 800; color: #FFFFFF;
+    line-height: 0.86; letter-spacing: -0.04em;
+  }
+  .main-title span { color: #E85404; }
+
+  /* ── Правый блок: подзаголовок в верхнем углу ── */
+  .top-right-block {
+    position: absolute; top: 156px; right: 72px;
+    width: 380px;
+    text-align: right;
+  }
+  .top-right-label {
+    font-size: 16px; font-weight: 700; letter-spacing: 0.26em;
+    text-transform: uppercase; color: rgba(232,84,4,0.60);
+    margin-bottom: 18px;
+  }
+  .top-right-title {
+    font-size: 46px; font-weight: 800; color: #FFFFFF;
+    line-height: 1.10; margin-bottom: 16px;
+  }
+  .top-right-sub {
+    font-size: 28px; font-weight: 400; color: rgba(255,255,255,0.52);
+    line-height: 1.45;
+  }
+  /* Вертикальная оранжевая черта слева от правого блока */
+  .top-right-block::before {
+    content: '';
+    position: absolute; left: -24px; top: 32px;
+    width: 2px; height: 120px;
+    background: #E85404;
+    opacity: 0.60;
+  }
+
+  /* ── Три трека снизу — крупнее ── */
+  .tracks {
+    position: absolute; bottom: 100px; left: 72px; right: 72px;
+  }
+  .tracks-label {
+    font-size: 13px; font-weight: 700; letter-spacing: 0.28em;
+    text-transform: uppercase; color: rgba(232,84,4,0.55);
+    margin-bottom: 28px;
+  }
+  .track {
+    display: flex; align-items: flex-start; gap: 24px;
+    padding: 32px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .track:first-child { border-top: 1px solid rgba(255,255,255,0.08); }
+
+  .track-num {
+    font-size: 13px; font-weight: 800; letter-spacing: 0.14em;
+    color: #E85404; width: 48px; flex-shrink: 0; padding-top: 5px;
+  }
+  .track-title {
+    font-size: 34px; font-weight: 800; color: #FFFFFF;
+    text-transform: uppercase; letter-spacing: 0.02em;
+    line-height: 1.15; margin-bottom: 12px;
+  }
+  .track-desc {
+    font-size: 26px; font-weight: 400;
+    color: rgba(255,255,255,0.55); line-height: 1.45;
+  }
+
+  .footer {
+    position: absolute; bottom: 44px; left: 72px; right: 72px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-date { font-size: 13px; font-weight: 700; letter-spacing: 0.16em; color: rgba(255,255,255,0.25); text-transform: uppercase; }
+  .footer-site { font-size: 15px; font-weight: 700; letter-spacing: 0.10em; color: #E85404; }
+</style>
+</head>
+<body>
+<div class="slide">
+
+  <div class="bg"></div>
+  <div class="overlay-top"></div>
+  <div class="overlay-bottom"></div>
+  <div class="bar-top"></div>
+  <div class="bar-bottom"></div>
+
+  <div class="header">
+    <div class="brand">SPARTA<em>.</em></div>
+    <div class="tag">Май 2026</div>
+  </div>
+  <div class="header-line"></div>
+
+  <!-- Левый блок: большой заголовок -->
+  <div class="eyebrow">Национальный проект</div>
+  <div class="main-title">НП<br><span>ТЛ</span></div>
+
+  <!-- Правый блок: заполняем пустой угол -->
+  <div class="top-right-block">
+    <div class="top-right-label">В повестке мая</div>
+    <div class="top-right-title">для университетов</div>
+    <div class="top-right-sub">Что происходит прямо сейчас — дедлайны сходятся по всем трекам одновременно</div>
+  </div>
+
+  <!-- Три трека — крупнее -->
+  <div class="tracks">
+    <div class="tracks-label">Ключевые треки</div>
+    <div class="track">
+      <div class="track-num">01</div>
+      <div>
+        <div class="track-title">Программы развития</div>
+        <div class="track-desc">Актуализация под НПТЛ — дедлайн май–июнь по большинству треков</div>
+      </div>
+    </div>
+    <div class="track">
+      <div class="track-num">02</div>
+      <div>
+        <div class="track-title">Технологическое предпринимательство</div>
+        <div class="track-desc">Вывод студенческих проектов на реальный рынок</div>
+      </div>
+    </div>
+    <div class="track">
+      <div class="track-num">03</div>
+      <div>
+        <div class="track-title">Приоритет 2030</div>
+        <div class="track-desc">Синхронизация с НПТЛ — дублирующая отчётность, разные метрики</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-date">07 мая 2026</div>
+    <div class="footer-site">sparta-tech.ru</div>
+  </div>
+
+</div>
+</body>
+</html>
