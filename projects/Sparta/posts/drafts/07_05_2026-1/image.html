@@ -9,339 +9,285 @@
   @font-face { font-family: 'Manrope'; font-weight: 800; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-ExtraBold.woff2') format('woff2'); }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { width: 1080px; height: 1080px; overflow: hidden; background: #FFFFFF; font-family: 'Manrope', 'Tahoma', sans-serif; }
-  .slide { position: relative; width: 1080px; height: 1080px; background: #FFFFFF; overflow: hidden; }
 
-  /* Оранжевая полоса сверху — как на сайте */
-  .top-bar {
-    position: absolute; top: 0; left: 0; right: 0; height: 10px;
+  body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: #0D0D0D;
+    font-family: 'Manrope', 'Arial', sans-serif;
+  }
+
+  .slide {
+    position: relative;
+    width: 1080px;
+    height: 1920px;
+    background: #0D0D0D;
+    overflow: hidden;
+  }
+
+  /* ─── Геометрические плоские блоки ─── */
+
+  /* Оранжевый прямоугольник — верхний акцент */
+  .block-top {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 8px;
     background: #E85404;
   }
 
-  /* Лёгкий серый фон центральной части */
-  .bg-light {
-    position: absolute; top: 10px; left: 0; right: 0; bottom: 0;
-    background: linear-gradient(175deg, #FFFFFF 0%, #F7F7F7 60%, #F2F2F2 100%);
+  /* Оранжевый вертикальный блок — левый край */
+  .block-left {
+    position: absolute;
+    top: 0; left: 0;
+    width: 8px; height: 100%;
+    background: #E85404;
   }
 
-  /* SVG слой: треугольная сеть (фирменный паттерн Спарты) */
-  .mesh-svg {
-    position: absolute; inset: 0; width: 1080px; height: 1080px;
+  /* Большой оранжевый прямоугольник-фон заголовка */
+  .title-bg {
+    position: absolute;
+    top: 440px; left: 0;
+    width: 100%; height: 340px;
+    background: #E85404;
   }
 
-  /* Правая тёмная панель — как на герое сайта */
-  .right-panel {
-    position: absolute; top: 10px; right: 0; width: 420px; bottom: 0;
-    background: linear-gradient(135deg, #1A1A2E 0%, #16213E 40%, #0F3460 100%);
-    clip-path: polygon(12% 0%, 100% 0%, 100% 100%, 0% 100%);
+  /* Тонкая горизонтальная линия */
+  .line-h {
+    position: absolute;
+    left: 80px; right: 80px;
+    height: 1px;
+    background: #E85404;
+  }
+  .line-h.dim {
+    background: rgba(255,255,255,0.08);
   }
 
-  /* Тех-паттерн на тёмной панели */
-  .right-tech {
-    position: absolute; top: 10px; right: 0; width: 420px; bottom: 0;
-    overflow: hidden;
-    clip-path: polygon(12% 0%, 100% 0%, 100% 100%, 0% 100%);
-  }
-
-  /* Шапка */
+  /* ─── Шапка ─── */
   .header {
-    position: absolute; top: 48px; left: 72px; right: 72px;
-    display: flex; align-items: center; justify-content: space-between;
-    z-index: 10;
+    position: absolute;
+    top: 80px; left: 80px; right: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 
-  /* Логотип — стиль сайта */
-  .brand-block { display: flex; flex-direction: column; }
-  .brand-name {
-    font-size: 34px; font-weight: 800; letter-spacing: 0.12em;
-    text-transform: uppercase; color: #1A1A1A; line-height: 1;
+  .brand {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 0.30em;
+    text-transform: uppercase;
+    color: #FFFFFF;
   }
-  .brand-name span { color: #E85404; }
-  .brand-tagline {
-    font-size: 12px; font-weight: 400; letter-spacing: 0.14em;
-    color: rgba(232,84,4,0.75); text-transform: uppercase; margin-top: 3px;
-  }
+  .brand em { color: #E85404; font-style: normal; }
 
   .tag {
-    font-size: 14px; font-weight: 700; letter-spacing: 0.12em;
-    text-transform: uppercase; color: #FFFFFF;
-    background: #E85404; border-radius: 4px; padding: 9px 22px;
-  }
-
-  /* Горизонтальная линия под шапкой */
-  .header-rule {
-    position: absolute; top: 120px; left: 72px; right: 450px;
-    height: 2px; background: #E85404;
-  }
-
-  /* Главный заголовок */
-  .title-block {
-    position: absolute; top: 152px; left: 72px; max-width: 580px;
-    z-index: 10;
-  }
-  .eyebrow {
-    font-size: 14px; font-weight: 700; letter-spacing: 0.22em;
-    text-transform: uppercase; color: #E85404; margin-bottom: 16px;
-  }
-  .main-title {
-    font-size: 118px; font-weight: 800; color: #1A1A1A;
-    line-height: 0.88; letter-spacing: -0.03em;
-  }
-  .main-title span { color: #E85404; }
-  .main-sub {
-    font-size: 26px; font-weight: 400; color: #555555;
-    margin-top: 18px; line-height: 1.4; letter-spacing: 0.01em;
-    max-width: 520px;
-  }
-
-  /* Разделитель */
-  .divider {
-    position: absolute; top: 456px; left: 72px; width: 540px;
-    height: 2px; background: #F0F0F0;
-  }
-  .divider::before {
-    content: ''; position: absolute; left: 0; top: 0;
-    width: 60px; height: 2px; background: #E85404;
-  }
-
-  /* Три пункта */
-  .agenda {
-    position: absolute; top: 488px; left: 72px; max-width: 560px;
-    z-index: 10;
-  }
-  .agenda-label {
-    font-size: 12px; font-weight: 700; letter-spacing: 0.22em;
-    text-transform: uppercase; color: rgba(232,84,4,0.55); margin-bottom: 30px;
-  }
-  .agenda-items { display: flex; flex-direction: column; gap: 24px; }
-  .agenda-item { display: flex; align-items: flex-start; gap: 18px; }
-  .agenda-dot {
-    width: 10px; height: 10px; flex-shrink: 0; margin-top: 8px;
-    border-radius: 50%; background: #E85404;
-  }
-  .agenda-text {
-    font-size: 24px; font-weight: 400; color: #333333; line-height: 1.45;
-  }
-  .agenda-text strong { color: #1A1A1A; font-weight: 700; }
-
-  /* Нижний блок */
-  .footer-rule {
-    position: absolute; bottom: 90px; left: 72px; right: 450px;
-    height: 1px; background: #E8E8E8;
-  }
-  .footer {
-    position: absolute; bottom: 44px; left: 72px; right: 72px;
-    display: flex; align-items: center; justify-content: space-between;
-    z-index: 10;
-  }
-  .footer-date {
-    font-size: 13px; font-weight: 700; letter-spacing: 0.14em;
-    color: #AAAAAA; text-transform: uppercase;
-  }
-  .footer-site {
-    font-size: 14px; font-weight: 700; letter-spacing: 0.10em;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
     color: #E85404;
+    border: 2px solid #E85404;
+    padding: 10px 24px;
+  }
+
+  /* ─── Надпись над заголовком ─── */
+  .eyebrow {
+    position: absolute;
+    top: 380px; left: 80px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.30em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.40);
+  }
+
+  /* ─── Главный заголовок (на оранжевом фоне) ─── */
+  .main-title {
+    position: absolute;
+    top: 440px; left: 80px; right: 80px;
+    padding-top: 48px;
+    font-size: 220px;
+    font-weight: 800;
+    color: #0D0D0D;
+    line-height: 0.82;
+    letter-spacing: -0.04em;
+  }
+
+  /* ─── Подзаголовок под оранжевым блоком ─── */
+  .main-sub {
+    position: absolute;
+    top: 800px; left: 80px; right: 80px;
+    font-size: 36px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.35;
+    letter-spacing: 0.01em;
+  }
+
+  /* ─── Разделитель ─── */
+  .divider {
+    position: absolute;
+    top: 980px; left: 80px; right: 80px;
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+  }
+  .divider::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 0;
+    width: 80px; height: 1px;
+    background: #E85404;
+  }
+
+  /* ─── Метка секции ─── */
+  .section-label {
+    position: absolute;
+    top: 1020px; left: 80px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.25);
+  }
+
+  /* ─── Три пункта ─── */
+  .agenda {
+    position: absolute;
+    top: 1080px; left: 80px; right: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .agenda-item {
+    display: flex;
+    align-items: stretch;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    padding: 44px 0;
+  }
+  .agenda-item:first-child {
+    border-top: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .agenda-num {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: #E85404;
+    width: 56px;
+    flex-shrink: 0;
+    padding-top: 6px;
+  }
+
+  .agenda-content { flex: 1; }
+
+  .agenda-title {
+    font-size: 30px;
+    font-weight: 800;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+
+  .agenda-desc {
+    font-size: 22px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.45;
+  }
+
+  /* ─── Нижний блок ─── */
+  .footer {
+    position: absolute;
+    bottom: 80px; left: 80px; right: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-date {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: rgba(255,255,255,0.20);
+    text-transform: uppercase;
+  }
+
+  .footer-site {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    color: #E85404;
+  }
+
+  /* Маленький оранжевый прямоугольник — нижний акцент */
+  .block-bottom {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 8px;
+    background: #E85404;
   }
 </style>
 </head>
 <body>
 <div class="slide">
 
-  <!-- Основной фон -->
-  <div class="bg-light"></div>
-
-  <!-- Тёмная правая панель -->
-  <div class="right-panel"></div>
-
-  <!-- Технологические элементы на правой панели -->
-  <svg class="right-tech" viewBox="0 0 420 1080" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:10px;right:0;width:420px;height:1070px;overflow:hidden;clip-path:polygon(12% 0%, 100% 0%, 100% 100%, 0% 100%)">
-    <!-- Сетка данных -->
-    <pattern id="techgrid" width="40" height="40" patternUnits="userSpaceOnUse">
-      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(232,84,4,0.12)" stroke-width="0.8"/>
-    </pattern>
-    <rect width="420" height="1080" fill="url(#techgrid)"/>
-
-    <!-- Круговые волны — технологический акцент -->
-    <circle cx="380" cy="250" r="180" fill="none" stroke="rgba(232,84,4,0.15)" stroke-width="1.5"/>
-    <circle cx="380" cy="250" r="130" fill="none" stroke="rgba(232,84,4,0.20)" stroke-width="1.5"/>
-    <circle cx="380" cy="250" r="80" fill="none" stroke="rgba(232,84,4,0.28)" stroke-width="1.5"/>
-    <circle cx="380" cy="250" r="35" fill="rgba(232,84,4,0.12)" stroke="rgba(232,84,4,0.50)" stroke-width="2"/>
-    <circle cx="380" cy="250" r="10" fill="#E85404" opacity="0.85"/>
-
-    <!-- Линии от центра -->
-    <line x1="380" y1="250" x2="200" y2="180" stroke="rgba(232,84,4,0.35)" stroke-width="1"/>
-    <line x1="380" y1="250" x2="220" y2="370" stroke="rgba(232,84,4,0.30)" stroke-width="1"/>
-    <line x1="380" y1="250" x2="160" y2="290" stroke="rgba(232,84,4,0.25)" stroke-width="1"/>
-    <line x1="380" y1="250" x2="300" y2="100" stroke="rgba(232,84,4,0.20)" stroke-width="1"/>
-    <line x1="380" y1="250" x2="420" y2="130" stroke="rgba(232,84,4,0.20)" stroke-width="1"/>
-
-    <!-- Узлы на линиях -->
-    <circle cx="200" cy="180" r="4" fill="#E85404" opacity="0.70"/>
-    <circle cx="220" cy="370" r="4" fill="#E85404" opacity="0.65"/>
-    <circle cx="160" cy="290" r="3" fill="#E85404" opacity="0.55"/>
-    <circle cx="300" cy="100" r="3" fill="#E85404" opacity="0.50"/>
-
-    <!-- Вертикальные потоки данных — цифровой дождь -->
-    <g font-family="monospace" font-size="12" fill="rgba(232,84,4,0.22)" letter-spacing="0">
-      <text x="60" y="500">0</text><text x="60" y="520">1</text><text x="60" y="540">0</text>
-      <text x="60" y="560">1</text><text x="60" y="580">1</text><text x="60" y="600">0</text>
-      <text x="60" y="620">0</text><text x="60" y="640">1</text><text x="60" y="660">0</text>
-      <text x="60" y="680">1</text><text x="60" y="700">0</text><text x="60" y="720">1</text>
-
-      <text x="100" y="450">1</text><text x="100" y="470">0</text><text x="100" y="490">0</text>
-      <text x="100" y="510">1</text><text x="100" y="530">1</text><text x="100" y="550">0</text>
-      <text x="100" y="570">1</text><text x="100" y="590">0</text><text x="100" y="610">0</text>
-      <text x="100" y="630">1</text><text x="100" y="650">1</text><text x="100" y="670">0</text>
-      <text x="100" y="690">1</text><text x="100" y="710">0</text>
-
-      <text x="140" y="520">0</text><text x="140" y="540">1</text><text x="140" y="560">1</text>
-      <text x="140" y="580">0</text><text x="140" y="600">0</text><text x="140" y="620">1</text>
-      <text x="140" y="640">1</text><text x="140" y="660">0</text><text x="140" y="680">1</text>
-      <text x="140" y="700">0</text><text x="140" y="720">1</text>
-
-      <text x="180" y="470">1</text><text x="180" y="490">1</text><text x="180" y="510">0</text>
-      <text x="180" y="530">1</text><text x="180" y="550">0</text><text x="180" y="570">1</text>
-      <text x="180" y="590">1</text><text x="180" y="610">0</text><text x="180" y="630">0</text>
-      <text x="180" y="650">1</text><text x="180" y="670">0</text><text x="180" y="690">1</text>
-
-      <text x="220" y="500">0</text><text x="220" y="520">0</text><text x="220" y="540">1</text>
-      <text x="220" y="560">1</text><text x="220" y="580">0</text><text x="220" y="600">1</text>
-      <text x="220" y="620">0</text><text x="220" y="640">1</text><text x="220" y="660">1</text>
-      <text x="220" y="680">0</text><text x="220" y="700">0</text>
-
-      <text x="260" y="480">1</text><text x="260" y="500">0</text><text x="260" y="520">1</text>
-      <text x="260" y="540">0</text><text x="260" y="560">0</text><text x="260" y="580">1</text>
-      <text x="260" y="600">1</text><text x="260" y="620">0</text><text x="260" y="640">1</text>
-      <text x="260" y="660">0</text><text x="260" y="680">1</text><text x="260" y="700">0</text>
-
-      <text x="300" y="510">0</text><text x="300" y="530">1</text><text x="300" y="550">0</text>
-      <text x="300" y="570">1</text><text x="300" y="590">0</text><text x="300" y="610">0</text>
-      <text x="300" y="630">1</text><text x="300" y="650">1</text><text x="300" y="670">0</text>
-      <text x="300" y="690">1</text>
-
-      <text x="340" y="490">1</text><text x="340" y="510">1</text><text x="340" y="530">0</text>
-      <text x="340" y="550">0</text><text x="340" y="570">1</text><text x="340" y="590">0</text>
-      <text x="340" y="610">1</text><text x="340" y="630">1</text><text x="340" y="650">0</text>
-      <text x="340" y="670">0</text><text x="340" y="690">1</text>
-
-      <text x="380" y="470">0</text><text x="380" y="490">1</text><text x="380" y="510">1</text>
-      <text x="380" y="530">0</text><text x="380" y="550">1</text><text x="380" y="570">0</text>
-      <text x="380" y="590">0</text><text x="380" y="610">1</text><text x="380" y="630">1</text>
-      <text x="380" y="650">0</text><text x="380" y="670">1</text>
-    </g>
-
-    <!-- Нижние узлы-точки -->
-    <g fill="#E85404">
-      <circle cx="80" cy="820" r="3" opacity="0.5"/>
-      <circle cx="150" cy="780" r="4" opacity="0.6"/>
-      <circle cx="220" cy="850" r="3" opacity="0.45"/>
-      <circle cx="290" cy="800" r="3.5" opacity="0.55"/>
-      <circle cx="360" cy="860" r="3" opacity="0.45"/>
-      <circle cx="400" cy="820" r="2.5" opacity="0.40"/>
-    </g>
-    <g stroke="rgba(232,84,4,0.25)" stroke-width="1" fill="none">
-      <line x1="80" y1="820" x2="150" y2="780"/>
-      <line x1="150" y1="780" x2="220" y2="850"/>
-      <line x1="220" y1="850" x2="290" y2="800"/>
-      <line x1="290" y1="800" x2="360" y2="860"/>
-      <line x1="360" y1="860" x2="400" y2="820"/>
-      <line x1="150" y1="780" x2="290" y2="800"/>
-    </g>
-
-    <!-- Текст на правой панели — подпись -->
-    <text x="210" y="920" text-anchor="middle" font-family="Tahoma,sans-serif" font-size="13" font-weight="700" fill="rgba(232,84,4,0.45)" letter-spacing="3">ТЕХНОЛОГИИ</text>
-    <text x="210" y="940" text-anchor="middle" font-family="Tahoma,sans-serif" font-size="13" font-weight="700" fill="rgba(232,84,4,0.30)" letter-spacing="3">ИННОВАЦИИ</text>
-    <text x="210" y="960" text-anchor="middle" font-family="Tahoma,sans-serif" font-size="13" font-weight="700" fill="rgba(232,84,4,0.20)" letter-spacing="3">УНИВЕРСИТЕТЫ</text>
-  </svg>
-
-  <!-- Фирменная треугольная сеть Спарты — левый нижний угол -->
-  <svg class="mesh-svg" viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:1080px;height:1080px;pointer-events:none;">
-    <!-- Треугольная сеть — левый нижний угол -->
-    <g stroke="#E85404" stroke-width="1.2" fill="none" opacity="0.18">
-      <!-- Треугольники низ-слева -->
-      <polygon points="0,1080 80,940 160,1010"/>
-      <polygon points="80,940 200,980 160,1010"/>
-      <polygon points="80,940 160,860 200,980"/>
-      <polygon points="160,860 280,900 200,980"/>
-      <polygon points="160,860 240,760 280,900"/>
-      <polygon points="240,760 340,820 280,900"/>
-      <polygon points="0,1080 80,940 0,940"/>
-      <polygon points="200,980 300,1020 160,1010"/>
-      <polygon points="300,1020 420,1060 160,1010"/>
-      <polygon points="300,1020 420,1060 380,1080"/>
-      <polygon points="280,900 380,940 340,820"/>
-      <polygon points="380,940 460,880 340,820"/>
-      <polygon points="380,940 480,960 460,880"/>
-      <polygon points="420,1060 500,1040 480,960"/>
-    </g>
-    <!-- Узлы треугольной сети -->
-    <g fill="#E85404" opacity="0.45">
-      <circle cx="80" cy="940" r="4"/>
-      <circle cx="160" cy="1010" r="3.5"/>
-      <circle cx="160" cy="860" r="4"/>
-      <circle cx="200" cy="980" r="3"/>
-      <circle cx="240" cy="760" r="4"/>
-      <circle cx="280" cy="900" r="3.5"/>
-      <circle cx="300" cy="1020" r="3"/>
-      <circle cx="340" cy="820" r="3.5"/>
-      <circle cx="380" cy="940" r="3"/>
-      <circle cx="420" cy="1060" r="3"/>
-      <circle cx="460" cy="880" r="3"/>
-      <circle cx="480" cy="960" r="2.5"/>
-    </g>
-
-    <!-- Треугольная сеть — правый верхний (частично, остаток виден из-за панели) -->
-    <g stroke="#E85404" stroke-width="1" fill="none" opacity="0.10">
-      <polygon points="650,10 720,80 760,20"/>
-      <polygon points="720,80 800,50 760,20"/>
-      <polygon points="720,80 780,140 800,50"/>
-      <polygon points="780,140 860,100 800,50"/>
-    </g>
-  </svg>
-
-  <!-- Верхняя оранжевая полоса -->
-  <div class="top-bar"></div>
+  <!-- Плоские геометрические блоки -->
+  <div class="block-top"></div>
+  <div class="block-left"></div>
+  <div class="block-bottom"></div>
+  <div class="title-bg"></div>
 
   <!-- Шапка -->
   <div class="header">
-    <div class="brand-block">
-      <div class="brand-name"><span>S</span>PARTA</div>
-      <div class="brand-tagline">энергия изменений</div>
-    </div>
-    <div class="tag">Дайджест · Май 2026</div>
+    <div class="brand">SPARTA<em>.</em></div>
+    <div class="tag">Май 2026</div>
   </div>
 
-  <div class="header-rule"></div>
+  <!-- Надпись над заголовком -->
+  <div class="eyebrow">Национальный проект</div>
 
   <!-- Главный заголовок -->
-  <div class="title-block">
-    <div class="eyebrow">Национальный проект</div>
-    <div class="main-title">НП<span>ТЛ</span></div>
-    <div class="main-sub">для университетов —<br>что в повестке</div>
-  </div>
+  <div class="main-title">НП<br>ТЛ</div>
 
+  <!-- Подзаголовок -->
+  <div class="main-sub">для университетов —<br>что в повестке мая</div>
+
+  <!-- Разделитель -->
   <div class="divider"></div>
+
+  <!-- Метка секции -->
+  <div class="section-label">Ключевые треки</div>
 
   <!-- Три пункта -->
   <div class="agenda">
-    <div class="agenda-label">Ключевые треки мая</div>
-    <div class="agenda-items">
-      <div class="agenda-item">
-        <div class="agenda-dot"></div>
-        <div class="agenda-text"><strong>Актуализация программ развития</strong> — дедлайн май–июнь по большинству треков</div>
+    <div class="agenda-item">
+      <div class="agenda-num">01</div>
+      <div class="agenda-content">
+        <div class="agenda-title">Программы развития</div>
+        <div class="agenda-desc">Актуализация под показатели НПТЛ — дедлайн май–июнь по большинству треков</div>
       </div>
-      <div class="agenda-item">
-        <div class="agenda-dot"></div>
-        <div class="agenda-text"><strong>Технологическое предпринимательство</strong> — вывод студпроектов на реальный рынок</div>
+    </div>
+    <div class="agenda-item">
+      <div class="agenda-num">02</div>
+      <div class="agenda-content">
+        <div class="agenda-title">Технологическое предпринимательство</div>
+        <div class="agenda-desc">Вывод студенческих проектов на уровень реального рынка</div>
       </div>
-      <div class="agenda-item">
-        <div class="agenda-dot"></div>
-        <div class="agenda-text"><strong>Синхронизация с «Приоритет 2030»</strong> — дублирующая отчётность, разные метрики</div>
+    </div>
+    <div class="agenda-item">
+      <div class="agenda-num">03</div>
+      <div class="agenda-content">
+        <div class="agenda-title">Приоритет 2030</div>
+        <div class="agenda-desc">Синхронизация с НПТЛ — дублирующая отчётность, разные метрики</div>
       </div>
     </div>
   </div>
 
-  <div class="footer-rule"></div>
+  <!-- Футер -->
   <div class="footer">
     <div class="footer-date">07 мая 2026</div>
     <div class="footer-site">sparta-tech.ru</div>
