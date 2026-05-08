@@ -10,169 +10,74 @@
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { width: 1080px; height: 1920px; overflow: hidden; font-family: 'Manrope', 'Arial', sans-serif; }
+  .slide { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
 
-  .slide {
-    position: relative;
-    width: 1080px;
-    height: 1920px;
-    overflow: hidden;
+  .bg {
+    position: absolute; inset: 0;
+    background: url('file:///C:/Users/Пользователь/клод/projects/Sparta/posts/drafts/07_05_2026-1/image4.jpg') center center / cover no-repeat;
   }
 
-  /* Фото — полный фон */
-  .bg-photo {
-    position: absolute;
-    inset: 0;
-    background: url('file:///C:/Users/Пользователь/клод/projects/Sparta/posts/drafts/07_05_2026-1/image.jpg') center center / cover no-repeat;
-  }
-
-  /* Тёмный оверлей сверху — для текста */
   .overlay-top {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 980px;
-    background: linear-gradient(
-      to bottom,
-      rgba(10,10,10,0.96) 0%,
-      rgba(10,10,10,0.92) 50%,
-      rgba(10,10,10,0.70) 78%,
+    position: absolute; top: 0; left: 0; right: 0; height: 860px;
+    background: linear-gradient(to bottom,
+      rgba(4,4,4,0.97) 0%,
+      rgba(4,4,4,0.93) 40%,
+      rgba(4,4,4,0.72) 68%,
+      rgba(4,4,4,0.20) 88%,
       transparent 100%
     );
   }
 
-  /* Лёгкий тёмный оверлей снизу — брендинг */
   .overlay-bottom {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 260px;
-    background: linear-gradient(
-      to top,
-      rgba(10,10,10,0.88) 0%,
-      rgba(10,10,10,0.60) 50%,
+    position: absolute; bottom: 0; left: 0; right: 0; height: 500px;
+    background: linear-gradient(to top,
+      rgba(4,4,4,0.97) 0%,
+      rgba(4,4,4,0.88) 40%,
+      rgba(4,4,4,0.40) 72%,
       transparent 100%
     );
   }
 
-  /* Оранжевая полоса сверху */
-  .bar-top {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 6px;
-    background: #E85404;
-  }
+  .bar-top    { position: absolute; top: 0; left: 0; right: 0; height: 6px; background: #E85404; }
+  .bar-bottom { position: absolute; bottom: 0; left: 0; right: 0; height: 6px; background: #E85404; }
 
-  /* Оранжевая полоса снизу */
-  .bar-bottom {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 6px;
-    background: #E85404;
-  }
-
-  /* ── Шапка ── */
   .header {
-    position: absolute;
-    top: 56px; left: 72px; right: 72px;
+    position: absolute; top: 54px; left: 72px; right: 72px;
     display: flex; align-items: center; justify-content: space-between;
   }
-  .brand {
-    font-size: 26px; font-weight: 800; letter-spacing: 0.28em;
-    text-transform: uppercase; color: #FFFFFF;
-  }
+  .brand { font-size: 26px; font-weight: 800; letter-spacing: 0.28em; text-transform: uppercase; color: #FFFFFF; }
   .brand em { color: #E85404; font-style: normal; }
-  .tag {
-    font-size: 13px; font-weight: 700; letter-spacing: 0.18em;
-    text-transform: uppercase; color: #E85404;
-    border: 2px solid #E85404; padding: 9px 20px;
-  }
-
-  /* Линия под шапкой */
-  .header-line {
-    position: absolute;
-    top: 126px; left: 72px; right: 72px;
-    height: 1px; background: rgba(232,84,4,0.25);
-  }
-
-  /* ── Заголовок ── */
-  .eyebrow {
-    position: absolute;
-    top: 158px; left: 72px;
-    font-size: 13px; font-weight: 700; letter-spacing: 0.30em;
-    text-transform: uppercase; color: rgba(232,84,4,0.70);
-  }
+  .tag { font-size: 13px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #E85404; border: 2px solid #E85404; padding: 9px 20px; }
+  .header-line { position: absolute; top: 124px; left: 72px; right: 72px; height: 1px; background: rgba(232,84,4,0.22); }
 
   .main-title {
-    position: absolute;
-    top: 196px; left: 72px;
-    font-size: 186px; font-weight: 800; color: #FFFFFF;
+    position: absolute; top: 192px; left: 72px;
+    font-size: 178px; font-weight: 800; color: #FFFFFF;
     line-height: 0.86; letter-spacing: -0.04em;
   }
   .main-title span { color: #E85404; }
 
   .main-sub {
-    position: absolute;
-    top: 554px; left: 72px; right: 200px;
-    font-size: 28px; font-weight: 400;
-    color: rgba(255,255,255,0.55);
-    line-height: 1.40;
+    position: absolute; top: 554px; left: 72px; right: 72px;
+    font-size: 27px; font-weight: 400; color: rgba(255,255,255,0.50); line-height: 1.40;
   }
 
-  /* Разделитель */
-  .divider {
-    position: absolute;
-    top: 694px; left: 72px; right: 72px;
-    height: 1px; background: rgba(255,255,255,0.10);
-  }
-  .divider::after {
-    content: ''; position: absolute; left: 0; top: 0;
-    width: 56px; height: 1px; background: #E85404;
-  }
-
-  /* ── Три трека ── */
-  .tracks {
-    position: absolute;
-    top: 730px; left: 72px; right: 72px;
-  }
-  .track {
-    display: flex; align-items: flex-start; gap: 20px;
-    padding: 32px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-  }
+  .tracks { position: absolute; bottom: 110px; left: 72px; right: 72px; }
+  .tracks-label { font-size: 12px; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(232,84,4,0.50); margin-bottom: 20px; }
+  .track { display: flex; align-items: flex-start; gap: 20px; padding: 26px 0; border-bottom: 1px solid rgba(255,255,255,0.07); }
   .track:first-child { border-top: 1px solid rgba(255,255,255,0.07); }
+  .track-num { font-size: 12px; font-weight: 800; letter-spacing: 0.14em; color: #E85404; width: 44px; flex-shrink: 0; padding-top: 4px; }
+  .track-title { font-size: 25px; font-weight: 800; color: #FFFFFF; text-transform: uppercase; letter-spacing: 0.02em; line-height: 1.15; margin-bottom: 6px; }
+  .track-desc { font-size: 19px; font-weight: 400; color: rgba(255,255,255,0.38); line-height: 1.40; }
 
-  .track-num {
-    font-size: 12px; font-weight: 800; letter-spacing: 0.14em;
-    color: #E85404; width: 44px; flex-shrink: 0; padding-top: 5px;
-  }
-  .track-title {
-    font-size: 27px; font-weight: 800; color: #FFFFFF;
-    text-transform: uppercase; letter-spacing: 0.02em;
-    line-height: 1.15; margin-bottom: 8px;
-  }
-  .track-desc {
-    font-size: 20px; font-weight: 400;
-    color: rgba(255,255,255,0.40); line-height: 1.40;
-  }
-
-  /* ── Футер ── */
-  .footer {
-    position: absolute;
-    bottom: 44px; left: 72px; right: 72px;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .footer-date {
-    font-size: 14px; font-weight: 700; letter-spacing: 0.16em;
-    color: rgba(255,255,255,0.30); text-transform: uppercase;
-  }
-  .footer-site {
-    font-size: 15px; font-weight: 700; letter-spacing: 0.10em;
-    color: #E85404;
-  }
+  .footer { position: absolute; bottom: 44px; left: 72px; right: 72px; display: flex; align-items: center; justify-content: space-between; }
+  .footer-date { font-size: 13px; font-weight: 700; letter-spacing: 0.16em; color: rgba(255,255,255,0.25); text-transform: uppercase; }
+  .footer-site { font-size: 15px; font-weight: 700; letter-spacing: 0.10em; color: #E85404; }
 </style>
 </head>
 <body>
 <div class="slide">
-
-  <div class="bg-photo"></div>
+  <div class="bg"></div>
   <div class="overlay-top"></div>
   <div class="overlay-bottom"></div>
   <div class="bar-top"></div>
@@ -184,13 +89,11 @@
   </div>
   <div class="header-line"></div>
 
-  <div class="eyebrow">Национальный проект</div>
   <div class="main-title">НП<br><span>ТЛ</span></div>
   <div class="main-sub">для университетов —<br>что в повестке мая</div>
 
-  <div class="divider"></div>
-
   <div class="tracks">
+    <div class="tracks-label">Ключевые треки</div>
     <div class="track">
       <div class="track-num">01</div>
       <div>
@@ -202,13 +105,13 @@
       <div class="track-num">02</div>
       <div>
         <div class="track-title">Технологическое предпринимательство</div>
-        <div class="track-desc">Вывод студенческих проектов на уровень реального рынка</div>
+        <div class="track-desc">Вывод студенческих проектов на реальный рынок</div>
       </div>
     </div>
     <div class="track">
       <div class="track-num">03</div>
       <div>
-        <div class="track-title">Приоритет 2030</div>
+        <div class="track-title">Приоритет-2030</div>
         <div class="track-desc">Синхронизация с НПТЛ — дублирующая отчётность, разные метрики</div>
       </div>
     </div>
@@ -218,7 +121,6 @@
     <div class="footer-date">07 мая 2026</div>
     <div class="footer-site">sparta-tech.ru</div>
   </div>
-
 </div>
 </body>
 </html>
