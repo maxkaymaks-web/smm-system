@@ -1,7 +1,31 @@
 {
-  "_comment": "ProjectID → Telegram forum thread_id в группе SEO-claw (-1003738582316). Заполняется через tools/tg-topic.mjs init-all после повышения бота до админа.",
+  "_comment": "ProjectID → Telegram forum thread_id в группе SEO-claw (-1003738582316). Создаётся через tools/tg-topic.mjs. Используется tools/tg-send.mjs и агентами для отправки результатов в нужный топик.",
   "general": {
     "thread_id": 1,
     "name": "General"
+  },
+  "BeautyCulture_DariaSopkina": {
+    "thread_id": 4,
+    "name": "Студия «Культура» (СПб)"
+  },
+  "Bioprintex_Limatex": {
+    "thread_id": 5,
+    "name": "Биопринтех / Лиматех (B2B)"
+  },
+  "Black_Apple": {
+    "thread_id": 6,
+    "name": "Black Apple (iPhone)"
+  },
+  "Lakmoda": {
+    "thread_id": 7,
+    "name": "Lakmoda (Люберцы)"
+  },
+  "Lis_Gym": {
+    "thread_id": 8,
+    "name": "Lis Gym (Reels)"
+  },
+  "Sparta": {
+    "thread_id": 9,
+    "name": "Sparta (B2B консалтинг)"
   }
 }
