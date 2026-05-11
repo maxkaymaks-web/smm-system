@@ -1,0 +1,37 @@
+{
+  "$schema": "https://docs.openclaw.ai/schemas/openclaw.json",
+  "name": "bit-and-pix-smm",
+  "home": "/root/smm-system",
+
+  "provider": {
+    "type": "openai-compatible",
+    "baseUrl": "${LITELLM_URL}",
+    "apiKey": "${LITELLM_KEY}"
+  },
+
+  "defaultAgent": "orchestrator",
+  "agentsDir": "/root/smm-system/agents",
+  "memoryDir": "/root/smm-system/.openclaw/memory",
+
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "botToken": "${TELEGRAM_BOT_TOKEN}",
+
+      "dmPolicy": "disabled",
+
+      "groupPolicy": "allowlist",
+      "groups": {
+        "${TELEGRAM_GROUP_ID}": {
+          "requireMention": true,
+          "defaultAgent": "orchestrator"
+        }
+      }
+    }
+  },
+
+  "logging": {
+    "level": "info",
+    "file": "/var/log/openclaw/openclaw.log"
+  }
+}

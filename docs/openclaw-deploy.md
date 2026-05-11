@@ -141,18 +141,69 @@ journalctl -u "$SERVICE" -n 50 --no-pager
 
 ---
 
-## Шаг 6 — проверить агентов
+## Шаг 6 — Telegram-канал с whitelist группы
 
-Запрос оператора в чат OpenClaw (через Telegram-канал, прямой API или CLI):
+Цель: бот отвечает **только** в одной группе, в DM никому, на @mention.
 
+### 6.1 Подготовка бота
+
+В @BotFather:
+- `/newbot` → имя → username → запиши токен в `.env` → `TELEGRAM_BOT_TOKEN`
+- `/mybots` → выбрать → **Bot Settings → Group Privacy → Turn off**
+
+После: добавь бота в нужную группу (для форум-группы дай ему права на чтение всех топиков).
+
+### 6.2 Получить chat_id
+
+С локальной машины или с RU-сервера (важно — на машине с уже доступным `.env`):
+
+```bash
+# Отправь любое сообщение в группу, потом:
+node tools/get-tg-chat-id.mjs
 ```
-Привет. Какой статус по проекту BeautyCulture_DariaSopkina?
+
+Скрипт выведет таблицу `id | type | title`. Для группы id будет отрицательный
+(у супергруппы — начинается с `-100`). Подставь в `.env` → `TELEGRAM_GROUP_ID`.
+
+Альтернатива через прямой Bot API:
+
+```bash
+curl -sS "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getChat?chat_id=-1001234567890"
 ```
 
-OpenClaw должен:
-1. Поднять `agents/orchestrator/SOUL.md` (modeл `smm/claude-sonnet-4.6`)
-2. Прочитать `projects/BeautyCulture_DariaSopkina/context.md`, `voice.md`, `content-plan.md`
-3. Вернуть сводку статусов
+Если возвращает `"ok":true` и `"title":"..."` — id верный.
+
+### 6.3 openclaw.json
+
+В репо лежит шаблон `openclaw.json.example` со ссылками `${VAR}`. На сервере:
+
+```bash
+mkdir -p /root/.openclaw /var/log/openclaw
+envsubst < /root/smm-system/openclaw.json.example > /root/.openclaw/openclaw.json
+chmod 600 /root/.openclaw/openclaw.json
+cat /root/.openclaw/openclaw.json   # проверь что плейсхолдеры подставились
+```
+
+(`envsubst` берёт значения из shell-env; перед запуском — `set -a; source /root/smm-system/.env; set +a`.)
+
+Ключевые поля в конфиге:
+- `channels.telegram.dmPolicy: "disabled"` — личка отключена для всех
+- `channels.telegram.groupPolicy: "allowlist"` — только из whitelist
+- `channels.telegram.groups["-100…"].requireMention: true` — отвечает на `@seoclawww_bot вопрос`
+
+Хочешь включить личку для себя — поменяй `dmPolicy` на `"allowlist"` и добавь `allowFrom: ["${TELEGRAM_OWNER_ID}"]` (узнать свой user_id — `node tools/get-tg-chat-id.mjs` после `/start` боту в личке).
+
+### 6.4 Перезапуск + проверка
+
+```bash
+SERVICE=$(systemctl list-units --type=service --all --no-legend | grep -i openclaw | awk '{print $1}' | head -1)
+systemctl restart "$SERVICE"
+journalctl -u "$SERVICE" -n 30 --no-pager | grep -i telegram
+```
+
+В группе пиши `@seoclawww_bot какой статус по BeautyCulture?` — бот должен ответить.
+
+OpenClaw поднимет `agents/orchestrator/SOUL.md` (модель `smm/claude-sonnet-4.6`), прочитает `projects/BeautyCulture_DariaSopkina/{context,voice,content-plan}.md`, вернёт сводку.
 
 ---
 
