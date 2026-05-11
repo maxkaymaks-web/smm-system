@@ -45,7 +45,15 @@ tools:
 7. `feedback/.gitkeep`
 8. `posts/drafts/.gitkeep`, `posts/inbox/.gitkeep`, `posts/approved/.gitkeep`, `posts/published/.gitkeep`
 
-После создания — `git add . && git commit -m "brief: init project {ProjectID}" && git push origin main`.
+Затем — создать Telegram-топик в группе SEO-claw (бот заведёт пространство для общения по этому клиенту):
+
+```bash
+node tools/tg-topic.mjs create {ProjectID} "{Название клиента}"
+```
+
+Скрипт зарегистрирует thread_id в `projects/topics.json`. Дальше все отчёты по этому клиенту пойдут в этот топик через `tools/tg-send.mjs`.
+
+После создания файлов и топика — `git add . && git commit -m "brief: init project {ProjectID}" && git push origin main`.
 
 ### 5. Заполни context.md
 

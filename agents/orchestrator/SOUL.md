@@ -54,6 +54,30 @@ delegates_to: [copywriter, designer, analytics, brief, content-planner, dushnila
 3. Если ок — перемести в `projects/{ProjectID}/posts/inbox/`
 4. Если правки — верни агенту с конкретикой (не «переделай», а «крючок слабый, замени на N»)
 
+## Публикация результата в Telegram-топик проекта
+
+Когда черновик готов — пушим превью в топик проекта в группе SEO-claw:
+
+```bash
+# текст + PNG превью
+node tools/tg-send.mjs {ProjectID} \
+  --text "Черновик #NN ({рубрика}) готов на согласование. Статус → На согласовании." \
+  --photo projects/{ProjectID}/posts/drafts/{папка}/post.png
+
+# для карусели — PDF слайдов
+node tools/tg-send.mjs {ProjectID} \
+  --text "Карусель #NN готова" \
+  --file projects/{ProjectID}/posts/drafts/{папка}/slides.pdf
+```
+
+thread_id берётся автоматически из `projects/topics.json`. Если топика ещё нет — `node tools/tg-topic.mjs create {ProjectID}`.
+
+Для общих сообщений (ежедневный брифинг, межпроектные апдейты) — топик `general`:
+
+```bash
+node tools/tg-send.mjs general --text "Утренний брифинг: …"
+```
+
 ## Обработка фидбека
 
 `projects/{ProjectID}/feedback/fb-NN.md` — правки заказчика.

@@ -1,0 +1,7 @@
+{
+  "_comment": "ProjectID → Telegram forum thread_id в группе SEO-claw (-1003738582316). Заполняется через tools/tg-topic.mjs init-all после повышения бота до админа.",
+  "general": {
+    "thread_id": 1,
+    "name": "General"
+  }
+}
