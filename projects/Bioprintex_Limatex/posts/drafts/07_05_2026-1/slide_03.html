@@ -7,152 +7,179 @@
   @font-face { font-family: 'Manrope'; font-weight: 400; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Regular.woff2') format('woff2'); }
   @font-face { font-family: 'Manrope'; font-weight: 700; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Bold.woff2') format('woff2'); }
   @font-face { font-family: 'Manrope'; font-weight: 800; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-ExtraBold.woff2') format('woff2'); }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { width: 1080px; height: 1080px; overflow: hidden; background: #1B1A24; font-family: 'Manrope', 'Tahoma', sans-serif; }
-  .slide { position: relative; width: 1080px; height: 1080px; background: #1B1A24; overflow: hidden; }
-
-  .pcb-bg {
-    position: absolute; inset: 0; background-color: #1B1A24;
-    background-image:
-      linear-gradient(90deg, transparent 49%, rgba(4,79,186,0.12) 49%, rgba(4,79,186,0.12) 51%, transparent 51%),
-      linear-gradient(0deg, transparent 49%, rgba(4,79,186,0.08) 49%, rgba(4,79,186,0.08) 51%, transparent 51%);
-    background-size: 120px 120px;
-  }
-  .glow { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 55% at 50% 40%, rgba(4,79,186,0.16) 0%, rgba(27,26,36,0) 70%); }
-  .grain { position: absolute; inset: 0; opacity: 0.04; }
-
-  .ghost-num {
-    position: absolute; bottom: 20px; left: 0; right: 0;
-    text-align: center; font-size: 96px; font-weight: 800;
-    color: #044FBA; opacity: 0.07; letter-spacing: 0.06em;
-    white-space: nowrap; pointer-events: none; line-height: 1;
-  }
-
-  .header { position: absolute; top: 60px; left: 80px; right: 80px; display: flex; align-items: center; justify-content: space-between; }
-  .pill { border: 1.5px solid #418EF1; color: #418EF1; border-radius: 40px; padding: 12px 28px; font-size: 22px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
-
-  .slide-title { position: absolute; top: 152px; left: 80px; right: 80px; }
-  .slide-title h2 { font-size: 50px; font-weight: 800; color: #FFFFFF; text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.1; margin-bottom: 12px; }
-  .title-line { width: 60px; height: 3px; background: linear-gradient(90deg, #044FBA, #418EF1); }
-
-  /* Три рычага — слева */
-  .levers {
-    position: absolute; top: 278px; left: 80px; width: 520px;
-    display: flex; flex-direction: column; gap: 16px;
-  }
-  .lever-card {
-    background: rgba(4,79,186,0.10);
-    border: 1px solid rgba(65,142,241,0.22);
-    border-radius: 10px; padding: 18px 22px;
-    display: flex; align-items: flex-start; gap: 18px;
-  }
-  .lever-num {
-    font-size: 16px; font-weight: 700; color: rgba(65,142,241,0.65);
-    letter-spacing: 0.14em; text-transform: uppercase; flex-shrink: 0;
-    width: 28px; padding-top: 3px;
-  }
-  .lever-content {}
-  .lever-title { font-size: 24px; font-weight: 800; color: #FFFFFF; margin-bottom: 6px; line-height: 1.2; }
-  .lever-desc { font-size: 19px; font-weight: 400; color: rgba(91,173,247,0.85); line-height: 1.45; }
-  .lever-desc em { color: #418EF1; font-style: normal; font-weight: 700; }
-
-  /* Результирующий блок справа */
-  .result-block {
-    position: absolute; top: 278px; right: 80px; width: 380px;
-  }
-  .result-label {
-    font-size: 18px; font-weight: 700; color: rgba(65,142,241,0.60);
-    letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 18px;
-  }
-  .result-big {
-    background: rgba(0,175,80,0.10);
-    border: 1px solid rgba(0,175,80,0.30);
-    border-radius: 14px; padding: 24px 22px; margin-bottom: 16px;
-    text-align: center;
-  }
-  .result-val { font-size: 100px; font-weight: 800; color: #00AF50; line-height: 1; letter-spacing: -0.03em; }
-  .result-unit { font-size: 34px; font-weight: 700; color: rgba(0,175,80,0.80); display: block; margin-top: 4px; }
-  .result-sub { font-size: 21px; font-weight: 400; color: rgba(91,173,247,0.75); margin-top: 10px; line-height: 1.4; }
-
-  .vs-arrow {
-    text-align: center; padding: 12px 0;
-    font-size: 19px; font-weight: 700;
-    color: rgba(65,142,241,0.50); letter-spacing: 0.08em;
-  }
-
-  .result-compare {
-    background: rgba(255,100,0,0.08);
-    border: 1px solid rgba(255,100,0,0.25);
-    border-radius: 10px; padding: 16px 20px;
-    text-align: center;
-  }
-  .compare-val { font-size: 48px; font-weight: 800; color: #FF7A1F; line-height: 1; }
-  .compare-unit { font-size: 24px; font-weight: 700; color: rgba(255,122,31,0.75); display: block; margin-top: 2px; }
-  .compare-label { font-size: 19px; font-weight: 400; color: rgba(255,255,255,0.60); margin-top: 8px; }
-
-  .logo-mark { position: absolute; bottom: 28px; right: 80px; font-size: 18px; font-weight: 700; color: #418EF1; letter-spacing: 0.12em; opacity: 0.7; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { width:1080px; height:1080px; overflow:hidden; background:#1B1A24; font-family:'Manrope','Tahoma',sans-serif; }
+  .slide { position:relative; width:1080px; height:1080px; overflow:hidden; background:#1B1A24; }
+  .grain { position:absolute; inset:0; opacity:0.035; }
 </style>
 </head>
 <body>
 <div class="slide">
-  <div class="pcb-bg"></div>
-  <div class="glow"></div>
+
+  <!-- PCB -->
+  <div style="position:absolute;inset:0;
+    background-image:
+      linear-gradient(90deg,transparent 49.5%,rgba(65,142,241,0.07) 49.5%,rgba(65,142,241,0.07) 50.5%,transparent 50.5%),
+      linear-gradient(0deg,transparent 49.5%,rgba(65,142,241,0.05) 49.5%,rgba(65,142,241,0.05) 50.5%,transparent 50.5%);
+    background-size:80px 80px;"></div>
+
+  <!-- Blue glow left -->
+  <div style="position:absolute;top:200px;left:-80px;width:500px;height:500px;
+    background:radial-gradient(circle, rgba(4,79,186,0.18) 0%, transparent 65%);
+    pointer-events:none;"></div>
+
+  <!-- Green glow right (result badge area) -->
+  <div style="position:absolute;top:280px;right:0;width:480px;height:480px;
+    background:radial-gradient(circle, rgba(0,175,80,0.16) 0%, transparent 65%);
+    pointer-events:none;"></div>
+
+  <!-- Grain -->
   <svg class="grain" xmlns="http://www.w3.org/2000/svg">
     <filter id="g"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
     <rect width="100%" height="100%" filter="url(#g)"/>
   </svg>
-  <div class="ghost-num">МЕХАНИЗМ</div>
 
-  <div class="header">
-    <div class="pill">КАК ЭТО РАБОТАЕТ</div>
+  <!-- SVG layer -->
+  <svg style="position:absolute;inset:0;width:1080px;height:1080px" viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg">
+
+    <!-- Big result badge: circle on right -->
+    <circle cx="820" cy="520" r="200" fill="rgba(0,175,80,0.07)" stroke="#00AF50" stroke-width="2" opacity="0.6"/>
+    <circle cx="820" cy="520" r="218" fill="none" stroke="#00AF50" stroke-width="1" opacity="0.20" stroke-dasharray="6 10"/>
+    <circle cx="820" cy="520" r="238" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.10" stroke-dasharray="3 15"/>
+
+    <!-- Connecting flow arrows: card 01 → badge -->
+    <path d="M 590 295 Q 680 295 720 400" fill="none" stroke="#418EF1" stroke-width="1.5" opacity="0.35" stroke-dasharray="6 5"/>
+    <polygon points="720,400 710,386 726,387" fill="#418EF1" opacity="0.35"/>
+
+    <!-- card 02 → badge -->
+    <path d="M 590 520 L 620 520" fill="none" stroke="#00AF50" stroke-width="2" opacity="0.40"/>
+    <polygon points="620,520 611,515 611,525" fill="#00AF50" opacity="0.40"/>
+
+    <!-- card 03 → badge -->
+    <path d="M 590 740 Q 680 740 720 640" fill="none" stroke="#418EF1" stroke-width="1.5" opacity="0.35" stroke-dasharray="6 5"/>
+    <polygon points="720,640 710,648 723,657" fill="#418EF1" opacity="0.35"/>
+
+    <!-- kLa bar mini chart inside badge (visual) -->
+    <!-- Standard bar -->
+    <rect x="745" y="600" width="18" height="50" rx="3" fill="#FF7A1F" opacity="0.7"/>
+    <!-- ZG bar (much taller) -->
+    <rect x="775" y="480" width="18" height="170" rx="3" fill="#00AF50" opacity="0.8"/>
+
+    <!-- Top corner circuit -->
+    <path d="M 80 52 L 160 52 L 190 82 L 340 82" fill="none" stroke="#418EF1" stroke-width="1.2" opacity="0.35"/>
+    <circle cx="160" cy="52" r="4" fill="none" stroke="#418EF1" stroke-width="1.5" opacity="0.4"/>
+    <circle cx="340" cy="82" r="5" fill="none" stroke="#418EF1" stroke-width="1.5" opacity="0.4"/>
+    <circle cx="340" cy="82" r="2" fill="#418EF1" opacity="0.3"/>
+
+    <!-- Bottom circuit -->
+    <path d="M 80 1020 L 200 1020 L 230 990 L 400 990" fill="none" stroke="#418EF1" stroke-width="1.2" opacity="0.25"/>
+    <circle cx="200" cy="1020" r="4" fill="none" stroke="#418EF1" stroke-width="1.5" opacity="0.30"/>
+
+    <!-- Vertical left accent line -->
+    <line x1="48" y1="140" x2="48" y2="940" stroke="#418EF1" stroke-width="1.5" opacity="0.15"/>
+  </svg>
+
+  <!-- HEADER -->
+  <div style="position:absolute;top:52px;left:80px;
+    display:flex;align-items:center;gap:20px;">
+    <div style="border:1.5px solid rgba(65,142,241,0.55);color:#418EF1;
+      border-radius:40px;padding:10px 26px;
+      font-size:20px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;">
+      КАК ЭТО РАБОТАЕТ
+    </div>
+    <div style="font-size:20px;font-weight:400;color:rgba(255,255,255,0.30);letter-spacing:0.04em;">
+      Три механизма → один результат
+    </div>
   </div>
 
-  <div class="slide-title">
-    <h2>Три рычага снижения<br>стоимости O₂</h2>
-    <div class="title-line"></div>
+  <!-- LEFT: 3 cascade mechanism cards -->
+  <!-- Card 01 -->
+  <div style="position:absolute;top:148px;left:80px;width:500px;
+    background:rgba(4,79,186,0.10);border:1px solid rgba(65,142,241,0.28);border-radius:12px;
+    padding:22px 26px;">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;">
+      <div style="font-size:13px;font-weight:700;color:rgba(65,142,241,0.60);letter-spacing:0.18em;text-transform:uppercase;">01</div>
+      <div style="flex:1;height:1px;background:rgba(65,142,241,0.18);"></div>
+      <div style="font-size:13px;font-weight:700;color:rgba(65,142,241,0.40);letter-spacing:0.10em;">Снарядный режим Тейлора</div>
+    </div>
+    <div style="font-size:25px;font-weight:800;color:#FFFFFF;margin-bottom:8px;line-height:1.2;">
+      Упорядоченный поток пузырьков
+    </div>
+    <div style="font-size:19px;font-weight:400;color:rgba(91,173,247,0.80);line-height:1.45;">
+      Геликоидная спираль из гидрофобного материала. Скорость O₂ — <strong style="color:#418EF1;">0,095 м/с</strong>. Время контакта с водой кратно возрастает
+    </div>
   </div>
 
-  <div class="levers">
-    <div class="lever-card">
-      <div class="lever-num">01</div>
-      <div class="lever-content">
-        <div class="lever-title">Снарядный режим течения</div>
-        <div class="lever-desc">Пузырьки движутся в геликоидной спирали — упорядоченно, не хаотично. Время контакта с водой кратно возрастает. <em>Тот же объём газа даёт больше O₂</em></div>
+  <!-- Card 02 (shifted right 30px) -->
+  <div style="position:absolute;top:378px;left:110px;width:500px;
+    background:rgba(4,79,186,0.10);border:1px solid rgba(65,142,241,0.28);border-radius:12px;
+    padding:22px 26px;
+    border-left:3px solid rgba(0,175,80,0.55);">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;">
+      <div style="font-size:13px;font-weight:700;color:rgba(0,175,80,0.65);letter-spacing:0.18em;text-transform:uppercase;">02</div>
+      <div style="flex:1;height:1px;background:rgba(0,175,80,0.18);"></div>
+      <div style="font-size:13px;font-weight:700;color:rgba(0,175,80,0.45);letter-spacing:0.10em;">Электростатика</div>
+    </div>
+    <div style="font-size:25px;font-weight:800;color:#FFFFFF;margin-bottom:8px;line-height:1.2;">
+      kL(O₂) возрастает в 9,71 раза
+    </div>
+    <div style="font-size:19px;font-weight:400;color:rgba(91,173,247,0.80);line-height:1.45;">
+      Заряды геликоида структурируют граничный слой воды — реактивность границы газ–жидкость принципиально выше
+    </div>
+  </div>
+
+  <!-- Card 03 (shifted right 60px) -->
+  <div style="position:absolute;top:608px;left:80px;width:500px;
+    background:rgba(4,79,186,0.10);border:1px solid rgba(65,142,241,0.28);border-radius:12px;
+    padding:22px 26px;">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;">
+      <div style="font-size:13px;font-weight:700;color:rgba(65,142,241,0.60);letter-spacing:0.18em;text-transform:uppercase;">03</div>
+      <div style="flex:1;height:1px;background:rgba(65,142,241,0.18);"></div>
+      <div style="font-size:13px;font-weight:700;color:rgba(65,142,241,0.40);letter-spacing:0.10em;">Волновая плёнка 20–200 нм</div>
+    </div>
+    <div style="font-size:25px;font-weight:800;color:#FFFFFF;margin-bottom:8px;line-height:1.2;">
+      Активная площадь контакта ↑
+    </div>
+    <div style="font-size:19px;font-weight:400;color:rgba(91,173,247,0.80);line-height:1.45;">
+      Продольно-поперечные волновые возмущения на границе газ–жидкость динамически увеличивают зону массопереноса
+    </div>
+  </div>
+
+  <!-- RIGHT: Result badge content -->
+  <div style="position:absolute;top:355px;left:660px;width:320px;text-align:center;">
+    <div style="font-size:16px;font-weight:700;color:rgba(0,175,80,0.65);
+      letter-spacing:0.16em;text-transform:uppercase;margin-bottom:16px;">Результат</div>
+    <div style="font-size:105px;font-weight:800;color:#00AF50;line-height:1;letter-spacing:-0.03em;
+      text-shadow:0 0 60px rgba(0,175,80,0.30);">0,8</div>
+    <div style="font-size:36px;font-weight:700;color:rgba(0,175,80,0.80);margin-top:4px;">руб/м³</div>
+    <div style="width:60px;height:2px;background:rgba(0,175,80,0.40);margin:14px auto;"></div>
+    <div style="font-size:18px;font-weight:400;color:rgba(91,173,247,0.70);line-height:1.5;">
+      против 3–5 руб/м³<br>у стандарта
+    </div>
+
+    <!-- mini kLa comparison legend -->
+    <div style="margin-top:22px;display:flex;align-items:flex-end;justify-content:center;gap:24px;">
+      <div style="text-align:center;">
+        <div style="font-size:15px;font-weight:700;color:#FF7A1F;margin-bottom:4px;">3–7</div>
+        <div style="font-size:12px;color:rgba(255,122,31,0.55);letter-spacing:0.06em;">СТАНДАРТ</div>
+      </div>
+      <div style="font-size:22px;color:rgba(65,142,241,0.35);">→</div>
+      <div style="text-align:center;">
+        <div style="font-size:15px;font-weight:700;color:#00AF50;margin-bottom:4px;">200–300</div>
+        <div style="font-size:12px;color:rgba(0,175,80,0.55);letter-spacing:0.06em;">kLa ч⁻¹</div>
       </div>
     </div>
-    <div class="lever-card">
-      <div class="lever-num">02</div>
-      <div class="lever-content">
-        <div class="lever-title">Электростатика граничного слоя</div>
-        <div class="lever-desc">Заряды поверхности геликоида ориентируют молекулы воды — реактивность границы газ–жидкость растёт. <em>kL(O₂) × 9,71</em></div>
-      </div>
-    </div>
-    <div class="lever-card">
-      <div class="lever-num">03</div>
-      <div class="lever-content">
-        <div class="lever-title">kLa = 200–300 ч⁻¹</div>
-        <div class="lever-desc">Против 3–7 ч⁻¹ у стандартных аэраторов. Скорость растворения O₂ <em>в 5–40 раз выше</em> при снижении энергозатрат &gt;25%</div>
-      </div>
-    </div>
   </div>
 
-  <div class="result-block">
-    <div class="result-label">Результат</div>
-    <div class="result-big">
-      <div class="result-val">0,8</div>
-      <div class="result-unit">руб/м³</div>
-      <div class="result-sub">Стоимость растворённого O₂<br>в реальных условиях УЗВ</div>
-    </div>
-    <div class="vs-arrow">↑ вместо ↓</div>
-    <div class="result-compare">
-      <div class="compare-val">3–5</div>
-      <div class="compare-unit">руб/м³</div>
-      <div class="compare-label">стандартная диффузорная аэрация</div>
-    </div>
+  <!-- bottom energy stat -->
+  <div style="position:absolute;bottom:60px;left:80px;
+    display:flex;align-items:center;gap:16px;">
+    <div style="font-size:17px;font-weight:700;color:rgba(65,142,241,0.50);letter-spacing:0.12em;text-transform:uppercase;">Энергозатраты</div>
+    <div style="font-size:28px;font-weight:800;color:#00AF50;">−25%</div>
+    <div style="font-size:17px;font-weight:400;color:rgba(255,255,255,0.35);">при той же производительности</div>
   </div>
 
-  <div class="logo-mark">БП</div>
+  <div style="position:absolute;bottom:36px;right:80px;font-size:18px;font-weight:700;color:#418EF1;letter-spacing:0.12em;opacity:0.55;">БП</div>
 </div>
 </body>
 </html>

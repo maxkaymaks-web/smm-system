@@ -7,123 +7,170 @@
   @font-face { font-family: 'Manrope'; font-weight: 400; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Regular.woff2') format('woff2'); }
   @font-face { font-family: 'Manrope'; font-weight: 700; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Bold.woff2') format('woff2'); }
   @font-face { font-family: 'Manrope'; font-weight: 800; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-ExtraBold.woff2') format('woff2'); }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { width: 1080px; height: 1080px; overflow: hidden; background: #1B1A24; font-family: 'Manrope', 'Tahoma', sans-serif; }
-  .slide { position: relative; width: 1080px; height: 1080px; background: #1B1A24; overflow: hidden; }
-
-  .pcb-bg {
-    position: absolute; inset: 0; background-color: #1B1A24;
-    background-image:
-      linear-gradient(90deg, transparent 49%, rgba(4,79,186,0.12) 49%, rgba(4,79,186,0.12) 51%, transparent 51%),
-      linear-gradient(0deg, transparent 49%, rgba(4,79,186,0.08) 49%, rgba(4,79,186,0.08) 51%, transparent 51%);
-    background-size: 120px 120px;
-  }
-  .grain { position: absolute; inset: 0; opacity: 0.04; }
-
-  .ghost-num {
-    position: absolute; bottom: 20px; left: 0; right: 0;
-    text-align: center; font-size: 96px; font-weight: 800;
-    color: #C55A11; opacity: 0.07; letter-spacing: 0.06em;
-    white-space: nowrap; pointer-events: none; line-height: 1;
-  }
-
-  .header { position: absolute; top: 60px; left: 80px; right: 80px; display: flex; align-items: center; justify-content: space-between; }
-  .pill { border: 1.5px solid #C55A11; color: #C55A11; border-radius: 40px; padding: 12px 28px; font-size: 22px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
-
-  .slide-title { position: absolute; top: 152px; left: 80px; right: 80px; }
-  .slide-title h2 { font-size: 52px; font-weight: 800; color: #FFFFFF; text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.1; margin-bottom: 12px; }
-  .title-line { width: 60px; height: 3px; background: linear-gradient(90deg, #C55A11, rgba(197,90,17,0.3)); }
-
-  /* Большая цифра слева */
-  .big-stat {
-    position: absolute; top: 310px; left: 80px; width: 420px;
-  }
-  .big-val { font-size: 96px; font-weight: 800; color: #FF7A1F; line-height: 1; letter-spacing: -0.03em; }
-  .big-unit { font-size: 36px; font-weight: 700; color: rgba(255,122,31,0.80); display: block; margin-top: 4px; }
-  .big-label { margin-top: 20px; font-size: 27px; font-weight: 400; color: rgba(91,173,247,0.85); line-height: 1.4; max-width: 400px; }
-
-  /* Причины справа */
-  .barriers {
-    position: absolute; top: 280px; right: 80px; width: 460px;
-    display: flex; flex-direction: column; gap: 14px;
-  }
-  .barrier-item {
-    display: flex; align-items: flex-start; gap: 16px;
-    padding: 16px 20px;
-    background: rgba(255,100,0,0.08);
-    border: 1px solid rgba(255,100,0,0.28);
-    border-radius: 10px;
-  }
-  .barrier-icon {
-    width: 38px; height: 38px; flex-shrink: 0;
-    border: 2px solid rgba(255,122,31,0.65);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 19px; font-weight: 800; color: #FF7A1F;
-  }
-  .barrier-text { font-size: 21px; font-weight: 400; color: rgba(255,255,255,0.88); line-height: 1.4; }
-  .barrier-text strong { color: #FF7A1F; font-weight: 700; }
-
-  /* Нижний вывод */
-  .conclusion {
-    position: absolute; bottom: 66px; left: 80px; right: 80px;
-    padding: 22px 30px;
-    background: rgba(197,90,17,0.10);
-    border: 1px solid rgba(197,90,17,0.35);
-    border-radius: 12px;
-  }
-  .conclusion-label { font-size: 18px; font-weight: 700; color: rgba(65,142,241,0.65); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px; }
-  .conclusion-text { font-size: 25px; font-weight: 400; color: rgba(255,255,255,0.90); line-height: 1.45; }
-  .conclusion-text strong { color: #FFFFFF; font-weight: 700; }
-
-  .logo-mark { position: absolute; bottom: 28px; right: 80px; font-size: 18px; font-weight: 700; color: #418EF1; letter-spacing: 0.12em; opacity: 0.7; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { width:1080px; height:1080px; overflow:hidden; background:#1B1A24; font-family:'Manrope','Tahoma',sans-serif; }
+  .slide { position:relative; width:1080px; height:1080px; overflow:hidden; background:#1B1A24; }
+  .grain { position:absolute; inset:0; opacity:0.035; }
 </style>
 </head>
 <body>
 <div class="slide">
-  <div class="pcb-bg"></div>
+
+  <!-- Subtle PCB -->
+  <div style="position:absolute;inset:0;
+    background-image:
+      linear-gradient(90deg,transparent 49.5%,rgba(65,142,241,0.07) 49.5%,rgba(65,142,241,0.07) 50.5%,transparent 50.5%),
+      linear-gradient(0deg,transparent 49.5%,rgba(65,142,241,0.05) 49.5%,rgba(65,142,241,0.05) 50.5%,transparent 50.5%);
+    background-size:80px 80px;"></div>
+
+  <!-- Orange radial glow top-right (danger zone) -->
+  <div style="position:absolute;top:-100px;right:-100px;width:700px;height:700px;
+    background:radial-gradient(circle, rgba(197,90,17,0.14) 0%, transparent 65%);
+    pointer-events:none;"></div>
+
+  <!-- Grain -->
   <svg class="grain" xmlns="http://www.w3.org/2000/svg">
     <filter id="g"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
     <rect width="100%" height="100%" filter="url(#g)"/>
   </svg>
-  <div class="ghost-num">ПРОБЛЕМА</div>
 
-  <div class="header">
-    <div class="pill">ПРОБЛЕМА</div>
-  </div>
+  <!-- SVG decorations -->
+  <svg style="position:absolute;inset:0;width:1080px;height:1080px" viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg">
 
-  <div class="slide-title">
-    <h2>Кислород в УЗВ —<br>40–60% операционных затрат</h2>
-    <div class="title-line"></div>
-  </div>
+    <!-- Giant faded "3–5" behind everything -->
+    <text x="540" y="680" text-anchor="middle" font-family="Tahoma,sans-serif"
+      font-size="580" font-weight="800" fill="#FF7A1F" opacity="0.04"
+      letter-spacing="-30">3–5</text>
 
-  <div class="big-stat">
-    <div class="big-val">3–5<span class="big-unit">руб/м³</span></div>
-    <div class="big-label">Стандартная стоимость<br>растворённого O₂<br>при диффузорной аэрации</div>
-  </div>
+    <!-- Warning hash marks top-right (danger zone hatch) -->
+    <line x1="820" y1="0"  x2="1080" y2="260" stroke="#C55A11" stroke-width="22" opacity="0.06"/>
+    <line x1="880" y1="0"  x2="1080" y2="200" stroke="#C55A11" stroke-width="22" opacity="0.04"/>
+    <line x1="760" y1="0"  x2="1080" y2="320" stroke="#C55A11" stroke-width="22" opacity="0.04"/>
+    <line x1="700" y1="0"  x2="1080" y2="380" stroke="#C55A11" stroke-width="22" opacity="0.03"/>
+    <line x1="940" y1="0"  x2="1080" y2="140" stroke="#C55A11" stroke-width="22" opacity="0.03"/>
 
-  <div class="barriers">
-    <div class="barrier-item">
-      <div class="barrier-icon">1</div>
-      <div class="barrier-text"><strong>Хаотичный пузырь</strong> — диаметр 3–5 мм, граничный слой насыщается мгновенно. kLa = 3–7 ч⁻¹ при необходимых 10+</div>
+    <!-- Top circuit trace -->
+    <path d="M 80 56 L 180 56 L 210 86 L 380 86" fill="none" stroke="#C55A11" stroke-width="1.2" opacity="0.40"/>
+    <circle cx="180" cy="56" r="4" fill="none" stroke="#C55A11" stroke-width="1.5" opacity="0.45"/>
+    <circle cx="380" cy="86" r="5" fill="none" stroke="#FF7A1F" stroke-width="1.5" opacity="0.5"/>
+    <circle cx="380" cy="86" r="2" fill="#FF7A1F" opacity="0.4"/>
+
+    <!-- Bottom circuit trace -->
+    <path d="M 1000 1000 L 900 1000 L 860 1040 L 700 1040 L 670 1010" fill="none" stroke="#418EF1" stroke-width="1.2" opacity="0.30"/>
+    <circle cx="900" cy="1000" r="4" fill="none" stroke="#418EF1" stroke-width="1.5" opacity="0.35"/>
+
+    <!-- Left vertical accent line -->
+    <line x1="46" y1="140" x2="46" y2="940" stroke="#C55A11" stroke-width="2" opacity="0.18"/>
+    <circle cx="46" cy="300" r="5" fill="none" stroke="#C55A11" stroke-width="1.5" opacity="0.35"/>
+    <circle cx="46" cy="300" r="2" fill="#C55A11" opacity="0.3"/>
+    <circle cx="46" cy="540" r="5" fill="none" stroke="#FF7A1F" stroke-width="1.5" opacity="0.35"/>
+    <circle cx="46" cy="540" r="2" fill="#FF7A1F" opacity="0.3"/>
+    <circle cx="46" cy="780" r="5" fill="none" stroke="#C55A11" stroke-width="1.5" opacity="0.3"/>
+
+    <!-- Horizontal branches from left accent -->
+    <line x1="46" y1="300" x2="90" y2="300" stroke="#C55A11" stroke-width="1" opacity="0.3"/>
+    <line x1="46" y1="540" x2="90" y2="540" stroke="#FF7A1F" stroke-width="1" opacity="0.3"/>
+  </svg>
+
+  <!-- HEADER -->
+  <div style="position:absolute;top:52px;left:80px;
+    display:flex;align-items:center;gap:20px;">
+    <div style="border:1.5px solid rgba(197,90,17,0.65);color:#C55A11;
+      border-radius:40px;padding:10px 26px;
+      font-size:20px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;">
+      ПРОБЛЕМА
     </div>
-    <div class="barrier-item">
-      <div class="barrier-icon">2</div>
-      <div class="barrier-text"><strong>Больше газа — больше затрат</strong> — чтобы обеспечить нужную концентрацию O₂, нужно «гнать» объём. Прямой рост OPEX</div>
-    </div>
-    <div class="barrier-item">
-      <div class="barrier-icon">3</div>
-      <div class="barrier-text"><strong>Рентабельность 25%</strong> — физический потолок аквакультуры при стандартной аэрации. Плотность посадки не растёт</div>
+    <div style="font-size:20px;font-weight:400;color:rgba(255,255,255,0.30);letter-spacing:0.06em;">
+      Почему стандарт не работает
     </div>
   </div>
 
-  <div class="conclusion">
-    <div class="conclusion-label">Следствие</div>
-    <div class="conclusion-text">При kLa 3–7 ч⁻¹ невозможно снизить стоимость O₂ ниже <strong>3 руб/м³</strong> — это физический предел диффузорной аэрации, не вопрос оборудования</div>
+  <!-- BIG WARNING BOX: the cost number -->
+  <div style="position:absolute;top:148px;left:80px;right:80px;
+    padding:36px 44px;
+    background:rgba(255,100,0,0.07);
+    border:2px solid rgba(197,90,17,0.50);
+    border-radius:16px;">
+    <div style="display:flex;align-items:baseline;gap:24px;flex-wrap:wrap;">
+      <div style="font-size:130px;font-weight:800;color:#FF7A1F;line-height:1;letter-spacing:-0.03em;">3–5</div>
+      <div>
+        <div style="font-size:46px;font-weight:700;color:rgba(255,122,31,0.85);line-height:1.1;">руб/м³</div>
+        <div style="font-size:24px;font-weight:400;color:rgba(255,255,255,0.55);margin-top:6px;">стоимость растворённого O₂<br>при стандартной аэрации</div>
+      </div>
+      <!-- warning icon right side -->
+      <div style="margin-left:auto;text-align:center;">
+        <svg width="80" height="80" viewBox="0 0 80 80">
+          <polygon points="40,8 74,68 6,68" fill="none" stroke="#C55A11" stroke-width="3" opacity="0.7"/>
+          <line x1="40" y1="28" x2="40" y2="50" stroke="#FF7A1F" stroke-width="4" stroke-linecap="round" opacity="0.85"/>
+          <circle cx="40" cy="59" r="3" fill="#FF7A1F" opacity="0.85"/>
+        </svg>
+        <div style="font-size:16px;font-weight:700;color:rgba(197,90,17,0.65);letter-spacing:0.08em;margin-top:4px;">OPEX</div>
+      </div>
+    </div>
   </div>
 
-  <div class="logo-mark">БП</div>
+  <!-- THREE BARRIER ROWS -->
+  <div style="position:absolute;top:440px;left:80px;right:80px;display:flex;flex-direction:column;gap:14px;">
+
+    <div style="display:flex;align-items:center;gap:0;
+      background:rgba(255,100,0,0.06);border:1px solid rgba(255,100,0,0.22);border-radius:10px;overflow:hidden;">
+      <div style="width:6px;height:100%;background:#C55A11;flex-shrink:0;align-self:stretch;"></div>
+      <div style="padding:16px 22px;display:flex;align-items:center;gap:20px;width:100%;">
+        <div style="font-size:28px;font-weight:800;color:#FF7A1F;width:34px;flex-shrink:0;">01</div>
+        <div style="font-size:22px;font-weight:400;color:rgba(255,255,255,0.85);line-height:1.4;">
+          <strong style="color:#FF7A1F;">Хаотичный пузырь</strong> — диаметр 3–5 мм, граничный слой насыщается. kLa = 3–7 ч⁻¹ при необходимых 10+
+        </div>
+        <div style="margin-left:auto;font-size:20px;font-weight:700;color:rgba(197,90,17,0.50);letter-spacing:0.12em;flex-shrink:0;">kLa 3–7</div>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:0;
+      background:rgba(255,100,0,0.06);border:1px solid rgba(255,100,0,0.22);border-radius:10px;overflow:hidden;">
+      <div style="width:6px;height:100%;background:#C55A11;flex-shrink:0;align-self:stretch;"></div>
+      <div style="padding:16px 22px;display:flex;align-items:center;gap:20px;width:100%;">
+        <div style="font-size:28px;font-weight:800;color:#FF7A1F;width:34px;flex-shrink:0;">02</div>
+        <div style="font-size:22px;font-weight:400;color:rgba(255,255,255,0.85);line-height:1.4;">
+          <strong style="color:#FF7A1F;">Больше газа — больше затрат</strong> — для нужной концентрации O₂ нужен бо́льший объём. OPEX растёт линейно
+        </div>
+        <div style="margin-left:auto;font-size:20px;font-weight:700;color:rgba(197,90,17,0.50);letter-spacing:0.12em;flex-shrink:0;">↑ OPEX</div>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:0;
+      background:rgba(255,100,0,0.06);border:1px solid rgba(255,100,0,0.22);border-radius:10px;overflow:hidden;">
+      <div style="width:6px;height:100%;background:#C55A11;flex-shrink:0;align-self:stretch;"></div>
+      <div style="padding:16px 22px;display:flex;align-items:center;gap:20px;width:100%;">
+        <div style="font-size:28px;font-weight:800;color:#FF7A1F;width:34px;flex-shrink:0;">03</div>
+        <div style="font-size:22px;font-weight:400;color:rgba(255,255,255,0.85);line-height:1.4;">
+          <strong style="color:#FF7A1F;">Плотность посадки ограничена</strong> — при kLa 3–7 невозможно превысить 50–80 кг/м³. Это физический, не управленческий предел
+        </div>
+        <div style="margin-left:auto;font-size:20px;font-weight:700;color:rgba(197,90,17,0.50);letter-spacing:0.12em;flex-shrink:0;">50–80</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM: Потолок progress bar -->
+  <div style="position:absolute;bottom:68px;left:80px;right:80px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <div style="font-size:19px;font-weight:700;color:rgba(65,142,241,0.55);letter-spacing:0.12em;text-transform:uppercase;">
+        Рентабельность аквакультуры — физический потолок
+      </div>
+      <div style="font-size:32px;font-weight:800;color:#FF7A1F;">25%</div>
+    </div>
+    <!-- bar -->
+    <div style="width:100%;height:10px;background:rgba(255,255,255,0.08);border-radius:6px;overflow:hidden;">
+      <div style="width:25%;height:100%;background:linear-gradient(90deg,#C55A11,#FF7A1F);border-radius:6px;position:relative;">
+        <div style="position:absolute;right:-1px;top:0;bottom:0;width:2px;background:#FF7A1F;box-shadow:0 0 8px #FF7A1F;"></div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:6px;">
+      <div style="font-size:16px;color:rgba(255,255,255,0.25);">0%</div>
+      <div style="font-size:16px;color:rgba(255,255,255,0.25);">100%</div>
+    </div>
+  </div>
+
+  <div style="position:absolute;bottom:36px;right:80px;font-size:18px;font-weight:700;color:#418EF1;letter-spacing:0.12em;opacity:0.55;">БП</div>
 </div>
 </body>
 </html>

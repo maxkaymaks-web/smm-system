@@ -7,155 +7,163 @@
   @font-face { font-family: 'Manrope'; font-weight: 400; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Regular.woff2') format('woff2'); }
   @font-face { font-family: 'Manrope'; font-weight: 700; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Bold.woff2') format('woff2'); }
   @font-face { font-family: 'Manrope'; font-weight: 800; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-ExtraBold.woff2') format('woff2'); }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { width: 1080px; height: 1080px; overflow: hidden; background: #1B1A24; font-family: 'Manrope', 'Tahoma', sans-serif; }
-  .slide { position: relative; width: 1080px; height: 1080px; background: #1B1A24; overflow: hidden; }
-
-  .pcb-bg {
-    position: absolute; inset: 0; background-color: #1B1A24;
-    background-image:
-      linear-gradient(90deg, transparent 49%, rgba(4,79,186,0.14) 49%, rgba(4,79,186,0.14) 51%, transparent 51%),
-      linear-gradient(0deg, transparent 49%, rgba(4,79,186,0.10) 49%, rgba(4,79,186,0.10) 51%, transparent 51%);
-    background-size: 120px 120px;
-  }
-  .glow { position: absolute; inset: 0; background: radial-gradient(ellipse 65% 55% at 50% 45%, rgba(0,175,80,0.12) 0%, rgba(27,26,36,0) 70%); }
-  .grain { position: absolute; inset: 0; opacity: 0.04; }
-
-  .ghost-watermark {
-    position: absolute; bottom: 20px; left: 0; right: 0;
-    text-align: center; font-size: 96px; font-weight: 800;
-    color: #00AF50; opacity: 0.06; letter-spacing: 0.06em;
-    white-space: nowrap; pointer-events: none; line-height: 1;
-  }
-
-  .header { position: absolute; top: 60px; left: 80px; right: 80px; display: flex; align-items: center; justify-content: space-between; }
-  .pill { border: 1.5px solid #00AF50; color: #00AF50; border-radius: 40px; padding: 12px 28px; font-size: 22px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
-
-  .slide-title { position: absolute; top: 152px; left: 80px; right: 80px; }
-  .slide-title h2 { font-size: 54px; font-weight: 800; color: #FFFFFF; text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.1; margin-bottom: 12px; }
-  .title-line { width: 60px; height: 3px; background: linear-gradient(90deg, #00AF50, rgba(0,175,80,0.2)); }
-
-  /* Таблица сравнения */
-  .comparison-table {
-    position: absolute; top: 280px; left: 80px; right: 80px;
-  }
-  .table-header {
-    display: grid; grid-template-columns: 1fr 1fr 1fr;
-    gap: 0; margin-bottom: 0;
-  }
-  .th { padding: 16px 20px; font-size: 19px; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; }
-  .th-param { color: rgba(65,142,241,0.65); }
-  .th-standard { background: rgba(255,100,0,0.10); border: 1px solid rgba(255,100,0,0.25); border-radius: 10px 0 0 0; color: #FF7A1F; text-align: center; }
-  .th-zg { background: rgba(0,175,80,0.12); border: 1px solid rgba(0,175,80,0.30); border-radius: 0 10px 0 0; color: #00AF50; text-align: center; }
-
-  .table-row {
-    display: grid; grid-template-columns: 1fr 1fr 1fr;
-    gap: 0;
-  }
-  .table-row:last-child .td-param { border-radius: 0 0 0 10px; }
-  .table-row:last-child .td-standard { border-radius: 0; }
-  .table-row:last-child .td-zg { border-radius: 0 0 10px 0; }
-
-  .td { padding: 15px 20px; border: 1px solid rgba(65,142,241,0.12); border-top: none; }
-  .td-param { font-size: 21px; font-weight: 700; color: rgba(255,255,255,0.85); }
-  .td-standard { font-size: 26px; font-weight: 800; color: #FF7A1F; text-align: center; background: rgba(255,100,0,0.06); border-color: rgba(255,100,0,0.18); }
-  .td-standard .sub { font-size: 17px; font-weight: 400; color: rgba(255,122,31,0.70); display: block; margin-top: 2px; }
-  .td-zg { font-size: 26px; font-weight: 800; color: #00AF50; text-align: center; background: rgba(0,175,80,0.08); border-color: rgba(0,175,80,0.22); }
-  .td-zg .sub { font-size: 17px; font-weight: 400; color: rgba(0,175,80,0.70); display: block; margin-top: 2px; }
-
-  .cta-block {
-    position: absolute; bottom: 88px; left: 80px; right: 80px;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 26px 36px;
-    background: rgba(4,79,186,0.12); border: 1px solid rgba(65,142,241,0.25);
-    border-radius: 14px;
-  }
-  .cta-text { font-size: 26px; font-weight: 400; color: rgba(255,255,255,0.85); line-height: 1.45; }
-  .cta-text strong { color: #FFFFFF; font-weight: 700; }
-  .cta-link { font-size: 24px; font-weight: 700; color: #418EF1; letter-spacing: 0.04em; white-space: nowrap; padding: 16px 32px; border: 1.5px solid #418EF1; border-radius: 40px; flex-shrink: 0; }
-
-  .logo-mark { position: absolute; bottom: 28px; right: 80px; font-size: 18px; font-weight: 700; color: #418EF1; letter-spacing: 0.12em; opacity: 0.7; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { width:1080px; height:1080px; overflow:hidden; background:#1B1A24; font-family:'Manrope','Tahoma',sans-serif; }
+  .slide { position:relative; width:1080px; height:1080px; overflow:hidden; background:#1B1A24; }
+  .grain { position:absolute; inset:0; opacity:0.035; }
 </style>
 </head>
 <body>
 <div class="slide">
-  <div class="pcb-bg"></div>
-  <div class="glow"></div>
+
+  <!-- PCB grid -->
+  <div style="position:absolute;inset:0;
+    background-image:
+      linear-gradient(90deg,transparent 49.5%,rgba(65,142,241,0.07) 49.5%,rgba(65,142,241,0.07) 50.5%,transparent 50.5%),
+      linear-gradient(0deg,transparent 49.5%,rgba(65,142,241,0.05) 49.5%,rgba(65,142,241,0.05) 50.5%,transparent 50.5%);
+    background-size:80px 80px;"></div>
+
+  <!-- LEFT zone tint (orange/danger) -->
+  <div style="position:absolute;top:0;left:0;width:480px;height:1080px;
+    background:linear-gradient(135deg, rgba(197,90,17,0.08) 0%, transparent 70%);
+    pointer-events:none;"></div>
+
+  <!-- RIGHT zone tint (green/success) -->
+  <div style="position:absolute;top:0;right:0;width:480px;height:1080px;
+    background:linear-gradient(225deg, rgba(0,175,80,0.10) 0%, transparent 70%);
+    pointer-events:none;"></div>
+
+  <!-- Grain -->
   <svg class="grain" xmlns="http://www.w3.org/2000/svg">
     <filter id="g"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
     <rect width="100%" height="100%" filter="url(#g)"/>
   </svg>
 
-  <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:0.18" viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg">
-    <path d="M 0 120 L 80 120 L 120 80 L 120 0" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.5"/>
-    <path d="M 1080 120 L 1000 120 L 960 80 L 960 0" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.5"/>
-    <path d="M 0 960 L 80 960 L 120 1000 L 120 1080" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.5"/>
-    <path d="M 1080 960 L 1000 960 L 960 1000 L 960 1080" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.5"/>
-    <line x1="0" y1="200" x2="200" y2="200" stroke="#044FBA" stroke-width="1.5"/>
-    <line x1="880" y1="200" x2="1080" y2="200" stroke="#044FBA" stroke-width="1.5"/>
-    <circle cx="200" cy="200" r="5" fill="none" stroke="#00AF50" stroke-width="1.5"/>
-    <circle cx="880" cy="200" r="5" fill="none" stroke="#00AF50" stroke-width="1.5"/>
+  <!-- SVG decorations -->
+  <svg style="position:absolute;inset:0;width:1080px;height:1080px" viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg">
+
+    <!-- Center vertical split line -->
+    <line x1="540" y1="120" x2="540" y2="960" stroke="url(#splitGrad)" stroke-width="1.5" opacity="0.6"/>
+    <defs>
+      <linearGradient id="splitGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#044FBA" stop-opacity="0"/>
+        <stop offset="30%" stop-color="#418EF1" stop-opacity="0.6"/>
+        <stop offset="50%" stop-color="#FFFFFF" stop-opacity="0.4"/>
+        <stop offset="70%" stop-color="#00AF50" stop-opacity="0.6"/>
+        <stop offset="100%" stop-color="#00AF50" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+
+    <!-- Center arrow -->
+    <polygon points="540,490 518,460 562,460" fill="#FFFFFF" opacity="0.25"/>
+    <polygon points="540,520 518,490 562,490" fill="#FFFFFF" opacity="0.15"/>
+
+    <!-- Left: faint "ДО" watermark -->
+    <text x="240" y="680" text-anchor="middle" font-family="Tahoma,sans-serif"
+      font-size="300" font-weight="800" fill="#C55A11" opacity="0.05">ДО</text>
+
+    <!-- Right: faint "ПОСЛЕ" watermark -->
+    <text x="800" y="680" text-anchor="middle" font-family="Tahoma,sans-serif"
+      font-size="180" font-weight="800" fill="#00AF50" opacity="0.05">ПОСЛЕ</text>
+
+    <!-- Top circuit traces -->
+    <path d="M 80 52 L 160 52 L 190 82 L 300 82" fill="none" stroke="#C55A11" stroke-width="1.2" opacity="0.30"/>
+    <circle cx="160" cy="52" r="3" fill="none" stroke="#C55A11" stroke-width="1.2" opacity="0.35"/>
+    <path d="M 1000 52 L 920 52 L 890 82 L 780 82" fill="none" stroke="#00AF50" stroke-width="1.2" opacity="0.30"/>
+    <circle cx="920" cy="52" r="3" fill="none" stroke="#00AF50" stroke-width="1.2" opacity="0.35"/>
+
+    <!-- Bottom circuit -->
+    <path d="M 80 1028 L 200 1028 L 230 998 L 380 998" fill="none" stroke="#418EF1" stroke-width="1.2" opacity="0.22"/>
+    <path d="M 1000 1028 L 880 1028 L 850 998 L 700 998" fill="none" stroke="#418EF1" stroke-width="1.2" opacity="0.22"/>
   </svg>
 
-  <div class="ghost-watermark">БИОПРИНТЕХ</div>
-
-  <div class="header">
-    <div class="pill">РЕЗУЛЬТАТ</div>
-  </div>
-
-  <div class="slide-title">
-    <h2>Экономика в сравнении</h2>
-    <div class="title-line"></div>
-  </div>
-
-  <div class="comparison-table">
-    <div class="table-header">
-      <div class="th th-param">Показатель</div>
-      <div class="th th-standard">Стандарт</div>
-      <div class="th th-zg">Аэратор ЗГ</div>
+  <!-- HEADER -->
+  <div style="position:absolute;top:0;left:0;right:0;height:112px;
+    display:flex;align-items:center;justify-content:center;gap:0;
+    border-bottom:1px solid rgba(65,142,241,0.12);">
+    <div style="flex:1;text-align:center;font-size:28px;font-weight:800;color:rgba(255,122,31,0.85);letter-spacing:0.12em;text-transform:uppercase;">
+      СТАНДАРТ
     </div>
-    <div class="table-row">
-      <div class="td td-param">Стоимость O₂</div>
-      <div class="td td-standard">3–5 руб/м³</div>
-      <div class="td td-zg">0,8 руб/м³</div>
+    <div style="width:1px;height:40px;background:rgba(255,255,255,0.12);"></div>
+    <div style="width:100px;text-align:center;font-size:22px;font-weight:700;color:rgba(255,255,255,0.30);letter-spacing:0.06em;">
+      vs
     </div>
-    <div class="table-row">
-      <div class="td td-param">kLa системы</div>
-      <div class="td td-standard">3–7 ч⁻¹</div>
-      <div class="td td-zg">200–300 ч⁻¹</div>
-    </div>
-    <div class="table-row">
-      <div class="td td-param">Плотность посадки</div>
-      <div class="td td-standard">50–80 кг/м³</div>
-      <div class="td td-zg">150+ кг/м³</div>
-    </div>
-    <div class="table-row">
-      <div class="td td-param">Рентабельность</div>
-      <div class="td td-standard">25%</div>
-      <div class="td td-zg">45–55%</div>
-    </div>
-    <div class="table-row">
-      <div class="td td-param">Энергозатраты</div>
-      <div class="td td-standard">база</div>
-      <div class="td td-zg">−25%</div>
-    </div>
-    <div class="table-row">
-      <div class="td td-param">Окупаемость</div>
-      <div class="td td-standard">—</div>
-      <div class="td td-zg">18 мес.</div>
+    <div style="width:1px;height:40px;background:rgba(255,255,255,0.12);"></div>
+    <div style="flex:1;text-align:center;font-size:28px;font-weight:800;color:rgba(0,175,80,0.90);letter-spacing:0.12em;text-transform:uppercase;">
+      АЭРАТОР ЗГ
     </div>
   </div>
 
-  <div class="cta-block">
-    <div class="cta-text">
-      <strong>Рассчитать экономику под вашу систему</strong><br>
-      УЗВ, рыбоводные пруды, садковые хозяйства
+  <!-- LEFT column metrics -->
+  <div style="position:absolute;top:130px;left:40px;width:460px;">
+
+    <div style="padding:20px 24px 16px 24px;border-bottom:1px solid rgba(255,100,0,0.15);">
+      <div style="font-size:16px;font-weight:700;color:rgba(197,90,17,0.60);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;">Стоимость O₂</div>
+      <div style="font-size:72px;font-weight:800;color:#FF7A1F;line-height:1;letter-spacing:-0.02em;">3–5</div>
+      <div style="font-size:26px;font-weight:700;color:rgba(255,122,31,0.70);margin-top:2px;">руб/м³</div>
     </div>
-    <div class="cta-link">limatech86.ru</div>
+
+    <div style="padding:20px 24px 16px 24px;border-bottom:1px solid rgba(255,100,0,0.15);">
+      <div style="font-size:16px;font-weight:700;color:rgba(197,90,17,0.60);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;">Скорость растворения</div>
+      <div style="font-size:72px;font-weight:800;color:#FF7A1F;line-height:1;letter-spacing:-0.02em;">3–7</div>
+      <div style="font-size:26px;font-weight:700;color:rgba(255,122,31,0.70);margin-top:2px;">kLa ч⁻¹</div>
+    </div>
+
+    <div style="padding:20px 24px 16px 24px;border-bottom:1px solid rgba(255,100,0,0.15);">
+      <div style="font-size:16px;font-weight:700;color:rgba(197,90,17,0.60);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;">Плотность посадки</div>
+      <div style="font-size:72px;font-weight:800;color:#FF7A1F;line-height:1;letter-spacing:-0.02em;">50–80</div>
+      <div style="font-size:26px;font-weight:700;color:rgba(255,122,31,0.70);margin-top:2px;">кг/м³</div>
+    </div>
+
+    <div style="padding:20px 24px 16px 24px;border-bottom:1px solid rgba(255,100,0,0.15);">
+      <div style="font-size:16px;font-weight:700;color:rgba(197,90,17,0.60);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;">Рентабельность</div>
+      <div style="font-size:72px;font-weight:800;color:#FF7A1F;line-height:1;letter-spacing:-0.02em;">25%</div>
+      <div style="font-size:22px;font-weight:400;color:rgba(255,122,31,0.55);margin-top:2px;">физический потолок</div>
+    </div>
+
   </div>
 
-  <div class="logo-mark">БП</div>
+  <!-- RIGHT column metrics -->
+  <div style="position:absolute;top:130px;right:40px;width:460px;">
+
+    <div style="padding:20px 24px 16px 24px;border-bottom:1px solid rgba(0,175,80,0.18);">
+      <div style="font-size:16px;font-weight:700;color:rgba(0,175,80,0.60);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;">Стоимость O₂</div>
+      <div style="font-size:72px;font-weight:800;color:#00AF50;line-height:1;letter-spacing:-0.02em;">0,8</div>
+      <div style="font-size:26px;font-weight:700;color:rgba(0,175,80,0.75);margin-top:2px;">руб/м³  <span style="font-size:18px;font-weight:400;color:rgba(0,175,80,0.50);">↓ в 4–6×</span></div>
+    </div>
+
+    <div style="padding:20px 24px 16px 24px;border-bottom:1px solid rgba(0,175,80,0.18);">
+      <div style="font-size:16px;font-weight:700;color:rgba(0,175,80,0.60);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;">Скорость растворения</div>
+      <div style="font-size:72px;font-weight:800;color:#00AF50;line-height:1;letter-spacing:-0.02em;">200–300</div>
+      <div style="font-size:26px;font-weight:700;color:rgba(0,175,80,0.75);margin-top:2px;">kLa ч⁻¹  <span style="font-size:18px;font-weight:400;color:rgba(0,175,80,0.50);">↑ в 5–40×</span></div>
+    </div>
+
+    <div style="padding:20px 24px 16px 24px;border-bottom:1px solid rgba(0,175,80,0.18);">
+      <div style="font-size:16px;font-weight:700;color:rgba(0,175,80,0.60);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;">Плотность посадки</div>
+      <div style="font-size:72px;font-weight:800;color:#00AF50;line-height:1;letter-spacing:-0.02em;">150+</div>
+      <div style="font-size:26px;font-weight:700;color:rgba(0,175,80,0.75);margin-top:2px;">кг/м³  <span style="font-size:18px;font-weight:400;color:rgba(0,175,80,0.50);">×3 к площади</span></div>
+    </div>
+
+    <div style="padding:20px 24px 16px 24px;border-bottom:1px solid rgba(0,175,80,0.18);">
+      <div style="font-size:16px;font-weight:700;color:rgba(0,175,80,0.60);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;">Рентабельность</div>
+      <div style="font-size:72px;font-weight:800;color:#00AF50;line-height:1;letter-spacing:-0.02em;">45–55%</div>
+      <div style="font-size:22px;font-weight:400;color:rgba(0,175,80,0.55);margin-top:2px;">ROI 18 мес.</div>
+    </div>
+
+  </div>
+
+  <!-- Bottom CTA bar -->
+  <div style="position:absolute;bottom:0;left:0;right:0;height:72px;
+    background:rgba(4,79,186,0.12);border-top:1px solid rgba(65,142,241,0.20);
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 60px;">
+    <div style="font-size:22px;font-weight:400;color:rgba(255,255,255,0.75);">
+      Рассчитать экономику под вашу систему →
+    </div>
+    <div style="font-size:22px;font-weight:700;color:#418EF1;letter-spacing:0.06em;">limatech86.ru</div>
+  </div>
+
+  <div style="position:absolute;bottom:22px;right:80px;font-size:16px;font-weight:700;color:#418EF1;letter-spacing:0.12em;opacity:0.45;">БП</div>
 </div>
 </body>
 </html>
