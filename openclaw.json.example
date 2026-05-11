@@ -1,37 +1,63 @@
 {
   "$schema": "https://docs.openclaw.ai/schemas/openclaw.json",
-  "name": "bit-and-pix-smm",
-  "home": "/root/smm-system",
 
-  "provider": {
-    "type": "openai-compatible",
-    "baseUrl": "${LITELLM_URL}",
-    "apiKey": "${LITELLM_KEY}"
+  "agents": {
+    "defaults": {
+      "workspace": "/root/smm-system",
+      "repoRoot": "/root/smm-system",
+      "skipBootstrap": true,
+      "model": {
+        "primary": "litellm-smm/smm/claude-sonnet-4.6",
+        "fallbacks": ["litellm-smm/smm/claude-haiku-4.5"]
+      }
+    }
   },
 
-  "defaultAgent": "orchestrator",
-  "agentsDir": "/root/smm-system/agents",
-  "memoryDir": "/root/smm-system/.openclaw/memory",
+  "gateway": {
+    "mode": "local",
+    "bind": "loopback",
+    "port": 18789,
+    "auth": {
+      "mode": "token",
+      "token": "${OPENCLAW_GATEWAY_TOKEN}"
+    }
+  },
+
+  "tools": { "profile": "coding" },
+  "session": { "dmScope": "per-channel-peer" },
+
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "litellm-smm": {
+        "baseUrl": "${LITELLM_URL}",
+        "api": "openai-completions",
+        "apiKey": "${LITELLM_KEY}",
+        "models": [
+          { "id": "smm/claude-sonnet-4.6",  "name": "Claude Sonnet 4.6 (LiteLLM)", "api": "openai-completions", "input": ["text", "image"] },
+          { "id": "smm/claude-haiku-4.5",   "name": "Claude Haiku 4.5 (LiteLLM)",  "api": "openai-completions", "input": ["text", "image"] },
+          { "id": "smm/claude-opus-4-7",    "name": "Claude Opus 4.7 (LiteLLM)",   "api": "openai-completions", "input": ["text", "image"] },
+          { "id": "smm/deepseek-v3",        "name": "DeepSeek V3 (LiteLLM)",       "api": "openai-completions", "input": ["text"] },
+          { "id": "smm/gemini-2.5-flash",   "name": "Gemini 2.5 Flash (LiteLLM)",  "api": "openai-completions", "input": ["text", "image"] },
+          { "id": "smm/gemini-2.5-pro",     "name": "Gemini 2.5 Pro (LiteLLM)",    "api": "openai-completions", "input": ["text", "image"] }
+        ]
+      }
+    }
+  },
 
   "channels": {
     "telegram": {
       "enabled": true,
       "botToken": "${TELEGRAM_BOT_TOKEN}",
-
       "dmPolicy": "disabled",
-
       "groupPolicy": "allowlist",
+      "groupAllowFrom": ["telegram:${TELEGRAM_OWNER_ID}"],
       "groups": {
         "${TELEGRAM_GROUP_ID}": {
           "requireMention": true,
-          "defaultAgent": "orchestrator"
+          "groupPolicy": "open"
         }
       }
     }
-  },
-
-  "logging": {
-    "level": "info",
-    "file": "/var/log/openclaw/openclaw.log"
   }
 }

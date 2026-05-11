@@ -6,6 +6,20 @@
 
 ---
 
+## 11.05.2026 (обновление 3) — OpenClaw задеплоен на RU-сервер
+
+- **OpenClaw 2026.5.7** на `5.42.117.201`, user-systemd сервис от root, gateway loopback `127.0.0.1:18789`. EnvironmentFile подцепляет `/root/smm-system/.env` — `tools/*.mjs` (fal.ai, S3, tg-send) видят все креды.
+- **Node 22 обязательно** (LTS 18 не подходит — `Array.prototype.toSorted` отсутствует, `openclaw` postinstall падает).
+- **npm install — БЕЗ прокси**: registry.npmjs.org доступен с RU напрямую, а через tinyproxy CONNECT возвращает 407.
+- **Новая схема `openclaw.json`** (несовместимая со старой): `agents.defaults.{workspace,repoRoot,model.primary,model.fallbacks}`, `models.providers.<id>.{baseUrl,api,apiKey,models[]}`, `channels.telegram.{groupPolicy,groupAllowFrom,groups[chat_id]}`. `defaultAgent` per-group больше не существует — оркестратор берётся как `agents.defaults.model.primary`.
+- **Onboard non-interactive** — `--auth-choice custom-api-key` + `--custom-base-url $LITELLM_URL` (не `litellm-api-key`, тот хардкодит chat URL). После onboard — `openclaw config patch` для всех 6 моделей `litellm-smm/smm/*`, workspace и Telegram allowlist.
+- **TELEGRAM_OWNER_ID обязателен** — без `groupAllowFrom` при `groupPolicy: allowlist` все сообщения silent-drop'аются. Берётся из `getChatAdministrators` группы (Pavel @reshifter = `1642013697`).
+- **Smoke-тест прошёл**: `openclaw infer model run --model litellm-smm/smm/claude-haiku-4.5 --prompt "PONG"` → `PONG`. Цепочка OpenClaw → LiteLLM → OpenRouter → Anthropic жива.
+- **`docs/openclaw-deploy.md`** переписан под фактический процесс. **`openclaw.json.example`** — новая схема (envsubst-ready).
+- **Fine-grained GitHub PAT** заменён на `smm-system`-only (Contents R+W, Metadata Read). Старый широкий PAT — revoke в UI.
+
+---
+
 ## 11.05.2026 (обновление 2) — Telegram форум-топики + S3 хранилище
 
 - **Группа SEO-claw в Telegram** — 8 топиков:
