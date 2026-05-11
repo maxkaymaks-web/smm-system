@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<style>
+  @font-face { font-family: 'Manrope'; font-weight: 400; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Regular.woff2') format('woff2'); }
+  @font-face { font-family: 'Manrope'; font-weight: 700; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Bold.woff2') format('woff2'); }
+  @font-face { font-family: 'Manrope'; font-weight: 800; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-ExtraBold.woff2') format('woff2'); }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1080px; height: 1080px; overflow: hidden; background: #1B1A24; font-family: 'Manrope', 'Tahoma', sans-serif; }
+  .slide { position: relative; width: 1080px; height: 1080px; background: #1B1A24; overflow: hidden; }
+
+  .pcb-bg {
+    position: absolute; inset: 0; background-color: #1B1A24;
+    background-image:
+      linear-gradient(90deg, transparent 49%, rgba(4,79,186,0.12) 49%, rgba(4,79,186,0.12) 51%, transparent 51%),
+      linear-gradient(0deg, transparent 49%, rgba(4,79,186,0.08) 49%, rgba(4,79,186,0.08) 51%, transparent 51%);
+    background-size: 120px 120px;
+  }
+  .glow { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 55% at 50% 40%, rgba(4,79,186,0.16) 0%, rgba(27,26,36,0) 70%); }
+  .grain { position: absolute; inset: 0; opacity: 0.04; }
+
+  .ghost-num {
+    position: absolute; bottom: 20px; left: 0; right: 0;
+    text-align: center; font-size: 96px; font-weight: 800;
+    color: #044FBA; opacity: 0.07; letter-spacing: 0.06em;
+    white-space: nowrap; pointer-events: none; line-height: 1;
+  }
+
+  .header { position: absolute; top: 60px; left: 80px; right: 80px; display: flex; align-items: center; justify-content: space-between; }
+  .pill { border: 1.5px solid #418EF1; color: #418EF1; border-radius: 40px; padding: 12px 28px; font-size: 22px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  .slide-title { position: absolute; top: 152px; left: 80px; right: 80px; }
+  .slide-title h2 { font-size: 50px; font-weight: 800; color: #FFFFFF; text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.1; margin-bottom: 12px; }
+  .title-line { width: 60px; height: 3px; background: linear-gradient(90deg, #044FBA, #418EF1); }
+
+  /* Три рычага — слева */
+  .levers {
+    position: absolute; top: 278px; left: 80px; width: 520px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .lever-card {
+    background: rgba(4,79,186,0.10);
+    border: 1px solid rgba(65,142,241,0.22);
+    border-radius: 10px; padding: 18px 22px;
+    display: flex; align-items: flex-start; gap: 18px;
+  }
+  .lever-num {
+    font-size: 16px; font-weight: 700; color: rgba(65,142,241,0.65);
+    letter-spacing: 0.14em; text-transform: uppercase; flex-shrink: 0;
+    width: 28px; padding-top: 3px;
+  }
+  .lever-content {}
+  .lever-title { font-size: 24px; font-weight: 800; color: #FFFFFF; margin-bottom: 6px; line-height: 1.2; }
+  .lever-desc { font-size: 19px; font-weight: 400; color: rgba(91,173,247,0.85); line-height: 1.45; }
+  .lever-desc em { color: #418EF1; font-style: normal; font-weight: 700; }
+
+  /* Результирующий блок справа */
+  .result-block {
+    position: absolute; top: 278px; right: 80px; width: 380px;
+  }
+  .result-label {
+    font-size: 18px; font-weight: 700; color: rgba(65,142,241,0.60);
+    letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 18px;
+  }
+  .result-big {
+    background: rgba(0,175,80,0.10);
+    border: 1px solid rgba(0,175,80,0.30);
+    border-radius: 14px; padding: 24px 22px; margin-bottom: 16px;
+    text-align: center;
+  }
+  .result-val { font-size: 100px; font-weight: 800; color: #00AF50; line-height: 1; letter-spacing: -0.03em; }
+  .result-unit { font-size: 34px; font-weight: 700; color: rgba(0,175,80,0.80); display: block; margin-top: 4px; }
+  .result-sub { font-size: 21px; font-weight: 400; color: rgba(91,173,247,0.75); margin-top: 10px; line-height: 1.4; }
+
+  .vs-arrow {
+    text-align: center; padding: 12px 0;
+    font-size: 19px; font-weight: 700;
+    color: rgba(65,142,241,0.50); letter-spacing: 0.08em;
+  }
+
+  .result-compare {
+    background: rgba(255,100,0,0.08);
+    border: 1px solid rgba(255,100,0,0.25);
+    border-radius: 10px; padding: 16px 20px;
+    text-align: center;
+  }
+  .compare-val { font-size: 48px; font-weight: 800; color: #FF7A1F; line-height: 1; }
+  .compare-unit { font-size: 24px; font-weight: 700; color: rgba(255,122,31,0.75); display: block; margin-top: 2px; }
+  .compare-label { font-size: 19px; font-weight: 400; color: rgba(255,255,255,0.60); margin-top: 8px; }
+
+  .logo-mark { position: absolute; bottom: 28px; right: 80px; font-size: 18px; font-weight: 700; color: #418EF1; letter-spacing: 0.12em; opacity: 0.7; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="pcb-bg"></div>
+  <div class="glow"></div>
+  <svg class="grain" xmlns="http://www.w3.org/2000/svg">
+    <filter id="g"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+    <rect width="100%" height="100%" filter="url(#g)"/>
+  </svg>
+  <div class="ghost-num">МЕХАНИЗМ</div>
+
+  <div class="header">
+    <div class="pill">КАК ЭТО РАБОТАЕТ</div>
+  </div>
+
+  <div class="slide-title">
+    <h2>Три рычага снижения<br>стоимости O₂</h2>
+    <div class="title-line"></div>
+  </div>
+
+  <div class="levers">
+    <div class="lever-card">
+      <div class="lever-num">01</div>
+      <div class="lever-content">
+        <div class="lever-title">Снарядный режим течения</div>
+        <div class="lever-desc">Пузырьки движутся в геликоидной спирали — упорядоченно, не хаотично. Время контакта с водой кратно возрастает. <em>Тот же объём газа даёт больше O₂</em></div>
+      </div>
+    </div>
+    <div class="lever-card">
+      <div class="lever-num">02</div>
+      <div class="lever-content">
+        <div class="lever-title">Электростатика граничного слоя</div>
+        <div class="lever-desc">Заряды поверхности геликоида ориентируют молекулы воды — реактивность границы газ–жидкость растёт. <em>kL(O₂) × 9,71</em></div>
+      </div>
+    </div>
+    <div class="lever-card">
+      <div class="lever-num">03</div>
+      <div class="lever-content">
+        <div class="lever-title">kLa = 200–300 ч⁻¹</div>
+        <div class="lever-desc">Против 3–7 ч⁻¹ у стандартных аэраторов. Скорость растворения O₂ <em>в 5–40 раз выше</em> при снижении энергозатрат &gt;25%</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="result-block">
+    <div class="result-label">Результат</div>
+    <div class="result-big">
+      <div class="result-val">0,8</div>
+      <div class="result-unit">руб/м³</div>
+      <div class="result-sub">Стоимость растворённого O₂<br>в реальных условиях УЗВ</div>
+    </div>
+    <div class="vs-arrow">↑ вместо ↓</div>
+    <div class="result-compare">
+      <div class="compare-val">3–5</div>
+      <div class="compare-unit">руб/м³</div>
+      <div class="compare-label">стандартная диффузорная аэрация</div>
+    </div>
+  </div>
+
+  <div class="logo-mark">БП</div>
+</div>
+</body>
+</html>
