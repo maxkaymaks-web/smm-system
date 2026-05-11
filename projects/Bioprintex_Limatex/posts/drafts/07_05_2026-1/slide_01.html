@@ -4,181 +4,185 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=1080">
 <style>
-  @font-face { font-family: 'Manrope'; font-weight: 400; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Regular.woff2') format('woff2'); }
-  @font-face { font-family: 'Manrope'; font-weight: 700; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Bold.woff2') format('woff2'); }
-  @font-face { font-family: 'Manrope'; font-weight: 800; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-ExtraBold.woff2') format('woff2'); }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { width:1080px; height:1080px; overflow:hidden; background:#1B1A24; font-family:'Manrope','Tahoma',sans-serif; }
-  .slide { position:relative; width:1080px; height:1080px; overflow:hidden; background:#1B1A24; }
-
-  /* PCB grid */
-  .pcb {
-    position:absolute; inset:0;
-    background-image:
-      linear-gradient(90deg, transparent 49.5%, rgba(65,142,241,0.09) 49.5%, rgba(65,142,241,0.09) 50.5%, transparent 50.5%),
-      linear-gradient(0deg,   transparent 49.5%, rgba(65,142,241,0.07) 49.5%, rgba(65,142,241,0.07) 50.5%, transparent 50.5%);
-    background-size: 80px 80px;
-  }
-  .grain { position:absolute; inset:0; opacity:0.035; }
-
-  /* Diagonal bg accent - right triangle */
-  .diag-fill {
-    position:absolute; top:0; right:0;
-    width:0; height:0;
-    border-style:solid;
-    border-width:0 420px 1080px 0;
-    border-color:transparent rgba(4,79,186,0.09) transparent transparent;
-  }
+  @font-face { font-family:'Manrope'; font-weight:400; src:url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Regular.woff2') format('woff2'); }
+  @font-face { font-family:'Manrope'; font-weight:700; src:url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Bold.woff2') format('woff2'); }
+  @font-face { font-family:'Manrope'; font-weight:800; src:url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-ExtraBold.woff2') format('woff2'); }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{width:1080px;height:1080px;overflow:hidden;background:#1B1A24;font-family:'Manrope','Tahoma',sans-serif;}
 </style>
 </head>
 <body>
-<div class="slide">
-  <div class="pcb"></div>
+<div style="position:relative;width:1080px;height:1080px;overflow:hidden;background:#1B1A24;">
 
-  <!-- Diagonal fill top-right -->
-  <div class="diag-fill"></div>
+  <!-- PCB grid -->
+  <div style="position:absolute;inset:0;
+    background-image:
+      linear-gradient(90deg,transparent 49.5%,rgba(65,142,241,0.08) 49.5%,rgba(65,142,241,0.08) 50.5%,transparent 50.5%),
+      linear-gradient(0deg,transparent 49.5%,rgba(65,142,241,0.06) 49.5%,rgba(65,142,241,0.06) 50.5%,transparent 50.5%);
+    background-size:80px 80px;"></div>
+
+  <!-- Top glow -->
+  <div style="position:absolute;top:-80px;left:50%;transform:translateX(-50%);
+    width:900px;height:420px;
+    background:radial-gradient(ellipse 80% 90%, rgba(4,79,186,0.12) 0%, transparent 70%);
+    pointer-events:none;"></div>
+
+  <!-- Green glow behind number -->
+  <div style="position:absolute;top:200px;left:-80px;width:680px;height:640px;
+    background:radial-gradient(ellipse 65% 65%, rgba(0,175,80,0.10) 0%, transparent 70%);
+    pointer-events:none;"></div>
 
   <!-- Grain -->
-  <svg class="grain" xmlns="http://www.w3.org/2000/svg">
+  <svg style="position:absolute;inset:0;opacity:0.035" xmlns="http://www.w3.org/2000/svg">
     <filter id="g"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
     <rect width="100%" height="100%" filter="url(#g)"/>
   </svg>
 
-  <!-- SVG layer: orbits + circuit traces + decorations -->
+  <!-- SVG decorations -->
   <svg style="position:absolute;inset:0;width:1080px;height:1080px" viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg">
+    <!-- Corners -->
+    <path d="M 0 96 L 56 96 L 84 68 L 84 0" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.30"/>
+    <circle cx="56" cy="96" r="3.5" fill="none" stroke="#418EF1" stroke-width="1.5" opacity="0.35"/>
+    <path d="M 1080 96 L 1024 96 L 996 68 L 996 0" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.30"/>
+    <circle cx="1024" cy="96" r="3.5" fill="none" stroke="#418EF1" stroke-width="1.5" opacity="0.35"/>
+    <path d="M 0 984 L 56 984 L 84 1012 L 84 1080" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.25"/>
+    <circle cx="56" cy="984" r="3.5" fill="none" stroke="#418EF1" stroke-width="1.5" opacity="0.28"/>
+    <path d="M 1080 984 L 1024 984 L 996 1012 L 996 1080" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.25"/>
+    <circle cx="1024" cy="984" r="3.5" fill="none" stroke="#418EF1" stroke-width="1.5" opacity="0.28"/>
 
-    <!-- Orbital rings around number zone (center ~370,520) -->
-    <circle cx="370" cy="520" r="220" fill="none" stroke="#00AF50" stroke-width="1" opacity="0.12"/>
-    <circle cx="370" cy="520" r="280" fill="none" stroke="#00AF50" stroke-width="1.5" opacity="0.07" stroke-dasharray="12 8"/>
-    <circle cx="370" cy="520" r="345" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.08" stroke-dasharray="4 14"/>
+    <!-- Orbital rings: centered on hero number (~cx=330, cy=460) -->
+    <circle cx="330" cy="460" r="200" fill="none" stroke="#00AF50" stroke-width="1" opacity="0.09"/>
+    <circle cx="330" cy="460" r="260" fill="none" stroke="#00AF50" stroke-width="1" opacity="0.055" stroke-dasharray="8 12"/>
+    <circle cx="330" cy="460" r="322" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.045" stroke-dasharray="3 16"/>
 
-    <!-- Circuit trace - top left corner -->
-    <path d="M 0 90 L 60 90 L 90 60 L 160 60 L 190 30 L 320 30" fill="none" stroke="#418EF1" stroke-width="1.2" opacity="0.35"/>
-    <circle cx="60" cy="90" r="4" fill="none" stroke="#418EF1" stroke-width="1.5" opacity="0.4"/>
-    <circle cx="190" cy="30" r="3" fill="#418EF1" opacity="0.3"/>
-    <circle cx="320" cy="30" r="5" fill="none" stroke="#00AF50" stroke-width="1.5" opacity="0.5"/>
-    <circle cx="320" cy="30" r="2" fill="#00AF50" opacity="0.4"/>
-
-    <!-- Circuit trace - bottom right corner -->
-    <path d="M 1080 990 L 1020 990 L 990 1020 L 880 1020 L 850 1050 L 760 1050" fill="none" stroke="#418EF1" stroke-width="1.2" opacity="0.30"/>
-    <circle cx="1020" cy="990" r="4" fill="none" stroke="#418EF1" stroke-width="1.5" opacity="0.35"/>
-
-    <!-- Vertical divider line (between number zone and right panel) -->
-    <line x1="680" y1="80" x2="680" y2="1000" stroke="#418EF1" stroke-width="1" opacity="0.18"/>
-    <!-- Node on divider -->
-    <circle cx="680" cy="280" r="5" fill="none" stroke="#418EF1" stroke-width="1.5" opacity="0.4"/>
-    <circle cx="680" cy="280" r="2" fill="#418EF1" opacity="0.3"/>
-    <circle cx="680" cy="560" r="5" fill="none" stroke="#00AF50" stroke-width="1.5" opacity="0.4"/>
-    <circle cx="680" cy="560" r="2" fill="#00AF50" opacity="0.35"/>
-    <circle cx="680" cy="820" r="5" fill="none" stroke="#418EF1" stroke-width="1.5" opacity="0.35"/>
-
-    <!-- Small horizontal branches from divider to right -->
-    <line x1="680" y1="280" x2="720" y2="280" stroke="#418EF1" stroke-width="1" opacity="0.3"/>
-    <line x1="680" y1="560" x2="720" y2="560" stroke="#00AF50" stroke-width="1" opacity="0.3"/>
-    <line x1="680" y1="820" x2="720" y2="820" stroke="#418EF1" stroke-width="1" opacity="0.25"/>
-
-    <!-- Diagonal slash accent (decorative) -->
-    <line x1="50" y1="1080" x2="640" y2="140" stroke="#044FBA" stroke-width="1" opacity="0.12"/>
-
-    <!-- Bottom horizontal line accent -->
-    <line x1="80" y1="960" x2="640" y2="960" stroke="#418EF1" stroke-width="1" opacity="0.22"/>
-    <line x1="80" y1="960" x2="80" y2="1080" stroke="#418EF1" stroke-width="1" opacity="0.22"/>
-
-    <!-- Top tag connector -->
-    <line x1="80" y1="60" x2="80" y2="120" stroke="#418EF1" stroke-width="1" opacity="0.25"/>
+    <!-- Vertical divider -->
+    <line x1="648" y1="96" x2="648" y2="984" stroke="#418EF1" stroke-width="1" opacity="0.18"/>
+    <circle cx="648" cy="320" r="4" fill="none" stroke="#00AF50" stroke-width="1.5" opacity="0.38"/>
+    <circle cx="648" cy="320" r="1.5" fill="#00AF50" opacity="0.35"/>
+    <circle cx="648" cy="590" r="4" fill="none" stroke="#418EF1" stroke-width="1.5" opacity="0.30"/>
+    <circle cx="648" cy="590" r="1.5" fill="#418EF1" opacity="0.28"/>
+    <circle cx="648" cy="860" r="4" fill="none" stroke="#00AF50" stroke-width="1.5" opacity="0.25"/>
+    <circle cx="648" cy="860" r="1.5" fill="#00AF50" opacity="0.22"/>
+    <line x1="648" y1="320" x2="680" y2="320" stroke="#00AF50" stroke-width="1" opacity="0.25"/>
+    <line x1="648" y1="590" x2="680" y2="590" stroke="#418EF1" stroke-width="1" opacity="0.22"/>
+    <line x1="648" y1="860" x2="680" y2="860" stroke="#00AF50" stroke-width="1" opacity="0.18"/>
   </svg>
 
-  <!-- Green radial glow centered on number -->
-  <div style="position:absolute;left:0;top:260px;width:750px;height:540px;
-    background:radial-gradient(ellipse 55% 60% at 34% 50%, rgba(0,175,80,0.13) 0%, transparent 70%);
-    pointer-events:none;"></div>
-
-  <!-- TOP LEFT: brand tag -->
-  <div style="position:absolute;top:52px;left:80px;
-    border:1.5px solid rgba(65,142,241,0.55);color:#5BADF7;
-    border-radius:40px;padding:10px 26px;
-    font-size:20px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;">
-    БИОПРИНТЕХ
+  <!-- HEADER -->
+  <div style="position:absolute;top:0;left:0;right:0;height:96px;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 72px;border-bottom:1px solid rgba(65,142,241,0.12);">
+    <div style="border:1.5px solid rgba(65,142,241,0.55);color:#5BADF7;
+      border-radius:40px;padding:9px 24px;
+      font-size:18px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;">
+      БИОПРИНТЕХ
+    </div>
+    <div style="border:1.5px solid rgba(0,175,80,0.50);color:#00AF50;
+      border-radius:40px;padding:9px 24px;
+      font-size:18px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;">
+      ТЕХНОЛОГИЯ
+    </div>
   </div>
 
-  <!-- TOP RIGHT: category -->
-  <div style="position:absolute;top:52px;right:80px;
-    border:1.5px solid rgba(0,175,80,0.55);color:#00AF50;
-    border-radius:40px;padding:10px 26px;
-    font-size:20px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;">
-    ТЕХНОЛОГИЯ
-  </div>
+  <!-- LEFT ZONE — vertically centered content -->
+  <div style="position:absolute;top:150px;left:72px;width:558px;">
 
-  <!-- LEFT ZONE: giant number -->
-  <div style="position:absolute;top:220px;left:72px;width:620px;">
-    <!-- label -->
-    <div style="font-size:22px;font-weight:700;color:rgba(91,173,247,0.65);
-      letter-spacing:0.18em;text-transform:uppercase;margin-bottom:10px;">
-      Аквакультура · УЗВ
+    <div style="font-size:17px;font-weight:700;color:rgba(91,173,247,0.50);
+      letter-spacing:0.18em;text-transform:uppercase;margin-bottom:16px;">
+      Аквакультура · УЗВ · Рыбоводство
     </div>
-    <!-- main number -->
-    <div style="font-size:310px;font-weight:800;color:#00AF50;
-      line-height:0.88;letter-spacing:-0.04em;
-      text-shadow:0 0 120px rgba(0,175,80,0.25);">
-      0,8
-    </div>
+
+    <!-- hero number -->
+    <div style="font-size:252px;font-weight:800;color:#00AF50;
+      line-height:0.92;letter-spacing:-0.04em;">0,8</div>
+
     <!-- unit -->
-    <div style="font-size:58px;font-weight:700;color:rgba(0,175,80,0.80);
-      letter-spacing:0.02em;margin-top:8px;">
-      руб/м³
-    </div>
+    <div style="font-size:50px;font-weight:700;color:rgba(0,175,80,0.76);
+      letter-spacing:0.01em;margin-top:14px;">руб/м³</div>
+
     <!-- divider -->
-    <div style="width:80px;height:3px;margin-top:28px;margin-bottom:22px;
-      background:linear-gradient(90deg,#00AF50,rgba(0,175,80,0.15));"></div>
+    <div style="width:56px;height:3px;margin-top:30px;margin-bottom:26px;
+      background:linear-gradient(90deg,#00AF50,rgba(0,175,80,0.12));border-radius:2px;"></div>
+
     <!-- subtitle -->
-    <div style="font-size:30px;font-weight:400;color:rgba(91,173,247,0.85);line-height:1.45;max-width:520px;">
+    <div style="font-size:28px;font-weight:400;color:rgba(255,255,255,0.80);
+      line-height:1.5;max-width:510px;">
       Цена кислорода, которая<br>меняет рентабельность
     </div>
+
+    <!-- fact 1 -->
+    <div style="margin-top:38px;display:flex;align-items:center;gap:16px;">
+      <div style="width:4px;height:38px;background:rgba(65,142,241,0.40);border-radius:2px;flex-shrink:0;"></div>
+      <div>
+        <div style="font-size:14px;font-weight:700;color:rgba(91,173,247,0.48);letter-spacing:0.12em;text-transform:uppercase;">kLa системы</div>
+        <div style="font-size:21px;font-weight:700;color:rgba(91,173,247,0.82);">200–300 ч⁻¹ <span style="font-size:17px;font-weight:400;color:rgba(91,173,247,0.48);">vs 3–7 у стандарта</span></div>
+      </div>
+    </div>
+
+    <!-- fact 2 -->
+    <div style="margin-top:22px;display:flex;align-items:center;gap:16px;">
+      <div style="width:4px;height:38px;background:rgba(0,175,80,0.35);border-radius:2px;flex-shrink:0;"></div>
+      <div>
+        <div style="font-size:14px;font-weight:700;color:rgba(91,173,247,0.48);letter-spacing:0.12em;text-transform:uppercase;">Снижение энергозатрат</div>
+        <div style="font-size:21px;font-weight:700;color:rgba(91,173,247,0.82);">−25% <span style="font-size:17px;font-weight:400;color:rgba(91,173,247,0.48);">при той же производительности</span></div>
+      </div>
+    </div>
+
+    <!-- fact 3 -->
+    <div style="margin-top:22px;display:flex;align-items:center;gap:16px;">
+      <div style="width:4px;height:38px;background:rgba(65,142,241,0.30);border-radius:2px;flex-shrink:0;"></div>
+      <div>
+        <div style="font-size:14px;font-weight:700;color:rgba(91,173,247,0.48);letter-spacing:0.12em;text-transform:uppercase;">Плотность посадки</div>
+        <div style="font-size:21px;font-weight:700;color:rgba(91,173,247,0.82);">150+ кг/м³ <span style="font-size:17px;font-weight:400;color:rgba(91,173,247,0.48);">против 50–80 при стандарте</span></div>
+      </div>
+    </div>
+
   </div>
 
-  <!-- RIGHT PANEL: 3 metrics stacked -->
-  <div style="position:absolute;top:200px;left:710px;right:60px;">
-
-    <div style="margin-bottom:32px;">
-      <div style="font-size:17px;font-weight:700;color:rgba(65,142,241,0.55);
-        letter-spacing:0.14em;text-transform:uppercase;margin-bottom:8px;">снижение стоимости O₂</div>
-      <div style="font-size:68px;font-weight:800;color:#00AF50;line-height:1;letter-spacing:-0.02em;">×4–6</div>
-      <div style="font-size:19px;font-weight:400;color:rgba(91,173,247,0.65);margin-top:4px;">
-        против стандарта 3–5 руб/м³
-      </div>
-    </div>
-
-    <div style="width:100%;height:1px;background:rgba(65,142,241,0.18);margin-bottom:32px;"></div>
-
-    <div style="margin-bottom:32px;">
-      <div style="font-size:17px;font-weight:700;color:rgba(65,142,241,0.55);
-        letter-spacing:0.14em;text-transform:uppercase;margin-bottom:8px;">рентабельность</div>
-      <div style="font-size:68px;font-weight:800;color:#00AF50;line-height:1;letter-spacing:-0.02em;">45–55%</div>
-      <div style="font-size:19px;font-weight:400;color:rgba(91,173,247,0.65);margin-top:4px;">
-        против 25% при стандарте
-      </div>
-    </div>
-
-    <div style="width:100%;height:1px;background:rgba(65,142,241,0.18);margin-bottom:32px;"></div>
+  <!-- RIGHT ZONE — 3 metrics, evenly distributed -->
+  <div style="position:absolute;top:160px;left:672px;right:64px;bottom:56px;
+    display:flex;flex-direction:column;justify-content:space-between;">
 
     <div>
-      <div style="font-size:17px;font-weight:700;color:rgba(65,142,241,0.55);
-        letter-spacing:0.14em;text-transform:uppercase;margin-bottom:8px;">окупаемость</div>
-      <div style="font-size:68px;font-weight:800;color:#00AF50;line-height:1;letter-spacing:-0.02em;">18 мес</div>
-      <div style="font-size:19px;font-weight:400;color:rgba(91,173,247,0.65);margin-top:4px;">
-        при средней загрузке УЗВ
+      <div style="font-size:13px;font-weight:700;color:rgba(91,173,247,0.48);
+        letter-spacing:0.16em;text-transform:uppercase;margin-bottom:12px;">снижение стоимости O₂</div>
+      <div style="font-size:64px;font-weight:800;color:#00AF50;line-height:1;letter-spacing:-0.02em;">×4–6</div>
+      <div style="font-size:18px;font-weight:400;color:rgba(91,173,247,0.62);margin-top:8px;line-height:1.4;">
+        против 3–5 руб/м³<br>стандартной аэрации
       </div>
     </div>
+
+    <div style="height:1px;background:rgba(65,142,241,0.14);"></div>
+
+    <div>
+      <div style="font-size:13px;font-weight:700;color:rgba(91,173,247,0.48);
+        letter-spacing:0.16em;text-transform:uppercase;margin-bottom:12px;">рентабельность</div>
+      <div style="font-size:64px;font-weight:800;color:#00AF50;line-height:1;letter-spacing:-0.02em;">45–55%</div>
+      <div style="font-size:18px;font-weight:400;color:rgba(91,173,247,0.62);margin-top:8px;line-height:1.4;">
+        против 25%<br>при стандарте
+      </div>
+    </div>
+
+    <div style="height:1px;background:rgba(65,142,241,0.14);"></div>
+
+    <div>
+      <div style="font-size:13px;font-weight:700;color:rgba(91,173,247,0.48);
+        letter-spacing:0.16em;text-transform:uppercase;margin-bottom:12px;">окупаемость</div>
+      <div style="font-size:64px;font-weight:800;color:#00AF50;line-height:1;letter-spacing:-0.02em;">18 мес.</div>
+      <div style="font-size:18px;font-weight:400;color:rgba(91,173,247,0.62);margin-top:8px;line-height:1.4;">
+        при средней<br>загрузке УЗВ
+      </div>
+    </div>
+
   </div>
 
-  <!-- Bottom left corner label -->
-  <div style="position:absolute;bottom:36px;left:80px;
-    font-size:18px;font-weight:700;color:rgba(65,142,241,0.35);letter-spacing:0.10em;">
-    limatech86.ru
+  <!-- FOOTER -->
+  <div style="position:absolute;bottom:0;left:0;right:0;height:48px;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 72px;border-top:1px solid rgba(65,142,241,0.10);">
+    <div style="font-size:16px;font-weight:700;color:rgba(65,142,241,0.35);letter-spacing:0.08em;">limatech86.ru</div>
+    <div style="font-size:16px;font-weight:700;color:rgba(65,142,241,0.45);letter-spacing:0.12em;">БП</div>
   </div>
-  <!-- Bottom right БП -->
-  <div style="position:absolute;bottom:36px;right:80px;
-    font-size:18px;font-weight:700;color:#418EF1;letter-spacing:0.12em;opacity:0.6;">БП</div>
 
 </div>
 </body>

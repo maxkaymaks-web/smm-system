@@ -4,166 +4,204 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=1080">
 <style>
-  @font-face { font-family: 'Manrope'; font-weight: 400; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Regular.woff2') format('woff2'); }
-  @font-face { font-family: 'Manrope'; font-weight: 700; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Bold.woff2') format('woff2'); }
-  @font-face { font-family: 'Manrope'; font-weight: 800; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-ExtraBold.woff2') format('woff2'); }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { width:1080px; height:1080px; overflow:hidden; background:#1B1A24; font-family:'Manrope','Tahoma',sans-serif; }
-  .slide { position:relative; width:1080px; height:1080px; overflow:hidden; background:#1B1A24; }
-  .grain { position:absolute; inset:0; opacity:0.035; }
+  @font-face { font-family:'Manrope'; font-weight:400; src:url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Regular.woff2') format('woff2'); }
+  @font-face { font-family:'Manrope'; font-weight:700; src:url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Bold.woff2') format('woff2'); }
+  @font-face { font-family:'Manrope'; font-weight:800; src:url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-ExtraBold.woff2') format('woff2'); }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{width:1080px;height:1080px;overflow:hidden;background:#1B1A24;font-family:'Manrope','Tahoma',sans-serif;}
 </style>
 </head>
 <body>
-<div class="slide">
+<div style="position:relative;width:1080px;height:1080px;overflow:hidden;background:#1B1A24;">
 
   <!-- PCB grid -->
   <div style="position:absolute;inset:0;
     background-image:
-      linear-gradient(90deg,transparent 49.5%,rgba(65,142,241,0.07) 49.5%,rgba(65,142,241,0.07) 50.5%,transparent 50.5%),
-      linear-gradient(0deg,transparent 49.5%,rgba(65,142,241,0.05) 49.5%,rgba(65,142,241,0.05) 50.5%,transparent 50.5%);
+      linear-gradient(90deg,transparent 49.5%,rgba(65,142,241,0.08) 49.5%,rgba(65,142,241,0.08) 50.5%,transparent 50.5%),
+      linear-gradient(0deg,transparent 49.5%,rgba(65,142,241,0.06) 49.5%,rgba(65,142,241,0.06) 50.5%,transparent 50.5%);
     background-size:80px 80px;"></div>
 
-  <!-- LEFT zone tint (orange/danger) -->
-  <div style="position:absolute;top:0;left:0;width:480px;height:1080px;
-    background:linear-gradient(135deg, rgba(197,90,17,0.08) 0%, transparent 70%);
+  <!-- Top glow -->
+  <div style="position:absolute;top:-80px;left:50%;transform:translateX(-50%);
+    width:900px;height:420px;
+    background:radial-gradient(ellipse 80% 90%, rgba(4,79,186,0.12) 0%, transparent 70%);
     pointer-events:none;"></div>
 
-  <!-- RIGHT zone tint (green/success) -->
-  <div style="position:absolute;top:0;right:0;width:480px;height:1080px;
-    background:linear-gradient(225deg, rgba(0,175,80,0.10) 0%, transparent 70%);
+  <!-- Left tint: subtle amber -->
+  <div style="position:absolute;top:0;left:0;width:490px;height:1080px;
+    background:linear-gradient(170deg, rgba(176,90,20,0.07) 0%, transparent 75%);
+    pointer-events:none;"></div>
+
+  <!-- Right tint: subtle green -->
+  <div style="position:absolute;top:0;right:0;width:490px;height:1080px;
+    background:linear-gradient(190deg, rgba(0,143,60,0.08) 0%, transparent 75%);
     pointer-events:none;"></div>
 
   <!-- Grain -->
-  <svg class="grain" xmlns="http://www.w3.org/2000/svg">
+  <svg style="position:absolute;inset:0;opacity:0.035" xmlns="http://www.w3.org/2000/svg">
     <filter id="g"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
     <rect width="100%" height="100%" filter="url(#g)"/>
   </svg>
 
   <!-- SVG decorations -->
   <svg style="position:absolute;inset:0;width:1080px;height:1080px" viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg">
-
-    <!-- Center vertical split line -->
-    <line x1="540" y1="120" x2="540" y2="960" stroke="url(#splitGrad)" stroke-width="1.5" opacity="0.6"/>
+    <path d="M 0 96 L 56 96 L 84 68 L 84 0" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.30"/>
+    <circle cx="56" cy="96" r="3.5" fill="none" stroke="#418EF1" stroke-width="1.5" opacity="0.35"/>
+    <path d="M 1080 96 L 1024 96 L 996 68 L 996 0" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.30"/>
+    <circle cx="1024" cy="96" r="3.5" fill="none" stroke="#418EF1" stroke-width="1.5" opacity="0.35"/>
+    <path d="M 0 984 L 56 984 L 84 1012 L 84 1080" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.25"/>
+    <circle cx="56" cy="984" r="3.5" fill="none" stroke="#418EF1" stroke-width="1.5" opacity="0.28"/>
+    <path d="M 1080 984 L 1024 984 L 996 1012 L 996 1080" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.25"/>
+    <circle cx="1024" cy="984" r="3.5" fill="none" stroke="#418EF1" stroke-width="1.5" opacity="0.28"/>
+    <!-- Center vertical split -->
     <defs>
-      <linearGradient id="splitGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#044FBA" stop-opacity="0"/>
-        <stop offset="30%" stop-color="#418EF1" stop-opacity="0.6"/>
-        <stop offset="50%" stop-color="#FFFFFF" stop-opacity="0.4"/>
-        <stop offset="70%" stop-color="#00AF50" stop-opacity="0.6"/>
-        <stop offset="100%" stop-color="#00AF50" stop-opacity="0"/>
+      <linearGradient id="vg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#418EF1" stop-opacity="0"/>
+        <stop offset="20%" stop-color="#D0762A" stop-opacity="0.35"/>
+        <stop offset="50%" stop-color="#FFFFFF" stop-opacity="0.25"/>
+        <stop offset="80%" stop-color="#00AF50" stop-opacity="0.35"/>
+        <stop offset="100%" stop-color="#418EF1" stop-opacity="0"/>
       </linearGradient>
     </defs>
-
-    <!-- Center arrow -->
-    <polygon points="540,490 518,460 562,460" fill="#FFFFFF" opacity="0.25"/>
-    <polygon points="540,520 518,490 562,490" fill="#FFFFFF" opacity="0.15"/>
-
-    <!-- Left: faint "ДО" watermark -->
-    <text x="240" y="680" text-anchor="middle" font-family="Tahoma,sans-serif"
-      font-size="300" font-weight="800" fill="#C55A11" opacity="0.05">ДО</text>
-
-    <!-- Right: faint "ПОСЛЕ" watermark -->
-    <text x="800" y="680" text-anchor="middle" font-family="Tahoma,sans-serif"
-      font-size="180" font-weight="800" fill="#00AF50" opacity="0.05">ПОСЛЕ</text>
-
-    <!-- Top circuit traces -->
-    <path d="M 80 52 L 160 52 L 190 82 L 300 82" fill="none" stroke="#C55A11" stroke-width="1.2" opacity="0.30"/>
-    <circle cx="160" cy="52" r="3" fill="none" stroke="#C55A11" stroke-width="1.2" opacity="0.35"/>
-    <path d="M 1000 52 L 920 52 L 890 82 L 780 82" fill="none" stroke="#00AF50" stroke-width="1.2" opacity="0.30"/>
-    <circle cx="920" cy="52" r="3" fill="none" stroke="#00AF50" stroke-width="1.2" opacity="0.35"/>
-
-    <!-- Bottom circuit -->
-    <path d="M 80 1028 L 200 1028 L 230 998 L 380 998" fill="none" stroke="#418EF1" stroke-width="1.2" opacity="0.22"/>
-    <path d="M 1000 1028 L 880 1028 L 850 998 L 700 998" fill="none" stroke="#418EF1" stroke-width="1.2" opacity="0.22"/>
+    <line x1="540" y1="96" x2="540" y2="932" stroke="url(#vg)" stroke-width="1.5"/>
+    <!-- Center arrows -->
+    <polygon points="540,430 525,410 555,410" fill="rgba(255,255,255,0.16)"/>
+    <polygon points="540,454 525,434 555,434" fill="rgba(255,255,255,0.10)"/>
   </svg>
 
   <!-- HEADER -->
-  <div style="position:absolute;top:0;left:0;right:0;height:112px;
-    display:flex;align-items:center;justify-content:center;gap:0;
+  <div style="position:absolute;top:0;left:0;right:0;height:96px;
+    display:flex;align-items:center;
     border-bottom:1px solid rgba(65,142,241,0.12);">
-    <div style="flex:1;text-align:center;font-size:28px;font-weight:800;color:rgba(255,122,31,0.85);letter-spacing:0.12em;text-transform:uppercase;">
-      СТАНДАРТ
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+      <div style="font-size:24px;font-weight:800;color:rgba(208,118,42,0.85);letter-spacing:0.10em;text-transform:uppercase;">СТАНДАРТ</div>
     </div>
-    <div style="width:1px;height:40px;background:rgba(255,255,255,0.12);"></div>
-    <div style="width:100px;text-align:center;font-size:22px;font-weight:700;color:rgba(255,255,255,0.30);letter-spacing:0.06em;">
-      vs
-    </div>
-    <div style="width:1px;height:40px;background:rgba(255,255,255,0.12);"></div>
-    <div style="flex:1;text-align:center;font-size:28px;font-weight:800;color:rgba(0,175,80,0.90);letter-spacing:0.12em;text-transform:uppercase;">
-      АЭРАТОР ЗГ
+    <div style="width:80px;text-align:center;font-size:18px;font-weight:700;color:rgba(255,255,255,0.22);letter-spacing:0.06em;">vs</div>
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+      <div style="font-size:24px;font-weight:800;color:rgba(0,175,80,0.90);letter-spacing:0.10em;text-transform:uppercase;">АЭРАТОР ЗГ</div>
     </div>
   </div>
 
-  <!-- LEFT column metrics -->
-  <div style="position:absolute;top:130px;left:40px;width:460px;">
+  <!-- LEFT COLUMN — 5 rows filling full height -->
+  <div style="position:absolute;top:104px;left:40px;width:482px;bottom:116px;
+    display:flex;flex-direction:column;justify-content:space-between;">
 
-    <div style="padding:20px 24px 16px 24px;border-bottom:1px solid rgba(255,100,0,0.15);">
-      <div style="font-size:16px;font-weight:700;color:rgba(197,90,17,0.60);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;">Стоимость O₂</div>
-      <div style="font-size:72px;font-weight:800;color:#FF7A1F;line-height:1;letter-spacing:-0.02em;">3–5</div>
-      <div style="font-size:26px;font-weight:700;color:rgba(255,122,31,0.70);margin-top:2px;">руб/м³</div>
+    <div style="border-bottom:1px solid rgba(208,118,42,0.14);padding-bottom:14px;">
+      <div style="font-size:12px;font-weight:700;color:rgba(208,118,42,0.52);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:6px;">Стоимость O₂</div>
+      <div style="display:flex;align-items:baseline;gap:10px;">
+        <div style="font-size:58px;font-weight:800;color:#D0762A;line-height:1;letter-spacing:-0.02em;">3–5</div>
+        <div style="font-size:20px;font-weight:700;color:rgba(208,118,42,0.62);">руб/м³</div>
+      </div>
     </div>
 
-    <div style="padding:20px 24px 16px 24px;border-bottom:1px solid rgba(255,100,0,0.15);">
-      <div style="font-size:16px;font-weight:700;color:rgba(197,90,17,0.60);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;">Скорость растворения</div>
-      <div style="font-size:72px;font-weight:800;color:#FF7A1F;line-height:1;letter-spacing:-0.02em;">3–7</div>
-      <div style="font-size:26px;font-weight:700;color:rgba(255,122,31,0.70);margin-top:2px;">kLa ч⁻¹</div>
+    <div style="border-bottom:1px solid rgba(208,118,42,0.14);padding-bottom:14px;">
+      <div style="font-size:12px;font-weight:700;color:rgba(208,118,42,0.52);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:6px;">Скорость растворения</div>
+      <div style="display:flex;align-items:baseline;gap:10px;">
+        <div style="font-size:58px;font-weight:800;color:#D0762A;line-height:1;letter-spacing:-0.02em;">3–7</div>
+        <div style="font-size:20px;font-weight:700;color:rgba(208,118,42,0.62);">kLa ч⁻¹</div>
+      </div>
     </div>
 
-    <div style="padding:20px 24px 16px 24px;border-bottom:1px solid rgba(255,100,0,0.15);">
-      <div style="font-size:16px;font-weight:700;color:rgba(197,90,17,0.60);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;">Плотность посадки</div>
-      <div style="font-size:72px;font-weight:800;color:#FF7A1F;line-height:1;letter-spacing:-0.02em;">50–80</div>
-      <div style="font-size:26px;font-weight:700;color:rgba(255,122,31,0.70);margin-top:2px;">кг/м³</div>
+    <div style="border-bottom:1px solid rgba(208,118,42,0.14);padding-bottom:14px;">
+      <div style="font-size:12px;font-weight:700;color:rgba(208,118,42,0.52);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:6px;">Плотность посадки</div>
+      <div style="display:flex;align-items:baseline;gap:10px;">
+        <div style="font-size:58px;font-weight:800;color:#D0762A;line-height:1;letter-spacing:-0.02em;">50–80</div>
+        <div style="font-size:20px;font-weight:700;color:rgba(208,118,42,0.62);">кг/м³</div>
+      </div>
     </div>
 
-    <div style="padding:20px 24px 16px 24px;border-bottom:1px solid rgba(255,100,0,0.15);">
-      <div style="font-size:16px;font-weight:700;color:rgba(197,90,17,0.60);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;">Рентабельность</div>
-      <div style="font-size:72px;font-weight:800;color:#FF7A1F;line-height:1;letter-spacing:-0.02em;">25%</div>
-      <div style="font-size:22px;font-weight:400;color:rgba(255,122,31,0.55);margin-top:2px;">физический потолок</div>
+    <div style="border-bottom:1px solid rgba(208,118,42,0.14);padding-bottom:14px;">
+      <div style="font-size:12px;font-weight:700;color:rgba(208,118,42,0.52);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:6px;">Рентабельность</div>
+      <div style="display:flex;align-items:baseline;gap:10px;">
+        <div style="font-size:58px;font-weight:800;color:#D0762A;line-height:1;letter-spacing:-0.02em;">25%</div>
+        <div style="font-size:17px;font-weight:400;color:rgba(208,118,42,0.50);">физ. потолок</div>
+      </div>
     </div>
 
-  </div>
-
-  <!-- RIGHT column metrics -->
-  <div style="position:absolute;top:130px;right:40px;width:460px;">
-
-    <div style="padding:20px 24px 16px 24px;border-bottom:1px solid rgba(0,175,80,0.18);">
-      <div style="font-size:16px;font-weight:700;color:rgba(0,175,80,0.60);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;">Стоимость O₂</div>
-      <div style="font-size:72px;font-weight:800;color:#00AF50;line-height:1;letter-spacing:-0.02em;">0,8</div>
-      <div style="font-size:26px;font-weight:700;color:rgba(0,175,80,0.75);margin-top:2px;">руб/м³  <span style="font-size:18px;font-weight:400;color:rgba(0,175,80,0.50);">↓ в 4–6×</span></div>
-    </div>
-
-    <div style="padding:20px 24px 16px 24px;border-bottom:1px solid rgba(0,175,80,0.18);">
-      <div style="font-size:16px;font-weight:700;color:rgba(0,175,80,0.60);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;">Скорость растворения</div>
-      <div style="font-size:72px;font-weight:800;color:#00AF50;line-height:1;letter-spacing:-0.02em;">200–300</div>
-      <div style="font-size:26px;font-weight:700;color:rgba(0,175,80,0.75);margin-top:2px;">kLa ч⁻¹  <span style="font-size:18px;font-weight:400;color:rgba(0,175,80,0.50);">↑ в 5–40×</span></div>
-    </div>
-
-    <div style="padding:20px 24px 16px 24px;border-bottom:1px solid rgba(0,175,80,0.18);">
-      <div style="font-size:16px;font-weight:700;color:rgba(0,175,80,0.60);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;">Плотность посадки</div>
-      <div style="font-size:72px;font-weight:800;color:#00AF50;line-height:1;letter-spacing:-0.02em;">150+</div>
-      <div style="font-size:26px;font-weight:700;color:rgba(0,175,80,0.75);margin-top:2px;">кг/м³  <span style="font-size:18px;font-weight:400;color:rgba(0,175,80,0.50);">×3 к площади</span></div>
-    </div>
-
-    <div style="padding:20px 24px 16px 24px;border-bottom:1px solid rgba(0,175,80,0.18);">
-      <div style="font-size:16px;font-weight:700;color:rgba(0,175,80,0.60);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;">Рентабельность</div>
-      <div style="font-size:72px;font-weight:800;color:#00AF50;line-height:1;letter-spacing:-0.02em;">45–55%</div>
-      <div style="font-size:22px;font-weight:400;color:rgba(0,175,80,0.55);margin-top:2px;">ROI 18 мес.</div>
+    <div>
+      <div style="font-size:12px;font-weight:700;color:rgba(208,118,42,0.52);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:6px;">Энергозатраты</div>
+      <div style="display:flex;align-items:baseline;gap:10px;">
+        <div style="font-size:58px;font-weight:800;color:#D0762A;line-height:1;letter-spacing:-0.02em;">база</div>
+        <div style="font-size:17px;font-weight:400;color:rgba(208,118,42,0.50);">точка отсчёта</div>
+      </div>
     </div>
 
   </div>
 
-  <!-- Bottom CTA bar -->
-  <div style="position:absolute;bottom:0;left:0;right:0;height:72px;
-    background:rgba(4,79,186,0.12);border-top:1px solid rgba(65,142,241,0.20);
-    display:flex;align-items:center;justify-content:space-between;
-    padding:0 60px;">
-    <div style="font-size:22px;font-weight:400;color:rgba(255,255,255,0.75);">
+  <!-- RIGHT COLUMN — 5 rows filling full height -->
+  <div style="position:absolute;top:104px;left:558px;right:40px;bottom:116px;
+    display:flex;flex-direction:column;justify-content:space-between;">
+
+    <div style="border-bottom:1px solid rgba(0,175,80,0.16);padding-bottom:14px;">
+      <div style="font-size:12px;font-weight:700;color:rgba(0,175,80,0.52);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:6px;">Стоимость O₂</div>
+      <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:nowrap;">
+        <div style="font-size:58px;font-weight:800;color:#00AF50;line-height:1;letter-spacing:-0.02em;">0,8</div>
+        <div>
+          <div style="font-size:20px;font-weight:700;color:rgba(0,175,80,0.70);">руб/м³</div>
+          <div style="font-size:15px;font-weight:700;color:rgba(0,175,80,0.48);">↓ в 4–6 раз</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="border-bottom:1px solid rgba(0,175,80,0.16);padding-bottom:14px;">
+      <div style="font-size:12px;font-weight:700;color:rgba(0,175,80,0.52);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:6px;">Скорость растворения</div>
+      <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:nowrap;">
+        <div style="font-size:58px;font-weight:800;color:#00AF50;line-height:1;letter-spacing:-0.02em;">200–300</div>
+        <div>
+          <div style="font-size:20px;font-weight:700;color:rgba(0,175,80,0.70);">kLa ч⁻¹</div>
+          <div style="font-size:15px;font-weight:700;color:rgba(0,175,80,0.48);">↑ в 5–40 раз</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="border-bottom:1px solid rgba(0,175,80,0.16);padding-bottom:14px;">
+      <div style="font-size:12px;font-weight:700;color:rgba(0,175,80,0.52);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:6px;">Плотность посадки</div>
+      <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:nowrap;">
+        <div style="font-size:58px;font-weight:800;color:#00AF50;line-height:1;letter-spacing:-0.02em;">150+</div>
+        <div>
+          <div style="font-size:20px;font-weight:700;color:rgba(0,175,80,0.70);">кг/м³</div>
+          <div style="font-size:15px;font-weight:700;color:rgba(0,175,80,0.48);">×3 к площади</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="border-bottom:1px solid rgba(0,175,80,0.16);padding-bottom:14px;">
+      <div style="font-size:12px;font-weight:700;color:rgba(0,175,80,0.52);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:6px;">Рентабельность</div>
+      <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:nowrap;">
+        <div style="font-size:58px;font-weight:800;color:#00AF50;line-height:1;letter-spacing:-0.02em;">45–55%</div>
+        <div style="font-size:17px;font-weight:400;color:rgba(0,175,80,0.52);">ROI 18 мес.</div>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:12px;font-weight:700;color:rgba(0,175,80,0.52);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:6px;">Энергозатраты</div>
+      <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:nowrap;">
+        <div style="font-size:58px;font-weight:800;color:#00AF50;line-height:1;letter-spacing:-0.02em;">−25%</div>
+        <div style="font-size:17px;font-weight:400;color:rgba(0,175,80,0.52);">экономия</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CTA BAR -->
+  <div style="position:absolute;bottom:48px;left:40px;right:40px;
+    padding:18px 32px;
+    background:rgba(4,79,186,0.10);border:1px solid rgba(65,142,241,0.20);border-radius:12px;
+    display:flex;align-items:center;justify-content:space-between;gap:24px;">
+    <div style="font-size:20px;font-weight:400;color:rgba(255,255,255,0.72);">
       Рассчитать экономику под вашу систему →
     </div>
-    <div style="font-size:22px;font-weight:700;color:#418EF1;letter-spacing:0.06em;">limatech86.ru</div>
+    <div style="font-size:20px;font-weight:700;color:#418EF1;letter-spacing:0.04em;flex-shrink:0;">limatech86.ru</div>
   </div>
 
-  <div style="position:absolute;bottom:22px;right:80px;font-size:16px;font-weight:700;color:#418EF1;letter-spacing:0.12em;opacity:0.45;">БП</div>
+  <!-- FOOTER -->
+  <div style="position:absolute;bottom:0;left:0;right:0;height:48px;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 72px;border-top:1px solid rgba(65,142,241,0.08);">
+    <div style="font-size:16px;font-weight:700;color:rgba(65,142,241,0.35);letter-spacing:0.08em;">limatech86.ru</div>
+    <div style="font-size:16px;font-weight:700;color:rgba(65,142,241,0.45);letter-spacing:0.12em;">БП</div>
+  </div>
+
 </div>
 </body>
 </html>

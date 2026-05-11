@@ -4,173 +4,197 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=1080">
 <style>
-  @font-face { font-family: 'Manrope'; font-weight: 400; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Regular.woff2') format('woff2'); }
-  @font-face { font-family: 'Manrope'; font-weight: 700; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Bold.woff2') format('woff2'); }
-  @font-face { font-family: 'Manrope'; font-weight: 800; src: url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-ExtraBold.woff2') format('woff2'); }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { width:1080px; height:1080px; overflow:hidden; background:#1B1A24; font-family:'Manrope','Tahoma',sans-serif; }
-  .slide { position:relative; width:1080px; height:1080px; overflow:hidden; background:#1B1A24; }
-  .grain { position:absolute; inset:0; opacity:0.035; }
+  @font-face { font-family:'Manrope'; font-weight:400; src:url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Regular.woff2') format('woff2'); }
+  @font-face { font-family:'Manrope'; font-weight:700; src:url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-Bold.woff2') format('woff2'); }
+  @font-face { font-family:'Manrope'; font-weight:800; src:url('file:///C:/Users/Пользователь/клод/global/brand/fonts/Manrope-ExtraBold.woff2') format('woff2'); }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{width:1080px;height:1080px;overflow:hidden;background:#1B1A24;font-family:'Manrope','Tahoma',sans-serif;}
 </style>
 </head>
 <body>
-<div class="slide">
+<div style="position:relative;width:1080px;height:1080px;overflow:hidden;background:#1B1A24;">
 
-  <!-- Subtle PCB -->
+  <!-- PCB grid -->
   <div style="position:absolute;inset:0;
     background-image:
-      linear-gradient(90deg,transparent 49.5%,rgba(65,142,241,0.07) 49.5%,rgba(65,142,241,0.07) 50.5%,transparent 50.5%),
-      linear-gradient(0deg,transparent 49.5%,rgba(65,142,241,0.05) 49.5%,rgba(65,142,241,0.05) 50.5%,transparent 50.5%);
+      linear-gradient(90deg,transparent 49.5%,rgba(65,142,241,0.08) 49.5%,rgba(65,142,241,0.08) 50.5%,transparent 50.5%),
+      linear-gradient(0deg,transparent 49.5%,rgba(65,142,241,0.06) 49.5%,rgba(65,142,241,0.06) 50.5%,transparent 50.5%);
     background-size:80px 80px;"></div>
 
-  <!-- Orange radial glow top-right (danger zone) -->
-  <div style="position:absolute;top:-100px;right:-100px;width:700px;height:700px;
-    background:radial-gradient(circle, rgba(197,90,17,0.14) 0%, transparent 65%);
+  <!-- Top glow -->
+  <div style="position:absolute;top:-80px;left:50%;transform:translateX(-50%);
+    width:900px;height:420px;
+    background:radial-gradient(ellipse 80% 90%, rgba(4,79,186,0.12) 0%, transparent 70%);
+    pointer-events:none;"></div>
+
+  <!-- Amber glow top-left (subtle) -->
+  <div style="position:absolute;top:80px;left:-80px;width:520px;height:360px;
+    background:radial-gradient(ellipse 60% 60%, rgba(176,90,20,0.09) 0%, transparent 70%);
     pointer-events:none;"></div>
 
   <!-- Grain -->
-  <svg class="grain" xmlns="http://www.w3.org/2000/svg">
+  <svg style="position:absolute;inset:0;opacity:0.035" xmlns="http://www.w3.org/2000/svg">
     <filter id="g"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
     <rect width="100%" height="100%" filter="url(#g)"/>
   </svg>
 
   <!-- SVG decorations -->
   <svg style="position:absolute;inset:0;width:1080px;height:1080px" viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg">
-
-    <!-- Giant faded "3–5" behind everything -->
-    <text x="540" y="680" text-anchor="middle" font-family="Tahoma,sans-serif"
-      font-size="580" font-weight="800" fill="#FF7A1F" opacity="0.04"
-      letter-spacing="-30">3–5</text>
-
-    <!-- Warning hash marks top-right (danger zone hatch) -->
-    <line x1="820" y1="0"  x2="1080" y2="260" stroke="#C55A11" stroke-width="22" opacity="0.06"/>
-    <line x1="880" y1="0"  x2="1080" y2="200" stroke="#C55A11" stroke-width="22" opacity="0.04"/>
-    <line x1="760" y1="0"  x2="1080" y2="320" stroke="#C55A11" stroke-width="22" opacity="0.04"/>
-    <line x1="700" y1="0"  x2="1080" y2="380" stroke="#C55A11" stroke-width="22" opacity="0.03"/>
-    <line x1="940" y1="0"  x2="1080" y2="140" stroke="#C55A11" stroke-width="22" opacity="0.03"/>
-
-    <!-- Top circuit trace -->
-    <path d="M 80 56 L 180 56 L 210 86 L 380 86" fill="none" stroke="#C55A11" stroke-width="1.2" opacity="0.40"/>
-    <circle cx="180" cy="56" r="4" fill="none" stroke="#C55A11" stroke-width="1.5" opacity="0.45"/>
-    <circle cx="380" cy="86" r="5" fill="none" stroke="#FF7A1F" stroke-width="1.5" opacity="0.5"/>
-    <circle cx="380" cy="86" r="2" fill="#FF7A1F" opacity="0.4"/>
-
-    <!-- Bottom circuit trace -->
-    <path d="M 1000 1000 L 900 1000 L 860 1040 L 700 1040 L 670 1010" fill="none" stroke="#418EF1" stroke-width="1.2" opacity="0.30"/>
-    <circle cx="900" cy="1000" r="4" fill="none" stroke="#418EF1" stroke-width="1.5" opacity="0.35"/>
-
-    <!-- Left vertical accent line -->
-    <line x1="46" y1="140" x2="46" y2="940" stroke="#C55A11" stroke-width="2" opacity="0.18"/>
-    <circle cx="46" cy="300" r="5" fill="none" stroke="#C55A11" stroke-width="1.5" opacity="0.35"/>
-    <circle cx="46" cy="300" r="2" fill="#C55A11" opacity="0.3"/>
-    <circle cx="46" cy="540" r="5" fill="none" stroke="#FF7A1F" stroke-width="1.5" opacity="0.35"/>
-    <circle cx="46" cy="540" r="2" fill="#FF7A1F" opacity="0.3"/>
-    <circle cx="46" cy="780" r="5" fill="none" stroke="#C55A11" stroke-width="1.5" opacity="0.3"/>
-
-    <!-- Horizontal branches from left accent -->
-    <line x1="46" y1="300" x2="90" y2="300" stroke="#C55A11" stroke-width="1" opacity="0.3"/>
-    <line x1="46" y1="540" x2="90" y2="540" stroke="#FF7A1F" stroke-width="1" opacity="0.3"/>
+    <path d="M 0 96 L 56 96 L 84 68 L 84 0" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.30"/>
+    <circle cx="56" cy="96" r="3.5" fill="none" stroke="#418EF1" stroke-width="1.5" opacity="0.35"/>
+    <path d="M 1080 96 L 1024 96 L 996 68 L 996 0" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.30"/>
+    <circle cx="1024" cy="96" r="3.5" fill="none" stroke="#418EF1" stroke-width="1.5" opacity="0.35"/>
+    <path d="M 0 984 L 56 984 L 84 1012 L 84 1080" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.25"/>
+    <circle cx="56" cy="984" r="3.5" fill="none" stroke="#418EF1" stroke-width="1.5" opacity="0.28"/>
+    <path d="M 1080 984 L 1024 984 L 996 1012 L 996 1080" fill="none" stroke="#418EF1" stroke-width="1" opacity="0.25"/>
+    <circle cx="1024" cy="984" r="3.5" fill="none" stroke="#418EF1" stroke-width="1.5" opacity="0.28"/>
+    <!-- Left vertical accent -->
+    <line x1="40" y1="112" x2="40" y2="980" stroke="#D0762A" stroke-width="1.5" opacity="0.18"/>
+    <circle cx="40" cy="340" r="3.5" fill="none" stroke="#D0762A" stroke-width="1.5" opacity="0.32"/>
+    <circle cx="40" cy="340" r="1.5" fill="#D0762A" opacity="0.28"/>
+    <circle cx="40" cy="570" r="3.5" fill="none" stroke="#D0762A" stroke-width="1.5" opacity="0.26"/>
+    <circle cx="40" cy="570" r="1.5" fill="#D0762A" opacity="0.22"/>
+    <circle cx="40" cy="800" r="3.5" fill="none" stroke="#D0762A" stroke-width="1.5" opacity="0.20"/>
+    <line x1="40" y1="340" x2="68" y2="340" stroke="#D0762A" stroke-width="1" opacity="0.22"/>
+    <line x1="40" y1="570" x2="68" y2="570" stroke="#D0762A" stroke-width="1" opacity="0.18"/>
+    <line x1="40" y1="800" x2="68" y2="800" stroke="#D0762A" stroke-width="1" opacity="0.15"/>
   </svg>
 
   <!-- HEADER -->
-  <div style="position:absolute;top:52px;left:80px;
-    display:flex;align-items:center;gap:20px;">
-    <div style="border:1.5px solid rgba(197,90,17,0.65);color:#C55A11;
-      border-radius:40px;padding:10px 26px;
-      font-size:20px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;">
+  <div style="position:absolute;top:0;left:0;right:0;height:96px;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 72px;border-bottom:1px solid rgba(65,142,241,0.12);">
+    <div style="border:1.5px solid rgba(208,118,42,0.60);color:#D0762A;
+      border-radius:40px;padding:9px 24px;
+      font-size:18px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;">
       ПРОБЛЕМА
     </div>
-    <div style="font-size:20px;font-weight:400;color:rgba(255,255,255,0.30);letter-spacing:0.06em;">
+    <div style="font-size:19px;font-weight:400;color:rgba(255,255,255,0.28);letter-spacing:0.04em;">
       Почему стандарт не работает
     </div>
   </div>
 
-  <!-- BIG WARNING BOX: the cost number -->
-  <div style="position:absolute;top:148px;left:80px;right:80px;
-    padding:36px 44px;
-    background:rgba(255,100,0,0.07);
-    border:2px solid rgba(197,90,17,0.50);
-    border-radius:16px;">
-    <div style="display:flex;align-items:baseline;gap:24px;flex-wrap:wrap;">
-      <div style="font-size:130px;font-weight:800;color:#FF7A1F;line-height:1;letter-spacing:-0.03em;">3–5</div>
-      <div>
-        <div style="font-size:46px;font-weight:700;color:rgba(255,122,31,0.85);line-height:1.1;">руб/м³</div>
-        <div style="font-size:24px;font-weight:400;color:rgba(255,255,255,0.55);margin-top:6px;">стоимость растворённого O₂<br>при стандартной аэрации</div>
+  <!-- WARNING BOX -->
+  <div style="position:absolute;top:112px;left:72px;right:72px;
+    padding:24px 32px;
+    background:rgba(176,90,20,0.08);border:1.5px solid rgba(208,118,42,0.38);border-radius:14px;">
+    <div style="font-size:13px;font-weight:700;color:rgba(208,118,42,0.55);
+      letter-spacing:0.16em;text-transform:uppercase;margin-bottom:8px;">Стоимость растворённого O₂ при стандартной аэрации</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:baseline;gap:14px;">
+        <div style="font-size:96px;font-weight:800;color:#D0762A;line-height:1;letter-spacing:-0.03em;">3–5</div>
+        <div>
+          <div style="font-size:36px;font-weight:700;color:rgba(208,118,42,0.80);">руб/м³</div>
+          <div style="font-size:19px;font-weight:400;color:rgba(255,255,255,0.42);margin-top:3px;">при диффузорной аэрации</div>
+        </div>
       </div>
-      <!-- warning icon right side -->
-      <div style="margin-left:auto;text-align:center;">
-        <svg width="80" height="80" viewBox="0 0 80 80">
-          <polygon points="40,8 74,68 6,68" fill="none" stroke="#C55A11" stroke-width="3" opacity="0.7"/>
-          <line x1="40" y1="28" x2="40" y2="50" stroke="#FF7A1F" stroke-width="4" stroke-linecap="round" opacity="0.85"/>
-          <circle cx="40" cy="59" r="3" fill="#FF7A1F" opacity="0.85"/>
-        </svg>
-        <div style="font-size:16px;font-weight:700;color:rgba(197,90,17,0.65);letter-spacing:0.08em;margin-top:4px;">OPEX</div>
-      </div>
+      <svg width="68" height="68" viewBox="0 0 68 68" style="flex-shrink:0">
+        <polygon points="34,5 64,59 4,59" fill="none" stroke="#D0762A" stroke-width="2.5" opacity="0.60"/>
+        <line x1="34" y1="22" x2="34" y2="42" stroke="#D0762A" stroke-width="3.5" stroke-linecap="round" opacity="0.75"/>
+        <circle cx="34" cy="50" r="2.8" fill="#D0762A" opacity="0.75"/>
+      </svg>
     </div>
   </div>
 
-  <!-- THREE BARRIER ROWS -->
-  <div style="position:absolute;top:440px;left:80px;right:80px;display:flex;flex-direction:column;gap:14px;">
+  <!-- BARRIER ROWS — 4 rows, evenly fill remaining space -->
+  <div style="position:absolute;top:306px;left:72px;right:72px;bottom:148px;
+    display:flex;flex-direction:column;justify-content:space-between;gap:0;">
 
-    <div style="display:flex;align-items:center;gap:0;
-      background:rgba(255,100,0,0.06);border:1px solid rgba(255,100,0,0.22);border-radius:10px;overflow:hidden;">
-      <div style="width:6px;height:100%;background:#C55A11;flex-shrink:0;align-self:stretch;"></div>
-      <div style="padding:16px 22px;display:flex;align-items:center;gap:20px;width:100%;">
-        <div style="font-size:28px;font-weight:800;color:#FF7A1F;width:34px;flex-shrink:0;">01</div>
-        <div style="font-size:22px;font-weight:400;color:rgba(255,255,255,0.85);line-height:1.4;">
-          <strong style="color:#FF7A1F;">Хаотичный пузырь</strong> — диаметр 3–5 мм, граничный слой насыщается. kLa = 3–7 ч⁻¹ при необходимых 10+
+    <!-- Row 1 -->
+    <div style="display:flex;align-items:stretch;
+      background:rgba(176,90,20,0.06);border:1px solid rgba(208,118,42,0.20);border-radius:10px;overflow:hidden;flex:1;">
+      <div style="width:5px;background:rgba(208,118,42,0.50);flex-shrink:0;"></div>
+      <div style="padding:0 22px;display:flex;align-items:center;gap:18px;flex:1;">
+        <div style="font-size:22px;font-weight:800;color:rgba(208,118,42,0.65);width:28px;flex-shrink:0;text-align:center;">01</div>
+        <div style="font-size:20px;font-weight:400;color:rgba(255,255,255,0.85);line-height:1.45;flex:1;">
+          <strong style="color:#D0762A;">Хаотичный пузырь</strong> — диаметр 3–5 мм, граничный слой насыщается мгновенно. kLa = 3–7 ч⁻¹ при необходимых 10+
         </div>
-        <div style="margin-left:auto;font-size:20px;font-weight:700;color:rgba(197,90,17,0.50);letter-spacing:0.12em;flex-shrink:0;">kLa 3–7</div>
+        <div style="font-size:17px;font-weight:700;color:rgba(208,118,42,0.42);letter-spacing:0.08em;flex-shrink:0;white-space:nowrap;">kLa 3–7</div>
       </div>
     </div>
 
-    <div style="display:flex;align-items:center;gap:0;
-      background:rgba(255,100,0,0.06);border:1px solid rgba(255,100,0,0.22);border-radius:10px;overflow:hidden;">
-      <div style="width:6px;height:100%;background:#C55A11;flex-shrink:0;align-self:stretch;"></div>
-      <div style="padding:16px 22px;display:flex;align-items:center;gap:20px;width:100%;">
-        <div style="font-size:28px;font-weight:800;color:#FF7A1F;width:34px;flex-shrink:0;">02</div>
-        <div style="font-size:22px;font-weight:400;color:rgba(255,255,255,0.85);line-height:1.4;">
-          <strong style="color:#FF7A1F;">Больше газа — больше затрат</strong> — для нужной концентрации O₂ нужен бо́льший объём. OPEX растёт линейно
+    <!-- gap -->
+    <div style="height:10px;flex-shrink:0;"></div>
+
+    <!-- Row 2 -->
+    <div style="display:flex;align-items:stretch;
+      background:rgba(176,90,20,0.06);border:1px solid rgba(208,118,42,0.20);border-radius:10px;overflow:hidden;flex:1;">
+      <div style="width:5px;background:rgba(208,118,42,0.50);flex-shrink:0;"></div>
+      <div style="padding:0 22px;display:flex;align-items:center;gap:18px;flex:1;">
+        <div style="font-size:22px;font-weight:800;color:rgba(208,118,42,0.65);width:28px;flex-shrink:0;text-align:center;">02</div>
+        <div style="font-size:20px;font-weight:400;color:rgba(255,255,255,0.85);line-height:1.45;flex:1;">
+          <strong style="color:#D0762A;">Больше газа — больше затрат</strong> — для нужной концентрации O₂ нужен бо́льший объём. OPEX растёт линейно с плотностью посадки
         </div>
-        <div style="margin-left:auto;font-size:20px;font-weight:700;color:rgba(197,90,17,0.50);letter-spacing:0.12em;flex-shrink:0;">↑ OPEX</div>
+        <div style="font-size:17px;font-weight:700;color:rgba(208,118,42,0.42);letter-spacing:0.08em;flex-shrink:0;white-space:nowrap;">↑ OPEX</div>
       </div>
     </div>
 
-    <div style="display:flex;align-items:center;gap:0;
-      background:rgba(255,100,0,0.06);border:1px solid rgba(255,100,0,0.22);border-radius:10px;overflow:hidden;">
-      <div style="width:6px;height:100%;background:#C55A11;flex-shrink:0;align-self:stretch;"></div>
-      <div style="padding:16px 22px;display:flex;align-items:center;gap:20px;width:100%;">
-        <div style="font-size:28px;font-weight:800;color:#FF7A1F;width:34px;flex-shrink:0;">03</div>
-        <div style="font-size:22px;font-weight:400;color:rgba(255,255,255,0.85);line-height:1.4;">
-          <strong style="color:#FF7A1F;">Плотность посадки ограничена</strong> — при kLa 3–7 невозможно превысить 50–80 кг/м³. Это физический, не управленческий предел
+    <!-- gap -->
+    <div style="height:10px;flex-shrink:0;"></div>
+
+    <!-- Row 3 -->
+    <div style="display:flex;align-items:stretch;
+      background:rgba(176,90,20,0.06);border:1px solid rgba(208,118,42,0.20);border-radius:10px;overflow:hidden;flex:1;">
+      <div style="width:5px;background:rgba(208,118,42,0.50);flex-shrink:0;"></div>
+      <div style="padding:0 22px;display:flex;align-items:center;gap:18px;flex:1;">
+        <div style="font-size:22px;font-weight:800;color:rgba(208,118,42,0.65);width:28px;flex-shrink:0;text-align:center;">03</div>
+        <div style="font-size:20px;font-weight:400;color:rgba(255,255,255,0.85);line-height:1.45;flex:1;">
+          <strong style="color:#D0762A;">Плотность посадки ограничена</strong> — при kLa 3–7 невозможно превысить 50–80 кг/м³. Физический, не управленческий предел
         </div>
-        <div style="margin-left:auto;font-size:20px;font-weight:700;color:rgba(197,90,17,0.50);letter-spacing:0.12em;flex-shrink:0;">50–80</div>
+        <div style="font-size:17px;font-weight:700;color:rgba(208,118,42,0.42);letter-spacing:0.08em;flex-shrink:0;white-space:nowrap;">50–80</div>
+      </div>
+    </div>
+
+    <!-- gap -->
+    <div style="height:10px;flex-shrink:0;"></div>
+
+    <!-- Row 4 -->
+    <div style="display:flex;align-items:stretch;
+      background:rgba(176,90,20,0.06);border:1px solid rgba(208,118,42,0.20);border-radius:10px;overflow:hidden;flex:1;">
+      <div style="width:5px;background:rgba(208,118,42,0.50);flex-shrink:0;"></div>
+      <div style="padding:0 22px;display:flex;align-items:center;gap:18px;flex:1;">
+        <div style="font-size:22px;font-weight:800;color:rgba(208,118,42,0.65);width:28px;flex-shrink:0;text-align:center;">04</div>
+        <div style="font-size:20px;font-weight:400;color:rgba(255,255,255,0.85);line-height:1.45;flex:1;">
+          <strong style="color:#D0762A;">Кислородные заморы</strong> — дефицит O₂ при превышении нагрузки. Потери малька 20–30%. Прямые убытки, не застрахованные от масштабирования
+        </div>
+        <div style="font-size:17px;font-weight:700;color:rgba(208,118,42,0.42);letter-spacing:0.08em;flex-shrink:0;white-space:nowrap;">−30%</div>
       </div>
     </div>
 
   </div>
 
-  <!-- BOTTOM: Потолок progress bar -->
-  <div style="position:absolute;bottom:68px;left:80px;right:80px;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-      <div style="font-size:19px;font-weight:700;color:rgba(65,142,241,0.55);letter-spacing:0.12em;text-transform:uppercase;">
+  <!-- PROGRESS BAR: потолок -->
+  <div style="position:absolute;bottom:60px;left:72px;right:72px;">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;">
+      <div style="font-size:14px;font-weight:700;color:rgba(91,173,247,0.48);
+        letter-spacing:0.12em;text-transform:uppercase;">
         Рентабельность аквакультуры — физический потолок
       </div>
-      <div style="font-size:32px;font-weight:800;color:#FF7A1F;">25%</div>
+      <div style="font-size:28px;font-weight:800;color:#D0762A;letter-spacing:-0.01em;">25%</div>
     </div>
-    <!-- bar -->
-    <div style="width:100%;height:10px;background:rgba(255,255,255,0.08);border-radius:6px;overflow:hidden;">
-      <div style="width:25%;height:100%;background:linear-gradient(90deg,#C55A11,#FF7A1F);border-radius:6px;position:relative;">
-        <div style="position:absolute;right:-1px;top:0;bottom:0;width:2px;background:#FF7A1F;box-shadow:0 0 8px #FF7A1F;"></div>
+    <div style="width:100%;height:7px;background:rgba(255,255,255,0.07);border-radius:4px;overflow:hidden;">
+      <div style="width:25%;height:100%;
+        background:linear-gradient(90deg,rgba(176,90,20,0.65),#D0762A);
+        border-radius:4px;position:relative;">
+        <div style="position:absolute;right:-5px;top:50%;transform:translateY(-50%);
+          width:10px;height:10px;background:#D0762A;border-radius:50%;
+          box-shadow:0 0 7px rgba(208,118,42,0.75);"></div>
       </div>
     </div>
-    <div style="display:flex;justify-content:space-between;margin-top:6px;">
-      <div style="font-size:16px;color:rgba(255,255,255,0.25);">0%</div>
-      <div style="font-size:16px;color:rgba(255,255,255,0.25);">100%</div>
+    <div style="display:flex;justify-content:space-between;margin-top:5px;">
+      <div style="font-size:13px;color:rgba(255,255,255,0.20);">0%</div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.20);">100%</div>
     </div>
   </div>
 
-  <div style="position:absolute;bottom:36px;right:80px;font-size:18px;font-weight:700;color:#418EF1;letter-spacing:0.12em;opacity:0.55;">БП</div>
+  <!-- FOOTER -->
+  <div style="position:absolute;bottom:0;left:0;right:0;height:48px;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 72px;border-top:1px solid rgba(65,142,241,0.10);">
+    <div style="font-size:16px;font-weight:700;color:rgba(65,142,241,0.35);letter-spacing:0.08em;">limatech86.ru</div>
+    <div style="font-size:16px;font-weight:700;color:rgba(65,142,241,0.45);letter-spacing:0.12em;">БП</div>
+  </div>
+
 </div>
 </body>
 </html>
