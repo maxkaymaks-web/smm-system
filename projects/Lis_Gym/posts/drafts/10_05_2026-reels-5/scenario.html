@@ -107,7 +107,7 @@ body {
 .hook-item { font-size: 11.5px; color: var(--muted); }
 .hook-item strong { color: var(--text); font-weight: 600; }
 
-/* RETENTION */
+/* RETENTION FACTOR */
 .retention {
   background: var(--bg-alt);
   border: 1px solid var(--border);
@@ -117,8 +117,8 @@ body {
   display: flex; gap: 12px; align-items: flex-start;
   padding: 10px 0; border-bottom: 1px solid var(--border);
 }
-.retention-row:first-child { padding-top: 0; }
 .retention-row:last-child { border-bottom: none; padding-bottom: 0; }
+.retention-row:first-child { padding-top: 0; }
 .retention-num {
   width: 22px; height: 22px; background: var(--accent); color: #fff;
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
@@ -139,7 +139,6 @@ body {
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
   font-size: 11px; font-weight: 800; flex-shrink: 0; margin-top: 1px;
 }
-.shot-num.error { background: var(--accent); }
 .shot-body { flex: 1; }
 .shot-time {
   font-size: 9px; font-weight: 700; color: var(--accent);
@@ -160,9 +159,9 @@ body {
   border-radius: 4px; padding: 3px 9px; font-size: 11px; font-weight: 700;
   margin-top: 7px; font-family: monospace; letter-spacing: 0;
 }
-.shot-overlay.error { background: var(--accent); }
 .shot-tag.cta { background: rgba(255,30,30,0.05); border-color: rgba(255,30,30,0.2); }
 .shot-tag.cta strong { color: var(--accent); }
+.shot-tag.cut { background: rgba(255,30,30,0.05); border-color: rgba(255,30,30,0.2); color: var(--accent); font-weight: 700; }
 
 /* HOW GRID */
 .how-grid {
@@ -190,7 +189,9 @@ body {
   border: 1px solid var(--border); background: var(--bg); color: var(--muted);
   text-decoration: none;
 }
+.music-link:hover { color: var(--text); }
 .music-alt { font-size: 11.5px; color: var(--muted); margin-top: 12px; }
+.music-alt a { color: var(--text); }
 
 /* CAPTION */
 .caption-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -264,7 +265,7 @@ body {
   <div class="hook-type">⚡ Число + боль</div>
   <div class="hook-text">«5 ошибок в тренировке ног — из-за которых у тебя нет прогресса»</div>
   <div class="hook-row">
-    <div class="hook-item"><strong>Визуал:</strong> средний план, стоишь в зале у тренажёра или у зеркала. Лёгкое движение — поправила наушники, взяла бутылку. Лицо не обязательно на первом кадре.</div>
+    <div class="hook-item"><strong>Визуал:</strong> средний план, стоишь в зале у тренажёра или у зеркала. Лёгкое движение — поправила наушники, взяла бутылку. Зал узнаваем на фоне.</div>
     <div class="hook-item"><strong>Аудио:</strong> lo-fi / инструментальный бит входит с первым кадром. Без слов — текст на экране важнее.</div>
   </div>
 </div>
@@ -276,7 +277,7 @@ body {
     <div class="retention-num">1</div>
     <div class="retention-body">
       <div class="retention-title">Число в хуке — зритель считает сам</div>
-      <div class="retention-desc">«5» = обещание. Мозг автоматически открывает внутренний счётчик. Уйти на 3-й ошибке — психологически некомфортно. Это эффект Зейгарник: незавершённое действие удерживает внимание лучше любого приёма.</div>
+      <div class="retention-desc">«5» = обещание. Мозг автоматически открывает внутренний счётчик. Уйти на 3-й ошибке психологически некомфортно. Это эффект Зейгарник: незавершённое действие удерживает внимание лучше любого другого приёма.</div>
     </div>
   </div>
   <div class="retention-row">
@@ -290,7 +291,7 @@ body {
     <div class="retention-num">3</div>
     <div class="retention-body">
       <div class="retention-title">Темп монтажа нарастает</div>
-      <div class="retention-desc">Ошибки 1–2 чуть длиннее (установка формата). Ошибки 3–5 — быстрее, ритм разгоняется. Финал — стоп. Этот ритм держит, как нарастающий саундтрек.</div>
+      <div class="retention-desc">Ошибки 1–2 чуть длиннее (установка формата). Ошибки 3–5 — быстрее, ритм разгоняется. Финал — стоп. Этот ритм держит, как нарастающий саундтрек — уйти становится всё сложнее.</div>
     </div>
   </div>
   <div class="retention-row">
@@ -319,67 +320,67 @@ body {
 </div>
 
 <div class="shot">
-  <div class="shot-num error">1</div>
+  <div class="shot-num">2</div>
   <div class="shot-body">
-    <div class="shot-time">2 – 4.5s · Ошибка 1</div>
-    <div class="shot-action">Показываешь неглубокий присед — доходишь только до половины амплитуды, бёдра параллели не касаются. Остановилась высоко. Намеренно неправильно — чтобы зритель узнал паттерн.</div>
+    <div class="shot-time">2 – 4.5s · Ошибка 01</div>
+    <div class="shot-action">Показываешь неглубокий присед — бёдра останавливаются высоко, до параллели не доходят. Снимать сбоку — чтобы глубина была видна. Намеренно неправильно, для наглядности.</div>
     <div class="shot-tags">
-      <div class="shot-tag"><strong>монтаж</strong>жёсткий кат</div>
+      <div class="shot-tag cut">⚡ жёсткий кат</div>
       <div class="shot-tag"><strong>ракурс</strong>сбоку — видна глубина приседа</div>
     </div>
-    <div class="shot-overlay error">«01 / мелкий присед — ягодицы не включаются»</div>
+    <div class="shot-overlay">«01 / мелкий присед — ягодицы не включаются»</div>
   </div>
 </div>
 
 <div class="shot">
-  <div class="shot-num error">2</div>
+  <div class="shot-num">3</div>
   <div class="shot-body">
-    <div class="shot-time">4.5 – 7s · Ошибка 2</div>
-    <div class="shot-action">Становишься с явно большим весом — корпус уходит вперёд, спина круглится. Можно преувеличить для наглядности. Гантели / штанга / блин в руках.</div>
+    <div class="shot-time">4.5 – 7s · Ошибка 02</div>
+    <div class="shot-action">Становишься с явно большим весом — корпус уходит вперёд, спина круглится. Гантели или штанга в руках. Можно преувеличить эффект для наглядности.</div>
     <div class="shot-tags">
-      <div class="shot-tag"><strong>монтаж</strong>жёсткий кат</div>
+      <div class="shot-tag cut">⚡ жёсткий кат</div>
       <div class="shot-tag"><strong>ракурс</strong>фронт или сбоку</div>
     </div>
-    <div class="shot-overlay error">«02 / вес слишком большой — техника ломается»</div>
+    <div class="shot-overlay">«02 / вес слишком большой — техника ломается»</div>
   </div>
 </div>
 
 <div class="shot">
-  <div class="shot-num error">3</div>
+  <div class="shot-num">4</div>
   <div class="shot-body">
-    <div class="shot-time">7 – 9s · Ошибка 3</div>
-    <div class="shot-action">Сразу идёшь к тренажёру / к штанге без разминки — садишься и начинаешь делать упражнение прямо с порога. Можно показать жест «сразу сюда» рукой.</div>
+    <div class="shot-time">7 – 9s · Ошибка 03</div>
+    <div class="shot-action">Сразу идёшь к тренажёру без разминки — садишься и начинаешь делать упражнение с порога. Можно показать жест «сразу сюда» рукой. Темп кадра чуть быстрее предыдущих.</div>
     <div class="shot-tags">
-      <div class="shot-tag"><strong>монтаж</strong>жёсткий кат</div>
-      <div class="shot-tag"><strong>темп</strong>быстрее чем предыдущие</div>
+      <div class="shot-tag cut">⚡ жёсткий кат</div>
+      <div class="shot-tag"><strong>темп</strong>быстрее чем 1–2</div>
     </div>
-    <div class="shot-overlay error">«03 / пропускаешь разминку — мышцы не включаются»</div>
+    <div class="shot-overlay">«03 / пропускаешь разминку — мышцы не включаются»</div>
   </div>
 </div>
 
 <div class="shot">
-  <div class="shot-num error">4</div>
+  <div class="shot-num">5</div>
   <div class="shot-body">
-    <div class="shot-time">9 – 11s · Ошибка 4</div>
-    <div class="shot-action">Делаешь только приседания снова и снова — показываешь «и снова присед» жестом или несколько повторов. Жест «только это» руками — как бы «одно и то же».</div>
+    <div class="shot-time">9 – 11s · Ошибка 04</div>
+    <div class="shot-action">Делаешь только приседания — снова и снова. Показываешь «и опять то же самое» жестом или несколько повторов подряд. Жест «одно и то же» руками.</div>
     <div class="shot-tags">
-      <div class="shot-tag"><strong>монтаж</strong>жёсткий кат</div>
+      <div class="shot-tag cut">⚡ жёсткий кат</div>
       <div class="shot-tag"><strong>темп</strong>нарастает</div>
     </div>
-    <div class="shot-overlay error">«04 / одно упражнение — нет полного объёма нагрузки»</div>
+    <div class="shot-overlay">«04 / одно упражнение — нет полного объёма нагрузки»</div>
   </div>
 </div>
 
 <div class="shot">
-  <div class="shot-num error">5</div>
+  <div class="shot-num">6</div>
   <div class="shot-body">
-    <div class="shot-time">11 – 13s · Ошибка 5</div>
-    <div class="shot-action">Берёшь ту же гантель, что «всегда» — можно пожать плечами с выражением «ну и ладно». Показываешь один и тот же вес который не меняется.</div>
+    <div class="shot-time">11 – 13s · Ошибка 05</div>
+    <div class="shot-action">Берёшь ту же гантель, что «всегда» — пожимаешь плечами с видом «ну и ладно». Один и тот же вес, который никогда не меняется. Можно посмотреть на него и пожать плечами.</div>
     <div class="shot-tags">
-      <div class="shot-tag"><strong>монтаж</strong>жёсткий кат</div>
+      <div class="shot-tag cut">⚡ жёсткий кат</div>
       <div class="shot-tag"><strong>аудио</strong>бит тише</div>
     </div>
-    <div class="shot-overlay error">«05 / нет прогрессии веса — мышцы давно привыкли»</div>
+    <div class="shot-overlay">«05 / нет прогрессии веса — мышцы давно привыкли»</div>
   </div>
 </div>
 
@@ -387,11 +388,12 @@ body {
   <div class="shot-num">7</div>
   <div class="shot-body">
     <div class="shot-time">13 – 15s · Финал</div>
-    <div class="shot-action">Средний план, смотришь в камеру. Чуть наклонила голову. Пауза — ничего не происходит. Freeze 1 секунда. Музыка затихает.</div>
+    <div class="shot-action">Средний план, стоишь лицом к камере. Чуть наклонила голову. Смотришь прямо. Пауза — ничего не происходит. Freeze 1 секунда. Музыка затихает.</div>
     <div class="shot-tags">
-      <div class="shot-tag"><strong>монтаж</strong>стоп → freeze 1 сек</div>
-      <div class="shot-tag cta"><strong>CTA</strong>вопрос = триггер комментариев</div>
-      <div class="shot-tag"><strong>аудио</strong>тишина / затихает</div>
+      <div class="shot-tag cut">⚡ жёсткий кат</div>
+      <div class="shot-tag"><strong>монтаж</strong>статика → freeze 1 сек</div>
+      <div class="shot-tag cta"><strong>CTA</strong>триггер комментариев</div>
+      <div class="shot-tag"><strong>аудио</strong>затихает</div>
     </div>
     <div class="shot-overlay">«нашла себя? напиши цифру в комментах 👇»</div>
   </div>
@@ -414,19 +416,23 @@ body {
   </div>
   <div class="how-cell">
     <div class="how-label">Камера</div>
-    <div class="how-value">Штатив на всё видео. Кадр 1 — можно штатив с таймером или подруга.</div>
+    <div class="how-value">Штатив на всё видео. Кадр 1 — штатив с таймером или снимает подруга.</div>
   </div>
   <div class="how-cell">
     <div class="how-label">Свет</div>
-    <div class="how-value">Равномерный. Финальный кадр — хороший свет на лицо, без теней снизу.</div>
+    <div class="how-value">Равномерный. Финальный кадр 7 — хороший свет на лицо, без теней снизу.</div>
   </div>
   <div class="how-cell">
     <div class="how-label">Одежда</div>
     <div class="how-value">Один комплект на всё видео.</div>
   </div>
+  <div class="how-cell">
+    <div class="how-label">Монтаж</div>
+    <div class="how-value">Жёсткий кат везде без исключений. Текст появляется вместе с кадром. Freeze в конце 1 сек.</div>
+  </div>
   <div class="how-cell full">
     <div class="how-label">Текст на экране — стиль нумерации</div>
-    <div class="how-value">Нумерация «01 /», «02 /» — добавить в CapCut или Instagram-редакторе. <strong>Белый жирный шрифт с тёмной обводкой.</strong> Ошибки 1–5 — красный акцент на номере если возможно. Финальный текст — белый, меньше размер.</div>
+    <div class="how-value">Нумерация «01 /», «02 /» — добавить в CapCut или Instagram-редакторе. <strong>Белый жирный шрифт с тёмной обводкой, по центру экрана.</strong> Финальный текст — чуть меньше, внизу экрана.</div>
   </div>
 </div>
 
@@ -434,14 +440,14 @@ body {
 <div class="stitle">Музыка</div>
 <div class="music">
   <div class="music-name">🎵 Lo-fi / инструментальный фитнес-бит — без слов</div>
-  <div class="music-why">Образовательный формат требует чистого звукового фона: текст на экране + слова в треке = конкуренция за внимание. Тихий ритмичный бит держит темп монтажа и не мешает читать.</div>
+  <div class="music-why">Образовательный формат — текст на экране конкурирует со словами в треке. Тихий ритмичный бит держит темп монтажа и не мешает читать. @mari_fittttttttt использует именно этот подход на форматах «5 ошибок».</div>
   <div class="music-links">
     <span class="music-link">Trending audio — фитнес без слов</span>
     <span class="music-link">Lo-fi instrumental beat</span>
     <span class="music-link">Original audio (тишина)</span>
   </div>
   <div class="music-alt">
-    <strong>Альтернатива:</strong> Original audio — только текст, без музыки. Работает если монтаж резкий и ритмичный. @mari_fittttttttt часто использует именно тихий фон под образовательные форматы.
+    <strong>Как выбрать:</strong> зайди в Instagram Reels → поиск «тренировка ног ошибки» → смотри, какой трек повторяется чаще всего → использовать его. Темп 90–110 bpm.
   </div>
 </div>
 
@@ -449,7 +455,7 @@ body {
 <div class="stitle">Подпись и хэштеги</div>
 <div class="caption-grid">
   <div class="caption-box">
-    <div class="caption-label">Подпись — структурированная + CTA</div>
+    <div class="caption-label">Подпись · Структура + CTA</div>
     <div class="caption-text">5 ошибок в тренировке ног — которые я сама делала 🙋
 
 01 — мелкий присед
@@ -468,7 +474,7 @@ body {
       <span class="hashtag">#санктпетербург</span>
     </div>
     <div style="margin-top:10px; font-size:11px; color:var(--muted); line-height:1.5">
-      Подпись со структурой «01–05» — образовательный контент сохраняют. Save Rate у таких видео выше в 2–3 раза.
+      Подпись со структурой «01–05» — образовательный контент сохраняют. Save Rate у таких видео выше в 2–3 раза vs развлекательных.
     </div>
   </div>
 </div>
@@ -478,11 +484,11 @@ body {
 <div class="how-grid">
   <div class="how-cell">
     <div class="how-label">Время</div>
-    <div class="how-value">Вс 10 мая, 11:00–13:00</div>
+    <div class="how-value">Вс 10 мая, 11:00–13:00 — образовательный контент сохраняют утром</div>
   </div>
   <div class="how-cell">
     <div class="how-label">Обложка (превью)</div>
-    <div class="how-value">Кадр 1 — стоишь в зале, текст хука виден целиком на превью</div>
+    <div class="how-value">Кадр 1 — стоишь в зале, текст хука «5 ошибок…» виден целиком</div>
   </div>
   <div class="how-cell">
     <div class="how-label">Геометка</div>
