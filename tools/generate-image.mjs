@@ -7,7 +7,7 @@
  * resolution:   0.5K | 1K | 2K | 4K (default: 1K)
  *
  * Requires: npm install @fal-ai/client
- * API key: ~/.claude/.env.fal → FAL_KEY=...
+ * API key: .env (repo root) → FAL_KEY=...
  */
 
 import { fal } from "@fal-ai/client";
@@ -16,15 +16,15 @@ import https from "https";
 import path from "path";
 import { fileURLToPath } from "url";
 
-// Load FAL_KEY from ~/.claude/.env.fal
-const envPath = path.join(process.env.HOME, ".claude/.env.fal");
+// Load FAL_KEY from .env (repo root)
+const envPath = path.join(process.cwd(), ".env");
 let FAL_KEY = process.env.FAL_KEY;
 if (!FAL_KEY && fs.existsSync(envPath)) {
   const envContent = fs.readFileSync(envPath, "utf-8");
   FAL_KEY = envContent.match(/FAL_KEY=(.+)/)?.[1]?.trim();
 }
 if (!FAL_KEY) {
-  console.error("FAL_KEY not found. Set in ~/.claude/.env.fal or env.");
+  console.error("FAL_KEY not found. Set in .env (repo root) or env.");
   process.exit(1);
 }
 

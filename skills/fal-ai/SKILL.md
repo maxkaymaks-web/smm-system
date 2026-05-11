@@ -21,7 +21,7 @@ description: Генерирует изображения, видео, аудио
 
 ## Конфигурация
 
-**API-ключ:** `~/.claude/.env.fal` → `FAL_KEY=...` (также в `~/.claude/settings.json`)
+**API-ключ:** `.env` в корне репо → `FAL_KEY=...`
 
 **Установка:**
 ```bash
@@ -36,7 +36,7 @@ fal.config({ credentials: process.env.FAL_KEY });
 
 **Загрузить ключ в Bash-скрипт:**
 ```bash
-export $(cat ~/.claude/.env.fal)
+export $(grep -v '^#' .env | xargs)
 ```
 
 ---

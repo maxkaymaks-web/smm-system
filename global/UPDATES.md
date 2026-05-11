@@ -1,8 +1,23 @@
 # UPDATES — Изменения системы от разработчика
 
-> Этот файл ведёт разработчик (Максим).
+> Этот файл ведёт разработчик (Максим / Pavel).
 > Оператор постов читает его при каждом запуске сессии.
 > Самые свежие записи — сверху.
+
+---
+
+## 11.05.2026 — переезд на OpenClaw + LiteLLM
+
+- **Полный переезд с Claude Code на OpenClaw.** Все агенты (`orchestrator`, `copywriter`, `designer`, `analytics`, `brief`, `content-planner`, `dushnila`) теперь живут в `agents/<name>/SOUL.md` (формат OpenClaw). Старые `skill.md` удалены. Папка `agents/skills/` удалена как дубль.
+- **LiteLLM как единственный AI-gateway** (`http://5.2.66.188:4000`, Postgres + spend tracking). Все модели под именами `smm/claude-haiku-4.5`, `smm/claude-sonnet-4.6`, `smm/claude-opus-4-7`, `smm/deepseek-v3`, `smm/gemini-2.5-flash`, `smm/gemini-2.5-pro`. Они идут через отдельный OpenRouter ключ для трекинга расхода SMM-проекта.
+- **Virtual key `smm-openclaw`** с бюджетом $50/30дн. `LITELLM_KEY` в `.env`. Расход: `node tools/spend.mjs`.
+- **HTTPS_PROXY** (tinyproxy на проксе 5.2.66.188:8888 с BasicAuth) прописан system-wide на RU-сервере `5.42.117.201` — `/etc/environment`, apt, git, npm видят. fal.ai/Apify/GitHub теперь доступны с RU.
+- **Дефолт-модель оркестратора:** `smm/claude-sonnet-4.6`, копирайтер/аналитик/планер — `smm/claude-haiku-4.5`. Haiku в 15× дешевле Sonnet, на типовых задачах разница незаметна.
+- **Креды в `.env`** (gitignored): LITELLM, FAL, APIFY, VK, GitHub PAT, S3 (Timeweb seo bucket), Swift. Шаблон — `.env.example`.
+- **Душнила** — теперь полноценный агент `agents/dushnila/SOUL.md` для обработки ОС заказчика.
+- **skills/директ-апи удалён** (не использовался). `skills/fal-ai`, `skills/сценарий-рилс`, `skills/сценарий-съёмки`, `skills/ежедневный-брифинг` — оставлены как reference docs для агентов.
+- **YAGNI** добавлен в `global/rules.md` как явное правило.
+- **Деплой OpenClaw** — делается отдельно: `docs/openclaw-deploy.md`.
 
 ---
 

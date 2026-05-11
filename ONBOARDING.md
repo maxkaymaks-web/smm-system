@@ -1,147 +1,112 @@
-# Онбординг оператора постов — bit&pix
+# Онбординг оператора — bit&pix SMM
 
-## Что нужно установить (один раз)
+Для оператора постов. Разработчик системы — Максим / Pavel.
 
-### 1. Node.js
-https://nodejs.org → скачать LTS версию, установить
+## Как устроено
 
-### 2. Claude Code
-```bash
-npm install -g @anthropic-ai/claude-code
-```
+Все агенты (копирайтер, дизайнер, аналитик и т.д.) живут на удалённом сервере под управлением **OpenClaw**. Ты с ними общаешься через Telegram-бот @bitandpixbot или прямой чат-интерфейс.
 
-### 3. Git
-https://git-scm.com → скачать и установить (если нет)
+Файлы проектов лежат на GitHub. Ты пулишь, читаешь черновики, обновляешь статусы, коммитишь.
 
----
+## Установка (один раз)
 
-## Первый запуск
+### 1. Node.js + Git
 
-### Шаг 1 — Клонировать репо
+- Node.js LTS: https://nodejs.org
+- Git: https://git-scm.com
+
+### 2. Клонировать репо
+
 ```bash
 git clone https://github.com/maxkaymaks-web/smm-system.git
 cd smm-system
+npm install
 ```
 
-### Шаг 2 — Установить скиллы Claude Code
-Скиллы лежат в `skills/` — нужно скопировать в `~/.claude/skills/`:
-```bash
-mkdir -p ~/.claude/skills
-cp -r skills/* ~/.claude/skills/
-```
-Это даёт Claude Code доступ к: fal-ai (генерация изображений), ежедневный-брифинг, сценарий-съёмки, директ-апи, сценарий-рилс.
+### 3. .env
 
-> **При обновлении системы** (`git pull`) — повторить команду выше, чтобы получить свежие скиллы.
-
-### Шаг 2а — Установить ключ fal.ai
-```bash
-cp global/.env.fal ~/.claude/.env.fal
-```
-
-### Шаг 3 — Авторизация Claude Code
-```bash
-claude
-```
-При первом запуске попросит API ключ — вставить ключ от Максима.
-
-### Шаг 4 — Открыть рабочую папку
-```bash
-claude  # запускать всегда из папки smm-system
-```
-Claude Code автоматически прочитает `CLAUDE.md` и загрузит твою роль.
-
----
+Запросить у Максима актуальный `.env` (там ключи API). Положить в корень репо. Не коммитить — он в `.gitignore`.
 
 ## Ежедневная работа
 
 **Утром:**
-1. Открыть Terminal → `cd smm-system` → `claude`
-2. Написать: *"начинаем работу"* — Claude прочитает обновления и спросит с каким проектом работаем
-
-**Получить актуальные файлы:**
 ```bash
+cd smm-system
 git pull origin main
 ```
-(запускать перед началом работы)
 
-**После любых изменений — сохранить:**
+В Telegram приходит ежедневный брифинг в 9:00 МСК (что делать сегодня).
+
+**По задаче:** пиши в Telegram-бот OpenClaw — он сам понимает, диспатчит нужного агента.
+
+Примеры команд оператора:
+- «Создай пост 04 из контент-плана для BeautyCulture_DariaSopkina»
+- «Статус поста 03 BeautyCulture → на согласовании»
+- «Заказчик прислал ОС по посту 02 Bioprintex: «слишком сухо». Разбери через Душнилу»
+
+**После любых изменений локально:**
 ```bash
 git add .
-git commit -m "posts: [что сделано] — [проект]"
+git commit -m "<scope>: <что сделал> — <ProjectID>"
 git push origin main
 ```
 
----
+Скоупы: `posts`, `content-plan`, `analytics`, `feedback`.
 
-## Структура проектов
+## Что МОЖНО делать оператору
 
-```
-smm-system/
-  projects/
-    Bioprintex_Limatex/       ← B2B, экология
-      content-plan.md         ← контент-план (текст)
-      content-plan.html       ← контент-план (визуал)
-      posts/
-        drafts/               ← черновики постов
-        inbox/                ← материалы от заказчика
-    BeautyCulture_DariaSopkina/  ← Студия красоты
-      ...
-    Lis_Gym/                    ← Фитнес-зал, Instagram Reels
-      ...
-  global/
-    rules.md                  ← общие правила
-    UPDATES.md                ← свежие изменения от разработчика
-  agents/skills/
-    copywriter/skill.md       ← как вызывать копирайтера
-    designer/skill.md         ← как вызывать дизайнера
-  skills/                     ← скиллы Claude Code (копировать в ~/.claude/skills/)
-    fal-ai/                   ← генерация фото/видео через fal.ai
-    ежедневный-брифинг/       ← утренний брифинг по проектам
-    сценарий-съёмки/          ← ТЗ на съёмку для клиентов
-    директ-апи/               ← создание кампаний Яндекс Директ
-    сценарий-рилс/            ← сценарии Instagram Reels (для Lis_Gym)
-```
+- Обновлять статусы в `content-plan.md` и `content-plan.html`
+- Читать черновики в `projects/*/posts/`
+- Создавать папки внутри `posts/drafts/` и `posts/inbox/`
+- Запускать любых агентов через Telegram-бот
+- Делать `git commit` + `push` после изменений
 
----
+## Что НЕЛЬЗЯ оператору
 
-## Конвертация HTML → PDF
+- Изменять `voice.md`, `context.md`, `strategy.md` любого проекта
+- Изменять `global/rules.md`, `CLAUDE.md`
+- Изменять `tools/`, `agents/*/SOUL.md`
+- Создавать новые проекты вручную (через бриф-агента)
+- Удалять файлы и папки
 
-Все визуальные документы системы (контент-планы, сценарии, карусели) создаются в HTML.
-Для получения PDF — два инструмента в папке `tools/`.
+## Статусы постов
 
-### Документы и сценарии (один HTML → один PDF)
+| Статус | Значение |
+|--------|----------|
+| `черновик` | Не начат |
+| `ждём материалы` | Ждём фото/видео от заказчика |
+| `на согласовании` | Текст отправлен заказчику |
+| `готово` | Заказчик одобрил, готово к публикации |
+| `опубликовано` | Опубликован в соцсети |
+
+## HTML → PDF (контент-планы и сценарии)
 
 ```bash
-node tools/html-to-pdf.js <файл.html> [выход.pdf]
+node tools/html-to-pdf.js projects/{ProjectID}/content-plan.html
+node tools/slides-to-pdf.js projects/{ProjectID}/posts/drafts/{папка}/
 ```
 
-Примеры:
-```bash
-node tools/html-to-pdf.js projects/Lis_Gym/content-plan.html
-node tools/html-to-pdf.js projects/Bioprintex_Limatex/posts/inbox/23_04_2026-konferentsiya/scenario.html scenario.pdf
-```
+Если не указать выходной путь — PDF сохранится рядом с HTML под тем же именем.
 
-Если `[выход.pdf]` не указан — PDF сохраняется рядом с HTML под тем же именем.
-
-### Карусели-слайды (папка с HTML → один PDF)
+## Расход на LLM
 
 ```bash
-node tools/slides-to-pdf.js <папка> [выход.pdf] [--quality 90] [--scale 2]
+node tools/spend.mjs
 ```
 
-Примеры:
-```bash
-node tools/slides-to-pdf.js projects/BeautyCulture_DariaSopkina/posts/drafts/22_04_2026-1/
-node tools/slides-to-pdf.js projects/Bioprintex_Limatex/posts/drafts/29_04_2026-1/ carousel.pdf --quality 85
-```
+Покажет сколько потрачено за месяц и сколько осталось в бюджете.
 
-Если `[выход.pdf]` не указан — PDF сохраняется в папке со слайдами как `slides.pdf`.
+## Проекты
 
----
+- `projects/Bioprintex_Limatex/` — Лиматех / Биопринтех, B2B экология (ВК)
+- `projects/BeautyCulture_DariaSopkina/` — Студия красоты «Культура», СПб (ВК)
+- `projects/Lis_Gym/` — Lis Gym, фитнес-блог (Instagram Reels)
+- `projects/Black_Apple/` — Black Apple, продажа iPhone, 9 городов (ВК)
+- `projects/Lakmoda/` — Lakmoda, салон красоты Люберцы (Instagram)
+- `projects/Sparta/` — Sparta, стратегический B2B/B2G консалтинг (Telegram)
 
-## Важно
+## Если что-то сломалось
 
-- Ежедневный брифинг приходит **автоматически в 9:00** в Telegram @bitandpixbot
-- Перед работой с любым проектом — `git pull`
-- Не трогать: `voice.md`, `rules.md`, `orchestrator.md`, `tools/`, `CLAUDE.md`
-- Вопросы по системе — Максиму
+- Вопросы по системе — Максиму / Pavel
+- Логи агента — на сервере через `journalctl -u openclaw`
+- `tools/spend.mjs` показывает что LiteLLM жив (если падает запрос — значит проблема)
