@@ -49,33 +49,54 @@ delegates_to: [copywriter, designer, analytics, brief, content-planner, dushnila
 ## Контроль качества
 
 После результата агента:
-1. Прочитай результат
+1. Прочитай результат (`post.md` локально, `post.png` через `s3.mjs get` в `/tmp` для визуала)
 2. Проверь по правилам `global/rules.md` (форматирование, стоп-слова, табу из `context.md`)
-3. Если ок — перемести в `projects/{ProjectID}/posts/inbox/`
+3. Если ок — переименовать S3-префикс с `posts/drafts/` на `posts/inbox/` + переместить локальный `post.md`:
+   ```bash
+   # переместить артефакты в S3
+   node tools/s3.mjs sync-down projects/{ProjectID}/posts/drafts/{папка}/ /tmp/move/
+   node tools/s3.mjs sync-up   /tmp/move/                                  projects/{ProjectID}/posts/inbox/{папка}/
+   node tools/s3.mjs rm        projects/{ProjectID}/posts/drafts/{папка}/  --recursive
+   rm -rf /tmp/move
+   # переместить .md (он в git)
+   mv projects/{ProjectID}/posts/drafts/{папка}/post.md projects/{ProjectID}/posts/inbox/{папка}/post.md
+   ```
 4. Если правки — верни агенту с конкретикой (не «переделай», а «крючок слабый, замени на N»)
 
 ## Публикация результата в Telegram-топик проекта
 
-Когда черновик готов — пушим превью в топик проекта в группе SEO-claw:
+Когда черновик готов — пушим превью в топик проекта. **PNG/PDF лежат в S3**, скачиваем во временный путь, посылаем, чистим:
 
 ```bash
-# текст + PNG превью
+WORK=/tmp/tg-{ProjectID}-{date}-{N}
+mkdir -p "$WORK"
+node tools/s3.mjs get projects/{ProjectID}/posts/drafts/{папка}/post.png $WORK/post.png
 node tools/tg-send.mjs {ProjectID} \
   --text "Черновик #NN ({рубрика}) готов на согласование. Статус → На согласовании." \
-  --photo projects/{ProjectID}/posts/drafts/{папка}/post.png
+  --photo $WORK/post.png
+rm -rf "$WORK"
+```
 
-# для карусели — PDF слайдов
-node tools/tg-send.mjs {ProjectID} \
-  --text "Карусель #NN готова" \
-  --file projects/{ProjectID}/posts/drafts/{папка}/slides.pdf
+Для карусели — `slides.pdf` (тоже из S3):
+
+```bash
+node tools/s3.mjs get projects/{ProjectID}/posts/drafts/{папка}/slides.pdf /tmp/slides.pdf
+node tools/tg-send.mjs {ProjectID} --text "Карусель #NN готова" --file /tmp/slides.pdf
+rm /tmp/slides.pdf
 ```
 
 thread_id берётся автоматически из `projects/topics.json`. Если топика ещё нет — `node tools/tg-topic.mjs create {ProjectID}`.
 
-Для общих сообщений (ежедневный брифинг, межпроектные апдейты) — топик `general`:
+Общие сообщения (ежедневный брифинг, межпроектные апдейты) — топик `general`:
 
 ```bash
 node tools/tg-send.mjs general --text "Утренний брифинг: …"
+```
+
+Технические вопросы (ошибки, баги, обсуждение архитектуры) — топик `tech_support`:
+
+```bash
+node tools/tg-send.mjs tech_support --text "OpenClaw упал в 14:02, LiteLLM 502. Перезапустил, ок."
 ```
 
 ## Обработка фидбека

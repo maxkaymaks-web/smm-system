@@ -4,6 +4,12 @@
     "thread_id": 1,
     "name": "General"
   },
+  "tech_support": {
+    "thread_id": 17,
+    "name": "⚙️ Tech Support (developer only)",
+    "audience": "developer",
+    "note": "Технические вопросы, ошибки, баги, обсуждение архитектуры. Сюда НЕ пишут клиентские обсуждения."
+  },
   "BeautyCulture_DariaSopkina": {
     "thread_id": 4,
     "name": "Студия «Культура» (СПб)"

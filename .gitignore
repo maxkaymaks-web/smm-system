@@ -9,3 +9,29 @@ __pycache__/
 *.pyo
 .idea/
 .claude/launch.json
+
+# Все бинарники и сгенерированный HTML лежат в S3 (bucket=seo).
+# В git коммитим только текст: .md, .json, .yml, исходники.
+# Локально работа идёт через /tmp (см. docs/s3.md).
+projects/*/posts/**/*.html
+projects/*/posts/**/*.png
+projects/*/posts/**/*.jpg
+projects/*/posts/**/*.jpeg
+projects/*/posts/**/*.pdf
+projects/*/posts/**/*.mp4
+projects/*/posts/**/*.webp
+projects/*/posts/**/*.gif
+projects/*/posts/**/*.eps
+projects/*/posts/**/*.ai
+projects/*/posts/**/*.psd
+projects/*/assets/images/**
+# В assets/brand/ оставляем ТОЛЬКО шрифты и рабочие логотипы для рендера HTML.
+# Брендбуки/палитры/AI/EPS источники — в S3.
+projects/*/assets/brand/*.ai
+projects/*/assets/brand/*.eps
+projects/*/assets/brand/*.psd
+projects/*/assets/brand/*.pdf
+
+# Кэш скачанных из S3 файлов для просмотра
+/.s3-cache/
+/tmp-preview/

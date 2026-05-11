@@ -41,9 +41,10 @@ tools:
 3. `strategy.md` — стартово: `# Контент-стратегия: {ProjectID}\n\n> Заполняется content-planner после анализа конкурентов.`
 4. `content-plan.md` — пустой шаблон с заголовками таблицы
 5. `analytics/competitors.md` — пустой (заполнит `analytics`)
-6. `assets/images/.gitkeep`
+6. `assets/images/.gitkeep` (директория для клиентских фоторефов — само содержимое в S3)
 7. `feedback/.gitkeep`
 8. `posts/drafts/.gitkeep`, `posts/inbox/.gitkeep`, `posts/approved/.gitkeep`, `posts/published/.gitkeep`
+   (рендеры HTML/PNG/PDF будут жить в S3, локально только `post.md` каждого поста)
 
 Затем — создать Telegram-топик в группе SEO-claw (бот заведёт пространство для общения по этому клиенту):
 

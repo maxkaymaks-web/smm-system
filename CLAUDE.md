@@ -43,8 +43,12 @@ LLM-вызовы (любые)
 Генерация изображений / видео / TTS
   └─→ fal.ai напрямую (HTTPS_PROXY через 5.2.66.188:8888 если запуск с RU IP)
 
+Хранилище медиа (HTML/PNG/JPG/PDF/MP4)
+  └─→ S3 Timeweb (s3.twcstorage.ru, bucket=seo). В git только текст (md/json).
+       Локально файлы — временные в /tmp. См. docs/s3.md.
+
 Telegram-бот (только в проде)
-  └─→ группа SEO-claw, 1 топик = 1 проект (см. projects/topics.json)
+  └─→ группа SEO-claw, 1 топик = 1 проект + General + Tech Support (projects/topics.json)
 ```
 
 ---
@@ -90,8 +94,11 @@ tools/                            утилиты (Node.js + Python)
   ├─ analyze-image.mjs  fal.ai vision (анализ референсов)
   ├─ remove-bg.mjs      fal.ai BRIA убирает фон
   ├─ upscale.mjs        fal.ai SeedVR2 апскейл
+  ├─ s3.mjs             S3 CRUD (list/put/get/rm/sync-up/sync-down/url)
+  ├─ migrate-to-s3.mjs  одноразовый: бинарники projects/ → S3 + удалить локально
   ├─ tg-topic.mjs       управление топиками SEO-claw группы
   ├─ tg-send.mjs        отправка в топик проекта (текст + PNG/PDF)
+  ├─ get-tg-chat-id.mjs хелпер для поиска chat_id
   ├─ spend.mjs          отчёт по тратам LiteLLM
   ├─ apify/             парсеры Instagram/TikTok
   └─ remotion-lakmoda/  видео-рендер для Lakmoda
@@ -103,8 +110,10 @@ skills/                           reference-доки (используются �
   └─ ежедневный-брифинг/SKILL.md утренний брифинг
 
 docs/
-  ├─ dev-guide.md       как разрабатывать и обучать агентов
-  └─ openclaw-deploy.md как раскатать прод на RU-сервер
+  ├─ dev-guide.md          как разрабатывать и обучать агентов
+  ├─ openclaw-deploy.md    как раскатать прод на RU-сервер
+  ├─ proxy-and-server.md   IPs, порты, как достучаться к LiteLLM/прокси
+  └─ s3.md                 как пользоваться S3 (где медиа лежат)
 ```
 
 ---

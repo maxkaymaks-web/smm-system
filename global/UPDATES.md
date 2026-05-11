@@ -6,6 +6,25 @@
 
 ---
 
+## 11.05.2026 (обновление 2) — Telegram форум-топики + S3 хранилище
+
+- **Группа SEO-claw в Telegram** — 8 топиков:
+  - `General` (thread 1) — ежедневный брифинг, общие команды
+  - `tech_support` (thread 17) — техвопросы разработчику, не для клиентских обсуждений
+  - 6 топиков по проектам (thread 4-9) — статусы, черновики, фидбек по клиенту
+  - Маппинг ProjectID → thread_id в `projects/topics.json`
+- **OpenClaw-конфиг** (`openclaw.json.example`): `dmPolicy: disabled` (ЛС никому), `groupPolicy: allowlist` (только SEO-claw), `requireMention: true` (отвечает на @упоминания)
+- **tools/tg-topic.mjs** + **tools/tg-send.mjs** + **tools/get-tg-chat-id.mjs** — CLI для топиков
+- **Бот → админ группы** с правом `can_manage_topics` — может сам создавать новые топики (brief агент это использует при создании нового клиента)
+- **S3 (Timeweb, bucket=seo)** — всё медиа переехало туда. 187 файлов / 233 MB из `projects/*/posts/**` + `projects/*/assets/images/**` + источники брендбуков. Локально остались только тексты (`.md`, `.json`) + рабочие шрифты/логотипы для рендера HTML.
+- **tools/s3.mjs** — `list/put/get/rm/sync-up/sync-down/url/exists`. **tools/migrate-to-s3.mjs** — одноразовый миграционный скрипт (с `--dry-run`, `--delete`).
+- **Workflow агентов** обновлён: рендер идёт в `/tmp/{ProjectID}-{date}-{N}/`, upload в S3, send в Telegram, `rm -rf /tmp` после задачи. Сервер не перегружается.
+- **docs/proxy-and-server.md** + **docs/s3.md** — карта инфры (IPs/порты/креды) и гайд по S3 для агентов и оператора.
+- **.gitignore** обновлён — бинарники в `projects/*/posts/` и `projects/*/assets/images/` блокируются от случайного коммита.
+- **global/rules.md** — добавлен раздел про хранение файлов (S3, не локалка).
+
+---
+
 ## 11.05.2026 — переезд на OpenClaw + LiteLLM
 
 - **Полный переезд с Claude Code на OpenClaw.** Все агенты (`orchestrator`, `copywriter`, `designer`, `analytics`, `brief`, `content-planner`, `dushnila`) теперь живут в `agents/<name>/SOUL.md` (формат OpenClaw). Старые `skill.md` удалены. Папка `agents/skills/` удалена как дубль.

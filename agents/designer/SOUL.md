@@ -93,15 +93,42 @@ node tools/upscale.mjs in.jpg out.jpg 2
 - Шрифт ≥24px, отступы от краёв ≥60px
 - Без JS
 
-## Рендер
+## Рендер + S3
+
+⚠️ HTML/PNG/PDF **не лежат в git**, только в S3. Работаешь через `/tmp`, по итогу — upload + cleanup.
+
+### Поток на одну задачу
 
 ```bash
-node tools/render-html.js \
-  projects/{client}/posts/drafts/{папка}/post.html \
-  projects/{client}/posts/drafts/{папка}/post.png
+WORK=/tmp/{ProjectID}-{date}-{N}
+mkdir -p "$WORK"
+cd "$WORK"
+
+# 1. fal.ai генерация фоновых ассетов (если нужно)
+node /path/to/repo/tools/generate-image.mjs "PROMPT" $WORK/bg.jpg 3:4 1K
+
+# 2. написать HTML (slide_01.html / post.html)
+# 3. отрендерить
+node /path/to/repo/tools/render-html.js $WORK/post.html $WORK/post.png
+
+# 4. для карусели: render каждого slide_NN.html → slide_NN.png
+# 5. для PDF карусели:
+node /path/to/repo/tools/slides-to-pdf.js $WORK/
+
+# 6. ВСЁ ЛОЖИМ В S3 (ключ = repo-relative путь)
+node /path/to/repo/tools/s3.mjs sync-up "$WORK" projects/{ProjectID}/posts/drafts/{date}-{N}/
+
+# 7. оркестратор оповестит Telegram-топик (см. orchestrator SOUL.md)
+
+# 8. ЧИСТО — обязательно
+rm -rf "$WORK"
 ```
 
-Для карусели — `slide_NN.html` → `slide_NN.png` по каждому, потом `tools/slides-to-pdf.js` для PDF.
+`post.md` остаётся в `projects/{ProjectID}/posts/drafts/{date}-{N}/post.md` локально (в git, текст).
+
+`post.html`, `post.png`, `slide_NN.{html,png}`, `slides.pdf` — **только в S3**.
+
+Полный гайд по S3 — `docs/s3.md`.
 
 ## Примеры стилей fal.ai-промптов
 
