@@ -6,6 +6,38 @@
 ---
 
 <!-- Записи добавляются сверху (новые первые) -->
+## 2026-05-12 | ✦ Роскошь и Премиум
+### Роскошь и Премиум — авто-обучение 12.05.2026
+> Аккаунты: @dior, @chanelofficial, @louboutinworld | Проанализировано изображений: 1
+
+#### Изученные посты
+  - **@chanelofficial** (42,072 likes) — Luxury | Deep charcoal, rich gold, soft rose, warm ivory, opulent and | Centered subject, dominant subject placement, ample negative
+
+#### Визуальные паттерны (синтез)
+1. Крупные шрифты с засечками заглавными буквами
+2. Акцентный золотой цвет
+3. Обилие "воздуха" или пустого пространства
+4. Темные, глубокие основные цвета фона
+5. Фокус на детализированных текстурах (ткань, кожа)
+
+#### Цветовая палитра стиля
+Глубокие, насыщенные основные цвета (темно-серый, черный, темно-синий) с яркими золотыми акцентами, создающими контраст и ощущение богатства.
+
+#### Правила композиции
+Центральное расположение главного объекта, с большим количеством негативного пространства вокруг него, подчеркивающее его значимость и премиальность.
+
+#### Текстура и свет
+Мягкий, рассеянный свет, выявляющий текстуру материалов и кожи, часто с легким контрастом на лице или ключевых деталях.
+
+#### fal.ai промпты для стиля (применять при генерации)
+  - `A high-fashion portrait on a dark charcoal background with prominent gold lettering. Subject is centered with ample negative space, exuding luxury and premium`
+  - `A striking close-up of a woman wearing opulent jewelry, set against a deep black background with subtle gold accents and luxurious textures.`
+  - `A still life featuring a delicate perfume bottle, bathed in soft light on a dark, velvety surface, with elegant gold serif typography.`
+
+#### Дизайн-фокус
+тёмные фоны, gold accent, крупный serif CAPS, пустое пространство как роскошь
+---
+
 ## 2026-05-11 | 🧠 Промпт-инжиниринг fal.ai
 ### Промпт-инжиниринг fal.ai — авто-обучение 11.05.2026
 
