@@ -91,37 +91,57 @@ console.log(`Output: ${outputPath} | model=${model} | ${aspectRatio}${model === 
 
 let result;
 
-if (model === "nano-banana-2") {
-  result = await meter(
-    { tool: "generate-image", model: "fal-ai/nano-banana-2", params: { resolution, aspect_ratio: aspectRatio, num_images: 1 } },
-    () => fal.run("fal-ai/nano-banana-2", {
-      input: {
-        prompt,
-        aspect_ratio: aspectRatio,
-        resolution,
-        output_format: "jpeg",
-        num_images: 1,
-      },
-    })
-  );
-} else {
-  const imageSize = ASPECT_TO_SIZE[aspectRatio] ?? "portrait_4_3";
-  result = await meter(
-    { tool: "generate-image", model: "openai/gpt-image-2", params: { image_size: imageSize, quality, num_images: 1 } },
-    () => fal.run("openai/gpt-image-2", {
-      input: {
-        prompt,
-        image_size: imageSize,
-        quality,
-        output_format: "jpeg",
-        num_images: 1,
-      },
-    })
-  );
+try {
+  if (model === "nano-banana-2") {
+    result = await meter(
+      { tool: "generate-image", model: "fal-ai/nano-banana-2", params: { resolution, aspect_ratio: aspectRatio, num_images: 1 } },
+      () => fal.run("fal-ai/nano-banana-2", {
+        input: {
+          prompt,
+          aspect_ratio: aspectRatio,
+          resolution,
+          output_format: "jpeg",
+          num_images: 1,
+        },
+      })
+    );
+  } else {
+    const imageSize = ASPECT_TO_SIZE[aspectRatio] ?? "portrait_4_3";
+    result = await meter(
+      { tool: "generate-image", model: "openai/gpt-image-2", params: { image_size: imageSize, quality, num_images: 1 } },
+      () => fal.run("openai/gpt-image-2", {
+        input: {
+          prompt,
+          image_size: imageSize,
+          quality,
+          output_format: "jpeg",
+          num_images: 1,
+        },
+      })
+    );
+  }
+} catch (err) {
+  console.error(`fal.ai ERROR: ${err.message}`);
+  console.error("Генерация остановлена. Никаких фоллбэков. Проверь прокси или попробуй позже.");
+  process.exit(2);
 }
 
-const imageUrl = result.data.images[0].url;
+const imageUrl = result?.data?.images?.[0]?.url;
+if (!imageUrl) {
+  console.error("fal.ai вернул пустой ответ (нет URL изображения).");
+  console.error("Генерация остановлена. Никаких фоллбэков.");
+  process.exit(2);
+}
+
 await downloadFile(imageUrl, outputPath);
 
-console.log("✓ Saved:", outputPath);
+const stat = fs.statSync(outputPath);
+if (stat.size === 0) {
+  fs.unlinkSync(outputPath);
+  console.error(`Файл ${outputPath} оказался пустым (0 байт) — скачивание не удалось.`);
+  console.error("Генерация остановлена. Никаких фоллбэков.");
+  process.exit(2);
+}
+
+console.log("✓ Saved:", outputPath, `(${stat.size} bytes)`);
 if (result.data.description) console.log("  Description:", result.data.description);
