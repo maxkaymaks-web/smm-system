@@ -159,7 +159,7 @@ git commit -m "<scope>: <action> — <ProjectID>"
 git push origin main
 ```
 
-Скоупы: `posts`, `content-plan`, `analytics`, `brief`, `designer`, `agents`, `tools`, `docs`, `feedback`, `litellm`.
+Скоупы: `posts`, `content-plan`, `analytics`, `brief`, `designer`, `agents`, `tools`, `docs`, `feedback`, `litellm`, `memory`.
 
 Локальные коммиты подхватятся на сервере при следующем `git pull` или ежечасном автопулле OpenClaw.
 

@@ -173,6 +173,6 @@ projects/{ProjectID}/posts/drafts/{dd_mm_yyyy}-{N}/
 - `analytics: competitors analysis — Bioprintex_Limatex`
 - `designer: render slides 01-05 — Lakmoda`
 
-Скоупы: `posts`, `content-plan`, `analytics`, `brief`, `designer`, `agents`, `tools`, `docs`.
+Скоупы: `posts`, `content-plan`, `analytics`, `brief`, `designer`, `agents`, `tools`, `docs`, `memory`.
 
 Не делать: `--no-verify`, `--amend` без явного запроса оператора, force push в main.
