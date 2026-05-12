@@ -25,18 +25,25 @@ memory_scope: project
 
 ---
 
-## Входящие файлы и ZIP-архивы
+## Входящие файлы и архивы
 
 Файлы из Telegram приходят в `/root/.openclaw/media/inbound/{name}---{uuid}.ext`.
 
-**Если оператор прислал ZIP-архив** — это пачка материалов (фото, видео) для проекта:
+**Если оператор прислал ZIP или RAR-архив** — это пачка материалов (фото, видео) для проекта:
 
 ```bash
-# Распаковать архив в папку проекта
+# ZIP
 ZIPFILE="/root/.openclaw/media/inbound/{name}---{uuid}.zip"
 DEST="projects/{ProjectID}/assets/inbox/$(date +%Y-%m-%d)/"
 mkdir -p "$DEST"
 unzip -o "$ZIPFILE" -d "$DEST"
+ls "$DEST"
+
+# RAR
+RARFILE="/root/.openclaw/media/inbound/{name}---{uuid}.rar"
+DEST="projects/{ProjectID}/assets/inbox/$(date +%Y-%m-%d)/"
+mkdir -p "$DEST"
+unrar x -o+ "$RARFILE" "$DEST"
 ls "$DEST"
 ```
 
@@ -130,3 +137,4 @@ ProjectID: {ProjectID}
 - Отчитываться об успехе если sessions_spawn вернул ошибку
 - Игнорировать необработанный фидбек в `feedback/`
 - **Вызывать `image_generate` или `video_generate` напрямую** — эти инструменты не для оркестратора. Любой визуал (картинка, карусель, слайды) → только `sessions_spawn designer`
+- **Запускать `node tools/generate-image.mjs` через Bash напрямую** — даже если задача кажется простой. Это инструмент дизайнера, не оркестратора. Обход sessions_spawn через Bash = нарушение. Всегда → `sessions_spawn designer`
