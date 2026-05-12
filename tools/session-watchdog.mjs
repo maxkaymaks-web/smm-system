@@ -104,25 +104,68 @@ for (const filePath of files) {
                  data.timedOutDuringCompaction    ? 'во время компакшна контекста' :
                                                    '';
 
-  // последнее от бота (≤2 фразы, ≤200 символов каждая)
-  const lastBotLines = (data.assistantTexts || [])
-    .slice(-2)
-    .map(t => t.trim().substring(0, 200))
-    .filter(Boolean);
+  // последние тул-коллы из messagesSnapshot
+  // структура OpenClaw: toolCall { type, id, name, arguments } + toolResult { type: "text", text }
+  const snap = data.messagesSnapshot || [];
 
-  // запрос оператора: очищаем от media-аннотаций и @mention
-  const userMsg = (data.finalPromptText || '')
-    .replace(/\[media attached:[^\]]*\]/g, '')
-    .replace(/@\S+\s*/g, '')
-    .trim()
-    .substring(0, 200);
+  const toolPairs = []; // { tool, cmd, result }
+  let pending = null;
+
+  for (const msg of snap) {
+    const role = msg.role || '';
+    const content = msg.content;
+    const blocks = Array.isArray(content) ? content : [];
+
+    for (const block of blocks) {
+      if (!block || typeof block !== 'object') continue;
+
+      if (block.type === 'toolCall') {
+        const name = block.name || '?';
+        const args = block.arguments || {};
+        // exec → показываем команду; остальные → JSON аргументов
+        const cmd = (name === 'exec' && args.command)
+          ? String(args.command).replace(/\s+/g, ' ').trim().substring(0, 160)
+          : `${name} ${JSON.stringify(args).substring(0, 100)}`;
+        pending = { tool: name, cmd };
+      } else if (role === 'toolResult' && block.type === 'text') {
+        const txt = (block.text || '').trim();
+        const firstLine = txt.split('\n')[0];
+
+        // фильтруем мусор
+        const isNoise = !txt
+          || txt === '(no output)'
+          || txt.startsWith('Usage: node ')
+          || txt.startsWith('Example ')
+          || /EXISTS|NOT FOUND/.test(txt)   // ls/test file checks
+          || /^[\w/.\-:]+$/.test(firstLine) // bare path with no context
+          || pending?.tool === 'update_plan'
+          || pending?.tool === 'image';     // image analysis — слишком длинно
+
+        if (pending) {
+          if (!isNoise) {
+            toolPairs.push({ tool: pending.tool, cmd: pending.cmd, result: firstLine.substring(0, 200) });
+          }
+          pending = null;
+        }
+      }
+    }
+  }
+
+  // незавершённый последний тул (таймаут во время него)
+  if (pending) {
+    toolPairs.push({ tool: pending.tool, cmd: pending.cmd, result: '(ответа не было — таймаут)' });
+  }
+
+  // последние 4 пары
+  const dedupLog = toolPairs.slice(-4).map(p =>
+    `→ ${p.tool}: ${p.cmd}\n  ⟵ ${p.result}`
+  );
 
   // собираем сообщение
   const lines2 = [
     `⏱ Сессия упала по таймауту${reason ? ` (${reason})` : ''} — задача не выполнена.`,
   ];
-  if (userMsg)        lines2.push(`\n📩 Запрос оператора:\n${userMsg}`);
-  if (lastBotLines.length) lines2.push(`\n🤖 Последнее от бота:\n${lastBotLines.join('\n\n')}`);
+  if (dedupLog.length) lines2.push(`\n📋 Последние действия:\n${dedupLog.join('\n')}`);
   lines2.push('\n↩️ Повторите запрос — бот снова готов.');
 
   const msg = lines2.join('\n');
