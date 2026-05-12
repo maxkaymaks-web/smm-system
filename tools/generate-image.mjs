@@ -76,6 +76,14 @@ if (!ALLOWED_MODELS.has(model)) {
   process.exit(1);
 }
 
+// fal.ai принимает только английские промпты. Кириллица в аргументе = encoding-баг агента.
+if (/[а-яёА-ЯЁ]/.test(prompt)) {
+  console.error("ОШИБКА: промпт содержит кириллицу — fal.ai принимает только английский язык.");
+  console.error("Перепиши промпт на английском и вызови снова.");
+  console.error(`Получено: "${prompt}"`);
+  process.exit(1);
+}
+
 // gpt-image-2 принимает image_size как preset name или { width, height }.
 // Сопоставление aspect_ratio → image_size preset из fal.ai.
 const ASPECT_TO_SIZE = {
