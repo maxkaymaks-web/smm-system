@@ -6,36 +6,44 @@
   },
   "tech_support": {
     "thread_id": 17,
-    "name": "⚙️ Tech Support (developer only)",
+    "name": "Tech Support (developer only)",
     "audience": "developer",
-    "note": "Технические вопросы, ошибки, баги, обсуждение архитектуры. Сюда НЕ пишут клиентские обсуждения."
+    "note": "Технические вопросы, ошибки, баги, обсуждение архитектуры. Сюда НЕ пишут клиентские обсуждения.",
+    "icon_custom_emoji_id": "5309832892262654231"
   },
   "BeautyCulture_DariaSopkina": {
     "thread_id": 4,
-    "name": "💅 Студия «Культура» (СПб)"
+    "name": "Студия «Культура» (СПб)",
+    "icon_custom_emoji_id": "5368808634392257474"
   },
   "Bioprintex_Limatex": {
     "thread_id": 5,
-    "name": "🧬 Биопринтех / Лиматех (B2B)"
+    "name": "Биопринтех / Лиматех (B2B)",
+    "icon_custom_emoji_id": "5411138633765757782"
   },
   "Black_Apple": {
     "thread_id": 6,
-    "name": "📱 Black Apple (iPhone)"
+    "name": "Black Apple (iPhone)",
+    "icon_custom_emoji_id": "5409357944619802453"
   },
   "Lakmoda": {
     "thread_id": 7,
-    "name": "👗 Lakmoda (Люберцы)"
+    "name": "Lakmoda (Люберцы)",
+    "icon_custom_emoji_id": "5368741306484925109"
   },
   "Lis_Gym": {
     "thread_id": 8,
-    "name": "🦊 Lis Gym (Reels)"
+    "name": "Lis Gym (Reels)",
+    "icon_custom_emoji_id": "5357370526597653193"
   },
   "Sparta": {
     "thread_id": 9,
-    "name": "🛡 Sparta (B2B консалтинг)"
+    "name": "Sparta (B2B консалтинг)",
+    "icon_custom_emoji_id": "5348227245599105972"
   },
   "finance": {
     "thread_id": 148,
-    "name": "💸 Бабки"
+    "name": "Бабки",
+    "icon_custom_emoji_id": "5309929258443874898"
   }
 }
