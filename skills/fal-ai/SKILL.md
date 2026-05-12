@@ -104,7 +104,9 @@ async function download(url, dest) {
 
 Любая другая t2i-модель — нарушение политики (`global/rules.md`).
 
-CLI-обёртка над обеими — `node tools/generate-image.mjs ... [--model=nano-banana-2|gpt-image-2] [--quality=low|medium|high]`. Прямые `fal.run` тоже допустимы.
+**Designer-агент:** только `node tools/generate-image.mjs ... [--model=nano-banana-2|gpt-image-2] [--quality=low|medium|high]` — никаких кастомных скриптов, прямых `fal.run`, `node -e`, или самописных `.mjs`. Обёртка настраивает `.env`, прокси и таймаут — без неё на RU-сервере ничего не заработает.
+
+**Другие агенты** (analytics и т.п.): прямые `fal.run` допустимы при условии ручной настройки `HTTPS_PROXY` и таймаута.
 
 ---
 
