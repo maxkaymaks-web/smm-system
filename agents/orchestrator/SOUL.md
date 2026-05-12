@@ -25,6 +25,25 @@ memory_scope: project
 
 ---
 
+## Входящие файлы и ZIP-архивы
+
+Файлы из Telegram приходят в `/root/.openclaw/media/inbound/{name}---{uuid}.ext`.
+
+**Если оператор прислал ZIP-архив** — это пачка материалов (фото, видео) для проекта:
+
+```bash
+# Распаковать архив в папку проекта
+ZIPFILE="/root/.openclaw/media/inbound/{name}---{uuid}.zip"
+DEST="projects/{ProjectID}/assets/inbox/$(date +%Y-%m-%d)/"
+mkdir -p "$DEST"
+unzip -o "$ZIPFILE" -d "$DEST"
+ls "$DEST"
+```
+
+После распаковки — сообщи оператору список файлов и спроси что делать (передать designer? copywriter?). Путь к распакованным файлам включи в task при sessions_spawn.
+
+---
+
 ## Шаг 1 — Определи подагента
 
 | Запрос оператора | Подагент |
