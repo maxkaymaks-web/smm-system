@@ -95,6 +95,17 @@ const ASPECT_TO_SIZE = {
   "3:4":  "portrait_4_3",
 };
 
+const TIMEOUT_MS = 90_000; // 90 сек — если fal.ai не ответил, значит висит
+
+function withTimeout(promise, ms) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error(`fal.ai timeout after ${ms / 1000}s — нет ответа`)), ms)
+    ),
+  ]);
+}
+
 console.log(`Generating: "${prompt}"`);
 console.log(`Output: ${outputPath} | model=${model} | ${aspectRatio}${model === "nano-banana-2" ? ` | ${resolution}` : ` | quality=${quality}`}`);
 
@@ -104,7 +115,7 @@ try {
   if (model === "nano-banana-2") {
     result = await meter(
       { tool: "generate-image", model: "fal-ai/nano-banana-2", params: { resolution, aspect_ratio: aspectRatio, num_images: 1 } },
-      () => fal.run("fal-ai/nano-banana-2", {
+      () => withTimeout(fal.run("fal-ai/nano-banana-2", {
         input: {
           prompt,
           aspect_ratio: aspectRatio,
@@ -112,13 +123,13 @@ try {
           output_format: "jpeg",
           num_images: 1,
         },
-      })
+      }), TIMEOUT_MS)
     );
   } else {
     const imageSize = ASPECT_TO_SIZE[aspectRatio] ?? "portrait_4_3";
     result = await meter(
       { tool: "generate-image", model: "openai/gpt-image-2", params: { image_size: imageSize, quality, num_images: 1 } },
-      () => fal.run("openai/gpt-image-2", {
+      () => withTimeout(fal.run("openai/gpt-image-2", {
         input: {
           prompt,
           image_size: imageSize,
@@ -126,7 +137,7 @@ try {
           output_format: "jpeg",
           num_images: 1,
         },
-      })
+      }), TIMEOUT_MS)
     );
   }
 } catch (err) {
