@@ -6,34 +6,33 @@ const puppeteer = require('puppeteer');
 const path = require('path');
 const fs = require('fs');
 
-// Try to find Chrome executable
+// Try to find Chrome executable — skip snap chromium (sandboxed, can't read host filesystem)
 function findChrome() {
   const candidates = [
     '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
     '/Applications/Chromium.app/Contents/MacOS/Chromium',
     '/usr/bin/google-chrome',
-    '/usr/bin/chromium-browser',
   ];
   for (const c of candidates) {
     if (fs.existsSync(c)) return c;
   }
-  return null; // let puppeteer find its own
+  return null; // let puppeteer use its own bundled chrome
 }
 
 async function renderHtml(htmlPath, outputPath, width = 1080) {
-  const executablePath = findChrome();
+  // Prefer puppeteer's bundled Chrome; fall back to system Chrome if found.
+  // Skip snap chromium — it can't read host filesystem via file:// URLs.
+  const systemChrome = findChrome();
   const launchOptions = {
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    executablePath: systemChrome || puppeteer.executablePath(),
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--allow-file-access-from-files'],
   };
-  if (executablePath) {
-    launchOptions.executablePath = executablePath;
-  }
 
   const browser = await puppeteer.launch(launchOptions);
   const page = await browser.newPage();
 
   const absoluteHtmlPath = path.resolve(htmlPath);
-  await page.goto(`file://${absoluteHtmlPath}`, { waitUntil: 'networkidle0' });
+  await page.goto(`file://${absoluteHtmlPath}`, { waitUntil: 'load', timeout: 30000 });
 
   // Get actual content height
   const height = await page.evaluate(() => document.body.scrollHeight);
