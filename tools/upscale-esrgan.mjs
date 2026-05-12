@@ -10,6 +10,7 @@ import fs from "fs";
 import https from "https";
 import http from "http";
 import path from "path";
+import { meter } from "./lib/fal-meter.mjs";
 
 // Load FAL_KEY
 const envPath = path.join(process.cwd(), ".env");
@@ -45,15 +46,18 @@ const uploadedUrl = await fal.storage.upload(blob, { contentType: "image/jpeg" }
 console.log("Uploaded:", uploadedUrl);
 
 console.log("Running ESRGAN upscale...");
-const result = await fal.run("fal-ai/esrgan", {
-  input: {
-    image_url: uploadedUrl,
-    model: "RealESRGAN_x4plus",
-    scale: 2,
-    face_enhance: false,
-    tile: 0,
-  },
-});
+const result = await meter(
+  { tool: "upscale-esrgan", model: "fal-ai/esrgan", params: { scale: 2 } },
+  () => fal.run("fal-ai/esrgan", {
+    input: {
+      image_url: uploadedUrl,
+      model: "RealESRGAN_x4plus",
+      scale: 2,
+      face_enhance: false,
+      tile: 0,
+    },
+  })
+);
 
 const imageUrl = result.data.image.url;
 console.log("Downloading result...");

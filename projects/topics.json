@@ -33,5 +33,9 @@
   "Sparta": {
     "thread_id": 9,
     "name": "Sparta (B2B консалтинг)"
+  },
+  "finance": {
+    "thread_id": 148,
+    "name": "💸 Бабки"
   }
 }

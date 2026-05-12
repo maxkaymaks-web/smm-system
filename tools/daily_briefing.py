@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Daily SMM briefing — bit&pix. Uses only stdlib (no pip needed)."""
 
-import json, urllib.request, urllib.parse, os
+import json, urllib.request, urllib.parse, os, subprocess
 from datetime import date
 from pathlib import Path
 
@@ -113,6 +113,30 @@ if not fire and not work and not mat:
 out.append('\n📊 Статистика')
 for pr, c in stat.items():
     out.append(f"{pr}: {c['tot']} постов | опубл. {c['pub']} | готово {c['ready']} | draft {c['draft']} | ждём {c['wait']} | согл. {c['rev']}")
+
+# Расход за вчера — одной строкой; детально в топик «Бабки» шлёт spend-send.mjs
+try:
+    repo_root = Path(__file__).parent.parent
+    r = subprocess.run(
+        ['node', 'tools/spend-report.mjs', '--period', '24h', '--json'],
+        cwd=repo_root, capture_output=True, text=True, timeout=30,
+    )
+    if r.returncode == 0:
+        d = json.loads(r.stdout)
+        s = d.get('sources', {})
+        llm   = s.get('litellm', {}).get('usd')
+        fal   = s.get('fal',     {}).get('usd', 0)
+        apify = s.get('apify',   {}).get('usd')
+        total = d.get('total_usd', 0)
+        parts = []
+        if llm   is not None: parts.append(f"LLM ${llm:.2f}")
+        if fal   is not None: parts.append(f"fal ${fal:.2f}")
+        if apify is not None: parts.append(f"Apify ${apify:.2f}")
+        out.append(f"\n💸 Вчера: ${total:.2f}  ·  {' · '.join(parts)}  →  подробности в «Бабках»")
+    else:
+        out.append(f"\n💸 ⚠ spend-report упал ({r.returncode}): {r.stderr.strip()[:120]}")
+except Exception as e:
+    out.append(f"\n💸 ⚠ не удалось получить расход: {e}")
 
 txt = '\n'.join(out)
 print(txt)

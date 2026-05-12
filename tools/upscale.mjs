@@ -17,6 +17,7 @@ import fs from "fs";
 import https from "https";
 import http from "http";
 import path from "path";
+import { meter } from "./lib/fal-meter.mjs";
 
 // Load FAL_KEY
 const envPath = path.join(process.cwd(), ".env");
@@ -63,18 +64,21 @@ const imageUrl = await fal.storage.upload(blob, { contentType: mimeType });
 console.log("Uploaded:", imageUrl);
 
 console.log(`Upscaling via SeedVR2 (${isTargetMode ? `target: ${targetRes}` : `×${factorOrMode}`})...`);
-const result = await fal.subscribe("fal-ai/seedvr/upscale/image", {
-  input: {
-    image_url: imageUrl,
-    ...upscaleInput,
-    output_format: outputFormat,
-    noise_scale: 0.1,
-  },
-  logs: true,
-  onQueueUpdate: (u) => {
-    if (u.status === "IN_PROGRESS") u.logs?.forEach(l => console.log("[fal]", l.message));
-  },
-});
+const result = await meter(
+  { tool: "upscale", model: "fal-ai/seedvr/upscale/image", params: { ...upscaleInput, output_format: outputFormat } },
+  () => fal.subscribe("fal-ai/seedvr/upscale/image", {
+    input: {
+      image_url: imageUrl,
+      ...upscaleInput,
+      output_format: outputFormat,
+      noise_scale: 0.1,
+    },
+    logs: true,
+    onQueueUpdate: (u) => {
+      if (u.status === "IN_PROGRESS") u.logs?.forEach(l => console.log("[fal]", l.message));
+    },
+  })
+);
 
 const resultUrl = result.data.image.url;
 console.log("Downloading result...");

@@ -8,6 +8,7 @@
 import { fal } from "@fal-ai/client";
 import fs from "fs";
 import path from "path";
+import { meter } from "./lib/fal-meter.mjs";
 
 const envPath = path.join(process.cwd(), ".env");
 let FAL_KEY = process.env.FAL_KEY;
@@ -73,13 +74,16 @@ FAL_PROMPT_2: [variation with different subject, same aesthetic, 25-35 words]
 FAL_PROMPT_3: [another variation, different angle or mood, 25-35 words]`;
 
 try {
-  const r = await fal.subscribe("fal-ai/any-llm", {
-    input: {
-      model: "google/gemini-flash-1.5",
-      prompt,
-    },
-    logs: false,
-  });
+  const r = await meter(
+    { tool: "synthesize-visual", model: "fal-ai/any-llm", params: { model: "google/gemini-flash-1.5" } },
+    () => fal.subscribe("fal-ai/any-llm", {
+      input: {
+        model: "google/gemini-flash-1.5",
+        prompt,
+      },
+      logs: false,
+    })
+  );
 
   const text = (r?.data?.output || r?.output || "").trim();
 

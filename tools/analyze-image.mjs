@@ -8,6 +8,7 @@
 import { fal } from "@fal-ai/client";
 import fs from "fs";
 import path from "path";
+import { meter } from "./lib/fal-meter.mjs";
 
 // Load FAL_KEY
 const envPath = path.join(process.cwd(), ".env");
@@ -49,14 +50,17 @@ FAL_PROMPT_1: [detailed fal.ai generation prompt in English recreating this visu
 FAL_PROMPT_2: [variation prompt with different subject but same aesthetic, 20-30 words]`;
 
 try {
-  const r = await fal.subscribe("fal-ai/any-llm/vision", {
-    input: {
-      model: "google/gemini-flash-1.5",
-      prompt,
-      image_url: uploadUrl,
-    },
-    logs: false,
-  });
+  const r = await meter(
+    { tool: "analyze-image", model: "fal-ai/any-llm/vision", params: { model: "google/gemini-flash-1.5" } },
+    () => fal.subscribe("fal-ai/any-llm/vision", {
+      input: {
+        model: "google/gemini-flash-1.5",
+        prompt,
+        image_url: uploadUrl,
+      },
+      logs: false,
+    })
+  );
 
   const text = (r?.data?.output || r?.output || "").trim();
 

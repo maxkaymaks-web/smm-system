@@ -35,3 +35,4 @@ projects/*/assets/brand/*.pdf
 # Кэш скачанных из S3 файлов для просмотра
 /.s3-cache/
 /tmp-preview/
+state/

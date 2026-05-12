@@ -15,6 +15,7 @@ import fs from "fs";
 import https from "https";
 import path from "path";
 import { fileURLToPath } from "url";
+import { meter } from "./lib/fal-meter.mjs";
 
 // Load FAL_KEY from .env (repo root)
 const envPath = path.join(process.cwd(), ".env");
@@ -52,15 +53,18 @@ if (!prompt || !outputPath) {
 console.log(`Generating: "${prompt}"`);
 console.log(`Output: ${outputPath} | ${aspectRatio} | ${resolution}`);
 
-const result = await fal.run("fal-ai/nano-banana-2", {
-  input: {
-    prompt,
-    aspect_ratio: aspectRatio,
-    resolution,
-    output_format: "jpeg",
-    num_images: 1,
-  },
-});
+const result = await meter(
+  { tool: "generate-image", model: "fal-ai/nano-banana-2", params: { resolution, aspect_ratio: aspectRatio, num_images: 1 } },
+  () => fal.run("fal-ai/nano-banana-2", {
+    input: {
+      prompt,
+      aspect_ratio: aspectRatio,
+      resolution,
+      output_format: "jpeg",
+      num_images: 1,
+    },
+  })
+);
 
 const imageUrl = result.data.images[0].url;
 await downloadFile(imageUrl, outputPath);
