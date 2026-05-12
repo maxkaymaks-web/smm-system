@@ -5,7 +5,7 @@
  * Используется агентами для отчётов: «черновик готов», «опубликовано», и т.п.
  *
  *   tg-send.mjs <ProjectID> --text "сообщение"
- *   tg-send.mjs <ProjectID> --text "..." --photo path/to/post.png
+ *   tg-send.mjs <ProjectID> --text "..." --photo path/to/post.png   (отправляет файлом/документом)
  *   tg-send.mjs <ProjectID> --text "..." --file path/to/post.pdf
  *
  * thread_id берётся из projects/topics.json.
@@ -66,10 +66,11 @@ const base = { chat_id, message_thread_id: thread };
 
 let res;
 if (photo) {
-  res = await postMultipart('sendPhoto', { ...base, caption: text ?? '' }, 'photo', photo);
+  // sendDocument чтобы Telegram не сжимал и отображал как файл, а не встроенное фото
+  res = await postMultipart('sendDocument', { ...base, caption: text ?? '' }, 'document', photo);
 } else if (file) {
   res = await postMultipart('sendDocument', { ...base, caption: text ?? '' }, 'document', file);
 } else {
-  res = await postMultipart('sendMessage', { ...base, text });
+  res = await postMultipart('sendMessage', { ...base, text, disable_web_page_preview: true });
 }
 console.log(`✓ → ${projectId} (thread ${thread}) msg ${res.message_id}`);
