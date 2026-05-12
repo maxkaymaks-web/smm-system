@@ -95,8 +95,8 @@ const ASPECT_TO_SIZE = {
   "3:4":  "portrait_4_3",
 };
 
-// nano-banana-2 быстрый (~15-30s), gpt-image-2 quality=high может идти до 3 минут
-const TIMEOUT_MS = model === "gpt-image-2" ? 210_000 : 90_000;
+// nano-banana-2 быстрый (~15-30s), gpt-image-2 quality=high может идти до 5 минут
+const TIMEOUT_MS = model === "gpt-image-2" ? 300_000 : 120_000;
 
 function withTimeout(promise, ms) {
   return Promise.race([
