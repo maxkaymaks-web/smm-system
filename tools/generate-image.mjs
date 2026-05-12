@@ -95,13 +95,14 @@ const ASPECT_TO_SIZE = {
   "3:4":  "portrait_4_3",
 };
 
-const TIMEOUT_MS = 90_000; // 90 сек — если fal.ai не ответил, значит висит
+// nano-banana-2 быстрый (~15-30s), gpt-image-2 quality=high может идти до 3 минут
+const TIMEOUT_MS = model === "gpt-image-2" ? 210_000 : 90_000;
 
 function withTimeout(promise, ms) {
   return Promise.race([
     promise,
     new Promise((_, reject) =>
-      setTimeout(() => reject(new Error(`fal.ai timeout after ${ms / 1000}s — нет ответа`)), ms)
+      setTimeout(() => reject(new Error(`TIMEOUT after ${ms / 1000}s. Это НЕ проблема промпта — fal.ai перегружен или прокси лагает. Не переформулируй промпт, не retry — останови задачу и сообщи оператору.`)), ms)
     ),
   ]);
 }
