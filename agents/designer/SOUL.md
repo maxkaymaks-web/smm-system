@@ -131,15 +131,25 @@ node /path/to/repo/tools/slides-to-pdf.js $WORK/
 # 6. ВСЁ ЛОЖИМ В S3 (ключ = repo-relative путь)
 node /path/to/repo/tools/s3.mjs sync-up "$WORK" projects/{ProjectID}/posts/drafts/{date}-{N}/
 
-# 7. оркестратор оповестит Telegram-топик (см. orchestrator SOUL.md)
+# 7. Отправить в Telegram ОБА файла: HTML и PNG (или PDF для карусели)
+#    Сначала HTML, потом PNG — чтобы оператор мог открыть исходник
+node /root/smm-system/tools/tg-send.mjs {ProjectID} $WORK/post.html
+node /root/smm-system/tools/tg-send.mjs {ProjectID} $WORK/post.png
 
-# 8. ЧИСТО — обязательно
+# Для карусели: slide_NN.png + slides.pdf + все slide_NN.html одним архивом или по очереди
+
+# 8. S3 upload
+node /path/to/repo/tools/s3.mjs sync-up "$WORK" projects/{ProjectID}/posts/drafts/{date}-{N}/
+
+# 9. ЧИСТО — обязательно
 rm -rf "$WORK"
 ```
 
 `post.md` остаётся в `projects/{ProjectID}/posts/drafts/{date}-{N}/post.md` локально (в git, текст).
 
 `post.html`, `post.png`, `slide_NN.{html,png}`, `slides.pdf` — **только в S3**.
+
+**Правило доставки:** всегда отправлять в топик **и HTML, и PNG** (или PDF). HTML — чтобы оператор мог поправить исходник без пересоздания.
 
 Полный гайд по S3 — `docs/s3.md`.
 

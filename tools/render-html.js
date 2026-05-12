@@ -20,33 +20,34 @@ function findChrome() {
 }
 
 async function renderHtml(htmlPath, outputPath, width = 1080) {
-  // Prefer puppeteer's bundled Chrome; fall back to system Chrome if found.
-  // Skip snap chromium — it can't read host filesystem via file:// URLs.
+  // Use puppeteer's bundled Chrome (skip snap chromium — sandboxed, can't access host filesystem).
   const systemChrome = findChrome();
-  const launchOptions = {
+  const browser = await puppeteer.launch({
     executablePath: systemChrome || puppeteer.executablePath(),
-    args: ['--no-sandbox', '--disable-setuid-sandbox', '--allow-file-access-from-files'],
-  };
-
-  const browser = await puppeteer.launch(launchOptions);
-  const page = await browser.newPage();
-
-  const absoluteHtmlPath = path.resolve(htmlPath);
-  await page.goto(`file://${absoluteHtmlPath}`, { waitUntil: 'load', timeout: 30000 });
-
-  // Get actual content height
-  const height = await page.evaluate(() => document.body.scrollHeight);
-
-  await page.setViewport({
-    width: Number(width),
-    height: height,
-    deviceScaleFactor: 2, // 2x resolution — crisp on retina
+    headless: 'new',
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-gpu',
+      '--disable-dev-shm-usage',
+      '--no-zygote',
+      '--single-process',
+    ],
   });
+
+  const page = await browser.newPage();
+  const html = fs.readFileSync(path.resolve(htmlPath), 'utf8');
+  await page.setContent(html, { waitUntil: 'domcontentloaded', timeout: 15000 });
+  // Allow web fonts (Google Fonts etc.) to load
+  await new Promise((r) => setTimeout(r, 2000));
+
+  const height = await page.evaluate(() => document.body.scrollHeight);
+  await page.setViewport({ width: Number(width), height, deviceScaleFactor: 2 });
 
   await page.screenshot({
     path: outputPath,
     fullPage: false,
-    clip: { x: 0, y: 0, width: Number(width), height: height },
+    clip: { x: 0, y: 0, width: Number(width), height },
   });
 
   await browser.close();
