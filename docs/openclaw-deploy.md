@@ -48,6 +48,14 @@ unset HTTP_PROXY HTTPS_PROXY http_proxy https_proxy
 cd /root/smm-system
 npm install --no-audit --no-fund         # puppeteer/sharp/@fal-ai/client/pdf-lib
 npm install -g openclaw@latest --no-audit --no-fund
+
+# sqlite-vec — нативное расширение для семантического recall памяти OpenClaw.
+# Без него `[memory] chunks_vec not updated — sqlite-vec unavailable. Vector
+# recall degraded.` и поиск по MEMORY.md/прошлым сессиям только полнотекстовый.
+# Кладём в node_modules OpenClaw, оттуда он его и грузит через loadExtension.
+cd /usr/lib/node_modules/openclaw
+npm install --no-save sqlite-vec
+
 openclaw --version
 ```
 
@@ -271,6 +279,7 @@ ssh root@5.42.117.201 '
 
 - Не вписывать `ANTHROPIC_API_KEY` / `OPENROUTER_API_KEY` напрямую в `.env`. Только `LITELLM_KEY` — все LLM-вызовы через LiteLLM
 - Не использовать `--auth-choice litellm-api-key` в onboard (хардкодит chat URL, не то что надо). Только `custom-api-key` + `--custom-base-url`
-- Не делать `git push` с RU-сервера без необходимости. Кодинг — локально
 - Не оставлять `groupPolicy: allowlist` без `groupAllowFrom` — silent-drop всех сообщений
 - Не ставить Node 18 — `toSorted` отсутствует, openclaw postinstall падает
+- Не забывать `npm install sqlite-vec` в `/usr/lib/node_modules/openclaw/` — без него семантический recall сломан (полнотекстовый поиск по `MEMORY.md` всё ещё работает, но `MEMORY.md` придётся перечитывать вручную)
+- `git push` с RU-сервера — нужен PAT: `printf "https://x-access-token:$GITHUB_PAT@github.com\n" > ~/.git-credentials && chmod 600 ~/.git-credentials && git config --global credential.helper store`. Без него авто-коммиты бота (например, сценарии Lis_Gym) застревают локально
