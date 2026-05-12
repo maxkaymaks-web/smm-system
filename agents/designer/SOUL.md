@@ -67,9 +67,21 @@ references:
 
 **Запуск:** трафик идёт через `HTTPS_PROXY` из `.env` (для RU-сервера обязательно).
 
+### Выбор text-to-image модели — строго две
+
+| Когда | Модель | Флаг CLI |
+|---|---|---|
+| Дефолт: фон, продукт, портрет, lifestyle, текстура | `fal-ai/nano-banana-2` | (по умолчанию) |
+| На картинке должен быть **разборчивый длинный/мульти-язычный/типографский текст** (плакат, цитата, упаковка с надписью, инфографика с подписями) | `openai/gpt-image-2` | `--model=gpt-image-2 [--quality=high]` |
+
+Любая другая t2i (Flux, Ideogram, Recraft, Seedream, Imagen, Qwen, SDXL, Nano Banana Pro и т.п.) — запрещена политикой проекта (`global/rules.md`). Если кажется, что нужна — это сигнал переформулировать промпт под одну из двух разрешённых.
+
 ```bash
-# Генерация изображения
-node tools/generate-image.mjs "ПРОМПТ EN" projects/{client}/assets/images/post-NN-bg.jpg 3:4 1K
+# Генерация изображения — дефолт (nano-banana-2)
+node tools/generate-image.mjs "PROMPT" projects/{client}/assets/images/post-NN-bg.jpg 3:4 1K
+
+# Генерация с длинным текстом на картинке — gpt-image-2
+node tools/generate-image.mjs "poster reading '...' bold serif, ..." out.jpg 3:4 --model=gpt-image-2 --quality=high
 
 # Удаление фона (BRIA)
 node tools/remove-bg.mjs in.jpg out.png
@@ -81,6 +93,7 @@ node tools/upscale.mjs in.jpg out.jpg 2
 Запрещено:
 - Использовать пустой фон с текстом — всегда либо fal.ai фото/текстура, либо Editorial с сильной типографикой + fal.ai деталь
 - `<img src="http...">` — только локальные пути или CSS `background-image`
+- Звать иные t2i модели напрямую через `fal.run("fal-ai/flux-...")` и т.п.
 
 ## Жёсткие требования к HTML
 

@@ -1,9 +1,14 @@
 ---
 name: fal-ai
-description: Генерирует изображения, видео, аудио через fal.ai API. 600+ моделей: Flux, nano-banana-2, Kling, Veo, Sora, Seedance, Wan, ElevenLabs, Kokoro и др. Вызывай когда нужна генерация изображений, видео, аудио, редактирование фото, удаление фона, апскейл, TTS, или когда упоминается fal.ai / FAL_KEY / nano-banana / flux / kling. Включает reverse-prompt методологию — читай references/prompt-engineering.md перед любой генерацией.
+description: Генерирует изображения, видео, аудио через fal.ai API. Text-to-image — только nano-banana-2 (дефолт) или openai/gpt-image-2 (сложный текст на картинке). Видео/аудио/LLM — Kling, Veo, Sora, ElevenLabs, Kokoro, any-llm. Вызывай когда нужна генерация, удаление фона, апскейл, TTS, или когда упоминается fal.ai / FAL_KEY / nano-banana / gpt-image / kling. Включает reverse-prompt методологию — читай references/prompt-engineering.md перед любой генерацией.
 ---
 
 # fal.ai — генерация через API
+
+> **Политика по моделям (см. `global/rules.md`):**
+> Text-to-image — разрешены ТОЛЬКО `fal-ai/nano-banana-2` (по умолчанию) и `openai/gpt-image-2` (для сложного текста / типографики на картинке).
+> Никакие другие t2i (Flux, Ideogram, Recraft, Seedream, Qwen, Imagen, SDXL, Nano Banana Pro и т.п.) не используются.
+> Img2img / inpainting / outpainting — через edit-эндпойнты тех же двух моделей.
 
 ## Промпт-инжиниринг (обязательно перед генерацией)
 
@@ -11,7 +16,7 @@ description: Генерирует изображения, видео, аудио
 - Структура SLCT (Subject / Look / Camera / Technical)
 - **Reverse-prompt**: анализ референс-изображения → разбор на составляющие → написание точного промпта
 - Итеративный цикл улучшения
-- Модельно-специфичные паттерны (nano-banana-2, flux, kling, veo)
+- Модельно-специфичные паттерны (nano-banana-2, gpt-image-2, kling, veo)
 - Шаблоны для SMM: продукт, портрет, архитектура, видео
 - Анти-паттерны и техники усиления
 
@@ -90,10 +95,22 @@ async function download(url, dest) {
 
 ## ИЗОБРАЖЕНИЯ
 
-### Основная модель: nano-banana-2
+Разрешены **ровно две модели**:
 
-**Model ID:** `fal-ai/nano-banana-2`  
-**Цена:** ~$0.06–$0.16/изображение
+| Когда | Модель | Slug | Цена |
+|---|---|---|---|
+| Дефолт (фон, продукт, портрет, lifestyle) | Nano Banana 2 | `fal-ai/nano-banana-2` | $0.06–$0.16/img |
+| Сложный/длинный/мультиязычный текст НА картинке, типографика, инфографика с разборчивыми надписями | GPT Image 2 | `openai/gpt-image-2` | $0.005–$0.40/img (по quality+size) |
+
+Любая другая t2i-модель — нарушение политики (`global/rules.md`).
+
+CLI-обёртка над обеими — `node tools/generate-image.mjs ... [--model=nano-banana-2|gpt-image-2] [--quality=low|medium|high]`. Прямые `fal.run` тоже допустимы.
+
+---
+
+### nano-banana-2 (по умолчанию)
+
+**Model ID:** `fal-ai/nano-banana-2` | Gemini-based, 4K, поддерживает web search и до 14 референс-изображений.
 
 | Параметр | Тип | По умолч. | Описание |
 |----------|-----|-----------|---------|
@@ -106,7 +123,7 @@ async function download(url, dest) {
 | `safety_tolerance` | enum | `4` | Строгость 1–6 |
 | `thinking_level` | enum | — | `minimal` / `high` (глубина обдумывания) |
 | `enable_web_search` | boolean | — | Поиск в интернете для актуальных референсов |
-| `limit_generations` | boolean | `true` | Лимит 1 генерация на промпт |
+| `image_urls` | string[] | — | До 14 референсов (img2img / multi-ref) |
 
 **Вывод:**
 ```json
@@ -131,64 +148,39 @@ const url = result.data.images[0].url;
 
 ---
 
-### Все модели для изображений
+### gpt-image-2 (только для сложного текста)
 
-| Model ID | Название | Цена | Когда использовать |
-|----------|----------|------|--------------------|
-| `fal-ai/nano-banana-2` | Nano Banana 2 | $0.06–0.16 | **По умолчанию.** Gemini-based, 4K, web search |
-| `fal-ai/nano-banana-pro` | Nano Banana Pro | $0.15 | Максимальное качество |
-| `fal-ai/flux-2-pro` | FLUX.2 [pro] | $0.03/MP | Топ фотореализм 2026 |
-| `fal-ai/flux-pro/v1.1-ultra` | FLUX Pro 1.1 Ultra | $0.06 | Фотореализм, 16:9 |
-| `fal-ai/flux/dev` | FLUX.1 [dev] | ~$0.025 | Баланс качество/скорость |
-| `fal-ai/flux/schnell` | FLUX.1 [schnell] | ~$0.003 | Черновики, 4 steps, ультра-быстро |
-| `fal-ai/bytedance/seedream/v4.5/text-to-image` | Seedream V4.5 | $0.04 | ByteDance, высокое качество |
-| `fal-ai/recraft/v3/text-to-image` | Recraft V3 | $0.04–0.08 | Векторный / дизайн стиль |
-| `fal-ai/ideogram/v3` | Ideogram V3 | $0.03–0.09 | **Лучший для текста на изображении** |
-| `fal-ai/gpt-image-1.5` | GPT Image 1.5 | $0.009–0.20 | OpenAI, мультиреференс |
-| `fal-ai/qwen-image-max/text-to-image` | Qwen Image Max | $0.075 | Alibaba, китайские промпты |
+**Model ID:** `openai/gpt-image-2` | OpenAI, рендерит текст с пиксельной точностью, поддерживает мульти-язык, плотную типографику, до 4K.
 
-**Правило выбора:**
-- Общая генерация → `nano-banana-2`
-- Черновик быстро → `flux/schnell`
-- Фотореализм → `flux-2-pro` или `flux-pro/v1.1-ultra`
-- Текст на изображении → `ideogram/v3`
-- Дизайн/вектор → `recraft/v3/text-to-image`
+Берём её **только** когда:
+- На картинке должна быть длинная разборчивая надпись (заголовок-плакат, цитата, текст на упаковке, инфографика с цифрами/подписями)
+- Несколько языков на одном изображении
+- Художественная типографика, где nano-banana-2 ломает буквы
 
----
+Для всего остального → nano-banana-2 дешевле в 2–10 раз и достаточно.
 
-## РЕДАКТИРОВАНИЕ ИЗОБРАЖЕНИЙ
+| Параметр | Тип | По умолч. | Описание |
+|----------|-----|-----------|---------|
+| `prompt` | string | — | **Обязательный** |
+| `image_size` | enum/obj | `landscape_4_3` | preset (`square_hd`, `portrait_4_3`, `landscape_16_9`, …) или `{width, height}` до 3840px |
+| `quality` | enum | `high` | `low` / `medium` / `high` — балансит цена/качество |
+| `num_images` | integer | 1 | |
+| `output_format` | enum | `png` | `jpeg` / `png` / `webp` |
 
-| Model ID | Цена | Что делает |
-|----------|------|-----------|
-| `fal-ai/flux/dev/image-to-image` | ~$0.025 | Style transfer, img2img |
-| `fal-ai/flux-pro/v1/fill` | $0.05/MP | Inpainting (маска + промпт) |
-| `fal-ai/flux-general/inpainting` | — | FLUX Dev + ControlNet + LoRA инпейнтинг |
-| `fal-ai/flux-kontext-lora/inpaint` | $0.035/MP | Flux Kontext LoRA инпейнтинг |
-| `fal-ai/flux-lora/inpainting` | — | FLUX LoRA инпейнтинг |
-
-**Пример img2img:**
+**Пример:**
 ```js
-const result = await fal.run("fal-ai/flux/dev/image-to-image", {
+const result = await fal.run("openai/gpt-image-2", {
   input: {
-    image_url: "https://...",
-    prompt: "same scene but in winter, snowy",
-    strength: 0.75,  // 0.0 = оригинал, 1.0 = полная генерация
+    prompt: "vintage travel poster reading 'SUMMER IN LISBON' in bold serif, terracotta and cream palette, art deco border",
+    image_size: "portrait_4_3",
+    quality: "high",
+    output_format: "jpeg",
   },
 });
+const url = result.data.images[0].url;
 ```
 
-**Пример inpainting (FLUX Pro Fill):**
-```js
-const result = await fal.subscribe("fal-ai/flux-pro/v1/fill", {
-  input: {
-    image_url: "https://...",
-    mask_url: "https://...",  // белые пиксели = редактировать
-    prompt: "a red sports car",
-  },
-  logs: true,
-  onQueueUpdate: (u) => u.logs?.forEach(l => console.log(l.message)),
-});
-```
+**Img2img / inpainting (если нужно править существующее с текстом):** `openai/gpt-image-2/edit` — те же входы + `image_url` и опциональный `mask_url`. Это единственный разрешённый img2img/inpainting эндпойнт в проекте.
 
 ---
 
@@ -381,18 +373,6 @@ console.log(result.data.output);
 
 ---
 
-## ОБУЧЕНИЕ / LoRA
-
-| Model ID | Цена | Описание |
-|----------|------|---------|
-| `fal-ai/flux-lora-fast-training` | $2/run | FLUX LoRA быстрое обучение (9–50 фото) |
-| `fal-ai/flux-2-trainer` | $0.008/step | FLUX.2 LoRA fine-tuning |
-| `fal-ai/hunyuan-video-lora-training` | — | HunyuanVideo LoRA |
-| `fal-ai/z-image-trainer` | — | Z-Image LoRA тренер |
-| `fal-ai/ltx-2-19b/video-to-video/lora` | — | LTX-2 video LoRA |
-
----
-
 ## Обработка ошибок
 
 ```js
@@ -412,7 +392,7 @@ try {
 
 ```
 Изображение:     fal.run("fal-ai/nano-banana-2", { input: { prompt, aspect_ratio, resolution } })
-Черновик img:    fal.run("fal-ai/flux/schnell", { input: { prompt, image_size: "landscape_16_9" } })
+Картинка с тек.: fal.run("openai/gpt-image-2",    { input: { prompt, image_size: "portrait_4_3", quality: "high" } })
 T2V баланс:      fal.subscribe("fal-ai/kling-video/v2.5-turbo/pro/text-to-video", { input: { prompt, duration: "5", aspect_ratio: "16:9" } })
 I2V:             fal.subscribe("fal-ai/kling-video/v2.5-turbo/pro/image-to-video", { input: { image_url, prompt, duration: "5" } })
 Фон убрать:      fal.subscribe("fal-ai/bria/background/remove", { input: { image_url } })

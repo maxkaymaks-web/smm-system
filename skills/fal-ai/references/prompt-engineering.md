@@ -56,14 +56,16 @@ blurred café interior bokeh in warm amber tones,
 
 ## Модельно-специфичные паттерны
 
-### nano-banana-2 (Gemini-based)
+> Разрешённые text-to-image модели в проекте — только две: `fal-ai/nano-banana-2` (default) и `openai/gpt-image-2` (для сложного текста). Всё остальное (Flux, Ideogram, Recraft, Seedream, Imagen, Qwen, SDXL и т.п.) — нельзя.
 
-- Понимает длинные, детальные промпты лучше чем Flux
+### nano-banana-2 (Gemini-based) — дефолт
+
+- Понимает длинные детальные промпты, неплохо рендерит короткий текст
 - Хорошо реагирует на `thinking_level: "high"` для сложных сцен
 - Поддерживает `enable_web_search: true` — полезно для актуальных визуальных трендов
-- Отлично рендерит **текст** — описывай шрифт, расположение, стиль
 - Поддерживает до 14 референс-изображений (через `image_urls` массив)
 - Пиши на русском — понимает, переводить не обязательно
+- Когда нужно: фон, продукт, портрет, lifestyle, любой визуал без длинного текста на картинке
 
 ```
 Хороший промпт для nano-banana-2:
@@ -74,30 +76,22 @@ blurred café interior bokeh in warm amber tones,
 overhead shot, product photography, luxury skincare"
 ```
 
-### flux/schnell и flux/dev
+### gpt-image-2 (OpenAI) — для сложного текста
 
-- Работает лучше с английским
-- Короткие промпты работают хорошо (< 100 слов)
-- Style tokens: `"hyperrealistic"`, `"cinematic"`, `"illustration"`, `"watercolor"`
-- Для деталей используй запятые, не длинные предложения
-- `guidance_scale: 3.5` — стандарт; выше = строже следует промпту
+- Специализация: **разборчивый текст / типографика на картинке**, в т.ч. длинные надписи, мульти-язык, мелкий шрифт, плотные параграфы
+- `quality: "low"` — черновики ($0.005–0.012/img), `"medium"` — рабочее качество, `"high"` — финал ($0.15–0.40 в зависимости от размера)
+- `image_size`: preset (`square_hd`, `portrait_4_3`, `landscape_16_9`, …) или `{ width, height }` до 3840px
+- Цвет нейтральный (тёплый кастинг GPT Image 1.5 убран в 2.0)
+- Когда нужно: плакаты, цитаты, инфографика, упаковка с длинным текстом, мульти-язычные надписи
+- Когда НЕ нужно: обычный фон, портрет без текста, продукт без надписей — там nano-banana-2 в 2–10 раз дешевле
 
 ```
-"red fox sitting on snowy hill, golden hour, cinematic lighting, 
-photorealistic, shallow depth of field, Canon 5D, nature photography"
+Хороший промпт для gpt-image-2:
+"Vintage travel poster reading 'WELCOME TO SOCHI — БАЛТИКА 2026' 
+in bold condensed serif at top, smaller hand-written caption 
+'Black Sea Riviera since 1838' below, terracotta and cream palette, 
+art-deco border with palm-tree silhouettes, slight paper grain texture"
 ```
-
-### flux-pro/v1.1-ultra
-
-- Лучший для фотореализма людей
-- Указывай конкретные характеристики лица, кожи, освещения
-- `aspect_ratio: "16:9"` оптимален для кино-кадров
-
-### ideogram/v3
-
-- Специализация: **текст на изображениях**
-- Используй кавычки для текста: `"the word 'SALE' in bold red serif font"`
-- Описывай шрифт, цвет, позицию, стиль
 
 ### Kling / Veo / Sora (видео)
 

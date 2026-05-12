@@ -80,6 +80,17 @@ You Aren't Gonna Need It. Не делать функциональность «�
 
 Генерация изображений/видео/аудио — `fal.ai` напрямую через клиент `@fal-ai/client`. Трафик с RU-сервера идёт через `HTTPS_PROXY` (см. `.env`).
 
+### Text-to-image: ровно две разрешённые модели
+
+| Когда | Модель |
+|---|---|
+| Дефолт (фон, продукт, портрет, lifestyle, текстура) | `fal-ai/nano-banana-2` |
+| На картинке нужен разборчивый длинный/мульти-язычный/типографский текст | `openai/gpt-image-2` |
+
+Никакие другие text-to-image модели (Flux любой версии, Ideogram, Recraft, Seedream, Imagen, Qwen, SDXL, Nano Banana Pro, и т.д.) в проекте не используются — ни через CLI `tools/generate-image.mjs`, ни прямыми вызовами `fal.run(...)` из агентов/скриптов. Img2img / inpainting — через `openai/gpt-image-2/edit` (тот же режим, что и t2i, плюс `image_url`/`mask_url`) или повторной генерацией в nano-banana-2 с `image_urls` массивом референсов.
+
+Не t2i (используется как было): `fal-ai/bria/background/remove` (фон), `fal-ai/seedvr/upscale/image` / `fal-ai/esrgan` (апскейл), `fal-ai/any-llm/vision` (анализ референсов), видео-модели Kling/Veo/Sora, аудио ElevenLabs/Kokoro.
+
 ---
 
 ## Форматирование постов (ВКонтакте — основной канал)

@@ -266,9 +266,11 @@ def run_prompt_engineering():
 {', '.join(f'`{m}`' for m in unique_models) or '— нет данных'}
 
 #### Рекомендации для дизайнера
-- Основная генерация фонов → `fal-ai/nano-banana-2` (наш дефолт)
+- Дефолт text-to-image → `fal-ai/nano-banana-2`
+- Картинки со сложным/длинным текстом → `openai/gpt-image-2` (только этот случай)
 - Удаление фона → `fal-ai/bria/background/remove`
 - Апскейл → `fal-ai/seedvr/upscale/image`
+- Любые другие t2i модели (Flux, Ideogram, Recraft, Seedream, Imagen, Qwen, SDXL, Nano Banana Pro и т.п.) — запрещены политикой проекта (`global/rules.md`). Если автообнаружение нашло их в источниках — это справочно, использовать нельзя.
 ---
 """
     tg_text = (

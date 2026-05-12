@@ -6,6 +6,18 @@
 
 ---
 
+## 12.05.2026 — политика text-to-image: только nano-banana-2 и gpt-image-2
+
+- **Жёсткое ограничение по моделям генерации картинок.** В проекте разрешены ровно две t2i-модели: `fal-ai/nano-banana-2` (дефолт, всё подряд) и `openai/gpt-image-2` (только когда нужен разборчивый длинный/мульти-язычный/типографский текст на картинке). Любые другие — Flux всех версий, Ideogram, Recraft, Seedream, Imagen, Qwen, SDXL, Nano Banana Pro и пр. — больше не используются.
+- **`tools/generate-image.mjs`** теперь принимает `--model=nano-banana-2|gpt-image-2` и `--quality=low|medium|high` (для gpt-image-2). Маппит `aspect_ratio` → `image_size` preset fal.ai. Whitelist моделей зашит в CLI — попытка вызвать чужую завершится ошибкой.
+- **`skills/fal-ai/SKILL.md`** + **`references/prompt-engineering.md`** переписаны: убраны таблицы альтернативных t2i и edit-моделей (Flux Fill/Kontext/LoRA, Ideogram, и пр.), оставлены только nano-banana-2 + gpt-image-2 с правилом выбора. Утилиты (bria, seedvr, esrgan), видео (Kling/Veo/Sora/etc), аудио, any-llm — без изменений.
+- **`agents/designer/SOUL.md`** — добавлен явный блок «Выбор text-to-image модели — строго две» с примерами CLI.
+- **`global/rules.md`** — раздел про fal.ai дополнен жёсткой политикой моделей.
+- **`tools/lib/fal-prices.json`** — добавлена строка `openai/gpt-image-2` для трекинга расхода (variants по `quality`).
+- **Зачем:** избежать дрейфа агентов на «универсальные» модели вроде Flux, держать стабильное качество nano-banana-2 как базы и точечный gpt-image-2 для типографики.
+
+---
+
 ## 11.05.2026 (обновление 3) — OpenClaw задеплоен на RU-сервер
 
 - **OpenClaw 2026.5.7** на `5.42.117.201`, user-systemd сервис от root, gateway loopback `127.0.0.1:18789`. EnvironmentFile подцепляет `/root/smm-system/.env` — `tools/*.mjs` (fal.ai, S3, tg-send) видят все креды.
