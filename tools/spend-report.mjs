@@ -127,7 +127,7 @@ function fetchLitellmLogsDelta(fromTs, toTs) {
   const since = fromTs.toISOString().replace('T', ' ').slice(0, 23);
   const until = toTs.toISOString().replace('T', ' ').slice(0, 23);
   const sql = `SELECT COALESCE(sum(spend),0) FROM "LiteLLM_SpendLogs" WHERE "api_key"='${keyHash}' AND "startTime">='${since}' AND "startTime"<='${until}';`;
-  const cmd = `docker exec litellm-postgres psql -U litellm litellm -t -A -c "${sql}"`;
+  const cmd = `docker exec litellm-postgres psql -U litellm litellm -t -A -c "${sql.replace(/"/g, '\\"').replace(/\n/g, ' ')}"`;
   try {
     const r = spawnSync('ssh', ['-p', '24822', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=8', 'root@5.2.66.188', cmd], {
       encoding: 'utf8', timeout: 15_000,
