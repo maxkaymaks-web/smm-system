@@ -32,8 +32,8 @@ const HEADER = {
   'month': '💸 Итог месяца',
 };
 
-// 1. Получить текст отчёта (без JSON, без шапки — её добавим)
-const reportProc = spawnSync('node', ['tools/spend-report.mjs', '--period', period], {
+// 1. Получить текст отчёта в HTML-формате для Telegram
+const reportProc = spawnSync('node', ['tools/spend-report.mjs', '--period', period, '--tg'], {
   cwd: REPO_ROOT, encoding: 'utf8',
 });
 if (reportProc.status !== 0) {
@@ -42,14 +42,8 @@ if (reportProc.status !== 0) {
 }
 const report = reportProc.stdout.trimEnd();
 
-// 2. Заголовок
-const today = new Date().toISOString().slice(0, 10);
-const header = `${HEADER[period] ?? '💸 Расход'} · ${today}`;
-
-const message = `${header}\n\n${report}`;
-
-// 3. Отправить в топик finance
-const sendProc = spawnSync('node', ['tools/tg-send.mjs', 'finance', '--text', message], {
+// 2. Отправить в топик finance с HTML parse_mode
+const sendProc = spawnSync('node', ['tools/tg-send.mjs', 'finance', '--text', report, '--html'], {
   cwd: REPO_ROOT, encoding: 'utf8', stdio: 'inherit',
 });
 process.exit(sendProc.status ?? 0);

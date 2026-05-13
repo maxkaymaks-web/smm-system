@@ -57,6 +57,7 @@ const get = name => { const i = args.indexOf(name); return i === -1 ? null : arg
 const text = get('--text');
 const photo = get('--photo');
 const file = get('--file');
+const html = args.includes('--html');
 
 if (!text && !photo && !file) { console.error('нужен --text или --photo или --file'); process.exit(1); }
 
@@ -66,11 +67,13 @@ const base = { chat_id, message_thread_id: thread };
 
 let res;
 if (photo) {
-  // sendDocument чтобы Telegram не сжимал и отображал как файл, а не встроенное фото
-  res = await postMultipart('sendDocument', { ...base, caption: text ?? '' }, 'document', photo);
+  const extra = html ? { parse_mode: 'HTML' } : {};
+  res = await postMultipart('sendDocument', { ...base, caption: text ?? '', ...extra }, 'document', photo);
 } else if (file) {
-  res = await postMultipart('sendDocument', { ...base, caption: text ?? '' }, 'document', file);
+  const extra = html ? { parse_mode: 'HTML' } : {};
+  res = await postMultipart('sendDocument', { ...base, caption: text ?? '', ...extra }, 'document', file);
 } else {
-  res = await postMultipart('sendMessage', { ...base, text, disable_web_page_preview: true });
+  const extra = html ? { parse_mode: 'HTML' } : {};
+  res = await postMultipart('sendMessage', { ...base, text, disable_web_page_preview: true, ...extra });
 }
 console.log(`✓ → ${projectId} (thread ${thread}) msg ${res.message_id}`);

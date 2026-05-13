@@ -3,20 +3,21 @@
  * spend-report.mjs — расход проекта за период.
  *
  * Источники:
- *   • LiteLLM /key/info        — cumulative по virtual key smm-openclaw (только наши LLM-вызовы)
+ *   • LiteLLM /spend/logs (ADMIN_KEY) или /key/info fallback — LLM-вызовы smm-openclaw
  *   • Apify /v2/users/me/usage/monthly — cumulative по биллинг-циклу
- *   • state/fal-spend.jsonl    — каждый fal-вызов из tools/lib/fal-meter.mjs, оценка по fal-prices.json
+ *   • state/fal-spend.jsonl — каждый fal-вызов с точным временем
  *
- * Дельты считаются через snapshot'ы в state/spend-snapshots.jsonl
- * (snapshot пишется по `--snapshot`, обычно из systemd timer'а раз в день).
+ * Дельты считаются через snapshot'ы в state/spend-snapshots.jsonl (Apify fallback).
+ * Snapshot пишется автоматически в конце каждого доReport() + явно через --snapshot.
  *
  * Использование:
- *   node tools/spend-report.mjs --snapshot            # записать snapshot текущих cumulative
+ *   node tools/spend-report.mjs --snapshot            # записать snapshot вручную
  *   node tools/spend-report.mjs --period 24h          # дневной отчёт
  *   node tools/spend-report.mjs --period 7d           # неделя
  *   node tools/spend-report.mjs --period 30d          # 30 дней
  *   node tools/spend-report.mjs --period month        # текущий календарный месяц
  *   node tools/spend-report.mjs --from 2026-05-01 --to 2026-05-10
+ *   node tools/spend-report.mjs --period 24h --tg     # HTML для Telegram
  *   node tools/spend-report.mjs --period 24h --json   # JSON для daily_briefing.py
  */
 
@@ -40,20 +41,22 @@ if (fs.existsSync(envPath)) {
 }
 const LITELLM_URL = process.env.LITELLM_URL;
 const LITELLM_KEY = process.env.LITELLM_KEY;
+const LITELLM_ADMIN_KEY = process.env.LITELLM_ADMIN_KEY;
 const APIFY_TOKEN = process.env.APIFY_TOKEN;
 
 // ---------- args ----------
 const args = process.argv.slice(2);
-const flag = (n) => args.indexOf(n);
-const val = (n) => { const i = flag(n); return i === -1 ? null : args[i + 1]; };
+const flag = (n) => args.indexOf(n) !== -1;
+const val = (n) => { const i = args.indexOf(n); return i === -1 ? null : args[i + 1]; };
 
-const isSnapshotMode = flag('--snapshot') !== -1;
-const wantJson = flag('--json') !== -1;
+const isSnapshotMode = flag('--snapshot');
+const wantJson = flag('--json');
+const wantTg = flag('--tg');
 const period = val('--period');
 const from = val('--from');
 const to = val('--to');
 
-// ---------- period -> {fromTs, toTs} ----------
+// ---------- period -> {fromTs, toTs, label} ----------
 function resolvePeriod() {
   const now = new Date();
   if (from && to) {
@@ -69,7 +72,7 @@ function resolvePeriod() {
     '30d':  () => ({ fromTs: new Date(now - 30 * 86400_000), toTs: now, label: 'последние 30 дней' }),
     'month': () => {
       const start = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
-      return { fromTs: start, toTs: now, label: `${start.toISOString().slice(0, 7)} (текущий календарный месяц)` };
+      return { fromTs: start, toTs: now, label: `${start.toISOString().slice(0, 7)} (текущий месяц)` };
     },
   };
   if (!period || !presets[period]) {
@@ -86,7 +89,6 @@ function readSnapshots() {
     .split('\n').filter(Boolean).map(JSON.parse);
 }
 function findSnapshotAt(ts) {
-  // Берём последний snapshot, чей ts <= target (== "состояние на начало периода")
   const snaps = readSnapshots().filter(s => new Date(s.ts) <= ts);
   return snaps.length ? snaps[snaps.length - 1] : null;
 }
@@ -108,12 +110,31 @@ async function fetchLitellm() {
     return {
       available: true,
       cumulative_usd: Number(info.spend ?? 0),
-      max_budget:    info.max_budget ?? null,
-      budget_duration: info.budget_duration ?? null,
+      max_budget:     info.max_budget ?? null,
       budget_reset_at: info.budget_reset_at ?? null,
     };
   } catch (e) {
     return { available: false, reason: e.message };
+  }
+}
+
+// Exact LLM delta via /spend/logs (requires ADMIN_KEY)
+async function fetchLitellmLogsDelta(fromTs, toTs) {
+  if (!LITELLM_URL || !LITELLM_KEY || !LITELLM_ADMIN_KEY) return null;
+  try {
+    const since = fromTs.toISOString().slice(0, 10);
+    const until = toTs.toISOString().slice(0, 10);
+    const r = await fetch(
+      `${LITELLM_URL}/spend/logs?start_date=${since}&end_date=${until}&api_key=${LITELLM_KEY}`,
+      { headers: { Authorization: `Bearer ${LITELLM_ADMIN_KEY}` } }
+    );
+    if (!r.ok) return null;
+    const body = await r.json();
+    const items = Array.isArray(body) ? body : (body.data ?? []);
+    const total = items.reduce((s, e) => s + Number(e.spend ?? e.cost ?? 0), 0);
+    return +total.toFixed(6);
+  } catch {
+    return null;
   }
 }
 
@@ -124,7 +145,6 @@ async function fetchApify() {
     if (!r.ok) return { available: false, reason: `HTTP ${r.status}` };
     const d = await r.json();
     const data = d.data ?? {};
-    // Сумма по всем услугам в текущем биллинг-цикле (после volume-скидок)
     const services = data.monthlyServiceUsage ?? {};
     let total = 0;
     for (const v of Object.values(services)) total += Number(v.amountAfterVolumeDiscountUsd ?? v.baseAmountUsd ?? 0);
@@ -177,7 +197,7 @@ function fetchFalCumulative() {
   return +total.toFixed(6);
 }
 
-// ---------- modes ----------
+// ---------- snapshot mode ----------
 async function doSnapshot() {
   const [litellm, apify] = await Promise.all([fetchLitellm(), fetchApify()]);
   const snap = {
@@ -189,49 +209,135 @@ async function doSnapshot() {
   appendSnapshot(snap);
   if (wantJson) console.log(JSON.stringify(snap));
   else {
-    console.log('✓ snapshot сохранён в', path.relative(REPO_ROOT, SNAPSHOT_FILE));
-    console.log('  ts:               ', snap.ts);
-    console.log('  litellm $:        ', snap.litellm_cumulative_usd ?? '(unavailable)');
-    console.log('  apify $:          ', snap.apify_cumulative_usd ?? '(unavailable)');
-    console.log('  fal $ (cumulative):', snap.fal_cumulative_usd);
+    console.log('✓ snapshot сохранён');
+    console.log('  ts:     ', snap.ts);
+    console.log('  litellm:', snap.litellm_cumulative_usd ?? '(unavailable)');
+    console.log('  apify:  ', snap.apify_cumulative_usd ?? '(unavailable)');
+    console.log('  fal:    ', snap.fal_cumulative_usd);
   }
 }
 
+// ---------- formatters ----------
 function fmt$(n) {
   if (n == null) return '—';
-  if (n === 0)   return '$0.0000';
-  if (n < 0.01)  return `$${n.toFixed(6)}`;
-  return `$${n.toFixed(4)}`;
+  if (n === 0)   return '$0.00';
+  if (n < 0.005) return `$${n.toFixed(4)}`;
+  return `$${n.toFixed(2)}`;
 }
 
+function formatPlain(data) {
+  const { period, total_usd, sources, caveats } = data;
+  const { litellm, apify, fal } = sources;
+  const lines = [];
+
+  lines.push(`💸 Расход — ${period.label}`);
+  lines.push(`Итого: ${fmt$(total_usd)}`);
+  lines.push('');
+
+  lines.push(`🤖 LLM: ${fmt$(litellm.usd)}`);
+  if (litellm.budget) {
+    const pct = litellm.cumulative_now != null
+      ? (litellm.cumulative_now / litellm.budget * 100).toFixed(0) : '?';
+    lines.push(`   из $${litellm.budget} цикла (${pct}%)`);
+  }
+
+  lines.push(`🎨 fal.ai: ${fmt$(fal.usd)} (${fal.calls} вызов${fal.calls === 1 ? '' : 'ов'})`);
+  if (Object.keys(fal.by_model).length) {
+    for (const [m, v] of Object.entries(fal.by_model))
+      lines.push(`   · ${m}: ${fmt$(v)}`);
+  }
+
+  lines.push(`🕷 Apify: ${fmt$(apify.usd)}`);
+
+  if (caveats.length) {
+    lines.push('');
+    for (const c of caveats) lines.push(`⚠️ ${c}`);
+  }
+
+  return lines.join('\n');
+}
+
+function formatTg(data) {
+  const { period, total_usd, sources, caveats } = data;
+  const { litellm, apify, fal } = sources;
+
+  const b = (s) => `<b>${s}</b>`;
+  const $n = (n) => fmt$(n);
+
+  const lines = [];
+  lines.push(`💸 ${b('Расход — ' + period.label)}`);
+  lines.push('');
+  lines.push(`Итого: ${b($n(total_usd))}`);
+  lines.push('');
+
+  lines.push(`🤖 LLM · ${b($n(litellm.usd))}`);
+  if (litellm.budget) {
+    const pct = litellm.cumulative_now != null
+      ? (litellm.cumulative_now / litellm.budget * 100).toFixed(0) : '?';
+    lines.push(`из $${litellm.budget} цикла · ${pct}%`);
+  }
+  if (litellm.caveat) lines.push(`⚠️ ${litellm.caveat}`);
+
+  lines.push('');
+  const falLine = `🎨 fal.ai · ${b($n(fal.usd))}`;
+  lines.push(fal.calls > 0 ? `${falLine} · ${fal.calls} вызов${fal.calls === 1 ? '' : 'ов'}` : falLine);
+  if (Object.keys(fal.by_model).length) {
+    for (const [m, v] of Object.entries(fal.by_model))
+      lines.push(`· ${m} · ${$n(v)}`);
+  }
+
+  lines.push('');
+  lines.push(`🕷 Apify · ${b($n(apify.usd))}`);
+  if (apify.caveat) lines.push(`⚠️ ${apify.caveat}`);
+
+  if (caveats.length) {
+    lines.push('');
+    for (const c of caveats) lines.push(`⚠️ ${c}`);
+  }
+
+  return lines.join('\n');
+}
+
+// ---------- report mode ----------
 async function doReport() {
   const { fromTs, toTs, label } = resolvePeriod();
-  const [litellm, apify] = await Promise.all([fetchLitellm(), fetchApify()]);
+  const [litellm, apify, llmLogsDelta] = await Promise.all([
+    fetchLitellm(),
+    fetchApify(),
+    fetchLitellmLogsDelta(fromTs, toTs),
+  ]);
   const fal = fetchFal(fromTs, toTs);
   const baseSnap = findSnapshotAt(fromTs);
 
-  // LiteLLM delta
-  let llmDelta = null, llmCaveat = null;
-  if (litellm.available) {
+  // LiteLLM delta: prefer /spend/logs (exact), fall back to snapshot diff
+  let llmDelta = null;
+  let llmCaveat = null;
+  let llmSource = 'snapshot';
+
+  if (llmLogsDelta !== null) {
+    llmDelta = llmLogsDelta;
+    llmSource = 'logs';
+  } else if (litellm.available) {
     if (baseSnap && baseSnap.litellm_cumulative_usd != null) {
       llmDelta = litellm.cumulative_usd - baseSnap.litellm_cumulative_usd;
       if (llmDelta < 0) {
-        llmCaveat = `бюджет ключа сбрасывался в периоде — оценка занижена`;
-        llmDelta = litellm.cumulative_usd; // показываем текущее cumulative как proxy
+        llmCaveat = 'бюджет ключа сбрасывался в периоде — оценка занижена';
+        llmDelta = litellm.cumulative_usd;
       }
     } else {
-      llmCaveat = 'нет snapshot для начала периода — показываю текущее cumulative с момента последнего reset';
+      llmCaveat = 'нет snapshot — cumulative с момента последнего reset';
       llmDelta = litellm.cumulative_usd;
     }
   }
 
   // Apify delta
-  let apifyDelta = null, apifyCaveat = null;
+  let apifyDelta = null;
+  let apifyCaveat = null;
   if (apify.available) {
     if (baseSnap && baseSnap.apify_cumulative_usd != null) {
       apifyDelta = apify.cumulative_usd - baseSnap.apify_cumulative_usd;
       if (apifyDelta < 0) {
-        apifyCaveat = `биллинг-цикл Apify reset'нулся в периоде (start: ${apify.cycle_start?.slice(0, 10)})`;
+        apifyCaveat = `цикл Apify reset'нулся в периоде (start: ${apify.cycle_start?.slice(0, 10)})`;
         apifyDelta = apify.cumulative_usd;
       }
     } else {
@@ -242,44 +348,57 @@ async function doReport() {
 
   const totalUsd = (llmDelta ?? 0) + (apifyDelta ?? 0) + fal.period_usd;
 
+  const globalCaveats = [];
+  if (!baseSnap && llmSource !== 'logs') {
+    globalCaveats.push('Для точных дельт нужен ежедневный snapshot (см. setup-cron.sh)');
+  }
+
   const out = {
-    period: { from: fromTs.toISOString(), to: toTs.toISOString(), label, baseline_snapshot_at: baseSnap?.ts ?? null },
+    period: {
+      from: fromTs.toISOString(),
+      to: toTs.toISOString(),
+      label,
+      baseline_snapshot_at: baseSnap?.ts ?? null,
+      llm_source: llmSource,
+    },
     total_usd: +totalUsd.toFixed(4),
     sources: {
-      litellm: litellm.available ? { usd: llmDelta == null ? null : +llmDelta.toFixed(4), cumulative_now: litellm.cumulative_usd, budget: litellm.max_budget, caveat: llmCaveat } : { available: false, reason: litellm.reason },
-      apify:   apify.available   ? { usd: apifyDelta == null ? null : +apifyDelta.toFixed(4), cumulative_now: apify.cumulative_usd, cycle: { start: apify.cycle_start, end: apify.cycle_end }, caveat: apifyCaveat } : { available: false, reason: apify.reason },
+      litellm: litellm.available
+        ? { usd: llmDelta == null ? null : +llmDelta.toFixed(4), cumulative_now: litellm.cumulative_usd, budget: litellm.max_budget, caveat: llmCaveat }
+        : { available: false, reason: litellm.reason },
+      apify: apify.available
+        ? { usd: apifyDelta == null ? null : +apifyDelta.toFixed(4), cumulative_now: apify.cumulative_usd, cycle: { start: apify.cycle_start, end: apify.cycle_end }, caveat: apifyCaveat }
+        : { available: false, reason: apify.reason },
       fal: { usd: fal.period_usd, calls: fal.calls, unknown_priced_calls: fal.unknown_priced_calls, by_model: fal.by_model },
     },
+    caveats: globalCaveats,
   };
 
-  if (wantJson) { console.log(JSON.stringify(out, null, 2)); return; }
+  if (wantJson) { console.log(JSON.stringify(out, null, 2)); }
+  else {
+    // Flatten for formatters
+    const data = {
+      period: out.period,
+      total_usd: out.total_usd,
+      sources: {
+        litellm: { usd: out.sources.litellm.usd, budget: out.sources.litellm.budget, cumulative_now: out.sources.litellm.cumulative_now, caveat: llmCaveat },
+        apify:   { usd: out.sources.apify.usd, caveat: apifyCaveat },
+        fal:     out.sources.fal,
+      },
+      caveats: globalCaveats,
+    };
+    console.log(wantTg ? formatTg(data) : formatPlain(data));
+  }
 
-  const lines = [];
-  lines.push(`💸 Расход — ${label}`);
-  lines.push('─'.repeat(50));
-  lines.push(`Итого: ${fmt$(totalUsd)}`);
-  lines.push('');
-  lines.push(`  LLM (LiteLLM):  ${fmt$(llmDelta)}${llmCaveat ? ` ⚠ ${llmCaveat}` : ''}`);
-  if (litellm.available && litellm.max_budget) {
-    const pct = (litellm.cumulative_usd / litellm.max_budget * 100).toFixed(0);
-    lines.push(`                  ${fmt$(litellm.cumulative_usd)} / $${litellm.max_budget} цикла (${pct}%)`);
-  }
-  lines.push(`  fal.ai:         ${fmt$(fal.period_usd)}   (${fal.calls} вызов${fal.calls === 1 ? '' : 'ов'})`);
-  if (fal.unknown_priced_calls > 0) {
-    lines.push(`                  ⚠ ${fal.unknown_priced_calls} вызов(ов) без цены (нет в fal-prices.json)`);
-  }
-  if (Object.keys(fal.by_model).length) {
-    for (const [m, v] of Object.entries(fal.by_model)) {
-      lines.push(`                    · ${m.padEnd(38)} ${fmt$(v)}`);
-    }
-  }
-  lines.push(`  Apify:          ${fmt$(apifyDelta)}${apifyCaveat ? ` ⚠ ${apifyCaveat}` : ''}`);
-  if (!baseSnap) {
-    lines.push('');
-    lines.push('💡 Для точного отчёта нужен snapshot на начало периода.');
-    lines.push('   Запусти `node tools/spend-report.mjs --snapshot` сегодня — через сутки получишь точную дельту 24h.');
-  }
-  console.log(lines.join('\n'));
+  // Auto-snapshot: write current values so next report has a baseline
+  const snap = {
+    ts: new Date().toISOString(),
+    litellm_cumulative_usd: litellm.available ? litellm.cumulative_usd : null,
+    apify_cumulative_usd:   apify.available   ? apify.cumulative_usd   : null,
+    fal_cumulative_usd:     fetchFalCumulative(),
+    auto: true,
+  };
+  appendSnapshot(snap);
 }
 
 // ---------- entry ----------
