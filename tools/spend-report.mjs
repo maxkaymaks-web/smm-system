@@ -24,6 +24,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(HERE, '..');
@@ -118,21 +120,21 @@ async function fetchLitellm() {
   }
 }
 
-// Exact LLM delta via /spend/logs (requires ADMIN_KEY)
-async function fetchLitellmLogsDelta(fromTs, toTs) {
-  if (!LITELLM_URL || !LITELLM_KEY || !LITELLM_ADMIN_KEY) return null;
+// Exact LLM delta via PostgreSQL (SSH → docker exec psql на прокси)
+function fetchLitellmLogsDelta(fromTs, toTs) {
+  if (!LITELLM_KEY) return null;
+  const keyHash = createHash('sha256').update(LITELLM_KEY).digest('hex');
+  const since = fromTs.toISOString().replace('T', ' ').slice(0, 23);
+  const until = toTs.toISOString().replace('T', ' ').slice(0, 23);
+  const sql = `SELECT COALESCE(sum(spend),0) FROM "LiteLLM_SpendLogs" WHERE "api_key"='${keyHash}' AND "startTime">='${since}' AND "startTime"<='${until}';`;
+  const cmd = `docker exec litellm-postgres psql -U litellm litellm -t -A -c "${sql}"`;
   try {
-    const since = fromTs.toISOString().slice(0, 10);
-    const until = toTs.toISOString().slice(0, 10);
-    const r = await fetch(
-      `${LITELLM_URL}/spend/logs?start_date=${since}&end_date=${until}&api_key=${LITELLM_KEY}`,
-      { headers: { Authorization: `Bearer ${LITELLM_ADMIN_KEY}` } }
-    );
-    if (!r.ok) return null;
-    const body = await r.json();
-    const items = Array.isArray(body) ? body : (body.data ?? []);
-    const total = items.reduce((s, e) => s + Number(e.spend ?? e.cost ?? 0), 0);
-    return +total.toFixed(6);
+    const r = spawnSync('ssh', ['-p', '24822', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=8', 'root@5.2.66.188', cmd], {
+      encoding: 'utf8', timeout: 15_000,
+    });
+    if (r.status !== 0) return null;
+    const val = parseFloat(r.stdout.trim());
+    return isNaN(val) ? null : +val.toFixed(6);
   } catch {
     return null;
   }
@@ -301,11 +303,8 @@ function formatTg(data) {
 // ---------- report mode ----------
 async function doReport() {
   const { fromTs, toTs, label } = resolvePeriod();
-  const [litellm, apify, llmLogsDelta] = await Promise.all([
-    fetchLitellm(),
-    fetchApify(),
-    fetchLitellmLogsDelta(fromTs, toTs),
-  ]);
+  const llmLogsDelta = fetchLitellmLogsDelta(fromTs, toTs);
+  const [litellm, apify] = await Promise.all([fetchLitellm(), fetchApify()]);
   const fal = fetchFal(fromTs, toTs);
   const baseSnap = findSnapshotAt(fromTs);
 
