@@ -115,6 +115,37 @@ clean(5), performance(2), engineered(1), innovation(1), system(1)
 
 ## Автообучение (новые — сверху)
 
+### Технологичность и Инновации — авто-обучение 13.05.2026
+> Аккаунты: @notionhq, @spacex, @dyson | Проанализировано изображений: 5
+
+#### Изученные посты
+  - **@spacex** (110,010 likes) — bold | deep navy blue sky, dark charcoal rocket, bright orange flam | rule of thirds, centered subject with negative space, ample 
+  - **@spacex** (70,455 likes) — bold | deep sky blue, dark metallic gray, bright orange flames, bri | rule of thirds, upper right, significant architectural frami
+  - **@dyson** (40,873 likes) — product | deep charcoal, muted blue, cool gray, industrial monochrome | centered, no clear focal point, ample negative space
+  - **@spacex** (52,756 likes) — Bold | Fiery orange, deep black, smoky white, intense yellow, drama | Rule of thirds, center-focused, generous negative space
+  - **@spacex** (45,302 likes) — bold | deep indigo, crimson red, industrial yellow, charcoal gray,  | rule of thirds, lower third, significant negative space
+
+#### Визуальные паттерны (синтез)
+— синтез не выполнен
+
+#### Цветовая палитра стиля
+— не определена
+
+#### Правила композиции
+— не определены
+
+#### Текстура и свет
+— не определены
+
+#### fal.ai промпты для стиля (применять при генерации)
+  - `A sleek, dark rocket blasting off, surrounded by white smoke against a deep blue sky, high contrast lighting, industrial aesthetic.`
+  - `A futuristic aircraft preparing for a test flight, dark metallic tones, bright engine glow, stark blue background, bold composition.`
+  - `A colossal rocket ascending from a towering structure against a stark blue sky, strong metallic textures, high contrast.`
+
+#### Дизайн-фокус
+строгие сетки, монохром, bold sans-serif, цифры как акцент, инфографика
+---
+
 ### Роскошь и Премиум — авто-обучение 12.05.2026
 > Аккаунты: @dior, @chanelofficial, @louboutinworld | Проанализировано изображений: 1
 
