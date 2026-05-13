@@ -78,6 +78,7 @@ ls "$DEST"
 **Для designer:**
 - `projects/{ProjectID}/context.md` — цвета, шрифты, бренд
 - `projects/{ProjectID}/voice.md` — атмосфера
+- `projects/{ProjectID}/strategy.md` — платформа (VK/TG/Instagram) и рубрика поста
 - `projects/{ProjectID}/posts/drafts/{папка}/post.md` — готовый текст (должен быть)
 
 **Для content-planner:**
@@ -114,6 +115,10 @@ sessions_spawn(
 ProjectID: {ProjectID}
 
 Задача: {что именно сделать — конкретно}
+
+Платформа: {VK / TG / Instagram — из strategy.md}
+Рубрика: {код рубрики — из strategy.md или content-plan.md}
+Кол-во фото/карточек: {если задано явно оператором, иначе «определить по рубрике»}
 
 === voice.md ===
 {содержимое файла целиком}
