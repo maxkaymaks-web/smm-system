@@ -6,7 +6,9 @@
  * Trajectory создаётся только для сообщений, которые бот реально обработал
  * (скипнутые и заблокированные сессий не имеют).
  *
- * Требует LITELLM_ADMIN_KEY в .env для запроса /spend/logs.
+ * Стоимость берётся из LiteLLM_SpendLogs (PostgreSQL) через SSH на прокси.
+ * Для этого на прокси-сервере должен быть SSH-ключ SMM-сервера в authorized_keys.
+ *
  * Работает только на сервере (где живут trajectory файлы).
  *
  * Использование:
@@ -19,7 +21,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
+import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(HERE, '..');
@@ -33,9 +37,14 @@ if (fs.existsSync(envPath)) {
     if (m && !process.env[m[1]]) process.env[m[1]] = m[2].replace(/^"(.*)"$/, '$1');
   }
 }
-const LITELLM_URL = process.env.LITELLM_URL;
 const LITELLM_KEY = process.env.LITELLM_KEY;
-const LITELLM_ADMIN_KEY = process.env.LITELLM_ADMIN_KEY;
+const PROXY_HOST = '5.2.66.188';
+const PROXY_PORT = '24822';
+
+// LiteLLM хранит ключи как SHA256 хэш
+const KEY_HASH = LITELLM_KEY
+  ? createHash('sha256').update(LITELLM_KEY).digest('hex')
+  : null;
 
 // ---------- args ----------
 const args = process.argv.slice(2);
@@ -62,9 +71,8 @@ function projectFromKey(sessionKey) {
   return topicToProject[m[1]] ?? `topic:${m[1]}`;
 }
 
-// ---------- extract user message from trajectory ----------
+// ---------- extract user message ----------
 function extractUserMsg(lines) {
-  // Берём первый human-message из первого messagesSnapshot
   for (const e of lines) {
     const snap = e?.data?.messagesSnapshot;
     if (!Array.isArray(snap) || !snap.length) continue;
@@ -82,52 +90,52 @@ function extractUserMsg(lines) {
   return null;
 }
 
-// ---------- LiteLLM /spend/logs (cached per day) ----------
-const dayLogsCache = new Map();
+// ---------- batch PostgreSQL query via SSH ----------
+function queryPgSpend(sessions) {
+  if (!KEY_HASH || sessions.length === 0) return sessions.map(() => null);
 
-async function getDayLogs(dateStr) {
-  if (dayLogsCache.has(dateStr)) return dayLogsCache.get(dateStr);
-  if (!LITELLM_URL || !LITELLM_KEY || !LITELLM_ADMIN_KEY) { dayLogsCache.set(dateStr, []); return []; }
+  // VALUES (idx, start_ts, end_ts), ...
+  const rows = sessions.map((s, i) =>
+    `(${i}, '${s.startTs.toISOString().replace('T', ' ').slice(0, 23)}'::timestamp, '${s.endTs.toISOString().replace('T', ' ').slice(0, 23)}'::timestamp)`
+  ).join(',\n    ');
+
+  const sql = `
+WITH sessions(idx, start_ts, end_ts) AS (
+  VALUES
+    ${rows}
+)
+SELECT s.idx, COALESCE(sum(l.spend), 0) AS total
+FROM sessions s
+LEFT JOIN "LiteLLM_SpendLogs" l ON
+  l."api_key" = '${KEY_HASH}'
+  AND l."startTime" >= s.start_ts
+  AND l."startTime" <= s.end_ts
+GROUP BY s.idx
+ORDER BY s.idx;
+`.trim();
+
+  const cmd = `docker exec litellm-postgres psql -U litellm litellm -t -A -F'|' -c "${sql.replace(/"/g, '\\"').replace(/\n/g, ' ')}"`;
+
   try {
-    const r = await fetch(
-      `${LITELLM_URL}/spend/logs?start_date=${dateStr}&end_date=${dateStr}&api_key=${LITELLM_KEY}`,
-      { headers: { Authorization: `Bearer ${LITELLM_ADMIN_KEY}` } }
+    const result = spawnSync(
+      'ssh', ['-p', PROXY_PORT, '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', `root@${PROXY_HOST}`, cmd],
+      { encoding: 'utf8', timeout: 30_000 }
     );
-    if (!r.ok) { dayLogsCache.set(dateStr, []); return []; }
-    const body = await r.json();
-    const items = Array.isArray(body) ? body : (body.data ?? []);
-    dayLogsCache.set(dateStr, items);
-    return items;
-  } catch {
-    dayLogsCache.set(dateStr, []);
-    return [];
-  }
-}
+    if (result.status !== 0) return sessions.map(() => null);
 
-async function getSessionCost(startTs, endTs) {
-  const startDay = startTs.toISOString().slice(0, 10);
-  const endDay = endTs.toISOString().slice(0, 10);
-  const queryDays = [startDay];
-  if (endDay !== startDay) queryDays.push(endDay);
-
-  let total = 0;
-  let hasTimestamps = false;
-
-  for (const day of queryDays) {
-    const items = await getDayLogs(day);
-    for (const item of items) {
-      const itemTs = item.startTime ?? item.created_at ?? item.timestamp ?? null;
-      if (itemTs) {
-        hasTimestamps = true;
-        const t = new Date(itemTs);
-        if (t < startTs || t > endTs) continue;
+    const costs = new Array(sessions.length).fill(null);
+    for (const line of result.stdout.split('\n')) {
+      const parts = line.trim().split('|');
+      if (parts.length === 2) {
+        const idx = parseInt(parts[0], 10);
+        const cost = parseFloat(parts[1]);
+        if (!isNaN(idx) && !isNaN(cost)) costs[idx] = cost;
       }
-      total += Number(item.spend ?? item.cost ?? 0);
     }
+    return costs;
+  } catch {
+    return sessions.map(() => null);
   }
-
-  // Если у логов нет timestamps — помечаем как «приближённо» (весь день)
-  return { total: +total.toFixed(6), approximate: !hasTimestamps };
 }
 
 // ---------- main ----------
@@ -147,7 +155,7 @@ let files = fs.readdirSync(SESSIONS_DIR)
     return { full, mtime: stat.mtimeMs, ctime: stat.birthtimeMs || stat.ctimeMs };
   })
   .filter(f => f.mtime > cutoff)
-  .sort((a, b) => b.mtime - a.mtime); // новые первые
+  .sort((a, b) => b.mtime - a.mtime);
 
 if (isFinite(countLimit)) files = files.slice(0, countLimit);
 
@@ -156,8 +164,7 @@ if (files.length === 0) {
   process.exit(0);
 }
 
-const results = [];
-
+const sessions = [];
 for (const { full, mtime, ctime } of files) {
   let lines;
   try {
@@ -170,12 +177,10 @@ for (const { full, mtime, ctime } of files) {
 
   const first = lines[0];
   const sessionKey = first.sessionKey ?? '';
-
-  // Пропускаем не-Telegram сессии
   if (!sessionKey.includes(':topic:')) continue;
 
   const projectId = projectFromKey(sessionKey) ?? 'general';
-  const firstTs = first.ts ? new Date(first.ts) : new Date(ctime);
+  const startTs = first.ts ? new Date(first.ts) : new Date(ctime);
   const lastLine = lines[lines.length - 1];
   const endTs = lastLine.ts ? new Date(lastLine.ts) : new Date(mtime);
 
@@ -184,12 +189,21 @@ for (const { full, mtime, ctime } of files) {
     ? userMsg.replace(/\s+/g, ' ').substring(0, 140) + (userMsg.length > 140 ? '…' : '')
     : '(текст не найден)';
 
-  const { total, approximate } = await getSessionCost(firstTs, endTs);
-  results.push({ projectId, firstTs, endTs, msgPreview, total, approximate });
+  sessions.push({ projectId, startTs, endTs, msgPreview });
 }
+
+if (sessions.length === 0) {
+  console.log('Нет данных для отображения.');
+  process.exit(0);
+}
+
+// Batch-запрос стоимости всех сессий сразу
+const costs = queryPgSpend(sessions);
+const results = sessions.map((s, i) => ({ ...s, cost: costs[i] }));
 
 // ---------- output ----------
 function fmt$(n) {
+  if (n == null) return '—';
   if (n === 0) return '$0.00';
   if (n < 0.005) return `$${n.toFixed(4)}`;
   return `$${n.toFixed(2)}`;
@@ -198,35 +212,19 @@ function fmtTime(d) {
   return d.toISOString().replace('T', ' ').slice(0, 16) + ' UTC';
 }
 
-if (results.length === 0) {
-  console.log('Нет данных для отображения.');
-  process.exit(0);
-}
-
-if (!LITELLM_ADMIN_KEY) {
-  const warn = '⚠️ LITELLM_ADMIN_KEY не задан — стоимость недоступна. Добавьте в .env.';
-  console.error(wantTg ? warn : warn);
-}
-
 if (wantTg) {
   const lines = [`💬 <b>Расход per-запрос · последние ${results.length}</b>`, ''];
   for (const r of results) {
-    const cost = LITELLM_ADMIN_KEY
-      ? `<b>${fmt$(r.total)}</b>${r.approximate ? ' ~' : ''}`
-      : '—';
-    lines.push(`${fmtTime(r.firstTs)} [${r.projectId}] · ${cost}`);
+    lines.push(`${fmtTime(r.startTs)} [${r.projectId}] · <b>${fmt$(r.cost)}</b>`);
     lines.push(r.msgPreview);
     lines.push('');
   }
   console.log(lines.join('\n').trimEnd());
 } else {
-  const sep = '─'.repeat(60);
-  console.log(`💬 Расход per-запрос · последние ${results.length}\n${sep}`);
+  console.log(`💬 Расход per-запрос · последние ${results.length}`);
+  console.log('─'.repeat(60));
   for (const r of results) {
-    const cost = LITELLM_ADMIN_KEY
-      ? fmt$(r.total) + (r.approximate ? ' ~' : '')
-      : '—';
-    console.log(`${fmtTime(r.firstTs)}  [${r.projectId}]  ${cost}`);
+    console.log(`${fmtTime(r.startTs)}  [${r.projectId}]  ${fmt$(r.cost)}`);
     console.log(`  ${r.msgPreview}`);
     console.log('');
   }
