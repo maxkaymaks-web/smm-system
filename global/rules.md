@@ -162,6 +162,23 @@ node tools/tg-send.mjs {ProjectID} --text "Передаю топ-6 копира�
 
 Статус должен быть одной фразой про **что сейчас делаешь** и **сколько примерно занимает** (если знаешь). Не дублировать каждые 5 секунд — только на смене этапа.
 
+## Отправка файлов в Telegram
+
+**Всегда** использовать `tg-send.mjs` с явным флагом. Никогда не использовать `MEDIA:` — это Telegram-сжатие, теряется качество.
+
+```bash
+# PNG/JPG — без сжатия (sendDocument)
+node tools/tg-send.mjs {ProjectID} --photo /path/to/image.png
+
+# PDF, HTML и любые другие файлы
+node tools/tg-send.mjs {ProjectID} --file /path/to/file.pdf
+
+# Текст + файл вместе
+node tools/tg-send.mjs {ProjectID} --photo /path/to/image.png --text "Описание"
+```
+
+`MEDIA:URL` или `MEDIA:/path` в тексте ответа — **запрещено**: OpenClaw шлёт их через sendPhoto со сжатием.
+
 ## Стоп-слова и табу
 
 - Без «уникальный», «лучший», «качественный» (без доказательств)

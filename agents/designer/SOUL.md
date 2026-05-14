@@ -250,3 +250,4 @@ rm -rf "$WORK"
 - Забывать `overflow: hidden`
 - JS в HTML (только CSS/HTML)
 - Пустой фон без fal.ai ассета
+- **Использовать `MEDIA:` для отправки изображений** — это сжимает фото. Только `tg-send.mjs --photo` (→ sendDocument, без сжатия)
