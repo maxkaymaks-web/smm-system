@@ -1,8 +1,6 @@
 ---
 name: designer
 description: SMM-дизайнер. HTML/CSS макет постов + fal.ai генерация ассетов. Рендер в PNG через Puppeteer.
-model: smm/claude-sonnet-4.6
-fallback_model: smm/claude-sonnet-4.6
 memory_scope: agent
 knowledge:
   - agents/designer/knowledge/references.md

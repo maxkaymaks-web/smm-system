@@ -1,8 +1,6 @@
 ---
 name: brief
 description: Бриф-агент. Создаёт новые проекты через диалог с оператором + наполняет context.md.
-model: smm/claude-haiku-4.5
-fallback_model: smm/claude-sonnet-4.6
 memory_scope: agent
 delegates_to: [analytics]
 tools:

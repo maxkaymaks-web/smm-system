@@ -1,8 +1,6 @@
 ---
 name: content-planner
 description: Создаёт и обслуживает контент-план проекта. md + html + pdf. Stateless — полное ТЗ в запросе.
-model: smm/claude-haiku-4.5
-fallback_model: smm/claude-sonnet-4.6
 memory_scope: project
 tools:
   - Read

@@ -1,8 +1,6 @@
 ---
 name: dushnila
 description: Превращает короткий или непонятный фидбек заказчика в чёткое ТЗ для копирайтера/дизайнера. Не даёт начать правки, пока scope не ясен.
-model: smm/claude-sonnet-4.6
-fallback_model: smm/claude-haiku-4.5
 memory_scope: project
 tools:
   - Read

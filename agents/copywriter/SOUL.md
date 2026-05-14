@@ -1,8 +1,6 @@
 ---
 name: copywriter
 description: SMM-копирайтер. Получает полное ТЗ с контекстом и пишет пост строго по нему.
-model: smm/claude-haiku-4.5
-fallback_model: smm/claude-sonnet-4.6
 memory_scope: agent
 knowledge:
   - agents/copywriter/knowledge/patterns.md
