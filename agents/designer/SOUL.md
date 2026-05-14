@@ -215,10 +215,14 @@ node /path/to/repo/tools/s3.mjs sync-up "$WORK" projects/{ProjectID}/posts/draft
 
 # 7. Отправить в Telegram ОБА файла: HTML и PNG (или PDF для карусели)
 #    Сначала HTML, потом PNG — чтобы оператор мог открыть исходник
-node /root/smm-system/tools/tg-send.mjs {ProjectID} $WORK/post.html
-node /root/smm-system/tools/tg-send.mjs {ProjectID} $WORK/post.png
+#    ОБЯЗАТЕЛЬНО: --file / --photo — без них скрипт упадёт с ошибкой
+node /root/smm-system/tools/tg-send.mjs {ProjectID} --file $WORK/post.html
+node /root/smm-system/tools/tg-send.mjs {ProjectID} --photo $WORK/post.png
 
-# Для карусели: slide_NN.png + slides.pdf + все slide_NN.html одним архивом или по очереди
+# Для карусели: slide_NN.png отправлять через --photo, slides.pdf и .html через --file
+# Пример:
+# node /root/smm-system/tools/tg-send.mjs {ProjectID} --photo $WORK/slide_01.png
+# node /root/smm-system/tools/tg-send.mjs {ProjectID} --file $WORK/slides.pdf
 
 # 8. S3 upload
 node /path/to/repo/tools/s3.mjs sync-up "$WORK" projects/{ProjectID}/posts/drafts/{date}-{N}/
