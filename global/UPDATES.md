@@ -6,6 +6,16 @@
 
 ---
 
+## 14.05.2026 — архив сессий OpenClaw в S3
+
+- **`tools/openclaw-logs-sync.mjs`** — ежедневная (cron 03:00 на 5.42.117.201) выгрузка всех session JSONL (`*.jsonl`, `*.trajectory.jsonl`, `*.trajectory-path.json`, `*.jsonl.reset.*`) из `/root/.openclaw/agents/main/sessions/` в `s3://seo/logs/openclaw/{YYYY}/{MM}/{DD}/{file}`. Партиция — по дате первого event'а в JSONL (день рождения сессии), а не по mtime — благодаря чему растущая сессия не «разъезжается» по разным датам.
+- **Идемпотентность через `x-amz-meta-srcmtime` + `srcsize`**: повторный запуск пропускает неизменённые файлы (`skipped=N`); активные сессии переливаются на следующий день автоматически (S3 PUT перезаписывает).
+- **Снимок индекса**: `sessions.json` агента дополнительно копируется в `logs/openclaw/_index/sessions-{YYYY-MM-DD}.json` — даёт точку отсчёта «какие сессии были живы на конец суток».
+- **Зачем**: накопить корпус реальных кейсов использования (полный prompt + system prompt + messagesSnapshot + tool calls/results) для последующего разбора и обучения. JSONL OpenClaw содержит всё необходимое — этот скрипт только архивирует.
+- На сервере доустановлен `@aws-sdk/client-s3` + `lib-storage` + `s3-request-presigner` (раньше декларировались в `package.json`, но `node_modules` на сервере были без них — `tools/s3.mjs` и связанные тулзы по факту были сломаны).
+
+---
+
 ## 12.05.2026 — политика text-to-image: только nano-banana-2 и gpt-image-2
 
 - **Жёсткое ограничение по моделям генерации картинок.** В проекте разрешены ровно две t2i-модели: `fal-ai/nano-banana-2` (дефолт, всё подряд) и `openai/gpt-image-2` (только когда нужен разборчивый длинный/мульти-язычный/типографский текст на картинке). Любые другие — Flux всех версий, Ideogram, Recraft, Seedream, Imagen, Qwen, SDXL, Nano Banana Pro и пр. — больше не используются.

@@ -238,6 +238,35 @@ echo '0 * * * * find /tmp -maxdepth 1 -type d -mtime +1 -name "[A-Z]*" -exec rm 
 
 ---
 
+## Шаг 8 — Архив сессий в S3 (cron 03:00)
+
+OpenClaw сам пишет полную транскрипцию каждой сессии (диалог + LLM-trajectory) в
+`/root/.openclaw/agents/main/sessions/`. Чтобы накапливать корпус кейсов для
+последующего разбора — заливаем эти файлы в S3 ежедневно.
+
+```bash
+# Доустановить AWS SDK (если ещё не стоит):
+cd /root/smm-system
+unset HTTP_PROXY HTTPS_PROXY http_proxy https_proxy
+npm install --no-audit --no-fund @aws-sdk/client-s3 @aws-sdk/lib-storage @aws-sdk/s3-request-presigner
+
+# Прогнать ручной snapshot и проверить:
+node tools/openclaw-logs-sync.mjs --dry-run | tail -10
+node tools/openclaw-logs-sync.mjs
+
+# Добавить в crontab:
+(crontab -l 2>/dev/null; echo "# OpenClaw session log → S3 (daily snapshot)"
+ echo "0 3 * * *   cd /root/smm-system && node tools/openclaw-logs-sync.mjs >> /var/log/openclaw-logs-sync.log 2>&1") | crontab -
+```
+
+Куда кладёт: `s3://seo/logs/openclaw/{YYYY}/{MM}/{DD}/{filename}` — дата =
+первый event'а сессии. Снимок индекса — `logs/openclaw/_index/sessions-{YYYY-MM-DD}.json`.
+Идемпотентно: повторные запуски пропускают неизменённые файлы (см. метадату
+`x-amz-meta-srcmtime` / `srcsize`); растущие сессии переливаются автоматически
+(S3 PUT перезаписывает).
+
+---
+
 ## Расход / бюджет
 
 ```bash
