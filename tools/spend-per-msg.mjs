@@ -6,8 +6,9 @@
  * Trajectory создаётся только для сообщений, которые бот реально обработал
  * (скипнутые и заблокированные сессий не имеют).
  *
- * Стоимость берётся из LiteLLM_SpendLogs (PostgreSQL) через SSH на прокси.
- * Для этого на прокси-сервере должен быть SSH-ключ SMM-сервера в authorized_keys.
+ * Стоимость считается точно: для каждой сессии берём request_id из LiteLLM
+ * /spend/logs/v2 и для каждого дёргаем OpenRouter /generation (там total_cost
+ * с учётом cache_read, чего LiteLLM stream-режим теряет — issue #7790 not planned).
  *
  * Работает только на сервере (где живут trajectory файлы).
  *
@@ -21,7 +22,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
-import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 
@@ -37,11 +37,12 @@ if (fs.existsSync(envPath)) {
     if (m && !process.env[m[1]]) process.env[m[1]] = m[2].replace(/^"(.*)"$/, '$1');
   }
 }
+const LITELLM_URL = process.env.LITELLM_URL;
 const LITELLM_KEY = process.env.LITELLM_KEY;
-const PROXY_HOST = '5.2.66.188';
-const PROXY_PORT = '24822';
+const LITELLM_MASTER_KEY = process.env.LITELLM_MASTER_KEY;
+const OR_KEY = process.env.OPENROUTER_API_KEY_SMM;
 
-// LiteLLM хранит ключи как SHA256 хэш
+// LiteLLM хранит api_key как SHA256 хэш
 const KEY_HASH = LITELLM_KEY
   ? createHash('sha256').update(LITELLM_KEY).digest('hex')
   : null;
@@ -90,52 +91,83 @@ function extractUserMsg(lines) {
   return null;
 }
 
-// ---------- batch PostgreSQL query via SSH ----------
-function queryPgSpend(sessions) {
-  if (!KEY_HASH || sessions.length === 0) return sessions.map(() => null);
-
-  // VALUES (idx, start_ts, end_ts), ...
-  const rows = sessions.map((s, i) =>
-    `(${i}, '${s.startTs.toISOString().replace('T', ' ').slice(0, 23)}'::timestamp, '${s.endTs.toISOString().replace('T', ' ').slice(0, 23)}'::timestamp)`
-  ).join(',\n    ');
-
-  const sql = `
-WITH sessions(idx, start_ts, end_ts) AS (
-  VALUES
-    ${rows}
-)
-SELECT s.idx, COALESCE(sum(l.spend), 0) AS total
-FROM sessions s
-LEFT JOIN "LiteLLM_SpendLogs" l ON
-  l."api_key" = '${KEY_HASH}'
-  AND l."startTime" >= s.start_ts
-  AND l."startTime" <= s.end_ts
-GROUP BY s.idx
-ORDER BY s.idx;
-`.trim();
-
-  const cmd = `docker exec litellm-postgres psql -U litellm litellm -t -A -F'|' -c "${sql.replace(/"/g, '\\"').replace(/\n/g, ' ')}"`;
-
-  try {
-    const result = spawnSync(
-      'ssh', ['-p', PROXY_PORT, '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', `root@${PROXY_HOST}`, cmd],
-      { encoding: 'utf8', timeout: 30_000 }
-    );
-    if (result.status !== 0) return sessions.map(() => null);
-
-    const costs = new Array(sessions.length).fill(null);
-    for (const line of result.stdout.split('\n')) {
-      const parts = line.trim().split('|');
-      if (parts.length === 2) {
-        const idx = parseInt(parts[0], 10);
-        const cost = parseFloat(parts[1]);
-        if (!isNaN(idx) && !isNaN(cost)) costs[idx] = cost;
-      }
-    }
-    return costs;
-  } catch {
+// ---------- точная стоимость сессий через OpenRouter ----------
+// LiteLLM в stream-режиме теряет cache_creation/cache_read из usage
+// (BerriAI/litellm#7790 closed as not planned) → SpendLogs.spend завышен.
+// Берём request_id (=OpenRouter gen-...) из /spend/logs/v2 и дёргаем OR.
+async function querySpend(sessions) {
+  if (!LITELLM_URL || !LITELLM_MASTER_KEY || !OR_KEY || sessions.length === 0) {
     return sessions.map(() => null);
   }
+
+  // широкое окно — мин(startTs)..макс(endTs)
+  const minTs = sessions.reduce((m, s) => s.startTs < m ? s.startTs : m, sessions[0].startTs);
+  const maxTs = sessions.reduce((m, s) => s.endTs > m ? s.endTs : m, sessions[0].endTs);
+  // /spend/logs/v2 end_date эксклюзивный → сдвигаем на +1
+  const since = minTs.toISOString().slice(0, 10);
+  const untilDate = new Date(maxTs);
+  untilDate.setUTCDate(untilDate.getUTCDate() + 1);
+  const until = untilDate.toISOString().slice(0, 10);
+
+  const entries = [];
+  try {
+    for (let page = 1; ; page++) {
+      const u = new URL(`${LITELLM_URL}/spend/logs/v2`);
+      u.searchParams.set('start_date', since);
+      u.searchParams.set('end_date', until);
+      u.searchParams.set('page', page);
+      u.searchParams.set('page_size', 100);
+      const r = await fetch(u, { headers: { Authorization: `Bearer ${LITELLM_MASTER_KEY}` } });
+      if (!r.ok) return sessions.map(() => null);
+      const j = await r.json();
+      for (const e of (j.data || [])) {
+        if (KEY_HASH && e.api_key && e.api_key !== KEY_HASH) continue;
+        if (!e.request_id?.startsWith('gen-')) continue;
+        entries.push({ request_id: e.request_id, ts: new Date(e.startTime) });
+      }
+      if (page >= (j.total_pages || 1)) break;
+    }
+  } catch { return sessions.map(() => null); }
+
+  // group entries -> sessions by timestamp range
+  const buckets = sessions.map(() => []);
+  for (const e of entries) {
+    for (let i = 0; i < sessions.length; i++) {
+      if (e.ts >= sessions[i].startTs && e.ts <= sessions[i].endTs) {
+        buckets[i].push(e);
+        break;
+      }
+    }
+  }
+
+  // fetch OR /generation параллельно (10 одновременных)
+  const flat = [];
+  for (let i = 0; i < sessions.length; i++) for (const e of buckets[i]) flat.push({ i, request_id: e.request_id });
+  const costs = new Map();
+  let idx = 0;
+  await Promise.all(Array.from({ length: 10 }, async () => {
+    while (idx < flat.length) {
+      const item = flat[idx++];
+      try {
+        const r = await fetch(`https://openrouter.ai/api/v1/generation?id=${item.request_id}`, {
+          headers: { Authorization: `Bearer ${OR_KEY}` },
+        });
+        if (!r.ok) continue;
+        const j = await r.json().catch(() => null);
+        if (!j?.data) continue;
+        costs.set(item.request_id, j.data.total_cost || 0);
+      } catch {}
+    }
+  }));
+
+  const totals = sessions.map((_, i) => {
+    let total = 0, any = false;
+    for (const e of buckets[i]) {
+      if (costs.has(e.request_id)) { total += costs.get(e.request_id); any = true; }
+    }
+    return any ? +total.toFixed(6) : 0;
+  });
+  return totals;
 }
 
 // ---------- main ----------
@@ -197,8 +229,8 @@ if (sessions.length === 0) {
   process.exit(0);
 }
 
-// Batch-запрос стоимости всех сессий сразу
-const costs = queryPgSpend(sessions);
+// Точная стоимость через OpenRouter (LiteLLM SpendLogs.spend завышен для stream)
+const costs = await querySpend(sessions);
 const results = sessions.map((s, i) => ({ ...s, cost: costs[i] }));
 
 // ---------- output ----------

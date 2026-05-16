@@ -56,7 +56,16 @@ if (clear) {
   await call('deleteMyCommands', {});
   console.log('✓ Все команды удалены');
 } else {
-  await call('setMyCommands', { commands: COMMANDS });
-  console.log(`✓ Зарегистрировано ${COMMANDS.length} команд:`);
+  // setMyCommands заменяет весь список. OpenClaw при старте регистрирует свои
+  // системные команды (/new, /reset, /help, ...) — если переписать только нашими,
+  // системные пропадут из меню. Сливаем: текущие + наши (наши перекрывают одноимённые).
+  const existing = await call('getMyCommands', {});
+  const ourCmds = new Set(COMMANDS.map(c => c.command));
+  const merged = [
+    ...existing.filter(c => !ourCmds.has(c.command)),
+    ...COMMANDS,
+  ];
+  await call('setMyCommands', { commands: merged });
+  console.log(`✓ Зарегистрировано ${COMMANDS.length} наших команд (всего в меню: ${merged.length}):`);
   for (const c of COMMANDS) console.log(`  /${c.command} — ${c.description}`);
 }

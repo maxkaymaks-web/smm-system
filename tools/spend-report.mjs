@@ -43,7 +43,8 @@ if (fs.existsSync(envPath)) {
 }
 const LITELLM_URL = process.env.LITELLM_URL;
 const LITELLM_KEY = process.env.LITELLM_KEY;
-const LITELLM_ADMIN_KEY = process.env.LITELLM_ADMIN_KEY;
+const LITELLM_MASTER_KEY = process.env.LITELLM_MASTER_KEY;
+const OR_KEY = process.env.OPENROUTER_API_KEY_SMM;
 const APIFY_TOKEN = process.env.APIFY_TOKEN;
 
 // ---------- args ----------
@@ -120,24 +121,71 @@ async function fetchLitellm() {
   }
 }
 
-// Exact LLM delta via PostgreSQL (SSH → docker exec psql на прокси)
-function fetchLitellmLogsDelta(fromTs, toTs) {
-  if (!LITELLM_KEY) return null;
-  const keyHash = createHash('sha256').update(LITELLM_KEY).digest('hex');
-  const since = fromTs.toISOString().replace('T', ' ').slice(0, 23);
-  const until = toTs.toISOString().replace('T', ' ').slice(0, 23);
-  const sql = `SELECT COALESCE(sum(spend),0) FROM "LiteLLM_SpendLogs" WHERE "api_key"='${keyHash}' AND "startTime">='${since}' AND "startTime"<='${until}';`;
-  const cmd = `docker exec litellm-postgres psql -U litellm litellm -t -A -c "${sql.replace(/"/g, '\\"').replace(/\n/g, ' ')}"`;
-  try {
-    const r = spawnSync('ssh', ['-p', '24822', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=8', 'root@5.2.66.188', cmd], {
-      encoding: 'utf8', timeout: 15_000,
-    });
-    if (r.status !== 0) return null;
-    const val = parseFloat(r.stdout.trim());
-    return isNaN(val) ? null : +val.toFixed(6);
-  } catch {
-    return null;
+// Точный LLM-расход за период.
+// Зачем сложно: LiteLLM в stream-режиме теряет cache_creation/cache_read из usage
+// (BerriAI/litellm#7790 closed as not planned), поэтому SpendLogs.spend завышен
+// на 15-40% для всех OpenClaw-вызовов (OpenClaw всегда стримит).
+// Решение: тянем request_id через /spend/logs/v2, для каждого дёргаем
+// OpenRouter /generation — там total_cost точный с учётом cache_read.
+async function fetchLitellmLogsDelta(fromTs, toTs) {
+  if (!LITELLM_URL || !LITELLM_MASTER_KEY || !OR_KEY) return null;
+  const keyHash = LITELLM_KEY ? createHash('sha256').update(LITELLM_KEY).digest('hex') : null;
+  // /spend/logs/v2: start_date inclusive, end_date exclusive — сдвигаем на +1 день,
+  // финальный фильтр по [fromTs, toTs] ниже.
+  const since = fromTs.toISOString().slice(0, 10);
+  const untilDate = new Date(toTs);
+  untilDate.setUTCDate(untilDate.getUTCDate() + 1);
+  const until = untilDate.toISOString().slice(0, 10);
+
+  const entries = [];
+  for (let page = 1; ; page++) {
+    const u = new URL(`${LITELLM_URL}/spend/logs/v2`);
+    u.searchParams.set('start_date', since);
+    u.searchParams.set('end_date', until);
+    u.searchParams.set('page', page);
+    u.searchParams.set('page_size', 100);
+    let r;
+    try {
+      r = await fetch(u, { headers: { Authorization: `Bearer ${LITELLM_MASTER_KEY}` } });
+    } catch { return null; }
+    if (!r.ok) return null;
+    const j = await r.json();
+    for (const e of (j.data || [])) {
+      const t = new Date(e.startTime);
+      if (t < fromTs || t > toTs) continue;
+      if (keyHash && e.api_key && e.api_key !== keyHash) continue;
+      if (!e.request_id?.startsWith('gen-')) continue;
+      entries.push(e);
+    }
+    if (page >= (j.total_pages || 1)) break;
   }
+
+  let totalCost = 0, cachedTokens = 0, promptTokens = 0, fetched = 0;
+  let idx = 0;
+  await Promise.all(Array.from({ length: 10 }, async () => {
+    while (idx < entries.length) {
+      const e = entries[idx++];
+      let r;
+      try {
+        r = await fetch(`https://openrouter.ai/api/v1/generation?id=${e.request_id}`, {
+          headers: { Authorization: `Bearer ${OR_KEY}` },
+        });
+      } catch { continue; }
+      if (!r.ok) continue;
+      const j = await r.json().catch(() => null);
+      if (!j?.data) continue;
+      totalCost += j.data.total_cost || 0;
+      cachedTokens += j.data.native_tokens_cached || 0;
+      promptTokens += j.data.native_tokens_prompt || 0;
+      fetched++;
+    }
+  }));
+
+  return {
+    usd: +totalCost.toFixed(6),
+    requests: fetched,
+    cache_hit_pct: promptTokens ? +(100 * cachedTokens / promptTokens).toFixed(0) : null,
+  };
 }
 
 async function fetchApify() {
@@ -242,6 +290,9 @@ function formatPlain(data) {
       ? (litellm.cumulative_now / litellm.budget * 100).toFixed(0) : '?';
     lines.push(`   из $${litellm.budget} цикла (${pct}%)`);
   }
+  if (litellm.cache_hit_pct != null) {
+    lines.push(`   cache hit: ${litellm.cache_hit_pct}%`);
+  }
 
   lines.push(`🎨 fal.ai: ${fmt$(fal.usd)} (${fal.calls} вызов${fal.calls === 1 ? '' : 'ов'})`);
   if (Object.keys(fal.by_model).length) {
@@ -278,6 +329,9 @@ function formatTg(data) {
       ? (litellm.cumulative_now / litellm.budget * 100).toFixed(0) : '?';
     lines.push(`из $${litellm.budget} цикла · ${pct}%`);
   }
+  if (litellm.cache_hit_pct != null) {
+    lines.push(`cache hit · ${litellm.cache_hit_pct}%`);
+  }
   if (litellm.caveat) lines.push(`⚠️ ${litellm.caveat}`);
 
   lines.push('');
@@ -303,18 +357,23 @@ function formatTg(data) {
 // ---------- report mode ----------
 async function doReport() {
   const { fromTs, toTs, label } = resolvePeriod();
-  const llmLogsDelta = fetchLitellmLogsDelta(fromTs, toTs);
-  const [litellm, apify] = await Promise.all([fetchLitellm(), fetchApify()]);
+  const [llmLogs, litellm, apify] = await Promise.all([
+    fetchLitellmLogsDelta(fromTs, toTs),
+    fetchLitellm(),
+    fetchApify(),
+  ]);
   const fal = fetchFal(fromTs, toTs);
   const baseSnap = findSnapshotAt(fromTs);
 
-  // LiteLLM delta: prefer /spend/logs (exact), fall back to snapshot diff
+  // LiteLLM delta: prefer OpenRouter /generation (exact), fall back to snapshot diff
   let llmDelta = null;
+  let llmCacheHit = null;
   let llmCaveat = null;
   let llmSource = 'snapshot';
 
-  if (llmLogsDelta !== null) {
-    llmDelta = llmLogsDelta;
+  if (llmLogs !== null) {
+    llmDelta = llmLogs.usd;
+    llmCacheHit = llmLogs.cache_hit_pct;
     llmSource = 'logs';
   } else if (litellm.available) {
     if (baseSnap && baseSnap.litellm_cumulative_usd != null) {
@@ -363,7 +422,7 @@ async function doReport() {
     total_usd: +totalUsd.toFixed(4),
     sources: {
       litellm: litellm.available
-        ? { usd: llmDelta == null ? null : +llmDelta.toFixed(4), cumulative_now: litellm.cumulative_usd, budget: litellm.max_budget, caveat: llmCaveat }
+        ? { usd: llmDelta == null ? null : +llmDelta.toFixed(4), cumulative_now: litellm.cumulative_usd, budget: litellm.max_budget, cache_hit_pct: llmCacheHit, caveat: llmCaveat }
         : { available: false, reason: litellm.reason },
       apify: apify.available
         ? { usd: apifyDelta == null ? null : +apifyDelta.toFixed(4), cumulative_now: apify.cumulative_usd, cycle: { start: apify.cycle_start, end: apify.cycle_end }, caveat: apifyCaveat }
@@ -380,7 +439,7 @@ async function doReport() {
       period: out.period,
       total_usd: out.total_usd,
       sources: {
-        litellm: { usd: out.sources.litellm.usd, budget: out.sources.litellm.budget, cumulative_now: out.sources.litellm.cumulative_now, caveat: llmCaveat },
+        litellm: { usd: out.sources.litellm.usd, budget: out.sources.litellm.budget, cumulative_now: out.sources.litellm.cumulative_now, cache_hit_pct: llmCacheHit, caveat: llmCaveat },
         apify:   { usd: out.sources.apify.usd, caveat: apifyCaveat },
         fal:     out.sources.fal,
       },
