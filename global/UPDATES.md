@@ -6,6 +6,27 @@
 
 ---
 
+## 16.05.2026 — уход от OpenClaw, ручной Claude Code + архив сессий
+
+- **OpenClaw на 5.42.117.201 отключён.** `openclaw-gateway.service` остановлен (stop + disable), оба root-cron'а (`session-watchdog.mjs` ежеминутный, `openclaw-logs-sync.mjs` daily 03:00) сняты. Последний финальный sync прошёл вручную (29 сессий / 75 файлов в `s3://seo/logs/openclaw/`, дельта после 16.05 03:00 — 6 файлов / 0.67 MB). Бинарь OpenClaw в `/usr/lib/node_modules`, `/root/.openclaw/`, конфиги — **не тронуты** (rollback одним `systemctl start`); полный cleanup отдельной задачей через 1-2 недели.
+- **Причина:** бюджет LiteLLM virtual key smm-openclaw исчерпан 16.05 ($50.07/$50); gateway бесполезно спамил `FailoverError`. Текущий формат «бот в TG отвечает сам на @mention» решено больше не поддерживать.
+- **Новый рабочий режим:** операторы запускают `cd smm-system && claude` руками, **1 задача = 1 сессия**. Это всё. Никаких 24/7-сервисов, никакого LiteLLM в горячем пути.
+- **Архив сессий CC в S3.** В конце задачи (с подтверждения оператора) Claude Code:
+  1. Пишет `summary.md` по шаблону **Hybrid YAML + recipe + narrative** в `/tmp/`.
+  2. Запускает `node tools/upload-session.mjs <ProjectID> --summary /tmp/session-summary.md`.
+  3. В S3 уходит 5 объектов:
+     - `logs/claude-code/by-project/{ProjectID}/{YYYY-MM-DD}/{sid}/{raw.jsonl,meta.json,summary.md}`
+     - `logs/claude-code/by-date/{YYYY}/{MM}/{DD}/{sid}.pointer.json` (короткий json со ссылкой)
+     - `logs/claude-code/_index/all-sessions.jsonl` (read-modify-write по `session_id`)
+- **`meta.json` — детерминистический** (парсится из JSONL CC без LLM): usage по моделям, tool counts, bash-команды, files read/written/edited, subagents, первый prompt, ai-title, duration, model, cc_version, git_branch. См. `tools/upload-session.mjs`.
+- **`summary.md` пишет сам CC по своему же контексту** (никаких дополнительных LLM-вызовов и платы за саммаризацию). Формат — `docs/session-finalize.md`: frontmatter (`project_id`, `task_type` из таксономии 15 значений, `status`, `difficulty`, `automation_potential`, `reusable_recipe`, `tags`) + блоки «Что просили / Inputs / Recipe / Tools / Artifacts / Decisions / Lessons / Что автоматизировать» + опциональные раскрытия ТЗ к подагентам.
+- **Цель корпуса** — научиться повторять типовые задачи через UI «без нейронок»: накапливаем рецепты, поверх индекса позже строится сайтик с кнопками.
+- **Удалено:** `tools/session-watchdog.mjs` (был полезен только при живом OpenClaw — уведомлял в TG о таймаутах сессий бота).
+- **Не тронуто:** `tools/openclaw-logs-sync.mjs` (оставлен в репо как рабочий снапшоттер историчного `logs/openclaw/` префикса в S3 — можно запустить руками при необходимости).
+- **CLAUDE.md** переписан: вверху — указание читать `docs/session-finalize.md` в конце сессии, секция «Архитектура» обновлена (нет «Telegram-бот в проде»), есть упоминание `upload-session.mjs` в `tools/`.
+
+---
+
 ## 14.05.2026 — архив сессий OpenClaw в S3
 
 - **`tools/openclaw-logs-sync.mjs`** — ежедневная (cron 03:00 на 5.42.117.201) выгрузка всех session JSONL (`*.jsonl`, `*.trajectory.jsonl`, `*.trajectory-path.json`, `*.jsonl.reset.*`) из `/root/.openclaw/agents/main/sessions/` в `s3://seo/logs/openclaw/{YYYY}/{MM}/{DD}/{file}`. Партиция — по дате первого event'а в JSONL (день рождения сессии), а не по mtime — благодаря чему растущая сессия не «разъезжается» по разным датам.

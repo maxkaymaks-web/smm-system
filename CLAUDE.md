@@ -1,8 +1,12 @@
 # SMM-система bit&pix — Claude Code entry point
 
 Файл загружается автоматически Claude Code при `cd smm-system && claude`.
-Это **локальный** режим — для разработки и разовых операторских задач.
-24/7 продакшн-бот живёт на сервере под управлением OpenClaw (см. `docs/openclaw-deploy.md`).
+Это основной режим работы — операторы запускают `claude` руками из репо,
+1 задача = 1 сессия. По окончании сессии (с подтверждения оператора)
+транскрипт + саммари выгружаются в S3 (`docs/session-finalize.md`).
+
+OpenClaw на 5.42.117.201 **отключён** 16.05.2026 (см. UPDATES). Любые
+упоминания «бот в Telegram отвечает сам» — устаревшие.
 
 ---
 
@@ -15,9 +19,22 @@
 
 ---
 
+## При завершении сессии — финализация
+
+Когда задача сделана и оператор подтвердил, что качество устраивает
+(«всё ок», «закрываемся», «финализируй», `/finalize` и т.п.) — прочитай
+**`docs/session-finalize.md`** и выполни процедуру: напиши `summary.md` по
+шаблону, запусти `node tools/upload-session.mjs <ProjectID> --summary ...`.
+
+Без явного подтверждения оператора не финализируй: лучше переспроси
+«качество устраивает? финализирую?». Цель — накопить корпус сессий
+(JSONL + meta + summary) для последующей автоматизации.
+
+---
+
 ## Что это за проект
 
-SMM-агентство bit&pix. Стек агентов автоматизирует:
+SMM-агентство bit&pix. Стек агентов помогает оператору делать:
 - Контент-планы (md + html + pdf)
 - Тексты постов и адаптации под VK/TG/MAX/Instagram
 - HTML-макеты слайдов и каруселей + fal.ai-генерация ассетов
@@ -25,30 +42,38 @@ SMM-агентство bit&pix. Стек агентов автоматизиру
 - Обработку фидбека от заказчика
 - Создание новых проектов через диалог-бриф
 
-Под капотом — LiteLLM gateway, Anthropic Claude (через OpenRouter), fal.ai, Apify.
+Под капотом — Claude через подписку Claude Code (Anthropic),
+fal.ai (картинки/видео), Apify (парсинг). LiteLLM остался как gateway для
+утилитных скриптов вроде `daily_briefing.py`, но основная работа идёт
+через `claude` напрямую.
 
 ---
 
 ## Архитектура
 
 ```
-агент orchestrator
-  ├─ диспатчит → copywriter, designer, analytics, brief, content-planner, dushnila
+оператор + Claude Code (claude в этом репо)
+  ├─ диспатчит подагентов: copywriter, designer, analytics, brief,
+  │   content-planner, dushnila (через Agent tool)
   ├─ читает  → projects/{ProjectID}/{context,voice,strategy,content-plan}.md
-  └─ пишет   → projects/{ProjectID}/posts/drafts/{дата}-{N}/
-
-LLM-вызовы (любые)
-  └─→ LiteLLM (http://5.2.66.188:4000) ──→ OpenRouter ──→ Claude/DeepSeek/Gemini
+  ├─ пишет   → projects/{ProjectID}/posts/drafts/{дата}-{N}/
+  └─ в конце → upload-session.mjs → S3 (см. docs/session-finalize.md)
 
 Генерация изображений / видео / TTS
   └─→ fal.ai напрямую (HTTPS_PROXY через 5.2.66.188:8888 если запуск с RU IP)
 
-Хранилище медиа (HTML/PNG/JPG/PDF/MP4)
+Хранилище медиа (HTML/PNG/JPG/PDF/MP4) + архив сессий
   └─→ S3 Timeweb (s3.twcstorage.ru, bucket=seo). В git только текст (md/json).
        Локально файлы — временные в /tmp. См. docs/s3.md.
 
-Telegram-бот (только в проде)
-  └─→ группа SEO-claw, 1 топик = 1 проект + General + Tech Support (projects/topics.json)
+Telegram (отправка готового в топик клиента)
+  └─→ группа SEO-claw, 1 топик = 1 проект + General + Tech Support
+       (projects/topics.json). Шлём через tools/tg-send.mjs из CC.
+       Автоответ бота на @mention отключён вместе с OpenClaw 16.05.2026.
+
+Утилитные LLM-вызовы (daily_briefing.py, и т.п.)
+  └─→ LiteLLM (http://5.2.66.188:4000) ──→ OpenRouter ──→ Claude/Gemini
+       (для основной работы — Claude через подписку CC, без LiteLLM)
 ```
 
 ---
@@ -99,7 +124,8 @@ tools/                            утилиты (Node.js + Python)
   ├─ tg-topic.mjs       управление топиками SEO-claw группы
   ├─ tg-send.mjs        отправка в топик проекта (текст + PNG/PDF)
   ├─ get-tg-chat-id.mjs хелпер для поиска chat_id
-  ├─ spend.mjs          отчёт по тратам LiteLLM
+  ├─ upload-session.mjs выгрузка финализированной сессии CC в S3
+  ├─ spend.mjs          отчёт по тратам LiteLLM (для утилитных скриптов)
   ├─ apify/             парсеры Instagram/TikTok
   └─ remotion-lakmoda/  видео-рендер для Lakmoda
 
@@ -111,7 +137,8 @@ skills/                           reference-доки (используются �
 
 docs/
   ├─ dev-guide.md          как разрабатывать и обучать агентов
-  ├─ openclaw-deploy.md    как раскатать прод на RU-сервер
+  ├─ session-finalize.md   процедура финализации сессии в конце задачи
+  ├─ openclaw-deploy.md    как раскатать прод OpenClaw (исторический, выключен 16.05)
   ├─ proxy-and-server.md   IPs, порты, как достучаться к LiteLLM/прокси
   └─ s3.md                 как пользоваться S3 (где медиа лежат)
 ```
@@ -161,8 +188,6 @@ git push origin main
 
 Скоупы: `posts`, `content-plan`, `analytics`, `brief`, `designer`, `agents`, `tools`, `docs`, `feedback`, `litellm`, `memory`.
 
-Локальные коммиты подхватятся на сервере при следующем `git pull` или ежечасном автопулле OpenClaw.
-
 ---
 
 ## Жёсткие запреты
@@ -178,6 +203,9 @@ git push origin main
 
 ## Расход на LLM
 
+Основная работа = подписка Claude Code, в spend-отчётах LiteLLM она не учитывается.
+LiteLLM-расход (utility-скрипты типа `daily_briefing.py`):
+
 ```bash
 node tools/spend.mjs              # сводка по virtual key smm-openclaw
 node tools/spend.mjs --logs 7     # детально по моделям за 7 дней
@@ -190,6 +218,6 @@ LiteLLM UI: `http://5.2.66.188:4000/ui` (логин — master key из `/root/l
 ## Если что-то непонятно
 
 - `docs/dev-guide.md` — как добавить агента, обучить копирайтера, отлаживать LLM-вызов
-- `docs/openclaw-deploy.md` — деплой OpenClaw на RU-сервер
+- `docs/session-finalize.md` — финализация сессии в конце задачи
 - `global/UPDATES.md` — последние изменения системы
 - `agents/<name>/SOUL.md` — что именно делает каждый агент
