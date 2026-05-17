@@ -102,7 +102,7 @@ function withTimeout(promise, ms) {
   return Promise.race([
     promise,
     new Promise((_, reject) =>
-      setTimeout(() => reject(new Error(`TIMEOUT after ${ms / 1000}s. Это НЕ проблема промпта — fal.ai перегружен или прокси лагает. Не переформулируй промпт, не retry — останови задачу и сообщи оператору.`)), ms)
+      setTimeout(() => reject(new Error(`TIMEOUT after ${ms / 1000}s. Это НЕ проблема промпта — fal.ai перегружен. Не переформулируй промпт, не retry — останови задачу и сообщи оператору.`)), ms)
     ),
   ]);
 }
@@ -143,7 +143,7 @@ try {
   }
 } catch (err) {
   console.error(`fal.ai ERROR: ${err.message}`);
-  console.error("Генерация остановлена. Никаких фоллбэков. Проверь прокси или попробуй позже.");
+  console.error("Генерация остановлена. Никаких фоллбэков. Попробуй позже.");
   process.exit(2);
 }
 

@@ -60,7 +60,9 @@ fal.ai (картинки/видео), Apify (парсинг). LiteLLM остал
   └─ в конце → upload-session.mjs → S3 (см. docs/session-finalize.md)
 
 Генерация изображений / видео / TTS
-  └─→ fal.ai напрямую (HTTPS_PROXY через 5.2.66.188:8888 если запуск с RU IP)
+  └─→ fal.ai напрямую. ЛОКАЛЬНЫЙ Claude Code — без прокси, fal.ai доступен.
+       HTTPS_PROXY через 5.2.66.188:8888 — только для исторических запусков
+       с RU-сервера 5.42.117.201 (OpenClaw отключён 16.05.2026).
 
 Хранилище медиа (HTML/PNG/JPG/PDF/MP4) + архив сессий
   └─→ S3 Timeweb (s3.twcstorage.ru, bucket=seo). В git только текст (md/json).

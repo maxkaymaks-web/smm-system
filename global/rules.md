@@ -78,7 +78,7 @@ You Aren't Gonna Need It. Не делать функциональность «�
 - Имена моделей: `smm/claude-haiku-4.5`, `smm/claude-sonnet-4.6`, `smm/claude-opus-4-7`, `smm/deepseek-v3`, `smm/gemini-2.5-flash`, `smm/gemini-2.5-pro`
 - Дефолт: `smm/claude-haiku-4.5` (агенты текста), `smm/claude-sonnet-4.6` (оркестратор, дизайнер), `smm/deepseek-v3` (bulk)
 
-Генерация изображений/видео/аудио — `fal.ai` напрямую через клиент `@fal-ai/client`. Трафик с RU-сервера идёт через `HTTPS_PROXY` (см. `.env`).
+Генерация изображений/видео/аудио — `fal.ai` напрямую через клиент `@fal-ai/client`. **Локальный Claude Code ходит в fal.ai напрямую, без прокси** — не выставляй `HTTPS_PROXY` сам и не паникуй, если её нет в `.env`. `HTTPS_PROXY` через `5.2.66.188:8888` нужен ТОЛЬКО при запуске с RU-сервера `5.42.117.201` (исторический OpenClaw, отключён 16.05.2026).
 
 ### Text-to-image: ровно две разрешённые модели
 

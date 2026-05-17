@@ -104,9 +104,11 @@ async function download(url, dest) {
 
 Любая другая t2i-модель — нарушение политики (`global/rules.md`).
 
-**Designer-агент:** только `node tools/generate-image.mjs ... [--model=nano-banana-2|gpt-image-2] [--quality=low|medium|high]` — никаких кастомных скриптов, прямых `fal.run`, `node -e`, или самописных `.mjs`. Обёртка настраивает `.env`, прокси и таймаут — без неё на RU-сервере ничего не заработает.
+**Designer-агент:** только `node tools/generate-image.mjs ... [--model=nano-banana-2|gpt-image-2] [--quality=low|medium|high]` — никаких кастомных скриптов, прямых `fal.run`, `node -e`, или самописных `.mjs`. Обёртка грузит `.env`, ставит таймаут и считает spend — без неё легко получить молчаливый hang.
 
-**Другие агенты** (analytics и т.п.): прямые `fal.run` допустимы при условии ручной настройки `HTTPS_PROXY` и таймаута.
+**Другие агенты** (analytics и т.п.): прямые `fal.run` допустимы при условии ручного таймаута.
+
+**Прокси:** локальный Claude Code ходит в fal.ai напрямую, `HTTPS_PROXY` НЕ нужен. Тинипрокси `5.2.66.188:8888` использовался только для запуска с RU-сервера `5.42.117.201` (исторический OpenClaw, выключен 16.05.2026).
 
 ---
 
