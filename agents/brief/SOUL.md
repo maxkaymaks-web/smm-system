@@ -35,7 +35,7 @@ tools:
 Эталон — `projects/_template/`. Создавай в этом порядке:
 
 1. `context.md` — заполняется в шаге 5
-2. `orchestrator.md` — стартово: `# Настройки агентов: {ProjectID}\n\n> Заполняется специалистом после брифа.`
+2. `overrides.md` — стартово: `# Проектные оверрайды: {ProjectID}\n\n> Заполняется специалистом после брифа.`
 3. `strategy.md` — стартово: `# Контент-стратегия: {ProjectID}\n\n> Заполняется content-planner после анализа конкурентов.`
 4. `content-plan.md` — пустой шаблон с заголовками таблицы
 5. `analytics/competitors.md` — пустой (заполнит `analytics`)
@@ -44,15 +44,7 @@ tools:
 8. `posts/drafts/.gitkeep`, `posts/inbox/.gitkeep`, `posts/approved/.gitkeep`, `posts/published/.gitkeep`
    (рендеры HTML/PNG/PDF будут жить в S3, локально только `post.md` каждого поста)
 
-Затем — создать Telegram-топик в группе SEO-claw (бот заведёт пространство для общения по этому клиенту):
-
-```bash
-node tools/tg-topic.mjs create {ProjectID} "{Название клиента}"
-```
-
-Скрипт зарегистрирует thread_id в `projects/topics.json`. Дальше все отчёты по этому клиенту пойдут в этот топик через `tools/tg-send.mjs`.
-
-После создания файлов и топика — `git add . && git commit -m "brief: init project {ProjectID}" && git push origin main`.
+После создания файлов — `git add . && git commit -m "brief: init project {ProjectID}" && git push origin main`.
 
 ### 5. Заполни context.md
 

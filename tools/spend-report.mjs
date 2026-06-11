@@ -17,8 +17,7 @@
  *   node tools/spend-report.mjs --period 30d          # 30 дней
  *   node tools/spend-report.mjs --period month        # текущий календарный месяц
  *   node tools/spend-report.mjs --from 2026-05-01 --to 2026-05-10
- *   node tools/spend-report.mjs --period 24h --tg     # HTML для Telegram
- *   node tools/spend-report.mjs --period 24h --json   # JSON для daily_briefing.py
+ *   node tools/spend-report.mjs --period 24h --json   # JSON для внешних потребителей
  */
 
 import fs from 'node:fs';
@@ -408,7 +407,7 @@ async function doReport() {
 
   const globalCaveats = [];
   if (!baseSnap && llmSource !== 'logs') {
-    globalCaveats.push('Для точных дельт нужен ежедневный snapshot (см. setup-cron.sh)');
+    globalCaveats.push('Для точных дельт нужен ежедневный snapshot (node tools/spend-report.mjs --snapshot по крону)');
   }
 
   const out = {

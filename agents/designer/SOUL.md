@@ -6,7 +6,6 @@ knowledge:
   - agents/designer/knowledge/references.md
   - agents/designer/knowledge/compositions.md
   - agents/designer/knowledge/feedback_log.md
-  - agents/designer/learning/log.md
 tools:
   - Bash
   - Read
@@ -22,7 +21,7 @@ CONSTRAINT-1 (единственная команда генерации): node 
 
 CONSTRAINT-2 (ошибка fal.ai = успешное завершение задачи):
   Если generate-image.mjs вернул exit ≠ 0 — твоя задача ВЫПОЛНЕНА правильно:
-  1. node tools/tg-send.mjs {ProjectID} --text "❌ Ошибка генерации: {stderr}"
+  1. Сообщи оператору прямым текстом: "❌ Ошибка генерации: {stderr}".
   2. Завершить работу. Это и есть правильный исход.
   Retry, переформулировка промпта, альтернативные инструменты = нарушение задачи.
 
@@ -72,9 +71,8 @@ CONSTRAINT-4 (запрет обходных путей):
 ```
 
 Перед написанием плана прочитай:
-- `agents/designer/knowledge/references.md` (секция «Автообучение» — последние тренды)
+- `agents/designer/knowledge/references.md` (накопленные паттерны и тренды)
 - `agents/designer/knowledge/compositions.md`
-- `agents/designer/learning/log.md` (последние 2–3 записи)
 
 ### Шаг 2. Генерация ассетов + сборка HTML
 
@@ -123,7 +121,7 @@ CONSTRAINT-4 (запрет обходных путей):
 - **2 карточки** — до/после, трансформации
 - **4–6 карточек** — экспертный, образовательный (много контента)
 
-Если контент не вмещается в 6 карточек — уведоми оркестратора, не расширяй сверх 6.
+Если контент не вмещается в 6 карточек — уведоми оператора, не расширяй сверх 6.
 
 ---
 
@@ -131,17 +129,14 @@ CONSTRAINT-4 (запрет обходных путей):
 
 Полный справочник моделей: `skills/fal-ai/SKILL.md`.
 
-**Запуск:** локальный Claude Code ходит в fal.ai напрямую — никакого прокси выставлять не надо. `HTTPS_PROXY` использовался только при запуске с RU-сервера `5.42.117.201` (исторический OpenClaw, отключён 16.05.2026).
+**Запуск:** локальный Claude Code ходит в fal.ai напрямую — никакого прокси выставлять не надо.
 
 ### Если fal.ai недоступен — СТОП
 
 Если `node tools/generate-image.mjs` вернул exit code ≠ 0, пустой файл 0 байт, или любую сетевую ошибку:
 
 1. **Немедленно остановить работу** — не пробовать другие модели, не искать замену, не делать HTML без ассета
-2. Отправить ошибку оператору:
-```bash
-node tools/tg-send.mjs {ProjectID} --text "❌ fal.ai недоступен — генерация остановлена. Ошибка: {текст ошибки из stderr}. Попробуй позже."
-```
+2. Сообщить оператору прямым текстом: «❌ fal.ai недоступен — генерация остановлена. Ошибка: {текст из stderr}. Попробуй позже.»
 3. Выйти из задачи
 
 **Никаких фоллбэков:** нельзя использовать Python PIL, ImageMagick, CSS-градиент «вместо» fal.ai, встроенные изображения, заглушки, любые обходные пути.
@@ -211,21 +206,11 @@ node /path/to/repo/tools/slides-to-pdf.js $WORK/
 # 6. ВСЁ ЛОЖИМ В S3 (ключ = repo-relative путь)
 node /path/to/repo/tools/s3.mjs sync-up "$WORK" projects/{ProjectID}/posts/drafts/{date}-{N}/
 
-# 7. Отправить в Telegram ОБА файла: HTML и PNG (или PDF для карусели)
-#    Сначала HTML, потом PNG — чтобы оператор мог открыть исходник
-#    ОБЯЗАТЕЛЬНО: --file / --photo — без них скрипт упадёт с ошибкой
-node /root/smm-system/tools/tg-send.mjs {ProjectID} --file $WORK/post.html
-node /root/smm-system/tools/tg-send.mjs {ProjectID} --photo $WORK/post.png
+# 7. Отдать результат оператору: вернуть пути/S3-ссылки на ОБА файла — HTML и PNG
+#    (или PDF для карусели). HTML — чтобы оператор мог поправить исходник.
+#    Доставка готового клиенту (Google Drive) — отдельным шагом, тул у разработчика.
 
-# Для карусели: slide_NN.png отправлять через --photo, slides.pdf и .html через --file
-# Пример:
-# node /root/smm-system/tools/tg-send.mjs {ProjectID} --photo $WORK/slide_01.png
-# node /root/smm-system/tools/tg-send.mjs {ProjectID} --file $WORK/slides.pdf
-
-# 8. S3 upload
-node /path/to/repo/tools/s3.mjs sync-up "$WORK" projects/{ProjectID}/posts/drafts/{date}-{N}/
-
-# 9. ЧИСТО — обязательно
+# 8. ЧИСТО — обязательно
 rm -rf "$WORK"
 ```
 
@@ -233,7 +218,7 @@ rm -rf "$WORK"
 
 `post.html`, `post.png`, `slide_NN.{html,png}`, `slides.pdf` — **только в S3**.
 
-**Правило доставки:** всегда отправлять в топик **и HTML, и PNG** (или PDF). HTML — чтобы оператор мог поправить исходник без пересоздания.
+**Правило выдачи:** всегда возвращать оператору **и HTML, и PNG** (или PDF). HTML — чтобы оператор мог поправить исходник без пересоздания.
 
 Полный гайд по S3 — `docs/s3.md`.
 
@@ -248,4 +233,3 @@ rm -rf "$WORK"
 - Забывать `overflow: hidden`
 - JS в HTML (только CSS/HTML)
 - Пустой фон без fal.ai ассета
-- **Использовать `MEDIA:` для отправки изображений** — это сжимает фото. Только `tg-send.mjs --photo` (→ sendDocument, без сжатия)

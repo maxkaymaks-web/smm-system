@@ -1,12 +1,35 @@
 # SMM-система bit&pix — Claude Code entry point
 
 Файл загружается автоматически Claude Code при `cd smm-system && claude`.
-Это основной режим работы — операторы запускают `claude` руками из репо,
-1 задача = 1 сессия. По окончании сессии (с подтверждения оператора)
-транскрипт + саммари выгружаются в S3 (`docs/session-finalize.md`).
+Основной режим: оператор запускает `claude` руками из репозитория и работает
+с ним как с сильным помощником. **1 задача = 1 сессия.** По окончании сессии
+(с подтверждения оператора) транскрипт + саммари выгружаются в архив
+(`docs/session-finalize.md`).
 
-OpenClaw на 5.42.117.201 **отключён** 16.05.2026 (см. UPDATES). Любые
-упоминания «бот в Telegram отвечает сам» — устаревшие.
+> ⚠️ Система в процессе перехода на новую модель работы. Концепция и будущий
+> процесс описываются начальником в **`docs/onboarding-process.md`** — пока
+> он не заполнен и не проведено интервью, многие детали (Notion, Google Drive,
+> судьба агентов) ещё не финализированы. Реализацию делает разработчик, не
+> оператор.
+
+---
+
+## Новая модель работы (коротко)
+
+Раньше посты генерировались автономными агентами (через OpenClaw-бота в
+Telegram). **Это отключено.** Теперь:
+
+- **Оператор ведёт много проектов параллельно** — сам делает посты, заполняет
+  контентом, держит окна задач. Таких операторов несколько.
+- **Claude Code (ты) = сильный помощник.** Знаешь типовые решения агентства:
+  как пишем посты, как верстаем, как разбираем ОС, как поступаем в разных
+  ситуациях. Помогаешь оператору, а не делаешь всё за него автономно.
+- **Агенты-эксперты** (`copywriter`, `designer`, `analytics`, `brief`,
+  `content-planner`, `dushnila`) доступны как модули экспертизы через Agent
+  tool — зови их, когда это ускоряет работу. Это **не обязаловка**: оператор
+  может работать и напрямую с тобой.
+- **Telegram отменён.** Готовое отдаётся клиенту через Google Drive (тул
+  доставки реализует разработчик). Никакой отправки в Telegram.
 
 ---
 
@@ -14,7 +37,7 @@ OpenClaw на 5.42.117.201 **отключён** 16.05.2026 (см. UPDATES). Лю
 
 1. `global/UPDATES.md` — свежие изменения системы (самые новые сверху)
 2. `global/rules.md` — общие правила работы (включая YAGNI)
-3. Спросить у пользователя: с каким проектом работаем + что делаем
+3. Спросить у оператора: с каким проектом работаем + что делаем
 4. `projects/{ProjectID}/voice.md` + `context.md` — голос и контекст клиента
 
 ---
@@ -26,26 +49,30 @@ OpenClaw на 5.42.117.201 **отключён** 16.05.2026 (см. UPDATES). Лю
 **`docs/session-finalize.md`** и выполни процедуру: напиши `summary.md` по
 шаблону, запусти `node tools/upload-session.mjs <ProjectID> --summary ...`.
 
-Без явного подтверждения оператора не финализируй: лучше переспроси
-«качество устраивает? финализирую?». Цель — накопить корпус сессий
-(JSONL + meta + summary) для последующей автоматизации.
+Перед финализацией **обязательно опроси оператора**:
+- «Точно всё сделали по задаче?»
+- «Делал что-то вне Claude Code (руками, в другом окне)? Опиши — зафиксирую
+  в саммари.» — это важно, чтобы лог сессии был полным для последующего
+  анализа паттернов «что сработало / что нет».
+
+Без явного подтверждения оператора не финализируй. Цель — накопить корпус
+сессий (JSONL + meta + summary), который потом раз в неделю/месяц
+анализируется: хорошие паттерны выносятся в документацию, плохие — в стоп-лист.
 
 ---
 
 ## Что это за проект
 
-SMM-агентство bit&pix. Стек агентов помогает оператору делать:
+SMM-агентство bit&pix. Помогаешь оператору делать:
 - Контент-планы (md + html + pdf)
-- Тексты постов и адаптации под VK/TG/MAX/Instagram
+- Тексты постов и адаптации под VK/MAX/Instagram
 - HTML-макеты слайдов и каруселей + fal.ai-генерация ассетов
 - Анализ конкурентов через Apify/VK API
 - Обработку фидбека от заказчика
 - Создание новых проектов через диалог-бриф
 
 Под капотом — Claude через подписку Claude Code (Anthropic),
-fal.ai (картинки/видео), Apify (парсинг). LiteLLM остался как gateway для
-утилитных скриптов вроде `daily_briefing.py`, но основная работа идёт
-через `claude` напрямую.
+fal.ai (картинки/видео), Apify (парсинг).
 
 ---
 
@@ -53,29 +80,22 @@ fal.ai (картинки/видео), Apify (парсинг). LiteLLM остал
 
 ```
 оператор + Claude Code (claude в этом репо)
-  ├─ диспатчит подагентов: copywriter, designer, analytics, brief,
-  │   content-planner, dushnila (через Agent tool)
+  ├─ при необходимости зовёт подагентов-экспертов: copywriter, designer,
+  │   analytics, brief, content-planner, dushnila (через Agent tool)
   ├─ читает  → projects/{ProjectID}/{context,voice,strategy,content-plan}.md
   ├─ пишет   → projects/{ProjectID}/posts/drafts/{дата}-{N}/
-  └─ в конце → upload-session.mjs → S3 (см. docs/session-finalize.md)
+  └─ в конце → upload-session.mjs → архив сессий (см. docs/session-finalize.md)
 
 Генерация изображений / видео / TTS
-  └─→ fal.ai напрямую. ЛОКАЛЬНЫЙ Claude Code — без прокси, fal.ai доступен.
-       HTTPS_PROXY через 5.2.66.188:8888 — только для исторических запусков
-       с RU-сервера 5.42.117.201 (OpenClaw отключён 16.05.2026).
+  └─→ fal.ai напрямую (без прокси).
 
 Хранилище медиа (HTML/PNG/JPG/PDF/MP4) + архив сессий
-  └─→ S3 Timeweb (s3.twcstorage.ru, bucket=seo). В git только текст (md/json).
-       Локально файлы — временные в /tmp. См. docs/s3.md.
+  └─→ сейчас S3 Timeweb (s3.twcstorage.ru, bucket=seo). В git только текст
+       (md/json). Локально файлы — временные в /tmp. См. docs/s3.md.
+       Планируется переезд медиа + логов на Google Drive (разработчик).
 
-Telegram (отправка готового в топик клиента)
-  └─→ группа SEO-claw, 1 топик = 1 проект + General + Tech Support
-       (projects/topics.json). Шлём через tools/tg-send.mjs из CC.
-       Автоответ бота на @mention отключён вместе с OpenClaw 16.05.2026.
-
-Утилитные LLM-вызовы (daily_briefing.py, и т.п.)
-  └─→ LiteLLM (http://5.2.66.188:4000) ──→ OpenRouter ──→ Claude/Gemini
-       (для основной работы — Claude через подписку CC, без LiteLLM)
+Доставка готового клиенту
+  └─→ Google Drive (тул реализует разработчик). Telegram отключён.
 ```
 
 ---
@@ -83,8 +103,7 @@ Telegram (отправка готового в топик клиента)
 ## Где что лежит
 
 ```
-agents/<name>/SOUL.md            конфиг + system prompt каждого агента
-  ├─ orchestrator       главный диспатчер
+agents/<name>/SOUL.md            конфиг + system prompt каждого агента-эксперта
   ├─ copywriter         тексты постов
   ├─ designer           HTML/CSS + fal.ai
   ├─ analytics          Apify/VK/fal.ai-vision
@@ -97,13 +116,12 @@ projects/<ProjectID>/             всё про конкретного клие�
   ├─ voice.md           голос бренда (приоритет, перекрывает всё)
   ├─ strategy.md        рубрикатор и KPI
   ├─ content-plan.md    + .html + .pdf — план месяца
-  ├─ orchestrator.md    проектные оверрайды для оркестратора
+  ├─ overrides.md       проектные оверрайды (табу, дизайн-спеки, след. задача)
   ├─ analytics/         анализ конкурентов и метрик
   ├─ feedback/          разборы ОС от заказчика
   ├─ assets/            бренд-ассеты клиента
   └─ posts/             drafts/ inbox/ approved/ published/
 
-projects/topics.json              ProjectID → Telegram thread_id
 projects/_template/               эталон файловой структуры
 
 global/
@@ -122,12 +140,8 @@ tools/                            утилиты (Node.js + Python)
   ├─ remove-bg.mjs      fal.ai BRIA убирает фон
   ├─ upscale.mjs        fal.ai SeedVR2 апскейл
   ├─ s3.mjs             S3 CRUD (list/put/get/rm/sync-up/sync-down/url)
-  ├─ migrate-to-s3.mjs  одноразовый: бинарники projects/ → S3 + удалить локально
-  ├─ tg-topic.mjs       управление топиками SEO-claw группы
-  ├─ tg-send.mjs        отправка в топик проекта (текст + PNG/PDF)
-  ├─ get-tg-chat-id.mjs хелпер для поиска chat_id
-  ├─ upload-session.mjs выгрузка финализированной сессии CC в S3
-  ├─ spend.mjs          отчёт по тратам LiteLLM (для утилитных скриптов)
+  ├─ upload-session.mjs выгрузка финализированной сессии CC в архив
+  ├─ spend-report.mjs   отчёт по тратам (fal.ai / Apify / LiteLLM)
   ├─ apify/             парсеры Instagram/TikTok
   └─ remotion-lakmoda/  видео-рендер для Lakmoda
 
@@ -135,13 +149,12 @@ skills/                           reference-доки (используются �
   ├─ fal-ai/SKILL.md             полный справочник 600+ моделей fal.ai
   ├─ сценарий-рилс/SKILL.md      шаблон Instagram Reels (Lis_Gym)
   ├─ сценарий-съёмки/SKILL.md    ТЗ на съёмку клиенту
-  └─ ежедневный-брифинг/SKILL.md утренний брифинг
+  └─ ежедневный-брифинг/SKILL.md обзор «что делать следующим» по проектам
 
 docs/
+  ├─ onboarding-process.md как начальник описывает процесс + план интервью
   ├─ dev-guide.md          как разрабатывать и обучать агентов
   ├─ session-finalize.md   процедура финализации сессии в конце задачи
-  ├─ openclaw-deploy.md    как раскатать прод OpenClaw (исторический, выключен 16.05)
-  ├─ proxy-and-server.md   IPs, порты, как достучаться к LiteLLM/прокси
   └─ s3.md                 как пользоваться S3 (где медиа лежат)
 ```
 
@@ -155,7 +168,8 @@ cd smm-system
 npm install            # @fal-ai/client, puppeteer, sharp, pdf-lib
 ```
 
-Запросить у Максима `.env` (LiteLLM, FAL, Apify, VK, GitHub PAT, Telegram, S3). Положить в корень. Файл в `.gitignore`.
+Запросить у Максима `.env` (FAL, Apify, VK, GitHub PAT, S3). Положить в корень.
+Файл в `.gitignore`.
 
 Запуск:
 ```bash
@@ -188,37 +202,22 @@ git commit -m "<scope>: <action> — <ProjectID>"
 git push origin main
 ```
 
-Скоупы: `posts`, `content-plan`, `analytics`, `brief`, `designer`, `agents`, `tools`, `docs`, `feedback`, `litellm`, `memory`.
+Скоупы: `posts`, `content-plan`, `analytics`, `brief`, `designer`, `agents`, `tools`, `docs`, `feedback`, `memory`.
 
 ---
 
-## Жёсткие запреты
+## Правила
 
-- Не писать пост сам, не вызвав `copywriter`
-- Не делать HTML-макет сам, не вызвав `designer`
-- Не редактировать `voice.md` без явной команды пользователя
-- Не пушить заметки на main без явной команды пользователя
-- Никаких прямых ключей OpenAI/Anthropic/OpenRouter в коде — только `LITELLM_KEY` из `.env`
+- Не редактировать `voice.md` без явной команды оператора
+- Не пушить заметки/память на main без явной команды оператора
+- Никаких прямых ключей в коде — только из `.env`
 - YAGNI: не плодить «на всякий случай», не оставлять обратной совместимости после миграции (см. `global/rules.md`)
-
----
-
-## Расход на LLM
-
-Основная работа = подписка Claude Code, в spend-отчётах LiteLLM она не учитывается.
-LiteLLM-расход (utility-скрипты типа `daily_briefing.py`):
-
-```bash
-node tools/spend.mjs              # сводка по virtual key smm-openclaw
-node tools/spend.mjs --logs 7     # детально по моделям за 7 дней
-```
-
-LiteLLM UI: `http://5.2.66.188:4000/ui` (логин — master key из `/root/litellm/.env` на проксе).
 
 ---
 
 ## Если что-то непонятно
 
+- `docs/onboarding-process.md` — куда начальник пишет процесс + план интервью
 - `docs/dev-guide.md` — как добавить агента, обучить копирайтера, отлаживать LLM-вызов
 - `docs/session-finalize.md` — финализация сессии в конце задачи
 - `global/UPDATES.md` — последние изменения системы
