@@ -101,14 +101,40 @@ VK в очередной раз перепрятал раздел API. Что р
 - **UI живой:** `http://5.42.117.201:3000` → `/installation/onboarding`
   (создание первого админа). Доступен снаружи (ufw off, как у Postiz).
 
+## Шлюз VK+TG (реализован 12.06.2026)
+
+Свой шлюз на long polling — HTTPS не нужен. Код в репо: `tools/chatwoot-gateway/`
+(`gateway.py`, `docker-compose.yaml`, `gateway.env.example`). На сервере живёт как
+сервис `gateway` в compose-проекте `chatwoot` (образ `python:3.12-slim`, ставит
+зависимости при старте, код примонтирован из `/opt/chatwoot/gateway/`).
+
+Как работает:
+- **Входящие.** VK Bots Long Poll и Telegram `getUpdates` → создаём контакт/диалог/
+  сообщение через **публичный API Chatwoot** (`/public/api/v1/inboxes/{identifier}/...`).
+  Контакт идентифицируется как `vk:<user_id>` / `tg:<chat_id>`; маппинг
+  (identifier→source_id/conversation) хранится в `/data/state.json` (volume).
+- **Исходящие.** Chatwoot account-webhook (`message_created`) → `gateway:8080/chatwoot/webhook`.
+  Берём только `message_type=outgoing`, маршрутизируем по префиксу identifier →
+  VK `messages.send` / Telegram `sendMessage`.
+- **Egress.** Telegram — через tinyproxy (`PROXY_URL`, DPI в РФ); VK и сам Chatwoot —
+  напрямую (httpx-клиенты с `trust_env=False`, у TG явный `proxy=`).
+
+Эксплуатация:
+- логи: `docker compose logs -f gateway` (в `/opt/chatwoot`)
+- рестарт: `docker compose restart gateway`
+- два API-канала в Chatwoot: «VK» и «Telegram» (identifier'ы — в `gateway.env`).
+- account-webhook зарегистрирован (`POST /api/v1/accounts/1/webhooks`).
+
+Доступ: `http://5.42.117.201:3000`, админ `admin@bitpix.ru` (пароль — в локальном
+`.env` как `CHATWOOT_ADMIN_PASSWORD`). Онбординг-флаг снят
+(`Redis::Alfred::CHATWOOT_INSTALLATION_ONBOARDING`), сам-регистр закрыт.
+
 ## TODO (осталось)
 
-- [ ] **HTTPS** — сейчас голый HTTP (пароли открытым текстом, и Telegram-вебхук
-      без HTTPS не примет). Поднять `sslip.io`/домен + Let's Encrypt (общий nginx
-      с Postiz). До этого Telegram — только через шлюз на long polling.
-- [ ] **Telegram-канал:** либо нативно (после HTTPS), либо шлюз long polling
-      (getUpdates через прокси) → Chatwoot API Channel.
-- [ ] **VK-шлюз:** long poll → Chatwoot API Channel (референс:
-      github.com/feel90d/chatwoot-messenger-gateway, PoC, довести до прода).
-- [ ] `ENABLE_ACCOUNT_SIGNUP` уже `false` — после создания админа проверить, что
-      сам-регистр закрыт.
+- [ ] **HTTPS** — сейчас голый HTTP (пароли операторов открытым текстом). Поднять
+      `sslip.io`/домен + Let's Encrypt (общий nginx с Postiz). Только для безопасности —
+      шлюзу HTTPS не нужен.
+- [ ] **Вложения VK/TG** — пока шлюз гоняет только текст. Фото/файлы/стикеры — TODO
+      (VK: двухшаговая загрузка; TG: file_id).
+- [ ] Прод-харднинг шлюза: ретраи Chatwoot API, обработка закрытых диалогов,
+      сборка зависимостей в образ вместо pip-at-start.
