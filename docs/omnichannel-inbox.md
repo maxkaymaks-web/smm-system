@@ -86,13 +86,29 @@ VK в очередной раз перепрятал раздел API. Что р
 2. Отдельный сервер под инбокс (лучше нероссийский → Telegram нативно, без прокси).
 3. Взять более лёгкое ядро (FreeScout, PHP) — заметно меньше ест.
 
-## TODO по развёртыванию (не сделано)
+## Развёрнуто (12.06.2026)
 
-- [ ] **Решить вопрос с сервером/RAM** (развилка выше) — гейт для всего остального.
-- [ ] HTTPS для UI: бесплатный хостнейм через `sslip.io`/DuckDNS + Let's Encrypt
-      (или общий nginx с Postiz, если будет домен).
-- [ ] Chatwoot через docker-compose на `:3000`, env-токены перенести с локального `.env`.
-- [ ] Telegram: подключить нативно (Bot API). При DPI-обрывах — egress через tinyproxy
-      или шлюз на long polling.
-- [ ] VK-шлюз: long poll → Chatwoot API Channel (референс:
+- RAM `seo` поднята до **8 GiB** (свободно ~6) — Chatwoot и Postiz уживаются.
+- Chatwoot CE (образ `chatwoot/chatwoot:latest`, 2.83 GB) развёрнут в
+  **`/opt/chatwoot`** (docker-compose, отдельный проект `chatwoot`):
+  - сервисы `rails` (`:3000`→наружу), `sidekiq`, `postgres` (pgvector pg16),
+    `redis` (alpine). postgres/redis НЕ публикуются на хост (только внутри сети
+    проекта) → нет конфликта с Postiz.
+  - `.env` на сервере (`chmod 600`): сгенерированы `SECRET_KEY_BASE`,
+    `POSTGRES_PASSWORD`, `REDIS_PASSWORD`; `DEFAULT_LOCALE=ru`,
+    `ENABLE_ACCOUNT_SIGNUP=false`, `FRONTEND_URL=http://5.42.117.201:3000`.
+  - БД инициализирована (`db:chatwoot_prepare`): 91 таблица, 135 миграций.
+- **UI живой:** `http://5.42.117.201:3000` → `/installation/onboarding`
+  (создание первого админа). Доступен снаружи (ufw off, как у Postiz).
+
+## TODO (осталось)
+
+- [ ] **HTTPS** — сейчас голый HTTP (пароли открытым текстом, и Telegram-вебхук
+      без HTTPS не примет). Поднять `sslip.io`/домен + Let's Encrypt (общий nginx
+      с Postiz). До этого Telegram — только через шлюз на long polling.
+- [ ] **Telegram-канал:** либо нативно (после HTTPS), либо шлюз long polling
+      (getUpdates через прокси) → Chatwoot API Channel.
+- [ ] **VK-шлюз:** long poll → Chatwoot API Channel (референс:
       github.com/feel90d/chatwoot-messenger-gateway, PoC, довести до прода).
+- [ ] `ENABLE_ACCOUNT_SIGNUP` уже `false` — после создания админа проверить, что
+      сам-регистр закрыт.
