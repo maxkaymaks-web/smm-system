@@ -118,6 +118,9 @@ VK в очередной раз перепрятал раздел API. Что р
   VK `messages.send` / Telegram `sendMessage`.
 - **Egress.** Telegram — через tinyproxy (`PROXY_URL`, DPI в РФ); VK и сам Chatwoot —
   напрямую (httpx-клиенты с `trust_env=False`, у TG явный `proxy=`).
+- **Аватарки.** Для новых контактов шлюз тянет фото профиля (VK `photo_200`, TG
+  `getUserProfilePhotos`) и грузит в контакт агентским API (`CHATWOOT_API_TOKEN`).
+  Существующим — бэкфилл `backfill_avatars.py`.
 
 Эксплуатация:
 - логи: `docker compose logs -f gateway` (в `/opt/chatwoot`)

@@ -37,6 +37,8 @@ TG_API = f"https://api.telegram.org/bot{TG_TOKEN}"
 TG_FILE = f"https://api.telegram.org/file/bot{TG_TOKEN}"
 STATE_PATH = os.environ.get("STATE_PATH", "/data/state.json")
 MAX_BYTES = 40 * 1024 * 1024  # лимит вложения Chatwoot по умолчанию
+ACCOUNT_ID = os.environ.get("CHATWOOT_ACCOUNT_ID", "1")
+API_TOKEN = os.environ.get("CHATWOOT_API_TOKEN", "")  # агентский токен (для загрузки аватара)
 
 # --- state (persisted) ---
 _state = {"contacts": {}, "convos": {}, "src2ident": {}, "names": {}, "tg_offset": 0}
@@ -70,17 +72,28 @@ def guess_ct(name, fallback="application/octet-stream"):
 
 
 # --- Chatwoot incoming helpers (public API) ---
-async def cw_ensure_contact(inbox, identifier, name):
+async def cw_ensure_contact(inbox, identifier, name, avatar_bytes=None):
     if identifier in _state["contacts"]:
         return _state["contacts"][identifier]
     r = await cw.post(f"/public/api/v1/inboxes/{inbox}/contacts",
                       json={"identifier": identifier, "name": name})
     r.raise_for_status()
-    src = r.json()["source_id"]
+    data = r.json()
+    src = data["source_id"]
+    cid = data.get("id")
     async with _lock:
         _state["contacts"][identifier] = src
         _state["src2ident"][src] = identifier
         save_state()
+    # аватар грузим только при создании контакта, агентским API (multipart)
+    if avatar_bytes and cid and API_TOKEN:
+        try:
+            await cw.put(f"/api/v1/accounts/{ACCOUNT_ID}/contacts/{cid}",
+                         headers={"api_access_token": API_TOKEN},
+                         files={"avatar": ("avatar.jpg", avatar_bytes, "image/jpeg")})
+            log.info("avatar -> %s", identifier)
+        except Exception as e:
+            log.warning("avatar upload fail %s: %s", identifier, e)
     return src
 
 
@@ -97,11 +110,11 @@ async def cw_ensure_conversation(inbox, identifier, source_id):
     return conv
 
 
-async def cw_incoming(inbox, identifier, name, content, attachments=None):
+async def cw_incoming(inbox, identifier, name, content, attachments=None, avatar_bytes=None):
     """attachments: список dict {name, ctype, data(bytes)}."""
     if not content and not attachments:
         return
-    src = await cw_ensure_contact(inbox, identifier, name)
+    src = await cw_ensure_contact(inbox, identifier, name, avatar_bytes)
     conv = await cw_ensure_conversation(inbox, identifier, src)
     url = f"/public/api/v1/inboxes/{inbox}/contacts/{src}/conversations/{conv}/messages"
     if attachments:
@@ -162,6 +175,20 @@ async def tg_download(file_id):
     return await download(tg, f"{TG_FILE}/{fp}")
 
 
+async def tg_avatar(user_id):
+    """Аватар профиля TG (bytes) — зовём только для новых контактов."""
+    try:
+        r = await tg.get(f"{TG_API}/getUserProfilePhotos",
+                         params={"user_id": user_id, "limit": 1})
+        photos = (r.json().get("result") or {}).get("photos") or []
+        if not photos:
+            return None
+        return await tg_download(photos[0][-1]["file_id"])  # самый крупный размер
+    except Exception as e:
+        log.warning("tg_avatar fail: %s", e)
+        return None
+
+
 async def tg_poll():
     while True:
         try:
@@ -190,26 +217,36 @@ async def tg_poll():
                     except Exception as e:
                         log.error("tg download %s: %s", fname, e)
                         text = (text + f"\n[не удалось скачать вложение: {fname}]").strip()
-                await cw_incoming(TG_INBOX, f"tg:{chat}", name, text, attachments)
+                ident = f"tg:{chat}"
+                avatar = None
+                if ident not in _state["contacts"] and frm.get("id"):
+                    avatar = await tg_avatar(frm["id"])
+                await cw_incoming(TG_INBOX, ident, name, text, attachments, avatar_bytes=avatar)
         except Exception as e:
             log.error("tg_poll: %s", e); await asyncio.sleep(3)
 
 
 # =================== VK ===================
-async def vk_name(user_id):
-    if str(user_id) in _state["names"]:
-        return _state["names"][str(user_id)]
+async def vk_profile(user_id):
+    """(name, avatar_bytes) — зовём только для новых контактов."""
     name = f"VK {user_id}"
+    avatar = None
     try:
         r = await vk.get("https://api.vk.com/method/users.get", params={
-            "user_ids": user_id, "access_token": VK_TOKEN, "v": VK_API_V})
+            "user_ids": user_id, "fields": "photo_200",
+            "access_token": VK_TOKEN, "v": VK_API_V})
         u = r.json().get("response", [])
         if u:
             name = f"{u[0].get('first_name','')} {u[0].get('last_name','')}".strip() or name
+            url = u[0].get("photo_200")
+            if url and "/camera_" not in url:   # пропускаем дефолтную «камеру»
+                try:
+                    avatar = await download(vk, url)
+                except Exception as e:
+                    log.warning("vk avatar dl: %s", e)
     except Exception as e:
-        log.warning("vk_name fail: %s", e)
-    _state["names"][str(user_id)] = name
-    return name
+        log.warning("vk_profile fail: %s", e)
+    return name, avatar
 
 
 async def vk_extract_media(atts):
@@ -282,8 +319,12 @@ async def vk_poll():
                     files, links = await vk_extract_media(msg.get("attachments", []))
                     if links:
                         text = (text + "\n" + "\n".join(links)).strip()
-                    name = await vk_name(frm)
-                    await cw_incoming(VK_INBOX, f"vk:{frm}", name, text, files)
+                    ident = f"vk:{frm}"
+                    if ident in _state["contacts"]:
+                        name, avatar = "", None
+                    else:
+                        name, avatar = await vk_profile(frm)
+                    await cw_incoming(VK_INBOX, ident, name, text, files, avatar_bytes=avatar)
         except Exception as e:
             log.error("vk_poll: %s", e); await asyncio.sleep(3)
 

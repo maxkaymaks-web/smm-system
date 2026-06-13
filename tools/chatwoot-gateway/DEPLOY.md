@@ -92,8 +92,10 @@ curl -X POST http://127.0.0.1:3000/api/v1/accounts/<ACCOUNT_ID>/webhooks \
 
 ## 6. gateway.env (шлюз)
 Из `gateway.env.example`: `CHATWOOT_URL=http://rails:3000`, identifier'ы из шага 4,
+`CHATWOOT_ACCOUNT_ID`/`CHATWOOT_API_TOKEN` (для аватарок контактов),
 `VK_COMMUNITY_TOKEN`/`VK_GROUP_ID`, `TELEGRAM_BOT_TOKEN`, `PROXY_URL` (+ HTTP(S)_PROXY
 для pip), `NO_PROXY=rails,redis,postgres,localhost,127.0.0.1,api.vk.com,.vk.com`.
+Бэкфилл аватарок существующим контактам (опц.): `docker compose exec -T gateway python /app/backfill_avatars.py`.
 ```bash
 docker compose up -d gateway
 docker compose logs -f gateway   # ждём "VK long poll подключён"
