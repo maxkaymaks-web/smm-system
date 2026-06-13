@@ -73,10 +73,21 @@ docker compose exec -T rails bundle exec rails runner \
 ```
 
 ## 5. Webhook на исходящие -> шлюз
+⚠️ **Два подводных камня (оба обязательны, иначе исходящие не уходят):**
+1. **URL вебхука должен быть ПУБЛИЧНЫМ** — Chatwoot блокирует доставку на внутренние
+   хосты (`gateway:8080`, приватные IP) как SSRF. Поэтому вебхук идёт на
+   `https://chat.<домен>/cw-<token>/chatwoot/webhook`, а nginx (шаг 8) проксирует
+   этот путь на шлюз (`127.0.0.1:8090`). Шлюз публикует порт на loopback (см. compose).
+2. **`extra_hosts` для rails и sidekiq** (в compose):
+   `"chat.<домен>:<IP сервера>"`. Иначе контейнер может резолвить домен в старый
+   wildcard-IP (DNS-кеш, TTL до суток) и вебхук уйдёт «не туда» (cert mismatch).
+
+Регистрация (после того как nginx-путь поднят, шаг 8):
 ```bash
+TOKEN=$(openssl rand -hex 8)   # тот же, что в nginx location /cw-$TOKEN/
 curl -X POST http://127.0.0.1:3000/api/v1/accounts/<ACCOUNT_ID>/webhooks \
   -H "api_access_token: <USER_TOKEN>" -H "Content-Type: application/json" \
-  -d '{"url":"http://gateway:8080/chatwoot/webhook","subscriptions":["message_created"]}'
+  -d "{\"url\":\"https://chat.<домен>/cw-$TOKEN/chatwoot/webhook\",\"subscriptions\":[\"message_created\"]}"
 ```
 
 ## 6. gateway.env (шлюз)

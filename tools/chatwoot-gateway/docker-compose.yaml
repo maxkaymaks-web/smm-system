@@ -10,6 +10,8 @@ services:
     depends_on:
       - postgres
       - redis
+    extra_hosts:
+      - "chat.bitandpix.ru:5.42.117.201"   # обход stale DNS-кеша (wildcard), вебхук на свой домен
     ports:
       - '3000:3000'
     environment:
@@ -25,6 +27,8 @@ services:
     depends_on:
       - postgres
       - redis
+    extra_hosts:
+      - "chat.bitandpix.ru:5.42.117.201"   # вебхуки на свой домен в обход stale DNS
     environment:
       - NODE_ENV=production
       - RAILS_ENV=production
@@ -57,6 +61,8 @@ services:
     depends_on:
       - rails
     env_file: gateway.env
+    ports:
+      - "127.0.0.1:8090:8080"   # для nginx-проксирования вебхука с публичного домена
     volumes:
       - ./gateway:/app:ro
       - gateway_data:/data

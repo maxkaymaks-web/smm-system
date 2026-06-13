@@ -146,8 +146,16 @@ Let's Encrypt, общий `certbot.timer`). `FRONTEND_URL=https://chat.bitandpix
   шлём: VK — двухшаговая загрузка (photos/docs getMessagesUploadServer→save→
   messages.send attachment); TG — `sendPhoto`/`sendDocument`.
 
+### Исходящие — как доставляется (важный нюанс)
+Chatwoot шлёт account-webhook `message_created`, НО блокирует внутренние URL (SSRF) →
+вебхук идёт на публичный `https://chat.bitandpix.ru/cw-<token>/chatwoot/webhook`,
+nginx проксирует на шлюз (`127.0.0.1:8090`). Плюс контейнерам rails/sidekiq прописан
+`extra_hosts: chat.bitandpix.ru:5.42.117.201` (иначе резолвят домен в старый wildcard-IP
+из DNS-кеша → cert mismatch). Текстовые исходящие в VK и TG **проверены, работают**.
+
 ## TODO (осталось)
 
-- [ ] Прогнать сквозной тест вложений в обе стороны (фото/файл/стикер/голосовое).
+- [ ] Сквозной тест ВЛОЖЕНИЙ исходящих (оператор шлёт фото/файл → VK/TG). Текст ок.
 - [ ] Прод-харднинг шлюза: ретраи Chatwoot API, обработка закрытых диалогов,
       сборка зависимостей в образ вместо pip-at-start, лимиты больших файлов.
+- [ ] Подчистить тестовые сообщения в диалогах VK/TG (Привет/Тест 1-4).
