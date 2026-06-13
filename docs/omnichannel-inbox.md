@@ -125,16 +125,29 @@ VK в очередной раз перепрятал раздел API. Что р
 - два API-канала в Chatwoot: «VK» и «Telegram» (identifier'ы — в `gateway.env`).
 - account-webhook зарегистрирован (`POST /api/v1/accounts/1/webhooks`).
 
-Доступ: `http://5.42.117.201:3000`, админ `admin@bitpix.ru` (пароль — в локальном
-`.env` как `CHATWOOT_ADMIN_PASSWORD`). Онбординг-флаг снят
-(`Redis::Alfred::CHATWOOT_INSTALLATION_ONBOARDING`), сам-регистр закрыт.
+Доступ: **`https://chat.bitandpix.ru`** (домен на reg.ru, A-запись `chat`→5.42.117.201;
+nginx-вход отдельным server-блоком, Postiz на `tech.bitandpix.ru` не задет; HTTPS —
+Let's Encrypt, общий `certbot.timer`). `FRONTEND_URL=https://chat.bitandpix.ru`.
+Админ `admin@bitpix.ru` (пароль — в локальном `.env` как `CHATWOOT_ADMIN_PASSWORD`).
+Онбординг-флаг снят (`Redis::Alfred::CHATWOOT_INSTALLATION_ONBOARDING`), сам-регистр закрыт.
+
+> ⚠️ Координация: на сервере параллельно работает агент по Postiz. **certbot нельзя
+> запускать одновременно** (общий lock) и не частить SSH-коннектами (сервер ловит
+> fail2ban-обрывы на kex). Делать консолидированные вызовы.
+
+## Вложения (реализовано 13.06.2026)
+
+Шлюз гоняет медиа в обе стороны (текст + файлы):
+- **Входящие.** TG: `getFile`→скачивание (через прокси); VK: прямые URL фото/doc/
+  голосовых/стикеров. Заливаются в Chatwoot multipart-ом `attachments[]` (публичный
+  API это принимает — проверено). Видео VK (нет прямого файла) — отдаётся ссылкой,
+  не молча. Не скачалось/>40МБ — текстовая пометка, не тихая потеря.
+- **Исходящие.** Из вебхука берём `attachments[].data_url`, качаем (внутр. rails:3000),
+  шлём: VK — двухшаговая загрузка (photos/docs getMessagesUploadServer→save→
+  messages.send attachment); TG — `sendPhoto`/`sendDocument`.
 
 ## TODO (осталось)
 
-- [ ] **HTTPS** — сейчас голый HTTP (пароли операторов открытым текстом). Поднять
-      `sslip.io`/домен + Let's Encrypt (общий nginx с Postiz). Только для безопасности —
-      шлюзу HTTPS не нужен.
-- [ ] **Вложения VK/TG** — пока шлюз гоняет только текст. Фото/файлы/стикеры — TODO
-      (VK: двухшаговая загрузка; TG: file_id).
+- [ ] Прогнать сквозной тест вложений в обе стороны (фото/файл/стикер/голосовое).
 - [ ] Прод-харднинг шлюза: ретраи Chatwoot API, обработка закрытых диалогов,
-      сборка зависимостей в образ вместо pip-at-start.
+      сборка зависимостей в образ вместо pip-at-start, лимиты больших файлов.
