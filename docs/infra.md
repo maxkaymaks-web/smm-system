@@ -41,37 +41,124 @@
 > **весь** исходящий постинг через tinyproxy (равномерно + страховка). VK через
 > прокси тоже ок.
 
-## Postiz (развёрнут 12.06.2026)
+## Postiz (развёрнут 12.06.2026, работает)
 
-- RAM апнут **1.9 → 3.8 GiB** + добавлен **2G swap** (`/swapfile`, в fstab).
-- **Docker CE 29.5.3 + compose v5.1.4** установлены (офиц. репозиторий).
-- Стек в **`/opt/postiz/`** (`docker-compose.yml` + `.env` с `JWT_SECRET`/`PG_PASSWORD`):
-  `postiz` (ghcr.io/gitroomhq/postiz-app, **образ 5.66 GB**) + `postiz-postgres`
-  (17-alpine) + `postiz-redis` (7.2). Тома: postgres-volume, postiz-uploads,
-  postiz-config, postiz-redis-data.
-- **UI живой:** `http://5.42.117.201:5000` (порт проброшен, ufw off, доступен снаружи).
-  `/auth` → 200. `MAIN_URL/FRONTEND_URL` пока на голый IP:5000 (временно).
-- `DISABLE_REGISTRATION=false` — **claim первого админа в UI сразу**, потом
-  выставить `true` и пересоздать контейнер.
+- RAM **1.9 → 8 GiB** (делит сервер с Chatwoot-инбоксом) + **2G swap** (`/swapfile`).
+- **Docker CE 29.5.3 + compose v5.1.4** (офиц. репозиторий).
+- **Урезанный стек (путь A), 5 контейнеров**, в **`/opt/postiz-official/`**,
+  файл **`docker-compose.trim.yaml`** (форк офиц. `docker-compose.yaml` из репо
+  gitroomhq/postiz-docker-compose, выкинуты Elasticsearch + temporal-ui +
+  admin-tools + spotlight):
+  `postiz` (ghcr, образ **5.66 GB**) · `postiz-postgres` (17-alpine) ·
+  `postiz-redis` (7.2) · `temporal` (auto-setup 1.28.1, **ENABLE_ES=false** →
+  визибилити на Postgres) · `temporal-postgresql` (postgres:16).
+- **UI/API:** **https://tech.bitandpix.ru** (через host-nginx, см. ниже).
+  `/auth` → 200; публичный API `/api/public/v1/*` (для Claude). Контейнер также
+  слушает `127.0.0.1:4007` (вход для nginx).
+- **Админ:** `admin@bitpix.team` / `Tmp123456!` (SUPERADMIN, сменить в UI).
+  `DISABLE_REGISTRATION=true` (после создания админа).
+- **API-ключ Claude** = `Organization.apiKey` (авто-генерится). Лежит в репо `.env`
+  как `POSTIZ_API_KEY` + `POSTIZ_API_URL`. Заголовок: `Authorization: <key>`
+  (без Bearer). Проверено: `GET /api/public/v1/integrations` → 200.
 
 ### Грабли при установке (чтобы не повторять)
 
-- **Образ Postiz 5.66 GB** не проходит через tinyproxy (затыкается, pull не
-  финишит). → daemon-прокси настроен **с `NO_PROXY=ghcr.io,pkg-containers.githubusercontent.com`**:
-  Docker Hub (postgres/redis) тянем через прокси (обход rate-limit), а Postiz с
-  ghcr — **напрямую**. См. `/etc/systemd/system/docker.service.d/http-proxy.conf`.
+- **Текущий Postiz (v2.12+) тащит Temporal-стек**, старый лёгкий compose
+  (postiz+pg+redis) НЕ работает — бэкенд крашится на коннекте к `temporal:7233`.
+  Брать офиц. compose из репо `gitroomhq/postiz-docker-compose`.
+- **Без Elasticsearch Temporal падает на регистрации search-attributes**:
+  Postiz создаёт `organizationId`+`postId` как тип **Text**, а Postgres-визибилити
+  лимитирован 3 Text-слотами → бэкенд не доходит до `listen(3000)` → `/api` 502.
+  **Фикс (durable):** предсоздать оба атрибута как **Keyword** —
+  `docker exec temporal temporal operator search-attribute create --address temporal:7233 --namespace default --name organizationId --type Keyword` (и `postId`),
+  затем перезапустить `postiz`. Атрибуты живут в `temporal-postgres-data`.
+- `:3002` внутри контейнера = health-порт **оркестратора**, не API. API-бэкенд =
+  `:3000` (как и ждёт внутренний nginx). 502 был из-за краша бэкенда, не из-за порта.
+- **Образ Postiz 5.66 GB** не проходит через tinyproxy. → daemon-прокси с
+  `NO_PROXY=ghcr.io,pkg-containers.githubusercontent.com`: Docker Hub тянем через
+  прокси (обход rate-limit), ghcr (Postiz) — напрямую.
+  См. `/etc/systemd/system/docker.service.d/http-proxy.conf`.
 - **SSH без pty не убивает удалённую команду по клиентскому таймауту** — длинные
-  pull'ы осиротели и копились (9 процессов, load 6.8). Для долгих операций на
-  сервере: `nohup ... &` + лог-файл + опрос, либо server-side `timeout`.
+  pull'ы осиротели (9 процессов, load 6.8). Долгие операции: `nohup+лог+опрос` или
+  server-side `timeout`. Заливка файлов на сервер: `cat local | ssh 'cat > remote'`.
+
+## Host-nginx (общий reverse-proxy + HTTPS) — 13.06.2026
+
+- На хосте `5.42.117.201` стоит **nginx 1.24 + certbot 2.9** (НЕ в Docker).
+  Это **общая точка входа** сервера на портах 80/443.
+- Сайт `/etc/nginx/sites-available/tech.bitandpix.ru` → `proxy_pass 127.0.0.1:4007`
+  (Postiz), websocket + `client_max_body_size 256m` (медиа).
+- **Домен `tech.bitandpix.ru`** (A-запись → 5.42.117.201). **HTTPS Let's Encrypt**
+  выпущен (до 2026-09-11, авто-renew через certbot timer). HTTP 80 → 301 на https.
+- **Второй сервис — Chatwoot — уже на `chat.bitandpix.ru`** (отдельный server-блок
+  + свой LE-серт, выпущен 13.06.2026 другим агентом, → Chatwoot `:3000`). Серт
+  под тем же `certbot.timer`, продлевается автоматически.
+
+### Сертификаты и автопродление (оба домена)
+
+| Домен | Сервис | Серт истекает | Продление |
+|-------|--------|---------------|-----------|
+| `tech.bitandpix.ru` | Postiz | 2026-09-11 | `certbot.timer` (общий) |
+| `chat.bitandpix.ru` | Chatwoot | 2026-09-11 | `certbot.timer` (общий) |
+
+- Один `certbot.timer` (2×/сутки, Persistent) обслуживает **оба** серта; реальное
+  продление ~за 30 дней до истечения, через nginx, без даунтайма. Подтверждено
+  двумя успешными боевыми выпусками.
+
+### ⚠️ Координация двух агентов на одном сервере (важно)
+
+- **certbot нельзя запускать параллельно** — у него глобальный lock; одновременные
+  запуски двух агентов падают с «Another instance is running» и могут вешать
+  `--dry-run` в очереди. Серриализовать: убедиться `pgrep -f certbot` пуст перед стартом.
+- **`--dry-run` ходит в LE staging** (регистрирует новый аккаунт) и на этом сервере
+  подвисает; боевое продление идёт в production (аккаунт есть) и работает. Для проверки
+  лучше `certbot renew --force-renewal`, а не `--dry-run`.
+- Манульный certbot запускать с **снятым прокси**: `env -u HTTPS_PROXY -u HTTP_PROXY certbot ...`
+  (интерактивный shell имеет `HTTPS_PROXY` → ACME через tinyproxy может зависнуть;
+  systemd-таймер и так идёт direct).
+- **SSH-обрывы на kex** у `5.42.117.201` учащаются при частых коннектах двух агентов
+  (похоже fail2ban). Не молотить коннектами; при обрыве — пауза и retry.
+
+## onboard-service (регистрация каналов без ssh) — 14.06.2026
+
+Тонкий Node-сервис рядом с Postiz: регистрирует соцканал клиента в БД Postiz
+(`INSERT/UPDATE` в таблицу `Integration`), т.к. public API Postiz создавать
+интеграции с готовым токеном не умеет. Операторы дёргают его по HTTPS — **без ssh**.
+
+- **Код:** в репо `tools/onboard-service/` (server.mjs + Dockerfile + package.json);
+  на сервере развёрнут в `/opt/postiz-official/onboard-service/`, добавлен сервисом
+  `onboard-service` в `docker-compose.trim.yaml` (сеть `postiz-network`,
+  слушает `127.0.0.1:4010`, `depends_on: postiz-postgres healthy`).
+- **nginx:** `location /onboard/` в сайте `tech.bitandpix.ru` → `127.0.0.1:4010`
+  (вставлен перед `location /`). Публичный вход: `https://tech.bitandpix.ru/onboard/`.
+- **Контракт:** `POST /onboard/channels` (vk: `{groupId,token}` / telegram:
+  `{chatId}`) → `{integrationId, updated}`; `GET /onboard/channels`. Auth —
+  `Authorization: Bearer $ONBOARD_API_KEY`. Идемпотентно по
+  `(organizationId, providerIdentifier, internalId)`.
+- **Секреты — в env сервиса (server-side, НЕ в git):** `ONBOARD_API_KEY`,
+  `DATABASE_URL` (как у Postiz), `POSTIZ_ORG_ID=637b7803-…`, `TELEGRAM_TOKEN`
+  (бот `bit_and_pix_bot`). Оператору в локальный `.env` — только `ONBOARD_API_URL`
+  + `ONBOARD_API_KEY`. Токен пишется в Postiz **СЫРЫМ** (Postiz не шифрует).
+- **Операторские тулы:** `tools/onboard/{new-client,edit-client,register-channel}.mjs`
+  (флоу — `docs/client-onboarding.md`). Тулы снимают `*_PROXY` из env (tinyproxy
+  режет Notion/наш сервис по allow-листу) → работают с любого устройства.
+- **Деплой повторно:** `tar`-залить `tools/onboard-service` в `/opt/postiz-official/`
+  → `docker compose -f docker-compose.trim.yaml up -d --build onboard-service`.
+  Вставки в compose/nginx идемпотентны; перед reload — `nginx -t`. Бэкапы `.bak.<ts>`.
 
 ## Что НЕ сделано (открыто)
 
-- **Домен + HTTPS перед Postiz** — обязателен для OAuth соцсетей (VK и пр. не
-  принимают редирект на голый http://IP). Нужен сабдомен на 5.42.117.201 →
-  nginx + Let's Encrypt, и переустановка `MAIN_URL/FRONTEND_URL/NEXT_PUBLIC_BACKEND_URL`.
-- **VK-приложение** (`VK_CLIENT_ID`/`VK_CLIENT_SECRET` в env Postiz) + тестовое
-  сообщество — для первого VK-теста. Был баг провайдера #1398 (client_id=undefined),
-  проверить на текущей версии.
+- **VK-приложение** → env Postiz **`VK_ID`/`VK_SECRET`** (НЕ `VK_CLIENT_ID` —
+  issue #1398 был про это: имя переменной `VK_ID`). Postiz использует **VK ID
+  OAuth** (`id.vk.com/authorize`, PKCE S256), scopes `wall`, `photos` (+др.),
+  постит через `wall.post` + `photos.saveWallPhoto`.
+  - **Redirect URI для VK-приложения (точно):**
+    `https://tech.bitandpix.ru/integrations/social/vk`
+    (формула: `${FRONTEND_URL}/integrations/social/vk`).
+  - Создать на `dev.vk.com` → платформа «Сайт», базовый домен `tech.bitandpix.ru`.
+    «ID приложения» → `VK_ID`, «Защищённый ключ» (client_secret) → `VK_SECRET`.
+- **Тестовое VK-сообщество: `VK_GROUP_ID=239528257`** (уже в репо `.env`, общий с
+  проектом чатов/Chatwoot; там же `VK_COMMUNITY_TOKEN` для него). Оператор —
+  админ этого сообщества, на нём и гоняем первый постинг-тест.
 - **Egress контейнера Postiz через tinyproxy** (app-level, для Telegram-resilience) —
-  пока контейнер ходит напрямую (VK/TG/Meta с сервера достижимы). Hardening-шаг.
-- `DISABLE_REGISTRATION=true` после claim первого админа.
+  пока напрямую (VK/TG/Meta с сервера достижимы). Hardening-шаг.
