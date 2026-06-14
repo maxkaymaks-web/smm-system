@@ -11,7 +11,10 @@
   файл `docker-compose.trim.yaml` (5 контейнеров, без Elasticsearch — см. infra.md).
 - **Админ Postiz:** `admin@bitpix.ru` / `Inbox-2723d32acb-Aa9!` (SUPERADMIN).
 - **API-ключ для Claude:** `POSTIZ_API_KEY` в репо `.env` (= `Organization.apiKey`).
-  Заголовок `Authorization: <key>` (без Bearer). Базовый URL `POSTIZ_API_URL`.
+  Заголовок `Authorization: <key>` (без Bearer). Базовый URL
+  `POSTIZ_API_URL=https://tech.bitandpix.ru` (host без `/api`); все эндпоинты ниже —
+  `${POSTIZ_API_URL}/api/public/v1/...` (префикс `/api` обязателен, без него nginx
+  редиректит на фронтенд → 307). Работает по https с любого устройства.
 - **Organization.id:** `637b7803-9bd5-472e-ad37-cf2ce87ac773`.
 
 ## Архитектурное решение (итог долгих поисков)
@@ -55,7 +58,7 @@ app-id типа VK Admin VK заблокировал). Поэтому:
   `token` = СЫРОЙ `VK_COMMUNITY_TOKEN` (из `.env`).
 - Регистрация = INSERT в таблицу `Integration` (обязательные NOT NULL: id, internalId,
   organizationId, name, providerIdentifier, type, token — остальное по дефолтам).
-- ✅ **Проверено боем:** `POST /public/v1/posts type=now settings.__type=vk` →
+- ✅ **Проверено боем:** `POST /api/public/v1/posts type=now settings.__type=vk` →
   опубликовано на стене: `https://vk.com/wall-239528257_2`.
 
 ### VK community-токен — что умеет
@@ -91,7 +94,7 @@ app-id типа VK Admin VK заблокировал). Поэтому:
 - Готовые слайды в S3: **`Sparta/posts/drafts/23_05_2026-1/slide_01.png` и `slide_02.png`**
   (1.5M / 1.3M) — годятся для multi-photo теста.
 - S3-тул: `node tools/s3.mjs <list|get|url|put|rm|exists>`; `s3.mjs url <key>` → URL.
-- Медиа в Postiz: загрузить через `/public/v1/upload-from-url` (отдаёт media {id,path}),
+- Медиа в Postiz: загрузить через `/api/public/v1/upload-from-url` (отдаёт media {id,path}),
   затем в посте `value[].image=[{id,path}]`. VK-провайдер сам фетчит по path и грузит в VK.
 
 ## Грабли окружения (чтобы не терять время)
@@ -106,14 +109,14 @@ app-id типа VK Admin VK заблокировал). Поэтому:
 - Долгие операции (pull/certbot) **осиротевают по ssh-таймауту** → `nohup+лог+опрос`
   или server-side `timeout`. certbot: НЕ параллелить (глобальный lock), `--dry-run`
   ходит в staging и виснет — проверять `--force-renewal` (см. infra.md).
-- Postiz API создать пост: `POST /public/v1/posts` body `{type, date(ISO), shortLink,
+- Postiz API создать пост: `POST /api/public/v1/posts` body `{type, date(ISO), shortLink,
   tags, posts:[{integration:{id}, value:[{content, image:[]}], settings:{__type:"vk"}}]}`.
   `type`: now|schedule|draft. Для VK `settings.__type="vk"`.
 
 ## ЧТО ДАЛЬШЕ (следующие шаги)
 
 1. **Multi-photo VK пост:** взять Sparta 23_05 slide_01/02.png → `s3.mjs url` →
-   Postiz `/public/v1/upload-from-url` ×2 → создать пост с `image[]` двумя фото +
+   Postiz `/api/public/v1/upload-from-url` ×2 → создать пост с `image[]` двумя фото +
    текст из `projects/Sparta/posts/drafts/23_05_2026-1/post.md` → `type=now` →
    проверить карусель на стене bit&pix (через `VK_SERVICE_TOKEN` wall.get).
 2. **Telegram «Claude добавляет источник»:** добавить `TELEGRAM_TOKEN=<bot>` в Postiz

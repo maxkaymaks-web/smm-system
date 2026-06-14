@@ -41,6 +41,30 @@ claude        # при первом старте подтвердить project-
 
 ---
 
+## 🟩 Онбординг каналов + публикация (ключи сервисов)
+
+Без этих двух ключей оператор не подключит соцсети клиента и не опубликует пост.
+Оба — секреты, раздаются операторам тем же защищённым каналом, что и Notion.
+
+```
+ONBOARD_API_KEY=<секрет сервиса онбординга>     # подключение VK/TG каналов (register-channel)
+POSTIZ_API_KEY=<Organization.apiKey из Postiz>   # публикация поста (Postiz public API)
+```
+
+- **`ONBOARD_API_KEY`** — задаётся в env контейнера `onboard-service` на сервере
+  (`ONBOARD_API_KEY`). Тот же ключ кладётся операторам. URL сервиса — константа
+  `ONBOARD_API_URL=https://tech.bitandpix.ru/onboard` (не секрет, уже в `.env.example`).
+- **`POSTIZ_API_KEY`** — это `Organization.apiKey` из БД Postiz (UI: Settings → API).
+  URL — константа `POSTIZ_API_URL=https://tech.bitandpix.ru` (host без `/api`);
+  эндпоинты — `${POSTIZ_API_URL}/api/public/v1/...`. Работает по https с любого
+  устройства (см. `docs/postiz-integration.md`).
+
+> Готовый раздаточный набор всех операторских секретов одним файлом —
+> сгенерировать из боевого `.env` и передать как `.env` оператору (см. «Кому
+> передать креды»). Файл `.env.operator` в `.gitignore` — в репозиторий не попадает.
+
+---
+
 ## 🟦 Медиа — S3 Timeweb
 
 Медиа (рендеры, картинки, PDF, видео) лежат в **S3** (бакет `seo`, префикс `smm/`).
@@ -63,5 +87,18 @@ S3_SECRET_KEY=…
 
 ## Кому передать креды
 
-**Сначала — разработчику** (настроить/проверить). **Потом — операторам:** каждый
-прописывает `NOTION_TOKEN` и S3-ключи в свой `.env`. Шаблон — `.env.example`.
+**Сначала — разработчику** (настроить/проверить). **Потом — операторам.**
+
+Оператору для полного флоу без ssh нужны секреты: `NOTION_TOKEN`, `ONBOARD_API_KEY`,
+`POSTIZ_API_KEY`, `FAL_KEY`, `APIFY_TOKEN`/`APIFY_USER_ID`, `S3_ACCESS_KEY`/`S3_SECRET_KEY`.
+URL-адреса сервисов и ID баз — константы (в `.env.example` / `config/notion.json`),
+добывать не надо.
+
+**НЕ передавать операторам** (админ/инфра): `*_ADMIN_PASSWORD` (Postiz/Chatwoot),
+`GITHUB_PAT` (git-доступ личный у каждого), `TELEGRAM_BOT_TOKEN` (живёт на сервере),
+`VK_COMMUNITY_TOKEN`/`VK_ID`/`VK_SECRET` (аккаунт bit&pix), `LITELLM_*`,
+`OPENROUTER_*`, `OPENCLAW_*`. Поэтому боевой `.env` целиком отдавать нельзя.
+
+Раздать удобно одним файлом: собрать `.env.operator` (только операторские секреты,
+скопированные из боевого `.env`; он в `.gitignore`) и передать оператору — тот
+переименует в `.env`: `cp .env.operator .env`. Шаблон полей — `.env.example`.

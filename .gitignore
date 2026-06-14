@@ -42,3 +42,4 @@ smm-system-bit-*.json
 *.iam.gserviceaccount.com.json
 gcp-*.json
 service-account*.json
+.env.operator
