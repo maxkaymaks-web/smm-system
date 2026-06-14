@@ -6,6 +6,14 @@
 
 ---
 
+## 2026-06-14 — Онбординг клиента без ssh
+Появились тулы `tools/onboard/{new-client,edit-client,register-channel}.mjs`:
+оператор заводит/правит клиента и подключает VK/TG каналы по HTTPS, без ssh и
+без ручной правки БД. Каналы регистрирует серверный `onboard-service`. Секреты
+у оператора — только `NOTION_TOKEN` + `ONBOARD_API_KEY`. Флоу — docs/client-onboarding.md.
+
+---
+
 ## 14.06.2026 (3) — Claude Code wiring (чтобы всё подтягивалось «само»)
 
 Аудит: что описано в доках ≠ что Claude Code реально автозагружает. Починено:
