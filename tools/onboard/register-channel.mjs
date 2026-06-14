@@ -31,7 +31,8 @@ if (type === 'vk') {
   payload = { projectId: id, type: 'vk', name: values.name, vk: { groupId: Number(values['group-id']), token: values.token } };
 } else if (type === 'telegram') {
   if (!values['chat-id']) die('для telegram нужен --chat-id');
-  payload = { projectId: id, type: 'telegram', name: values.name, telegram: { chatId: Number(values['chat-id']) } };
+  // chat-id оставляем строкой: getChat принимает и числовой -100…, и @username
+  payload = { projectId: id, type: 'telegram', name: values.name, telegram: { chatId: values['chat-id'] } };
 } else {
   die('--type должен быть vk|telegram');
 }
@@ -51,7 +52,7 @@ if (type === 'vk') {
     ? JSON.parse(fs.readFileSync(chPath, 'utf8'))
     : { notionClientPageId: null, channels: [] };
   reg.channels = reg.channels.filter((c) => c.integrationId !== out.integrationId);
-  reg.channels.push({ type, integrationId: out.integrationId, internalId: out.internalId, name: values.name });
+  reg.channels.push({ type, integrationId: out.integrationId, internalId: out.internalId, name: out.name || values.name });
   fs.writeFileSync(chPath, JSON.stringify(reg, null, 2) + '\n');
 
   console.log(`✓ канал ${type} ${out.updated ? 'обновлён' : 'зарегистрирован'}: integrationId=${out.integrationId}`);

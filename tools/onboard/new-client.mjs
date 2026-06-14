@@ -41,6 +41,7 @@ const platforms = (values.platforms || '').split(',').map((s) => s.trim()).filte
   // 2. Notion: карточка (идемпотентно по Local project ID)
   const cfg = loadNotionConfig();
   let client = await findClientByProjectId(cfg.databases.clients, id);
+  const clientExisted = Boolean(client);
   if (client) {
     console.log(`• клиент уже в Notion: ${pageUrl(client)} — карточку не дублирую`);
   } else {
@@ -50,12 +51,14 @@ const platforms = (values.platforms || '').split(',').map((s) => s.trim()).filte
     console.log(`✓ карточка Notion: ${pageUrl(client)}`);
   }
 
-  // 3. План (опционально)
-  if (!values['no-plan']) {
+  // 3. План — только при первичном заведении (иначе повтор плодил бы дубли)
+  if (!values['no-plan'] && !clientExisted) {
     const plan = await createPlan(cfg.databases.plans, {
       name: `${name} — план`, clientPageId: client.id, status: 'черновик',
     });
     console.log(`✓ план Notion: ${pageUrl(plan)}`);
+  } else if (clientExisted) {
+    console.log('• план не создаю (клиент уже был заведён)');
   }
 
   // 4. channels.json — реестр каналов проекта

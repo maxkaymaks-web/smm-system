@@ -4,7 +4,7 @@ import pg from 'pg';
 
 const {
   ONBOARD_API_KEY, DATABASE_URL, POSTIZ_ORG_ID,
-  TELEGRAM_TOKEN, VK_SERVICE_TOKEN, PORT = '4010',
+  TELEGRAM_TOKEN, PORT = '4010',
 } = process.env;
 
 if (!ONBOARD_API_KEY || !DATABASE_URL || !POSTIZ_ORG_ID) {
@@ -27,7 +27,11 @@ const readBody = (req) => new Promise((resolve, reject) => {
 async function validateVk(token) {
   const u = `https://api.vk.com/method/groups.getById?access_token=${encodeURIComponent(token)}&v=5.199`;
   const r = await (await fetch(u)).json();
-  if (r.error) throw new Error(`VK-токен невалиден: ${r.error.error_msg}`);
+  if (r.error) {
+    // code 5 = auth failed → действительно битый токен (422); прочее (rate limit и т.п.) → 500
+    if (r.error.error_code === 5) throw new Error(`VK-токен невалиден: ${r.error.error_msg}`);
+    throw new Error(`VK API ошибка ${r.error.error_code}: ${r.error.error_msg}`);
+  }
 }
 async function validateTelegram(chatId) {
   if (!TELEGRAM_TOKEN) throw new Error('TELEGRAM_TOKEN не задан в сервисе');
@@ -95,21 +99,23 @@ const server = http.createServer(async (req, res) => {
         const { groupId, token } = body.vk || {};
         if (!groupId || !token) return json(res, 422, { error: 'нужны vk.groupId и vk.token' });
         await validateVk(token);
+        const resolvedName = name || `vk-${groupId}`;
         const r = await upsertIntegration({
-          name: name || `vk-${groupId}`, providerIdentifier: 'vk',
+          name: resolvedName, providerIdentifier: 'vk',
           internalId: String(groupId), token,
         });
-        return json(res, 200, { integrationId: r.id, providerIdentifier: 'vk', internalId: String(groupId), updated: r.updated });
+        return json(res, 200, { integrationId: r.id, providerIdentifier: 'vk', internalId: String(groupId), name: resolvedName, updated: r.updated });
       }
       if (type === 'telegram') {
         const { chatId } = body.telegram || {};
         if (!chatId) return json(res, 422, { error: 'нужен telegram.chatId' });
         const title = await validateTelegram(chatId);
+        const resolvedName = name || title;
         const r = await upsertIntegration({
-          name: name || title, providerIdentifier: 'telegram',
+          name: resolvedName, providerIdentifier: 'telegram',
           internalId: String(chatId), token: String(chatId),
         });
-        return json(res, 200, { integrationId: r.id, providerIdentifier: 'telegram', internalId: String(chatId), updated: r.updated });
+        return json(res, 200, { integrationId: r.id, providerIdentifier: 'telegram', internalId: String(chatId), name: resolvedName, updated: r.updated });
       }
       return json(res, 422, { error: 'type должен быть vk|telegram' });
     }
