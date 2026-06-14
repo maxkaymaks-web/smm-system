@@ -41,9 +41,13 @@ app-id типа VK Admin VK заблокировал). Поэтому:
 - Примонтирован поверх ДВУХ копий в контейнере (volumes в `docker-compose.trim.yaml`):
   `/app/apps/orchestrator/dist/.../social/vk.provider.js` и `/app/apps/backend/dist/.../social/vk.provider.js`.
 - Суть патча: `post(groupId, token, …)` шлёт `wall.post` с `owner_id=-groupId`,
-  `from_group=1`; загрузка фото/видео через `group_id`; attachments по реальному
-  (отрицательному) owner_id из `saveWallPhoto`; `refreshToken` — no-op (community-
-  токены бессрочные). `releaseURL = https://vk.com/wall-<groupId>_<postId>`.
+  `from_group=1`; **загрузка фото через messages-upload-сервер** (`getMessagesUploadServer`
+  + `saveMessagesPhoto`, т.к. `getWallUploadServer` для group-auth = err 27);
+  attachments по реальному (отрицательному) owner_id; `refreshToken` — no-op
+  (community-токены бессрочные). `releaseURL = https://vk.com/wall-<groupId>_<postId>`.
+- **Канон патча теперь завендорен в репо: `patches/vk.provider.js`** (раньше был
+  только на сервере). При передеплое — этот файл монтируется поверх dist
+  (orchestrator + backend), см. `docs/infra.md`.
 
 ### 🔑 КРИТИЧНО: Postiz хранит токены интеграций в ОТКРЫТОМ виде
 - Не шифрует (в `integration.service` нет encrypt, в пост-флоу нет decrypt).
@@ -61,10 +65,17 @@ app-id типа VK Admin VK заблокировал). Поэтому:
 - ✅ **Проверено боем:** `POST /api/public/v1/posts type=now settings.__type=vk` →
   опубликовано на стене: `https://vk.com/wall-239528257_2`.
 
-### VK community-токен — что умеет
-- ✅ `wall.post` (постинг в стену сообщества) — РАБОТАЕТ.
-- ❌ `wall.get`, `wall.delete`, `wall.edit` — `error_code 27 "method is unavailable
-  with group auth"`. Читать стену — только сервисным токеном (`VK_SERVICE_TOKEN`).
+### VK community-токен — что умеет (уточнено 14.06, проверено боем)
+- ✅ `wall.post` (постинг в стену сообщества, текст) — РАБОТАЕТ.
+- ✅ **Фото на стену (карусель)** — РАБОТАЕТ, но через **messages**-upload-сервер:
+  `photos.getMessagesUploadServer(group_id)` → upload → `photos.saveMessagesPhoto`
+  → `owner_id=-<groupId>` → attach `photo-<groupId>_<id>` в `wall.post`.
+  ⚠️ Прямой `photos.getWallUploadServer`/`saveWallPhoto` community-токену **закрыты**
+  (`error_code 27`) — на этом падала публикация мультифото (`wall-239528257_3` —
+  первый успешный фото-пост после фикса патча). См. `patches/vk.provider.js`.
+- ❌ `wall.get`, `wall.delete`, `wall.edit` — `error_code 27`. Читать/удалять стену
+  community-токеном нельзя. `VK_SERVICE_TOKEN` тоже не читает (`wall.getById` →
+  `error_code 1051` profile type) — проверять публикацию глазами/в Postiz по `releaseURL`.
 - Токен в `.env`: `VK_COMMUNITY_TOKEN` (vk1.a.…, 220 симв), `VK_GROUP_ID=239528257`,
   права: wall+manage+photos+messages+docs.
 
@@ -115,10 +126,10 @@ app-id типа VK Admin VK заблокировал). Поэтому:
 
 ## ЧТО ДАЛЬШЕ (следующие шаги)
 
-1. **Multi-photo VK пост:** взять Sparta 23_05 slide_01/02.png → `s3.mjs url` →
-   Postiz `/api/public/v1/upload-from-url` ×2 → создать пост с `image[]` двумя фото +
-   текст из `projects/Sparta/posts/drafts/23_05_2026-1/post.md` → `type=now` →
-   проверить карусель на стене bit&pix (через `VK_SERVICE_TOKEN` wall.get).
+1. ✅ **Multi-photo VK пост — СДЕЛАНО (14.06):** Sparta 23_05 slide_01/02.png →
+   `s3.mjs url` → `upload-from-url` ×2 → пост с `image[]` + текст → `type=draft` →
+   человек нажал publish → `wall-239528257_3` (карусель). Потребовал фикс патча
+   (messages-upload, см. выше).
 2. **Telegram «Claude добавляет источник»:** добавить `TELEGRAM_TOKEN=<bot>` в Postiz
    compose (env), пересоздать postiz; зарегать канал «тестовый» (INSERT integration
    telegram, internalId/token=chat_id=-1004375691069, name=тестовый); тест поста
