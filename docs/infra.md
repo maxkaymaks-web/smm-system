@@ -31,15 +31,16 @@
 
 | Хост | Прямо с основного (RU) | Через tinyproxy |
 |------|:----------------------:|:---------------:|
-| `api.vk.com` | ✅ отвечает | ✅ |
-| `api.telegram.org` | ✅ отвечает | ✅ |
+| `api.vk.com` | ✅ стабильно (и из контейнера) | ✅ |
+| `api.telegram.org` | ⚠️ флапает (DPI режет часть DC; из контейнера `ETIMEDOUT`) | ✅ надёжно |
 | `graph.facebook.com` (Meta/IG) | ✅ отвечает | ✅ |
 | `platform-api.max.ru` | — | ✅ |
 
 > Пробы подтверждают только TCP+TLS+HTTP-ответ до API-хоста, не реальную работу
-> Bot/Graph-вызовов. Telegram периодически режется DPI в РФ → решено гнать
-> **весь** исходящий постинг через tinyproxy (равномерно + страховка). VK через
-> прокси тоже ок.
+> Bot/Graph-вызовов. **Уточнено 14.06:** Telegram прямым путём НЕнадёжен (RU-DPI
+> таймаутит часть Telegram-DC по IP, DNS отдаёт их по кругу; из docker-контейнера
+> особенно). Вывод: **к Telegram всегда через tinyproxy**, VK — напрямую. onboard-
+> service так и сделан (`TELEGRAM_PROXY`+`ProxyAgent`, см. секцию ниже).
 
 ## Postiz (развёрнут 12.06.2026, работает)
 
@@ -137,14 +138,26 @@
   `(organizationId, providerIdentifier, internalId)`.
 - **Секреты — в env сервиса (server-side, НЕ в git):** `ONBOARD_API_KEY`,
   `DATABASE_URL` (как у Postiz), `POSTIZ_ORG_ID=637b7803-…`, `TELEGRAM_TOKEN`
-  (бот `bit_and_pix_bot`). Оператору в локальный `.env` — только `ONBOARD_API_URL`
-  + `ONBOARD_API_KEY`. Токен пишется в Postiz **СЫРЫМ** (Postiz не шифрует).
+  (бот `bit_and_pix_bot`), **`TELEGRAM_PROXY`** (= аутентиф. tinyproxy
+  `http://…@5.2.66.188:8888`; для egress к Telegram, см. ниже). Оператору в
+  локальный `.env` — только `ONBOARD_API_URL` + `ONBOARD_API_KEY`. Токен пишется
+  в Postiz **СЫРЫМ** (Postiz не шифрует).
+- **Egress валидации (важно, проверено 14.06):** перед `INSERT` сервис валидирует
+  токен в API соцсети. **VK** (`groups.getById`) — **напрямую**, стабильно.
+  **Telegram** (`getChat`) — **через `TELEGRAM_PROXY`**: RU-DPI флапает прямой путь
+  к Telegram-DC (часть IP таймаутит, особенно из docker-контейнера — `ETIMEDOUT`),
+  через tinyproxy `getMe`/`getChat` = ok. Node `fetch`/undici **env-прокси
+  игнорирует** → в `server.mjs` явный `undici.ProxyAgent` только для TG-вызова
+  (оттого `undici` в `package.json` сервиса). VK через прокси не гоняем.
 - **Операторские тулы:** `tools/onboard/{new-client,edit-client,register-channel}.mjs`
   (флоу — `docs/client-onboarding.md`). Тулы снимают `*_PROXY` из env (tinyproxy
   режет Notion/наш сервис по allow-листу) → работают с любого устройства.
+  `register-channel` принимает отрицательный `--chat-id -100…` (TG-каналы) —
+  argv нормализуется внутри (Node `parseArgs` иначе падает на «похоже на флаг»).
 - **Деплой повторно:** `tar`-залить `tools/onboard-service` в `/opt/postiz-official/`
-  → `docker compose -f docker-compose.trim.yaml up -d --build onboard-service`.
-  Вставки в compose/nginx идемпотентны; перед reload — `nginx -t`. Бэкапы `.bak.<ts>`.
+  → `docker compose -f docker-compose.trim.yaml up -d --build onboard-service`
+  (`--build` обязателен — иначе не подтянется новый `undici`). Вставки в
+  compose/nginx идемпотентны; перед reload — `nginx -t`. Бэкапы `.bak.<ts>`.
 
 ## Что НЕ сделано (открыто)
 
@@ -160,5 +173,9 @@
 - **Тестовое VK-сообщество: `VK_GROUP_ID=239528257`** (уже в репо `.env`, общий с
   проектом чатов/Chatwoot; там же `VK_COMMUNITY_TOKEN` для него). Оператор —
   админ этого сообщества, на нём и гоняем первый постинг-тест.
-- **Egress контейнера Postiz через tinyproxy** (app-level, для Telegram-resilience) —
-  пока напрямую (VK/TG/Meta с сервера достижимы). Hardening-шаг.
+- **Egress контейнера Postiz через tinyproxy** (app-level, для Telegram-resilience).
+  ⚠️ 14.06 выяснилось: **прямой путь к Telegram из docker-контейнера НЕнадёжен**
+  (DPI таймаутит часть Telegram-DC; VK — ок). Для onboard-service уже решено через
+  `TELEGRAM_PROXY`+`ProxyAgent` (см. секцию выше). **Тот же риск у самого Postiz**
+  при постинге в TG → когда дойдёт до TG-публикации, Postiz-провайдеру нужен
+  аналогичный egress через tinyproxy. Сейчас не настроено.

@@ -1,10 +1,11 @@
 import http from 'node:http';
 import crypto from 'node:crypto';
 import pg from 'pg';
+import { ProxyAgent } from 'undici';
 
 const {
   ONBOARD_API_KEY, DATABASE_URL, POSTIZ_ORG_ID,
-  TELEGRAM_TOKEN, PORT = '4010',
+  TELEGRAM_TOKEN, TELEGRAM_PROXY, HTTPS_PROXY, PORT = '4010',
 } = process.env;
 
 if (!ONBOARD_API_KEY || !DATABASE_URL || !POSTIZ_ORG_ID) {
@@ -12,6 +13,21 @@ if (!ONBOARD_API_KEY || !DATABASE_URL || !POSTIZ_ORG_ID) {
   process.exit(1);
 }
 const pool = new pg.Pool({ connectionString: DATABASE_URL });
+
+// Telegram-API из РФ-сервера флапает по DPI (часть DC-IP таймаутит), поэтому
+// валидацию TG гоним через аутентифицированный прокси. Node fetch (undici) env-
+// прокси игнорирует → нужен явный ProxyAgent. VK достаётся напрямую — не трогаем.
+const tgDispatcher = (() => {
+  const url = TELEGRAM_PROXY || HTTPS_PROXY;
+  if (!url) return undefined;
+  const u = new URL(url);
+  const opts = { uri: `${u.protocol}//${u.host}` };
+  if (u.username) {
+    const creds = `${decodeURIComponent(u.username)}:${decodeURIComponent(u.password)}`;
+    opts.token = `Basic ${Buffer.from(creds).toString('base64')}`;
+  }
+  return new ProxyAgent(opts);
+})();
 
 const json = (res, code, obj) => {
   res.writeHead(code, { 'Content-Type': 'application/json' });
@@ -36,7 +52,7 @@ async function validateVk(token) {
 async function validateTelegram(chatId) {
   if (!TELEGRAM_TOKEN) throw new Error('TELEGRAM_TOKEN не задан в сервисе');
   const u = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/getChat?chat_id=${encodeURIComponent(chatId)}`;
-  const r = await (await fetch(u)).json();
+  const r = await (await fetch(u, tgDispatcher ? { dispatcher: tgDispatcher } : undefined)).json();
   if (!r.ok) throw new Error(`Telegram getChat: ${r.description} (бот добавлен админом канала?)`);
   return r.result.title || String(chatId);
 }

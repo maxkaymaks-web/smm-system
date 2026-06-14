@@ -7,7 +7,27 @@ import { loadEnv } from '../lib/notion.mjs';
 
 const ROOT = process.cwd();
 loadEnv();
+
+// parseArgs не принимает значение, начинающееся с '-' (TG chat_id каналов = -100…),
+// — склеиваем "--opt value" → "--opt=value" для наших строковых опций.
+const STR_OPTS = new Set(['id', 'type', 'group-id', 'token', 'chat-id', 'name']);
+function normalizeArgv(argv) {
+  const out = [];
+  for (let i = 0; i < argv.length; i++) {
+    const m = /^--([^=]+)$/.exec(argv[i]);
+    const next = argv[i + 1];
+    if (m && STR_OPTS.has(m[1]) && next !== undefined && next.startsWith('-') && !next.startsWith('--')) {
+      out.push(`${argv[i]}=${next}`);
+      i++;
+    } else {
+      out.push(argv[i]);
+    }
+  }
+  return out;
+}
+
 const { values } = parseArgs({
+  args: normalizeArgv(process.argv.slice(2)),
   options: {
     id: { type: 'string' },
     type: { type: 'string' },                // vk | telegram
