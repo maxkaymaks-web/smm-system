@@ -28,8 +28,8 @@ You Aren't Gonna Need It. Не делать функциональность «�
 
 - **Операционка** (статусы, план, очередь) — в **Notion** (источник истины), не в `.md`
 - **Знания** (`context/voice/strategy/overrides`) и тексты (`.md`/`.json`) — в **git**
-- **Бинарники** (HTML-рендеры, PNG/JPG/PDF/MP4) — **сейчас S3** (`s3.twcstorage.ru`, bucket=`seo`);
-  цель — Google Drive (Фаза 3, `tools/gdrive.mjs` ещё не внедрён, пиши в S3 как раньше)
+- **Бинарники** (HTML-рендеры, PNG/JPG/PDF/MP4) — **S3** (`s3.twcstorage.ru`, bucket=`seo`),
+  всё под префиксом `smm/` (напр. `smm/projects/{ID}/posts/…`). Google Drive отменён.
 - Локально работа через `/tmp/{ProjectID}-{date}-{N}/` — рабочая директория задачи
 - После задачи (upload → доставка) — **`/tmp` чистится агентом**; если упало — оператор руками
 

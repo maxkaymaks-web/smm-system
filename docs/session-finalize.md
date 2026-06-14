@@ -268,12 +268,12 @@ artifacts.
 **Команда:**
 ```bash
 node tools/s3.mjs sync-up /tmp/Lakmoda-17_05-1/ \
-  projects/Lakmoda/posts/drafts/17_05_2026-1/
-node tools/s3.mjs url projects/Lakmoda/posts/drafts/17_05_2026-1/slide_01.png
+  smm/projects/Lakmoda/posts/drafts/17_05_2026-1/
+node tools/s3.mjs url smm/projects/Lakmoda/posts/drafts/17_05_2026-1/slide_01.png
 ```
 
-**Результат:** 3 PNG в S3, presigned-ссылки выданы оператору. Доставка клиенту
-(Google Drive) — отдельным шагом оператора, тул у разработчика.
+**Результат:** 3 PNG в S3, presigned-ссылки выданы оператору. Просмотр/доставка —
+presigned-ссылка или Cyberduck (Google Drive не используем, см. `docs/storage.md`).
 
 **Длительность:** 6s.
 

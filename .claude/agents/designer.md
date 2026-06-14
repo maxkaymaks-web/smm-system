@@ -192,12 +192,12 @@ node /path/to/repo/tools/render-html.js $WORK/post.html $WORK/post.png
 # 5. для PDF карусели:
 node /path/to/repo/tools/slides-to-pdf.js $WORK/
 
-# 6. ВСЁ ЛОЖИМ В S3 (ключ = repo-relative путь)
-node /path/to/repo/tools/s3.mjs sync-up "$WORK" projects/{ProjectID}/posts/drafts/{date}-{N}/
+# 6. ВСЁ ЛОЖИМ В S3 (ключ = smm/ + repo-relative путь)
+node /path/to/repo/tools/s3.mjs sync-up "$WORK" smm/projects/{ProjectID}/posts/drafts/{date}-{N}/
 
 # 7. Отдать результат оператору: вернуть пути/S3-ссылки на ОБА файла — HTML и PNG
 #    (или PDF для карусели). HTML — чтобы оператор мог поправить исходник.
-#    Доставка готового клиенту (Google Drive) — отдельным шагом, тул у разработчика.
+#    Просмотр/доставка — presigned-ссылка (node tools/s3.mjs url <ключ>) или Cyberduck.
 
 # 8. ЧИСТО — обязательно
 rm -rf "$WORK"

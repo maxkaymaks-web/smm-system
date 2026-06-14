@@ -103,9 +103,9 @@ fal.ai (картинки/видео), Apify (парсинг).
 Хранилища (подробно — docs/storage.md):
   • Операционка (статусы, план, задачи)  → Notion (источник истины)
   • Знания клиента (context/voice/strategy/overrides) + ноу-хау → git
-  • Медиа (HTML/PNG/JPG/PDF/MP4)          → СЕЙЧАС S3 Timeweb; ЦЕЛЬ — Google Drive
-                                            (Фаза 3, tools/gdrive.mjs ещё не внедрён)
-  • Архив сессий Claude Code              → S3 (остаётся)
+  • Медиа (HTML/PNG/JPG/PDF/MP4)          → S3 Timeweb, бакет seo, префикс smm/
+                                            (Google Drive рассматривали — отказались)
+  • Архив сессий Claude Code              → S3 (logs/claude-code/…)
   Локально файлы — временные в /tmp.
 
 Диалоги с клиентом   → Chatwoot (TG/VK/MAX).
@@ -176,7 +176,7 @@ docs/
   ├─ onboarding-process.md интервью начальника (видение + процесс)
   ├─ client-onboarding.md  SOP заведения нового клиента (бриф → Notion → Drive)
   ├─ storage.md            где что хранится: сейчас vs цель
-  ├─ access-setup.md       подключение Google Drive + Notion (креды)
+  ├─ access-setup.md       подключение Notion + доступ к медиа S3 (креды)
   ├─ postiz-integration.md публикация: подключение каналов в Postiz
   ├─ s3.md                 S3: медиа сейчас + архив сессий
   ├─ dev-guide.md          как разрабатывать и обучать агентов
@@ -191,12 +191,12 @@ docs/
 ```bash
 git clone https://github.com/maxkaymaks-web/smm-system.git
 cd smm-system
-npm install            # @fal-ai/client, puppeteer, sharp, pdf-lib, googleapis
+npm install            # @fal-ai/client, puppeteer, sharp, pdf-lib
 ```
 
 Запросить у Максима креды (см. `docs/access-setup.md`): `.env`
-(FAL, Apify, VK, GitHub PAT, S3, `NOTION_TOKEN`) + JSON-ключ service-account
-Google Drive. Положить в корень. Секреты в `.gitignore`.
+(FAL, Apify, VK, GitHub PAT, S3, `NOTION_TOKEN`). Положить в корень.
+Секреты в `.gitignore`.
 
 Запуск:
 ```bash
