@@ -19,10 +19,11 @@ Claude Code ходит в Drive программно через service-account 
    (или взять существующий).
 2. **APIs & Services → Library** → найти **Google Drive API → Enable**.
 3. **APIs & Services → Credentials → Create credentials → Service account.**
-   Имя любое (напр. `smm-gdrive`). Роль можно не давать. Create.
+   Имя любое. Роль можно не давать. Create. (Текущий SA проекта —
+   `smm-system` в проекте `smm-system-bit`.)
 4. Открыть созданный service-account → вкладка **Keys → Add key → Create new key →
    JSON.** Скачается файл `*.json` — это и есть ключ.
-5. В JSON есть поле `client_email` вида `smm-gdrive@…iam.gserviceaccount.com` —
+5. В JSON есть поле `client_email` вида `smm-system@smm-system-bit.iam.gserviceaccount.com` —
    **запомни этот адрес**, он нужен в шаге 2.
 
 ### Шаг 2. Дать доступ к рабочей папке
@@ -37,14 +38,16 @@ Claude Code ходит в Drive программно через service-account 
 > этого Общего диска (Editor). Бонус: туда же оператор/клиент могут докинуть файл руками.
 
 ### Что попадает в `.env`
-- Положить JSON-ключ в корень репо как `gdrive-sa.json` (уже под `.gitignore` как `.env`;
-  если нет — добавить в `.gitignore`).
+- Положить JSON-ключ в корень репо (текущий файл — `smm-system-bit-761618b24b0d.json`;
+  паттерн `smm-system-bit-*.json` уже в `.gitignore`).
 - В `.env`:
   ```
-  GOOGLE_APPLICATION_CREDENTIALS=./gdrive-sa.json
+  GOOGLE_APPLICATION_CREDENTIALS=./smm-system-bit-761618b24b0d.json
   GDRIVE_ROOT_FOLDER_ID=<ID папки или Общего диска>
   ```
   `GDRIVE_ROOT_FOLDER_ID` — это часть URL папки после `/folders/`.
+  ⏳ На 14.06.2026 JSON-ключ уже на месте; `GDRIVE_ROOT_FOLDER_ID` и расшаривание
+  папки на SA-email — ещё не сделаны (блокер Фазы 3 «Drive»).
 
 ---
 
@@ -69,8 +72,8 @@ Claude Code работает с Notion через **внутреннюю инт�
 ```
 NOTION_TOKEN=<Internal Integration Secret>
 ```
-(ID конкретных баз — `NOTION_CLIENTS_DB_ID` / `NOTION_POSTS_DB_ID` — добавятся на Фазе 2,
-когда базы будут созданы.)
+ID баз Notion — **не секрет**, лежат открыто в `config/notion.json` (`clients`/`plans`/`posts`).
+Базы уже созданы (14.06.2026) под страницей «Тест»; на боевой странице — обновить config.
 
 ---
 

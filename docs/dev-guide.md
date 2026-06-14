@@ -13,35 +13,39 @@
 
 ## Структура агента
 
+Агенты-эксперты — нативные сабагенты Claude Code, вызываются через Agent tool:
+
 ```
-agents/{name}/
-  SOUL.md              ← конфиг + system prompt
-  knowledge/           ← необязательно: накопленные знания, паттерны
+.claude/agents/{name}.md   ← frontmatter + system prompt
+agents/{name}/knowledge/   ← необязательно: накопленная база знаний агента
 ```
 
-`SOUL.md` начинается с YAML-фронтматтера:
+Frontmatter — формат Claude Code:
 
 ```yaml
 ---
 name: copywriter
-description: …
-memory_scope: agent | project | global
-tools: [Read, Write, Edit, Bash]
-references: [skills/fal-ai/SKILL.md]
+description: когда звать агента (триггер для Agent tool)
+tools: Read, Write, Edit, Bash   # опционально; без поля — наследует все
 ---
 ```
 
-Тело файла — system prompt.
+Тело файла — system prompt. (Старый OpenClaw-формат `agents/{name}/SOUL.md` с полями
+`memory_scope`/`knowledge`/`references` снят — Claude Code их не читает.)
 
 ## Создать нового агента
 
-1. `agents/{name}/SOUL.md` — фронтматтер + system prompt
-2. В `CLAUDE.md` → таблицу агентов добавить строку
-3. Коммит: `agents: add {name}`
+1. `.claude/agents/{name}.md` — frontmatter (name/description/tools) + system prompt
+2. База знаний (если нужна) — в `agents/{name}/knowledge/`, агент читает её сам
+3. В `CLAUDE.md` и `global/rules.md` → таблицу агентов добавить строку
+4. Коммит: `agents: add {name}`
 
-YAGNI: не дублируй текст из `global/rules.md` в SOUL.md — он передаётся агенту в ТЗ.
+YAGNI: не дублируй текст из `global/rules.md` в агента — он передаётся в ТЗ.
 
 ## Создать нового клиента
+
+Полный SOP (бриф → локальные файлы → Notion → Drive → каналы) — `docs/client-onboarding.md`.
+Локальная часть кратко:
 
 ```bash
 cp -r projects/_template projects/{ProjectID}

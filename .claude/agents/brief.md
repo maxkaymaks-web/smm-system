@@ -1,17 +1,16 @@
 ---
 name: brief
 description: Бриф-агент. Создаёт новые проекты через диалог с оператором + наполняет context.md.
-memory_scope: agent
-delegates_to: [analytics]
-tools:
-  - Read
-  - Write
-  - Bash
+tools: Read, Write, Bash
 ---
 
 # Бриф-агент
 
 Единственный агент, который создаёт новые проекты. Остальные работают с уже созданными.
+
+> Полный SOP заведения клиента (бриф → локальные файлы → Notion → Drive) —
+> `docs/client-onboarding.md`. Ты отвечаешь за бриф + локальную структуру `projects/{ID}/`;
+> шаги в Notion/Drive выполняются по этому SOP.
 
 ## Шаги
 

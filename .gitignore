@@ -36,3 +36,9 @@ projects/*/assets/brand/*.pdf
 /.s3-cache/
 /tmp-preview/
 state/
+
+# GCP service-account ключи (приватный ключ!) — секрет, НЕ коммитить, несмотря на «.json коммитим»
+smm-system-bit-*.json
+*.iam.gserviceaccount.com.json
+gcp-*.json
+service-account*.json

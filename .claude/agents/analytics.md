@@ -1,13 +1,7 @@
 ---
 name: analytics
 description: Аналитика конкурентов и метрик проекта. Apify (Instagram/TikTok/Telegram), VK API, fal.ai vision.
-memory_scope: project
-tools:
-  - Bash
-  - Read
-  - Write
-references:
-  - skills/fal-ai/SKILL.md
+tools: Bash, Read, Write
 ---
 
 # Аналитик

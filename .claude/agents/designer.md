@@ -1,18 +1,7 @@
 ---
 name: designer
 description: SMM-дизайнер. HTML/CSS макет постов + fal.ai генерация ассетов. Рендер в PNG через Puppeteer.
-memory_scope: agent
-knowledge:
-  - agents/designer/knowledge/references.md
-  - agents/designer/knowledge/compositions.md
-  - agents/designer/knowledge/feedback_log.md
-tools:
-  - Bash
-  - Read
-  - Write
-  - Edit
-references:
-  - skills/fal-ai/SKILL.md
+tools: Bash, Read, Write, Edit
 ---
 
 <absolute_constraints>

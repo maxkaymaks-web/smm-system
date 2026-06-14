@@ -6,11 +6,9 @@
 (с подтверждения оператора) транскрипт + саммари выгружаются в архив
 (`docs/session-finalize.md`).
 
-> ⚠️ Система в процессе перехода на новую модель работы. Концепция и будущий
-> процесс описываются начальником в **`docs/onboarding-process.md`** — пока
-> он не заполнен и не проведено интервью, многие детали (Notion, Google Drive,
-> судьба агентов) ещё не финализированы. Реализацию делает разработчик, не
-> оператор.
+> Видение и процесс зафиксированы: интервью начальника — `docs/onboarding-process.md`,
+> целевая архитектура и план — `docs/superpowers/specs/2026-06-12-notion-gdrive-integration-design.md`.
+> Где что хранится **сейчас vs цель** — `docs/storage.md`.
 
 ---
 
@@ -25,11 +23,21 @@ Telegram). **Это отключено.** Теперь:
   как пишем посты, как верстаем, как разбираем ОС, как поступаем в разных
   ситуациях. Помогаешь оператору, а не делаешь всё за него автономно.
 - **Агенты-эксперты** (`copywriter`, `designer`, `analytics`, `brief`,
-  `content-planner`, `dushnila`) доступны как модули экспертизы через Agent
-  tool — зови их, когда это ускоряет работу. Это **не обязаловка**: оператор
-  может работать и напрямую с тобой.
-- **Telegram отменён.** Готовое отдаётся клиенту через Google Drive (тул
-  доставки реализует разработчик). Никакой отправки в Telegram.
+  `content-planner`, `dushnila`) — нативные сабагенты Claude Code в
+  `.claude/agents/<name>.md`. Зови их через Agent tool, когда это ускоряет
+  работу. Это **не обязаловка**: оператор может работать и напрямую с тобой.
+- **Финальную публикацию всегда жмёт человек.** Нейросеть сама в соцсети ничего
+  не публикует.
+
+### Три окна + Notion за ними
+
+- **Chatwoot** — клиентские диалоги, омниканал TG/VK/MAX. Развёрнут.
+- **Claude Code (ты)** — основной рабочий экран: подсказываешь что следующим,
+  вместе с оператором делаешь пост, пушишь в Postiz, ведёшь Notion.
+- **Postiz** — превью перед публикацией; человек жмёт ок/публикацию. Кандидат,
+  допиливается (см. `docs/postiz-integration.md`).
+- **Notion** — БД/источник истины операционки (базы «Клиенты»/«Планы»/«Посты»)
+  + Kanban для начальника. Ведёшь ты; начальник смотрит/иногда правит.
 
 ---
 
@@ -64,12 +72,12 @@ Telegram). **Это отключено.** Теперь:
 ## Что это за проект
 
 SMM-агентство bit&pix. Помогаешь оператору делать:
-- Контент-планы (md + html + pdf)
-- Тексты постов и адаптации под VK/MAX/Instagram
+- Контент-планы (ведутся в Notion; клиенту уходит PDF-снапшот)
+- Тексты постов и адаптации под VK/MAX/Instagram/Telegram
 - HTML-макеты слайдов и каруселей + fal.ai-генерация ассетов
 - Анализ конкурентов через Apify/VK API
 - Обработку фидбека от заказчика
-- Создание новых проектов через диалог-бриф
+- Создание новых проектов через диалог-бриф (см. `docs/client-onboarding.md`)
 
 Под капотом — Claude через подписку Claude Code (Anthropic),
 fal.ai (картинки/видео), Apify (парсинг).
@@ -80,22 +88,28 @@ fal.ai (картинки/видео), Apify (парсинг).
 
 ```
 оператор + Claude Code (claude в этом репо)
-  ├─ при необходимости зовёт подагентов-экспертов: copywriter, designer,
-  │   analytics, brief, content-planner, dushnila (через Agent tool)
-  ├─ читает  → projects/{ProjectID}/{context,voice,strategy,content-plan}.md
-  ├─ пишет   → projects/{ProjectID}/posts/drafts/{дата}-{N}/
+  ├─ при необходимости зовёт сабагентов-экспертов через Agent tool:
+  │   copywriter, designer, analytics, brief, content-planner, dushnila
+  │   (.claude/agents/<name>.md)
+  ├─ читает  → projects/{ProjectID}/{context,voice,strategy,overrides}.md  (git)
+  ├─ ведёт   → Notion: базы «Клиенты»/«Планы»/«Посты» (операционка, источник истины)
+  ├─ пишет   → projects/{ProjectID}/posts/drafts/{дата}-{N}/ (рабочие черновики)
+  ├─ пушит   → Postiz (готовый пост на превью → человек публикует)
   └─ в конце → upload-session.mjs → архив сессий (см. docs/session-finalize.md)
 
 Генерация изображений / видео / TTS
   └─→ fal.ai напрямую (без прокси).
 
-Хранилище медиа (HTML/PNG/JPG/PDF/MP4) + архив сессий
-  └─→ сейчас S3 Timeweb (s3.twcstorage.ru, bucket=seo). В git только текст
-       (md/json). Локально файлы — временные в /tmp. См. docs/s3.md.
-       Планируется переезд медиа + логов на Google Drive (разработчик).
+Хранилища (подробно — docs/storage.md):
+  • Операционка (статусы, план, задачи)  → Notion (источник истины)
+  • Знания клиента (context/voice/strategy/overrides) + ноу-хау → git
+  • Медиа (HTML/PNG/JPG/PDF/MP4)          → СЕЙЧАС S3 Timeweb; ЦЕЛЬ — Google Drive
+                                            (Фаза 3, tools/gdrive.mjs ещё не внедрён)
+  • Архив сессий Claude Code              → S3 (остаётся)
+  Локально файлы — временные в /tmp.
 
-Доставка готового клиенту
-  └─→ Google Drive (тул реализует разработчик). Telegram отключён.
+Диалоги с клиентом   → Chatwoot (TG/VK/MAX).
+Публикация           → Postiz (человек жмёт финальную кнопку).
 ```
 
 ---
@@ -103,7 +117,7 @@ fal.ai (картинки/видео), Apify (парсинг).
 ## Где что лежит
 
 ```
-agents/<name>/SOUL.md            конфиг + system prompt каждого агента-эксперта
+.claude/agents/<name>.md         сабагенты-эксперты Claude Code (system prompt + frontmatter)
   ├─ copywriter         тексты постов
   ├─ designer           HTML/CSS + fal.ai
   ├─ analytics          Apify/VK/fal.ai-vision
@@ -111,16 +125,22 @@ agents/<name>/SOUL.md            конфиг + system prompt каждого а�
   ├─ content-planner    контент-планы
   └─ dushnila           разбирает ОС заказчика
 
-projects/<ProjectID>/             всё про конкретного клиента
+agents/<name>/                    база знаний агентов (НЕ system prompt):
+  ├─ brief/questions.md           33 вопроса брифа (Q33 — мастер-вопрос)
+  └─ designer/knowledge/          накопленные дизайн-референсы
+
+config/notion.json                ID баз Notion (НЕ секрет; секрет — NOTION_TOKEN в .env)
+
+projects/<ProjectID>/             всё про конкретного клиента (знания — в git)
   ├─ context.md         бриф клиента
   ├─ voice.md           голос бренда (приоритет, перекрывает всё)
-  ├─ strategy.md        рубрикатор и KPI
-  ├─ content-plan.md    + .html + .pdf — план месяца
-  ├─ overrides.md       проектные оверрайды (табу, дизайн-спеки, след. задача)
+  ├─ strategy.md        рубрикатор и KPI (внутренний, клиенту не показываем)
+  ├─ overrides.md       «личное дело»: табу, дизайн-спеки, «запомни/не делай»
   ├─ analytics/         анализ конкурентов и метрик
   ├─ feedback/          разборы ОС от заказчика
   ├─ assets/            бренд-ассеты клиента
   └─ posts/             drafts/ inbox/ approved/ published/
+  (операционка — статусы/план/очередь — теперь в Notion, не в content-plan.md)
 
 projects/_template/               эталон файловой структуры
 
@@ -139,9 +159,10 @@ tools/                            утилиты (Node.js + Python)
   ├─ analyze-image.mjs  fal.ai vision (анализ референсов)
   ├─ remove-bg.mjs      fal.ai BRIA убирает фон
   ├─ upscale.mjs        fal.ai SeedVR2 апскейл
-  ├─ s3.mjs             S3 CRUD (list/put/get/rm/sync-up/sync-down/url)
+  ├─ s3.mjs             S3 CRUD (медиа сейчас + архив сессий)
+  ├─ chatwoot-gateway/  шлюз VK+TG ↔ Chatwoot
   ├─ upload-session.mjs выгрузка финализированной сессии CC в архив
-  ├─ spend-report.mjs   отчёт по тратам (fal.ai / Apify / LiteLLM)
+  ├─ spend-report.mjs   отчёт по тратам (fal.ai / Apify)
   ├─ apify/             парсеры Instagram/TikTok
   └─ remotion-lakmoda/  видео-рендер для Lakmoda
 
@@ -149,13 +170,18 @@ skills/                           reference-доки (используются �
   ├─ fal-ai/SKILL.md             полный справочник 600+ моделей fal.ai
   ├─ сценарий-рилс/SKILL.md      шаблон Instagram Reels (Lis_Gym)
   ├─ сценарий-съёмки/SKILL.md    ТЗ на съёмку клиенту
-  └─ ежедневный-брифинг/SKILL.md обзор «что делать следующим» по проектам
+  └─ ежедневный-брифинг/SKILL.md обзор «что делать следующим» (поверх Notion)
 
 docs/
-  ├─ onboarding-process.md как начальник описывает процесс + план интервью
+  ├─ onboarding-process.md интервью начальника (видение + процесс)
+  ├─ client-onboarding.md  SOP заведения нового клиента (бриф → Notion → Drive)
+  ├─ storage.md            где что хранится: сейчас vs цель
+  ├─ access-setup.md       подключение Google Drive + Notion (креды)
+  ├─ postiz-integration.md публикация: подключение каналов в Postiz
+  ├─ s3.md                 S3: медиа сейчас + архив сессий
   ├─ dev-guide.md          как разрабатывать и обучать агентов
   ├─ session-finalize.md   процедура финализации сессии в конце задачи
-  └─ s3.md                 как пользоваться S3 (где медиа лежат)
+  └─ superpowers/specs/    дизайн-спеки (интеграция Notion/Drive/Postiz)
 ```
 
 ---
@@ -165,11 +191,12 @@ docs/
 ```bash
 git clone https://github.com/maxkaymaks-web/smm-system.git
 cd smm-system
-npm install            # @fal-ai/client, puppeteer, sharp, pdf-lib
+npm install            # @fal-ai/client, puppeteer, sharp, pdf-lib, googleapis
 ```
 
-Запросить у Максима `.env` (FAL, Apify, VK, GitHub PAT, S3). Положить в корень.
-Файл в `.gitignore`.
+Запросить у Максима креды (см. `docs/access-setup.md`): `.env`
+(FAL, Apify, VK, GitHub PAT, S3, `NOTION_TOKEN`) + JSON-ключ service-account
+Google Drive. Положить в корень. Секреты в `.gitignore`.
 
 Запуск:
 ```bash
@@ -188,7 +215,8 @@ claude          # Claude Code сам прочитает этот CLAUDE.md
 | `готово` | Заказчик одобрил, готово к публикации |
 | `опубликовано` | Опубликован в соцсети |
 
-Обновление в `content-plan.md` + `content-plan.html` — немедленно после смены.
+Статус ведётся в **Notion (база «Посты»)** — источник истины. Обновляй немедленно
+после смены. (Старый трекер `content-plan.md` ретайрнут.)
 
 ---
 
@@ -212,15 +240,18 @@ git push origin main
 - Не редактировать `voice.md` без явной команды оператора
 - Коммит и пуш разрешены, но **каждый раз спрашивать подтверждение оператора**
   перед `git commit` и `git push` (не автоматически)
-- Никаких прямых ключей в коде — только из `.env`
+- Секреты — только в `.env`. Не-секретные константы (ID баз Notion и т.п.) —
+  открыто в репо (`config/notion.json`)
 - YAGNI: не плодить «на всякий случай», не оставлять обратной совместимости после миграции (см. `global/rules.md`)
 
 ---
 
 ## Если что-то непонятно
 
-- `docs/onboarding-process.md` — куда начальник пишет процесс + план интервью
-- `docs/dev-guide.md` — как добавить агента, обучить копирайтера, отлаживать LLM-вызов
+- `docs/client-onboarding.md` — как завести нового клиента (бриф → Notion → Drive)
+- `docs/storage.md` — где что хранится (сейчас vs цель)
+- `docs/onboarding-process.md` — видение и процесс от начальника
+- `docs/dev-guide.md` — как добавить агента, обучить копирайтера, отлаживать
 - `docs/session-finalize.md` — финализация сессии в конце задачи
 - `global/UPDATES.md` — последние изменения системы
-- `agents/<name>/SOUL.md` — что именно делает каждый агент
+- `.claude/agents/<name>.md` — что именно делает каждый агент-эксперт

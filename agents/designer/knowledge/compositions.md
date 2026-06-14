@@ -83,7 +83,7 @@
 **Когда:** beauty / lifestyle / personal brand — брендовые слайды серии, философия, анонсы
 **Суть:** Фон — тёмная органическая текстура (мокрая глина, кожа, камень, бумага) вместо фото людей или однотонного цвета. Создаёт тактильность и премиальность. Белый текст поверх.
 **Реализация в HTML:** CSS `background-image` + SVG feTurbulence (grain) поверх. Или: фото текстуры через `background-image:url(...)` + `filter:brightness(0.6) saturate(0.8)`.
-**Когда текстура — grain-overlay уже в `agents/designer/SOUL.md`.** Для тёмного текстурного фона: `background:#2a1f1a` + grain overlay opacity 0.12.
+**Когда текстура — grain-overlay уже в `.claude/agents/designer.md`.** Для тёмного текстурного фона: `background:#2a1f1a` + grain overlay opacity 0.12.
 ---
 
 ### Series footer — тег-пилюли как идентификатор серии
