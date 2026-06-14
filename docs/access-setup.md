@@ -29,6 +29,16 @@ NOTION_TOKEN=<Internal Integration Secret>
 ID баз — открыто в `config/notion.json` (`clients`/`plans`/`posts`). Базы созданы
 (14.06.2026) под страницей «Тест»; на боевой странице — обновить config.
 
+**Notion MCP в Claude Code.** Репо содержит `.mcp.json` (сервер `notion` через
+`npx @notionhq/notion-mcp-server`, токен — `${NOTION_TOKEN}`). Чтобы Claude Code
+подставил токен, переменная должна быть **в окружении** при запуске `claude` —
+`.env` сам по себе в шелл не экспортируется. Перед запуском:
+```bash
+set -a; source .env; set +a
+claude        # при первом старте подтвердить project-scoped MCP-сервер notion
+```
+Проверка статуса — команда `/mcp` внутри сессии.
+
 ---
 
 ## 🟦 Медиа — S3 Timeweb

@@ -13,7 +13,7 @@
 | Статусы постов, план, очередь, приоритет | **Notion** (базы «Клиенты»/«Планы»/«Посты») | Notion |
 | Карточка клиента (платформы, фокус, ссылка на медиа) | **Notion** | Notion |
 | Знания клиента: `context/voice/strategy/overrides` | **git** | git |
-| Ноу-хау агентства (`.claude/agents`, `global/`, `skills/`) | **git** | git |
+| Ноу-хау агентства (`.claude/agents`, `.claude/skills`, `global/`) | **git** | git |
 | Медиа: HTML-рендеры, PNG/JPG/PDF/MP4, бренд-ассеты | **S3 Timeweb** | бакет `seo`, префикс `smm/` |
 | Пост под публикацию (текст+медиа, расписание) | **Postiz** | Postiz |
 | Архив сессий Claude Code | **S3** | `logs/claude-code/…` (тот же бакет) |

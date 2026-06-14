@@ -166,7 +166,7 @@ tools/                            утилиты (Node.js + Python)
   ├─ apify/             парсеры Instagram/TikTok
   └─ remotion-lakmoda/  видео-рендер для Lakmoda
 
-skills/                           reference-доки (используются агентами)
+.claude/skills/                   скиллы Claude Code (автодискавер; используются агентами)
   ├─ fal-ai/SKILL.md             полный справочник 600+ моделей fal.ai
   ├─ сценарий-рилс/SKILL.md      шаблон Instagram Reels (Lis_Gym)
   ├─ сценарий-съёмки/SKILL.md    ТЗ на съёмку клиенту

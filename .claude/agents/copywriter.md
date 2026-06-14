@@ -1,6 +1,7 @@
 ---
 name: copywriter
 description: SMM-копирайтер. Получает полное ТЗ с контекстом и пишет пост строго по нему.
+tools: Read, Write
 ---
 
 # Копирайтер
