@@ -114,6 +114,18 @@ fal.ai (картинки/видео), Apify (парсинг).
 
 ---
 
+## Онбординг и публикация (без ssh)
+
+- Завести/править клиента: `tools/onboard/new-client.mjs`, `edit-client.mjs`
+  (репо-скелет + карточка Notion). Подключить соцканалы:
+  `tools/onboard/register-channel.mjs` (VK community-токен / TG-канал → Postiz).
+- Связка клиент→канал — в `projects/{ID}/channels.json` (`integrationId`).
+- Публикация: Postiz public API (`upload-from-url` ×N → `/posts`,
+  `settings.__type`), реальные токены соцсетей держит Postiz. Детали —
+  `docs/postiz-integration.md`, полный флоу — `docs/client-onboarding.md`.
+
+---
+
 ## Где что лежит
 
 ```
@@ -161,6 +173,11 @@ tools/                            утилиты (Node.js + Python)
   ├─ upscale.mjs        fal.ai SeedVR2 апскейл
   ├─ s3.mjs             S3 CRUD (медиа сейчас + архив сессий)
   ├─ chatwoot-gateway/  шлюз VK+TG ↔ Chatwoot
+  ├─ onboard/new-client.mjs       завести клиента (репо + Notion), без ssh
+  ├─ onboard/edit-client.mjs      править поля клиента в Notion + overrides
+  ├─ onboard/register-channel.mjs подключить VK/TG канал в Postiz, без ssh
+  ├─ onboard-service/             серверный сервис регистрации каналов (на сервере)
+  ├─ lib/notion.mjs               обёртка Notion API
   ├─ upload-session.mjs выгрузка финализированной сессии CC в архив
   ├─ spend-report.mjs   отчёт по тратам (fal.ai / Apify)
   ├─ apify/             парсеры Instagram/TikTok
