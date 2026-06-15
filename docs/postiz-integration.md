@@ -85,10 +85,17 @@ app-id типа VK Admin VK заблокировал). Поэтому:
 2. «Создать ключ» → права **Стена, Фотографии, Управление** → скопировать (`vk1.a.…`).
 3. Прислать нам → регистрируем как VK-канал в Postiz (INSERT, RAW токен).
 
-## Telegram: что выяснено (ещё НЕ зарегистрировано)
+## Telegram: РАБОЧИЙ (15.06.2026)
+
+> ✅ Проверено боем: текст и карусель (3 фото) уходят в канал. Постинг-канал —
+> регистрируется через `onboard-service` (как и VK). Egress-фикс контейнера
+> Postiz — `docs/infra.md` → секция «Postiz → Telegram egress». Кратко: в env
+> `postiz` добавлены `TELEGRAM_TOKEN` + `HTTPS_PROXY` (TG-провайдер на
+> `node-telegram-bot-api`/`request` уважает env-прокси) + `NO_PROXY` с VK-доменами
+> (VK-аплоад фото на Axios — его прокси ломал, держим напрямую).
 
 - Postiz Telegram-провайдер использует **ОДИН бот из env `TELEGRAM_TOKEN`**
-  (в нашем `docker-compose.trim.yaml` он ПОКА НЕ ЗАДАН — **надо добавить**).
+  (бот `bit_and_pix_bot`; теперь задан в env контейнера `postiz`).
 - Наш бот: **`bit_and_pix_bot`** (id 8961639936), токен = `TELEGRAM_BOT_TOKEN` в `.env`.
 - `authenticate(code=chatId/username)` делает `getChat`, возвращает
   `id = username || chat.id`, `accessToken = String(chat.id)`, `name = title`.
@@ -130,10 +137,10 @@ app-id типа VK Admin VK заблокировал). Поэтому:
    `s3.mjs url` → `upload-from-url` ×2 → пост с `image[]` + текст → `type=draft` →
    человек нажал publish → `wall-239528257_3` (карусель). Потребовал фикс патча
    (messages-upload, см. выше).
-2. **Telegram «Claude добавляет источник»:** добавить `TELEGRAM_TOKEN=<bot>` в Postiz
-   compose (env), пересоздать postiz; зарегать канал «тестовый» (INSERT integration
-   telegram, internalId/token=chat_id=-1004375691069, name=тестовый); тест поста
-   `settings.__type="telegram"` → проверить, что прилетело в канал.
+2. ✅ **Telegram — СДЕЛАНО 15.06.2026.** `TELEGRAM_TOKEN`+прокси добавлены в env
+   `postiz`, канал регистрируется через `onboard-service`, тест поста
+   `settings.__type="telegram"` (текст + карусель) долетел в канал. Детали egress —
+   `docs/infra.md` (секция «Postiz → Telegram egress»).
 3. **Демо approve-флоу:** `type=draft` → оператор в UI Postiz жмёт Publish → летит.
 4. **Снести 2 тестовых поста** на стене bit&pix (id 1,2) — community-токен не умеет
    delete; нужно руками или user-токеном админа.

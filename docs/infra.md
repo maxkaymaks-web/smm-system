@@ -159,6 +159,37 @@
   (`--build` обязателен — иначе не подтянется новый `undici`). Вставки в
   compose/nginx идемпотентны; перед reload — `nginx -t`. Бэкапы `.bak.<ts>`.
 
+## Postiz → Telegram egress (решено 15.06.2026)
+
+Постинг в Telegram из самого Postiz рвался: TG-пост вис в `QUEUE`, потом `ERROR`.
+Две причины, обе в контейнере `postiz`:
+
+1. **Не задан `TELEGRAM_TOKEN`** — нативный TG-провайдер создаёт бота как
+   `new TelegramBot(process.env.TELEGRAM_TOKEN)`; без токена слать нечем.
+2. **Нет egress к `api.telegram.org`** (RU-DPI; из контейнера `ETIMEDOUT`), VK при
+   этом доступен напрямую.
+
+**Фикс — env контейнера `postiz` в `docker-compose.trim.yaml`:**
+```yaml
+TELEGRAM_TOKEN: "<бот bit_and_pix_bot>"
+HTTPS_PROXY: "http://<user>:<pass>@5.2.66.188:8888"
+HTTP_PROXY:  "http://<user>:<pass>@5.2.66.188:8888"
+NO_PROXY: "localhost,127.0.0.1,::1,postiz-postgres,postiz-redis,temporal,tech.bitandpix.ru,5.42.117.201,5.2.66.188,vk.com,.vk.com,userapi.com,.userapi.com,vkuser.net,.vkuser.net"
+```
+
+**Почему это работает и почему `NO_PROXY` именно такой (важный нюанс клиентов):**
+- TG-провайдер шлёт через `node-telegram-bot-api` (либа `request`) — она **уважает
+  `HTTPS_PROXY` из env** → TG уходит через tinyproxy. ✅
+- VK-провайдер делает API-вызовы через `fetch`/undici — **env-прокси игнорирует** →
+  VK API и так напрямую, прокси на него не влияет.
+- **НО** VK-провайдер заливает фото на upload-сервер (`pu.vk.com`/`*.userapi.com`)
+  через **Axios**, а Axios **уважает env-прокси**. Если не исключить VK-домены —
+  заливка уходит с IP прокси, а upload-URL VK привязан к IP запросившего → `404`.
+  Поэтому VK-домены добавлены в `NO_PROXY` (Axios для VK идёт напрямую). Итог:
+  **через прокси — только Telegram, всё остальное напрямую.**
+- Применение: `docker compose -f docker-compose.trim.yaml up -d postiz` (бэкапы
+  `.bak.<ts>`). Проверено боем: VK `wall-239528257_6` + TG `t.me/…/6` (карусель 3 фото).
+
 ## Что НЕ сделано (открыто)
 
 - **VK-приложение** → env Postiz **`VK_ID`/`VK_SECRET`** (НЕ `VK_CLIENT_ID` —
@@ -173,9 +204,6 @@
 - **Тестовое VK-сообщество: `VK_GROUP_ID=239528257`** (уже в репо `.env`, общий с
   проектом чатов/Chatwoot; там же `VK_COMMUNITY_TOKEN` для него). Оператор —
   админ этого сообщества, на нём и гоняем первый постинг-тест.
-- **Egress контейнера Postiz через tinyproxy** (app-level, для Telegram-resilience).
-  ⚠️ 14.06 выяснилось: **прямой путь к Telegram из docker-контейнера НЕнадёжен**
-  (DPI таймаутит часть Telegram-DC; VK — ок). Для onboard-service уже решено через
-  `TELEGRAM_PROXY`+`ProxyAgent` (см. секцию выше). **Тот же риск у самого Postiz**
-  при постинге в TG → когда дойдёт до TG-публикации, Postiz-провайдеру нужен
-  аналогичный egress через tinyproxy. Сейчас не настроено.
+- ✅ **Egress контейнера Postiz через tinyproxy для Telegram — СДЕЛАНО 15.06.2026.**
+  См. секцию «Postiz → Telegram egress» выше (TELEGRAM_TOKEN + HTTPS_PROXY +
+  NO_PROXY с исключением VK-доменов из-за Axios-аплоада фото).

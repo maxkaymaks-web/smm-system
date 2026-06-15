@@ -74,6 +74,44 @@ context/voice/strategy руками/через brief.
 отправляем через Chatwoot. **Два уровня согласования:** сначала план целиком (клиент
 одобряет состав/темы), затем каждый готовый пост отдельно. Финальную публикацию жмёт человек.
 
+## Шаг 7. Публикация: черновик в Postiz
+
+Когда пост готов (текст согласован, медиа в S3) — создаём черновик в Postiz:
+
+1. **Загрузи медиа** (если есть картинки) — по одной через `upload-from-url`:
+   ```bash
+   # presign URL в S3
+   node tools/s3.mjs url smm/projects/{ProjectID}/posts/drafts/{дата}-{N}/{file}.png 3600
+   # загрузить в Postiz → получишь {id, path}
+   curl -s -X POST "$POSTIZ_API_URL/api/public/v1/upload-from-url" \
+     -H "Authorization: $POSTIZ_API_KEY" -H "Content-Type: application/json" \
+     -d '{"url": "<presigned_url>"}'
+   ```
+
+2. **Создай черновик** — `POST /api/public/v1/posts` с `type=draft`:
+   ```json
+   {
+     "type": "draft",
+     "date": "<ISO>",
+     "shortLink": false,
+     "tags": [],
+     "posts": [
+       { "integration": {"id": "<vk_integrationId>"},
+         "value": [{"content": "<текст>", "image": [{"id":"...", "path":"..."}]}],
+         "settings": {"__type": "vk"} },
+       { "integration": {"id": "<tg_integrationId>"},
+         "value": [{"content": "<текст>", "image": [{"id":"...", "path":"..."}]}],
+         "settings": {"__type": "telegram"} }
+     ]
+   }
+   ```
+   `integrationId` — из `projects/{ProjectID}/channels.json`.
+
+3. **Дай оператору ссылку:** `https://tech.bitandpix.ru` → он открывает, видит черновик
+   во вкладке «Drafts», проверяет и нажимает «Publish». **Финальную кнопку жмёт человек.**
+
+> Только `type=draft` — никогда `type=now` из кода агента без явной команды оператора.
+
 ## Чек-лист
 
 - [ ] Бриф снят (Q33 учтён), ЦА/тональность согласованы с человеком
@@ -83,3 +121,4 @@ context/voice/strategy руками/через brief.
 - [ ] Медиа-папка заведена в S3, ссылка в карточке Notion
 - [ ] Каналы подключены (`register-channel.mjs` → Postiz; Chatwoot — вручную)
 - [ ] Контент-план отправлен клиенту на согласование (PDF)
+- [ ] Черновики созданы в Postiz (`type=draft`), оператор нажал Publish

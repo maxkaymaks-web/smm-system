@@ -1,0 +1,17 @@
+{
+  "notionClientPageId": null,
+  "channels": [
+    {
+      "type": "vk",
+      "integrationId": "20d7fc35-7c52-45cf-bf99-0d6ca78c3380",
+      "internalId": "239528257",
+      "name": "bit&pix ВКонтакте"
+    },
+    {
+      "type": "telegram",
+      "integrationId": "9cfb11a3-0676-4745-abbf-a8ec8cfd35b8",
+      "internalId": "-1004375691069",
+      "name": "тестовый (TG)"
+    }
+  ]
+}

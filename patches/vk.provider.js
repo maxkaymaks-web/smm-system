@@ -98,47 +98,51 @@ class VkProvider extends social_abstract_1.SocialAbstract {
         };
     }
     // groupId = integration.internalId (positive). Upload to the community.
-    async uploadMedia(groupId, accessToken, post) {
-        return await Promise.all((post?.media || []).map(async (media) => {
-            const isVideo = (0, has_extension_1.hasExtension)(media.path, 'mp4');
+    // Retries up to 3 times with a fresh upload URL on each attempt (VK pu.vk.com is intermittently slow).
+    async uploadOnePhoto(groupId, accessToken, media) {
+        const isVideo = (0, has_extension_1.hasExtension)(media.path, 'mp4');
+        for (let attempt = 0; attempt < 3; attempt++) {
             const all = await (await this.fetch(isVideo
                 ? `https://api.vk.com/method/video.save?group_id=${groupId}&access_token=${accessToken}&v=5.251`
                 : `https://api.vk.com/method/photos.getMessagesUploadServer?group_id=${groupId}&access_token=${accessToken}&v=5.251`)).json();
-            const { data } = await axios_1.default.get(media.path, {
-                responseType: 'stream',
-            });
-            const slash = media.path.split('/').at(-1);
-            const formData = new form_data_1.default();
-            formData.append('photo', data, {
-                filename: slash,
-                contentType: mime_types_1.default.lookup(slash) || '',
-            });
-            const value = (await axios_1.default.post(all.response.upload_url, formData, {
-                headers: {
-                    ...formData.getHeaders(),
-                },
-            })).data;
-            if (isVideo) {
-                return {
-                    id: all.response.video_id,
-                    ownerId: all.response.owner_id ?? `-${groupId}`,
-                    type: 'video',
-                };
+            if (all.error) throw new Error(`VK getMessagesUploadServer error: ${JSON.stringify(all.error)}`);
+            try {
+                const { data } = await axios_1.default.get(media.path, { responseType: 'stream' });
+                const slash = media.path.split('/').at(-1);
+                const formData = new form_data_1.default();
+                formData.append('photo', data, {
+                    filename: slash,
+                    contentType: mime_types_1.default.lookup(slash) || '',
+                });
+                const value = (await axios_1.default.post(all.response.upload_url, formData, {
+                    headers: { ...formData.getHeaders() },
+                })).data;
+                if (isVideo) {
+                    return { id: all.response.video_id, ownerId: all.response.owner_id ?? `-${groupId}`, type: 'video' };
+                }
+                const formSend = new FormData();
+                formSend.append('photo', value.photo);
+                formSend.append('server', value.server);
+                formSend.append('hash', value.hash);
+                const j = await (await fetch(`https://api.vk.com/method/photos.saveMessagesPhoto?group_id=${groupId}&access_token=${accessToken}&v=5.251`, {
+                    method: 'POST',
+                    body: formSend,
+                })).json();
+                if (j.error) throw new Error(`VK saveMessagesPhoto error: ${JSON.stringify(j.error)}`);
+                const saved = j.response[0];
+                return { id: saved.id, ownerId: saved.owner_id ?? `-${groupId}`, type: 'photo' };
+            } catch (err) {
+                if (attempt < 2) {
+                    console.warn(`VK photo upload attempt ${attempt + 1} failed: ${err.message}. Retrying…`);
+                    await new Promise(r => setTimeout(r, 3000 * (attempt + 1)));
+                } else {
+                    throw err;
+                }
             }
-            const formSend = new FormData();
-            formSend.append('photo', value.photo);
-            formSend.append('server', value.server);
-            formSend.append('hash', value.hash);
-            const saved = (await (await fetch(`https://api.vk.com/method/photos.saveMessagesPhoto?group_id=${groupId}&access_token=${accessToken}&v=5.251`, {
-                method: 'POST',
-                body: formSend,
-            })).json()).response[0];
-            return {
-                id: saved.id,
-                ownerId: saved.owner_id ?? `-${groupId}`,
-                type: 'photo',
-            };
-        }));
+        }
+    }
+    async uploadMedia(groupId, accessToken, post) {
+        return await Promise.all((post?.media || []).map((media) => this.uploadOnePhoto(groupId, accessToken, media)));
     }
     async post(groupId, accessToken, postDetails) {
         const [firstPost] = postDetails;
