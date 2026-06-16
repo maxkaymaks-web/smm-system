@@ -43,3 +43,10 @@ smm-system-bit-*.json
 gcp-*.json
 service-account*.json
 .env.operator
+
+# VK OAuth локальные токены (секрет)
+tools/vk/.vk-token.json
+tools/vk/.vk-oauth-state.json
+
+# Временные снапшоты Playwright MCP
+.playwright-mcp/

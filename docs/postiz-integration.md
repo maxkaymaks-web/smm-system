@@ -65,19 +65,32 @@ app-id типа VK Admin VK заблокировал). Поэтому:
 - ✅ **Проверено боем:** `POST /api/public/v1/posts type=now settings.__type=vk` →
   опубликовано на стене: `https://vk.com/wall-239528257_2`.
 
-### VK community-токен — что умеет (уточнено 14.06, проверено боем)
-- ✅ `wall.post` (постинг в стену сообщества, текст) — РАБОТАЕТ.
-- ✅ **Фото на стену (карусель)** — РАБОТАЕТ, но через **messages**-upload-сервер:
-  `photos.getMessagesUploadServer(group_id)` → upload → `photos.saveMessagesPhoto`
-  → `owner_id=-<groupId>` → attach `photo-<groupId>_<id>` в `wall.post`.
-  ⚠️ Прямой `photos.getWallUploadServer`/`saveWallPhoto` community-токену **закрыты**
-  (`error_code 27`) — на этом падала публикация мультифото (`wall-239528257_3` —
-  первый успешный фото-пост после фикса патча). См. `patches/vk.provider.js`.
-- ❌ `wall.get`, `wall.delete`, `wall.edit` — `error_code 27`. Читать/удалять стену
-  community-токеном нельзя. `VK_SERVICE_TOKEN` тоже не читает (`wall.getById` →
-  `error_code 1051` profile type) — проверять публикацию глазами/в Postiz по `releaseURL`.
+### VK community-токен — что умеет (ПЕРЕСМОТРЕНО 15.06.2026, проверено боем)
+- ✅ `wall.post` (постинг в стену сообщества, **только текст**) — РАБОТАЕТ.
+- ❌ **ФОТО НА СТЕНУ community-токеном НЕВОЗМОЖНЫ.** (Раньше тут стояло «работает» —
+  это было ОШИБКОЙ: визуально картинки никто не проверил. 15.06 проверено по факту —
+  фото на стене НЕ появляются.) Детали почему:
+  - `photos.getWallUploadServer` (штатная загрузка фото на стену) community-токену
+    **закрыт** — `error_code 27` («method is unavailable with group auth»).
+  - Обход через `photos.getMessagesUploadServer` + `saveMessagesPhoto` **загружает**
+    фото, но в **приватный альбом `album_id -64` (messages)**; ответ содержит
+    `access_key`. При `wall.post` такое фото VK **молча дропает** — пост уходит без
+    вложений, БЕЗ ошибки в ответе. Проверено и `photo-<gid>_<id>`, и
+    `photo-<gid>_<id>_<access_key>` (wall_11 и wall_12) — оба без картинки.
+  - Вывод: community-токен фундаментально не вешает фото на стену. Для фото нужен
+    **USER-токен админа группы** (OAuth, scope `photos`+`wall`+`groups`,
+    `getWallUploadServer?group_id=…`). См. [[vk-community-token-no-wall-photos]].
+- ❌ `wall.get`, `wall.delete`, `wall.edit`, `photos.getById` — `error_code 27`.
+  Читать/удалять стену и фото community-токеном нельзя. `VK_SERVICE_TOKEN` тоже не
+  читает (`wall.getById` → `error_code 1051` profile type). Публичный HTML стены без
+  авторизации VK не отдаёт (пустое тело) — **проверять публикацию может только
+  залогиненный человек глазами.**
 - Токен в `.env`: `VK_COMMUNITY_TOKEN` (vk1.a.…, 220 симв), `VK_GROUP_ID=239528257`,
   права: wall+manage+photos+messages+docs.
+
+> ⚠️ Патч `patches/vk.provider.js` с messages-upload + retry на 504 в проде, но фото
+> им не долетают (см. выше). 504 от `pu.vk.com` — отдельная реальная проблема (CDN
+> ротируется, часть серверов отдаёт 504), retry её закрывает, но это не про фото.
 
 ### Онбординг клиента (VK) — инструкция в 2-3 клика
 1. Админ сообщества открывает (десктоп): `https://vk.com/club<GROUP_ID>?act=tokens`
@@ -133,10 +146,13 @@ app-id типа VK Admin VK заблокировал). Поэтому:
 
 ## ЧТО ДАЛЬШЕ (следующие шаги)
 
-1. ✅ **Multi-photo VK пост — СДЕЛАНО (14.06):** Sparta 23_05 slide_01/02.png →
-   `s3.mjs url` → `upload-from-url` ×2 → пост с `image[]` + текст → `type=draft` →
-   человек нажал publish → `wall-239528257_3` (карусель). Потребовал фикс патча
-   (messages-upload, см. выше).
+1. ❌ **Multi-photo VK пост — НЕ РАБОТАЕТ через community-токен (выяснено 15.06).**
+   Ранее тут стояло «СДЕЛАНО (wall_3)» — это было заблуждением, картинку визуально не
+   проверяли. По факту фото на стену community-токеном не вешаются (`error_code 27` на
+   getWallUploadServer; messages-фото из альбома -64 VK дропает на стене даже с
+   access_key). Решение — **user-токен админа группы** (своё VK-приложение). Идёт
+   ресёрч/реализация. См. секцию «VK community-токен» выше и
+   [[vk-community-token-no-wall-photos]].
 2. ✅ **Telegram — СДЕЛАНО 15.06.2026.** `TELEGRAM_TOKEN`+прокси добавлены в env
    `postiz`, канал регистрируется через `onboard-service`, тест поста
    `settings.__type="telegram"` (текст + карусель) долетел в канал. Детали egress —
@@ -146,11 +162,22 @@ app-id типа VK Admin VK заблокировал). Поэтому:
    delete; нужно руками или user-токеном админа.
 5. **Оформить онбординг-тул:** скрипт `register-channel` (VK: RAW community-токен;
    TG: chat_id) — чтобы подключение клиента было одной командой.
+6. 🔴 **ГЛАВНОЕ: VK-фото на стену через user-токен (своё приложение).** Community-токен
+   фото не вешает (подтверждено внешне 15.06, см. секцию «VK community-токен» +
+   [[vk-community-token-no-wall-photos]]). Нужен **user-токен админа группы**:
+   - своё VK **Standalone**-приложение; OAuth **2.1 + PKCE**; токен ~60 мин + refresh
+     ~180 дней (нужен рефреш-флоу); scope **`wall`+`photos`+`groups`**.
+   - флоу патча: `photos.getWallUploadServer?group_id=…` → upload → `saveWallPhoto` →
+     `wall.post from_group=1`.
+   - **открытый риск:** scope `wall`+`photos` может гейтиться модерацией VK — проверить
+     эмпирически до того, как закладываться. НЕ путать с VK ID `vk2.a.*` (auth-only).
 
 ## Тупик, который НЕ повторять
 - User-токен VK (covers all admin groups + edit/delete) — нужен OAuth, scope `wall`
   гейтится модерацией (~3 дня, паспорт), gray app-id (VK Admin 6121396 и пр.) VK
-  заблокировал. Для MVP не лезть — community-токен решает.
+  заблокировал. **NB (15.06): для ФОТО на стену это всё равно неизбежно** — community-
+  токен фото не умеет, обходного пути нет. Так что user-токен/приложение — не тупик, а
+  единственный путь к фото; см. шаг 6 выше.
 - VK ID OAuth redirect настраивается в `id.vk.ru/about/business/go` → «Подключение
   авторизации» (НЕ в dev.vk.com «Размещение»). `VK_SECRET` Postiz НЕ использует (PKCE).
   Это всё не нужно при community-токене.
