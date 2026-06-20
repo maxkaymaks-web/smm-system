@@ -7,6 +7,21 @@
 > Шаги в Notion/Drive/каналах выполняет оператор + Claude Code по этому SOP.
 > Карта хранилищ — `docs/storage.md`. Доступы/креды — `docs/access-setup.md`.
 
+## Шаг 0. Форма-бриф клиенту (опционально, без звонка)
+
+Чтобы не опрашивать клиента вживую — дай ему ссылку на анкету:
+**https://survey.bitandpix.ru** (32 вопроса брифа, секции, прогресс-бар; на
+вступительном экране — TG оператора, можно надиктовать голосовым вместо текста).
+
+Ответ клиента падает в S3. Забрать — по токену, S3-креды не нужны (нужны
+`SURVEY_API_URL` + `SURVEY_API_KEY` в `.env`):
+
+    node tools/intake/check.mjs                 # список заявок (свежие сверху)
+    node tools/intake/check.mjs --get <key>     # одна заявка целиком (вопрос→ответ)
+
+Дальше Claude по ответам заводит проект (Шаг 2) и заполняет context/voice/strategy.
+Сервис — `tools/survey-service/` (дизайн: `docs/superpowers/specs/2026-06-20-survey-intake-form-design.md`).
+
 ## Шаг 1. Бриф
 
 Зови агента `brief` (или работай напрямую). Вопросы — `agents/brief/questions.md`
