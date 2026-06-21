@@ -116,6 +116,8 @@ fal.ai (картинки/видео), Apify (парсинг).
 
 ## Онбординг и публикация (без ssh)
 
+- Форма-бриф клиенту: дай ссылку **https://survey.bitandpix.ru**; забрать ответы —
+  `node tools/intake/check.mjs` (список) / `--get <key>` (целиком). Это Шаг 0.
 - Завести/править клиента: `tools/onboard/new-client.mjs`, `edit-client.mjs`
   (репо-скелет + карточка Notion). Подключить соцканалы:
   `tools/onboard/register-channel.mjs` (VK community-токен / TG-канал → Postiz).
