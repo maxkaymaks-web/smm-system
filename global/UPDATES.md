@@ -6,6 +6,118 @@
 
 ---
 
+## 2026-06-20 — Форма-бриф клиенту (анкета по ссылке)
+Клиента больше не обязательно опрашивать вживую — есть онлайн-анкета на 32 вопроса
+брифа: **https://survey.bitandpix.ru** (секции, прогресс-бар, на вступительном
+экране TG оператора — можно надиктовать голосовым вместо текста). Отдай ссылку
+клиенту, ответ упадёт в S3.
+
+**Забрать заполненное (любой оператор/агент с доступом к репо):**
+
+    node tools/intake/check.mjs                 # список заявок (свежие сверху)
+    node tools/intake/check.mjs --get <key>     # одна заявка целиком (вопрос→ответ)
+
+Ходит в read-API по токену (`SURVEY_API_URL` + `SURVEY_API_KEY` в `.env`),
+S3-креды не нужны. Дальше по ответам заводишь проект (`new-client.mjs`) и
+заполняешь context/voice/strategy. Это **Шаг 0** онбординга — `docs/client-onboarding.md`.
+Сервис — `tools/survey-service/`, дизайн — `docs/superpowers/specs/2026-06-20-survey-intake-form-design.md`.
+
+---
+
+## 2026-06-14 — Онбординг клиента без ssh
+Появились тулы `tools/onboard/{new-client,edit-client,register-channel}.mjs`:
+оператор заводит/правит клиента и подключает VK/TG каналы по HTTPS, без ssh и
+без ручной правки БД. Каналы регистрирует серверный `onboard-service`. Секреты
+у оператора — только `NOTION_TOKEN` + `ONBOARD_API_KEY`. Флоу — docs/client-onboarding.md.
+
+---
+
+## 14.06.2026 (3) — Claude Code wiring (чтобы всё подтягивалось «само»)
+
+Аудит: что описано в доках ≠ что Claude Code реально автозагружает. Починено:
+- **Скиллы переехали `skills/` → `.claude/skills/`** — только там CC их автодискаверит.
+  Добавлен frontmatter (`name`/`description`) в `ежедневный-брифинг/SKILL.md` (без него
+  скилл не грузился). Ссылки `skills/…` в агентах/доках обновлены.
+- **Notion MCP подключён:** добавлен `.mcp.json` (сервер `notion` через
+  `npx @notionhq/notion-mcp-server`, токен `${NOTION_TOKEN}`). ⚠️ Чтобы CC подставил
+  токен — он должен быть **в окружении** при запуске: `set -a; source .env; set +a` →
+  `claude` → подтвердить project MCP-сервер. Статус — `/mcp`. (См. `docs/access-setup.md`.)
+- **Сабагенты `.claude/agents/`** — 6 шт., frontmatter валиден; copywriter получил
+  явный `tools: Read, Write`. (Отсутствие `tools` = наследование всех — не баг.)
+
+---
+
+## 14.06.2026 (2) — отказ от Google Drive, остаёмся на S3 (префикс `smm/`)
+
+- **Переезд медиа на Google Drive отменён** (после ресёрча). Причины: сервис-аккаунты
+  после 15.04.2025 не пишут в личный My Drive; Workspace+Shared Drive не оплатить из РФ
+  (санкции); личный Drive через OAuth — хрупко и привязано к одному аккаунту. S3 уже
+  работает, RU-родной, дёшев, headless-надёжен, team-safe.
+- **Медиа остаётся на S3**, но теперь **всё под префиксом `smm/`** (не в корне бакета):
+  `smm/projects/{ProjectID}/posts/…` и `…/assets/`. Архив сессий — отдельно (`logs/claude-code/…`).
+- **Просмотр для человека:** директору — Cyberduck/S3 Browser/веб-панель Timeweb; клиентам —
+  presigned-ссылки (`tools/s3.mjs url`). Это и закрывало единственную причину хотеть Drive.
+- Обновлены: `storage.md`, `s3.md`, `access-setup.md` (выкинут Drive-раздел), `CLAUDE.md`,
+  `rules.md`, спека (Компонент 2), `client-onboarding.md`, designer-агент, `.env.example`
+  (убраны `GOOGLE_*`). Фаза 3 «Drive» — выкинута. Google service-account ключ не нужен.
+
+---
+
+## 14.06.2026 — Notion-операционка живой + доки под Claude Code
+
+- **Notion как операционка — внедрено.** Созданы базы «Клиенты»/«Планы»/«Посты»
+  (связи `Клиенты ──< Планы ──< Посты`), 6 проектов мигрированы (77 постов). ID баз —
+  открыто в `config/notion.json`, токен — `NOTION_TOKEN` в `.env`. Операционная роль
+  `content-plan.md` ретайрнута: статусы/план/очередь теперь в Notion.
+- **Агенты переведены под Claude Code.** Старый OpenClaw-формат `agents/*/SOUL.md`
+  (`memory_scope`/`knowledge`/`references`) → нативные сабагенты `.claude/agents/*.md`
+  (frontmatter + system prompt, вызов через Agent tool). Базы знаний остались в
+  `agents/<name>/knowledge/` (+ `brief/questions.md`).
+- **Новые доки:** `docs/storage.md` (где что хранится — сейчас vs цель),
+  `docs/client-onboarding.md` (полный SOP заведения клиента: бриф → Notion → Drive →
+  каналы), `docs/access-setup.md` (поправлены SA-email и имя ключа на фактические).
+- **Архитектура «3 окна»:** Chatwoot (диалоги) + Claude Code (работа) + Postiz
+  (превью/публикация, кандидат) + Notion (БД) + Drive (медиа, Фаза 3, ещё не внедрён —
+  медиа пока в S3). Дизайн — `docs/superpowers/specs/2026-06-12-notion-gdrive-integration-design.md`.
+- **Правки правил:** `CLAUDE.md` и `global/rules.md` переписаны под новую модель;
+  git-правило — коммит/пуш только с подтверждением оператора (убрано «пушим
+  немедленно»); зафиксировано «секреты в `.env`, константы открыто».
+- **Блокеры:** Drive (Фаза 3) ждёт `GDRIVE_ROOT_FOLDER_ID` + расшаренную папку;
+  Postiz — не финал, изолируется за `tools/publish.mjs`.
+
+---
+
+## 11.06.2026 — смена концепции + большая зачистка
+
+- **Новая модель работы.** Уход от «автономные агенты генерят посты» к «оператор
+  ведёт много проектов параллельно, Claude Code = сильный помощник с типовыми
+  решениями». Операторов несколько, у каждого много проектов. Реализацию всей
+  обвязки делает разработчик; будущий процесс описывает начальник.
+- **Telegram отменён полностью.** Доставка готового клиенту переезжает на Google
+  Drive (тул у разработчика). Удалены: `tools/tg-send.mjs`, `tg-topic.mjs`,
+  `get-tg-chat-id.mjs`, `tg-set-commands.mjs`, `spend-send.mjs`, `projects/topics.json`.
+  Все TG-упоминания вычищены из `CLAUDE.md`, `global/rules.md`, `agents/*`, `docs/*`.
+- **OpenClaw — снос артефактов.** Удалены: `agents/orchestrator/` (диспатчер был
+  только под TG-автобот), `docs/openclaw-deploy.md`, `openclaw.json.example`,
+  `ONBOARDING.md` (описывал OpenClaw/TG-онбординг), `tools/openclaw-logs-sync.mjs`,
+  `tools/spend-per-msg.mjs`, `tools/migrate-to-s3.mjs` (миграция отработала),
+  `tools/setup-cron.sh`, `tools/daily_briefing.py` (TG-крон, плюс в нём был утёкший
+  bot-токен — отозвать у @BotFather).
+- **Дизайнер-автообучение снято.** Удалены `tools/designer_learning.py` и
+  `agents/designer/learning/` (логи крона). Накопленная база `agents/designer/knowledge/`
+  оставлена — пополняется вручную.
+- **Жёсткие запреты сняты.** «Не писать пост без copywriter / не верстать без
+  designer» убрано из `CLAUDE.md` — агенты теперь модули экспертизы (помощь, не
+  обязаловка), а не звенья обязательного оркестратора.
+- **Логирование** остаётся в S3 как есть. Добавлено: перед финализацией оператора
+  опрашивают «всё ли сделано» и «делал ли что-то вне CC» — чтобы лог был полным
+  для будущего анализа паттернов. Переезд логов/медиа на Google Drive и
+  операционка в Notion — отложено до интервью с начальником (`docs/onboarding-process.md`).
+- **Заготовка под начальника:** `docs/onboarding-process.md` — куда начальник
+  надиктовывает процесс + блок открытых вопросов для интервью.
+
+---
+
 ## 17.05.2026 — HTTPS_PROXY больше не относится к локальному CC
 
 - **Правило:** прокси `5.2.66.188:8888` нужен ТОЛЬКО для запусков с RU-сервера `5.42.117.201` (исторический OpenClaw, выключен 16.05.2026). Локальный `claude` в этом репо ходит во внешние сервисы (fal.ai, Apify, GitHub) напрямую — никакого `HTTPS_PROXY` ни в `.env`, ни в окружении задавать не надо.

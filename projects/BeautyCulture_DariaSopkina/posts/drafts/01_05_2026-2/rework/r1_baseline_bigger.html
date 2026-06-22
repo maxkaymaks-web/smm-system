@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Raleway:wght@300;400;500;600&display=swap');
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1350px;overflow:hidden;background:#EBD9C5}
+.slide{position:relative;width:1080px;height:1350px;overflow:hidden;background:radial-gradient(ellipse 80% 70% at 50% 50%,#F5E6D2 0%,#EBD9C5 55%,#DAC4AC 100%)}
+
+.tag-tl{position:absolute;top:48px;left:54px;font-family:'Raleway',sans-serif;font-size:15px;font-weight:500;letter-spacing:0.4em;text-transform:uppercase;color:#3a2e22}
+.tag-tr{position:absolute;top:48px;right:54px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:21px;color:#3a2e22;letter-spacing:0.06em}
+
+.headline{position:absolute;top:108px;left:0;right:0;text-align:center;font-family:'Cormorant Garamond',serif;font-weight:600;font-size:84px;line-height:0.96;color:#2a221c;text-transform:uppercase;letter-spacing:0.18em}
+.sub{position:absolute;top:300px;left:0;right:0;text-align:center;font-family:'Raleway',sans-serif;font-size:14px;font-weight:500;letter-spacing:0.5em;text-transform:uppercase;color:#6b5340}
+
+.pill-l{position:absolute;top:368px;left:140px;background:#2a221c;color:#F5E6D2;font-family:'Raleway',sans-serif;font-size:14px;font-weight:500;letter-spacing:0.4em;text-transform:uppercase;padding:13px 32px;border-radius:99px;z-index:5}
+.pill-r{position:absolute;top:368px;right:140px;background:#2a221c;color:#F5E6D2;font-family:'Raleway',sans-serif;font-size:14px;font-weight:500;letter-spacing:0.4em;text-transform:uppercase;padding:13px 32px;border-radius:99px;z-index:5}
+
+.photos{position:absolute;top:444px;left:54px;right:54px;display:flex;gap:32px;z-index:4}
+.photo{flex:1;height:680px;border-radius:14px;overflow:hidden;box-shadow:0 24px 48px rgba(60,40,20,0.18);transform:rotate(-1.2deg)}
+.photo:last-child{transform:rotate(1.2deg)}
+.photo img{width:100%;height:100%;object-fit:cover;display:block}
+
+.vside-l{position:absolute;left:24px;top:670px;writing-mode:vertical-rl;transform:rotate(180deg);font-family:'Raleway',sans-serif;font-size:13px;font-weight:500;letter-spacing:0.5em;text-transform:uppercase;color:#6b5340;display:flex;align-items:center;gap:14px}
+.vside-l::before{content:"";width:42px;height:1px;background:#6b5340;display:block}
+.vside-r{position:absolute;right:24px;top:680px;writing-mode:vertical-rl;font-family:'Raleway',sans-serif;font-size:13px;font-weight:500;letter-spacing:0.5em;text-transform:uppercase;color:#6b5340;display:flex;align-items:center;gap:14px}
+.vside-r::after{content:"";width:42px;height:1px;background:#6b5340;display:block}
+
+.numeric{position:absolute;left:18px;top:920px;font-family:'Cormorant Garamond',serif;font-weight:700;font-size:200px;line-height:0.88;color:#2a221c;letter-spacing:-0.04em}
+
+.brand-bottom{position:absolute;left:0;right:0;bottom:60px;text-align:center;z-index:3}
+.brand-bottom .name{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:34px;color:#2a221c;text-transform:uppercase;letter-spacing:0.4em;display:block}
+.brand-bottom .name::before{content:"——";display:block;font-size:14px;color:#6b5340;letter-spacing:0;margin-bottom:6px}
+.brand-bottom .tag{font-family:'Raleway',sans-serif;font-size:11px;font-weight:400;letter-spacing:0.5em;text-transform:uppercase;color:#6b5340;margin-top:6px;display:block}
+</style></head>
+<body><div class="slide">
+  <div class="tag-tl">До · После</div>
+  <div class="tag-tr">Культура</div>
+  <div class="headline">Подмышечные<br>впадины</div>
+  <div class="sub">— Лазерная эпиляция —</div>
+  <div class="pill-l">До</div>
+  <div class="pill-r">После</div>
+  <div class="photos">
+    <div class="photo"><img src="../../../../assets/images/before-after/armpit_1_before_up.jpg"></div>
+    <div class="photo"><img src="../../../../assets/images/before-after/armpit_1_after_up.jpg"></div>
+  </div>
+  <div class="vside-l">Процедур после · 4</div>
+  <div class="vside-r">Заметный результат</div>
+  <div class="brand-bottom"><span class="name">Культура</span><span class="tag">студия красоты</span></div>
+</div></body></html>

@@ -1,12 +1,43 @@
 # SMM-система bit&pix — Claude Code entry point
 
 Файл загружается автоматически Claude Code при `cd smm-system && claude`.
-Это основной режим работы — операторы запускают `claude` руками из репо,
-1 задача = 1 сессия. По окончании сессии (с подтверждения оператора)
-транскрипт + саммари выгружаются в S3 (`docs/session-finalize.md`).
+Основной режим: оператор запускает `claude` руками из репозитория и работает
+с ним как с сильным помощником. **1 задача = 1 сессия.** По окончании сессии
+(с подтверждения оператора) транскрипт + саммари выгружаются в архив
+(`docs/session-finalize.md`).
 
-OpenClaw на 5.42.117.201 **отключён** 16.05.2026 (см. UPDATES). Любые
-упоминания «бот в Telegram отвечает сам» — устаревшие.
+> Видение и процесс зафиксированы: интервью начальника — `docs/onboarding-process.md`,
+> целевая архитектура и план — `docs/superpowers/specs/2026-06-12-notion-gdrive-integration-design.md`.
+> Где что хранится **сейчас vs цель** — `docs/storage.md`.
+
+---
+
+## Новая модель работы (коротко)
+
+Раньше посты генерировались автономными агентами (через OpenClaw-бота в
+Telegram). **Это отключено.** Теперь:
+
+- **Оператор ведёт много проектов параллельно** — сам делает посты, заполняет
+  контентом, держит окна задач. Таких операторов несколько.
+- **Claude Code (ты) = сильный помощник.** Знаешь типовые решения агентства:
+  как пишем посты, как верстаем, как разбираем ОС, как поступаем в разных
+  ситуациях. Помогаешь оператору, а не делаешь всё за него автономно.
+- **Агенты-эксперты** (`copywriter`, `designer`, `analytics`, `brief`,
+  `content-planner`, `dushnila`) — нативные сабагенты Claude Code в
+  `.claude/agents/<name>.md`. Зови их через Agent tool, когда это ускоряет
+  работу. Это **не обязаловка**: оператор может работать и напрямую с тобой.
+- **Финальную публикацию всегда жмёт человек.** Нейросеть сама в соцсети ничего
+  не публикует.
+
+### Три окна + Notion за ними
+
+- **Chatwoot** — клиентские диалоги, омниканал TG/VK/MAX. Развёрнут.
+- **Claude Code (ты)** — основной рабочий экран: подсказываешь что следующим,
+  вместе с оператором делаешь пост, пушишь в Postiz, ведёшь Notion.
+- **Postiz** — превью перед публикацией; человек жмёт ок/публикацию. Кандидат,
+  допиливается (см. `docs/postiz-integration.md`).
+- **Notion** — БД/источник истины операционки (базы «Клиенты»/«Планы»/«Посты»)
+  + Kanban для начальника. Ведёшь ты; начальник смотрит/иногда правит.
 
 ---
 
@@ -14,7 +45,7 @@ OpenClaw на 5.42.117.201 **отключён** 16.05.2026 (см. UPDATES). Лю
 
 1. `global/UPDATES.md` — свежие изменения системы (самые новые сверху)
 2. `global/rules.md` — общие правила работы (включая YAGNI)
-3. Спросить у пользователя: с каким проектом работаем + что делаем
+3. Спросить у оператора: с каким проектом работаем + что делаем
 4. `projects/{ProjectID}/voice.md` + `context.md` — голос и контекст клиента
 
 ---
@@ -26,26 +57,30 @@ OpenClaw на 5.42.117.201 **отключён** 16.05.2026 (см. UPDATES). Лю
 **`docs/session-finalize.md`** и выполни процедуру: напиши `summary.md` по
 шаблону, запусти `node tools/upload-session.mjs <ProjectID> --summary ...`.
 
-Без явного подтверждения оператора не финализируй: лучше переспроси
-«качество устраивает? финализирую?». Цель — накопить корпус сессий
-(JSONL + meta + summary) для последующей автоматизации.
+Перед финализацией **обязательно опроси оператора**:
+- «Точно всё сделали по задаче?»
+- «Делал что-то вне Claude Code (руками, в другом окне)? Опиши — зафиксирую
+  в саммари.» — это важно, чтобы лог сессии был полным для последующего
+  анализа паттернов «что сработало / что нет».
+
+Без явного подтверждения оператора не финализируй. Цель — накопить корпус
+сессий (JSONL + meta + summary), который потом раз в неделю/месяц
+анализируется: хорошие паттерны выносятся в документацию, плохие — в стоп-лист.
 
 ---
 
 ## Что это за проект
 
-SMM-агентство bit&pix. Стек агентов помогает оператору делать:
-- Контент-планы (md + html + pdf)
-- Тексты постов и адаптации под VK/TG/MAX/Instagram
+SMM-агентство bit&pix. Помогаешь оператору делать:
+- Контент-планы (ведутся в Notion; клиенту уходит PDF-снапшот)
+- Тексты постов и адаптации под VK/MAX/Instagram/Telegram
 - HTML-макеты слайдов и каруселей + fal.ai-генерация ассетов
 - Анализ конкурентов через Apify/VK API
 - Обработку фидбека от заказчика
-- Создание новых проектов через диалог-бриф
+- Создание новых проектов через диалог-бриф (см. `docs/client-onboarding.md`)
 
 Под капотом — Claude через подписку Claude Code (Anthropic),
-fal.ai (картинки/видео), Apify (парсинг). LiteLLM остался как gateway для
-утилитных скриптов вроде `daily_briefing.py`, но основная работа идёт
-через `claude` напрямую.
+fal.ai (картинки/видео), Apify (парсинг).
 
 ---
 
@@ -53,38 +88,50 @@ fal.ai (картинки/видео), Apify (парсинг). LiteLLM остал
 
 ```
 оператор + Claude Code (claude в этом репо)
-  ├─ диспатчит подагентов: copywriter, designer, analytics, brief,
-  │   content-planner, dushnila (через Agent tool)
-  ├─ читает  → projects/{ProjectID}/{context,voice,strategy,content-plan}.md
-  ├─ пишет   → projects/{ProjectID}/posts/drafts/{дата}-{N}/
-  └─ в конце → upload-session.mjs → S3 (см. docs/session-finalize.md)
+  ├─ при необходимости зовёт сабагентов-экспертов через Agent tool:
+  │   copywriter, designer, analytics, brief, content-planner, dushnila
+  │   (.claude/agents/<name>.md)
+  ├─ читает  → projects/{ProjectID}/{context,voice,strategy,overrides}.md  (git)
+  ├─ ведёт   → Notion: базы «Клиенты»/«Планы»/«Посты» (операционка, источник истины)
+  ├─ пишет   → projects/{ProjectID}/posts/drafts/{дата}-{N}/ (рабочие черновики)
+  ├─ пушит   → Postiz (готовый пост на превью → человек публикует)
+  └─ в конце → upload-session.mjs → архив сессий (см. docs/session-finalize.md)
 
 Генерация изображений / видео / TTS
-  └─→ fal.ai напрямую. ЛОКАЛЬНЫЙ Claude Code — без прокси, fal.ai доступен.
-       HTTPS_PROXY через 5.2.66.188:8888 — только для исторических запусков
-       с RU-сервера 5.42.117.201 (OpenClaw отключён 16.05.2026).
+  └─→ fal.ai напрямую (без прокси).
 
-Хранилище медиа (HTML/PNG/JPG/PDF/MP4) + архив сессий
-  └─→ S3 Timeweb (s3.twcstorage.ru, bucket=seo). В git только текст (md/json).
-       Локально файлы — временные в /tmp. См. docs/s3.md.
+Хранилища (подробно — docs/storage.md):
+  • Операционка (статусы, план, задачи)  → Notion (источник истины)
+  • Знания клиента (context/voice/strategy/overrides) + ноу-хау → git
+  • Медиа (HTML/PNG/JPG/PDF/MP4)          → S3 Timeweb, бакет seo, префикс smm/
+                                            (Google Drive рассматривали — отказались)
+  • Архив сессий Claude Code              → S3 (logs/claude-code/…)
+  Локально файлы — временные в /tmp.
 
-Telegram (отправка готового в топик клиента)
-  └─→ группа SEO-claw, 1 топик = 1 проект + General + Tech Support
-       (projects/topics.json). Шлём через tools/tg-send.mjs из CC.
-       Автоответ бота на @mention отключён вместе с OpenClaw 16.05.2026.
-
-Утилитные LLM-вызовы (daily_briefing.py, и т.п.)
-  └─→ LiteLLM (http://5.2.66.188:4000) ──→ OpenRouter ──→ Claude/Gemini
-       (для основной работы — Claude через подписку CC, без LiteLLM)
+Диалоги с клиентом   → Chatwoot (TG/VK/MAX).
+Публикация           → Postiz (человек жмёт финальную кнопку).
 ```
+
+---
+
+## Онбординг и публикация (без ssh)
+
+- Форма-бриф клиенту: дай ссылку **https://survey.bitandpix.ru**; забрать ответы —
+  `node tools/intake/check.mjs` (список) / `--get <key>` (целиком). Это Шаг 0.
+- Завести/править клиента: `tools/onboard/new-client.mjs`, `edit-client.mjs`
+  (репо-скелет + карточка Notion). Подключить соцканалы:
+  `tools/onboard/register-channel.mjs` (VK community-токен / TG-канал → Postiz).
+- Связка клиент→канал — в `projects/{ID}/channels.json` (`integrationId`).
+- Публикация: Postiz public API (`upload-from-url` ×N → `/posts`,
+  `settings.__type`), реальные токены соцсетей держит Postiz. Детали —
+  `docs/postiz-integration.md`, полный флоу — `docs/client-onboarding.md`.
 
 ---
 
 ## Где что лежит
 
 ```
-agents/<name>/SOUL.md            конфиг + system prompt каждого агента
-  ├─ orchestrator       главный диспатчер
+.claude/agents/<name>.md         сабагенты-эксперты Claude Code (system prompt + frontmatter)
   ├─ copywriter         тексты постов
   ├─ designer           HTML/CSS + fal.ai
   ├─ analytics          Apify/VK/fal.ai-vision
@@ -92,18 +139,23 @@ agents/<name>/SOUL.md            конфиг + system prompt каждого а�
   ├─ content-planner    контент-планы
   └─ dushnila           разбирает ОС заказчика
 
-projects/<ProjectID>/             всё про конкретного клиента
+agents/<name>/                    база знаний агентов (НЕ system prompt):
+  ├─ brief/questions.md           33 вопроса брифа (Q33 — мастер-вопрос)
+  └─ designer/knowledge/          накопленные дизайн-референсы
+
+config/notion.json                ID баз Notion (НЕ секрет; секрет — NOTION_TOKEN в .env)
+
+projects/<ProjectID>/             всё про конкретного клиента (знания — в git)
   ├─ context.md         бриф клиента
   ├─ voice.md           голос бренда (приоритет, перекрывает всё)
-  ├─ strategy.md        рубрикатор и KPI
-  ├─ content-plan.md    + .html + .pdf — план месяца
-  ├─ orchestrator.md    проектные оверрайды для оркестратора
+  ├─ strategy.md        рубрикатор и KPI (внутренний, клиенту не показываем)
+  ├─ overrides.md       «личное дело»: табу, дизайн-спеки, «запомни/не делай»
   ├─ analytics/         анализ конкурентов и метрик
   ├─ feedback/          разборы ОС от заказчика
   ├─ assets/            бренд-ассеты клиента
   └─ posts/             drafts/ inbox/ approved/ published/
+  (операционка — статусы/план/очередь — теперь в Notion, не в content-plan.md)
 
-projects/topics.json              ProjectID → Telegram thread_id
 projects/_template/               эталон файловой структуры
 
 global/
@@ -121,28 +173,34 @@ tools/                            утилиты (Node.js + Python)
   ├─ analyze-image.mjs  fal.ai vision (анализ референсов)
   ├─ remove-bg.mjs      fal.ai BRIA убирает фон
   ├─ upscale.mjs        fal.ai SeedVR2 апскейл
-  ├─ s3.mjs             S3 CRUD (list/put/get/rm/sync-up/sync-down/url)
-  ├─ migrate-to-s3.mjs  одноразовый: бинарники projects/ → S3 + удалить локально
-  ├─ tg-topic.mjs       управление топиками SEO-claw группы
-  ├─ tg-send.mjs        отправка в топик проекта (текст + PNG/PDF)
-  ├─ get-tg-chat-id.mjs хелпер для поиска chat_id
-  ├─ upload-session.mjs выгрузка финализированной сессии CC в S3
-  ├─ spend.mjs          отчёт по тратам LiteLLM (для утилитных скриптов)
+  ├─ s3.mjs             S3 CRUD (медиа сейчас + архив сессий)
+  ├─ chatwoot-gateway/  шлюз VK+TG ↔ Chatwoot
+  ├─ onboard/new-client.mjs       завести клиента (репо + Notion), без ssh
+  ├─ onboard/edit-client.mjs      править поля клиента в Notion + overrides
+  ├─ onboard/register-channel.mjs подключить VK/TG канал в Postiz, без ssh
+  ├─ onboard-service/             серверный сервис регистрации каналов (на сервере)
+  ├─ lib/notion.mjs               обёртка Notion API
+  ├─ upload-session.mjs выгрузка финализированной сессии CC в архив
+  ├─ spend-report.mjs   отчёт по тратам (fal.ai / Apify)
   ├─ apify/             парсеры Instagram/TikTok
   └─ remotion-lakmoda/  видео-рендер для Lakmoda
 
-skills/                           reference-доки (используются агентами)
+.claude/skills/                   скиллы Claude Code (автодискавер; используются агентами)
   ├─ fal-ai/SKILL.md             полный справочник 600+ моделей fal.ai
   ├─ сценарий-рилс/SKILL.md      шаблон Instagram Reels (Lis_Gym)
   ├─ сценарий-съёмки/SKILL.md    ТЗ на съёмку клиенту
-  └─ ежедневный-брифинг/SKILL.md утренний брифинг
+  └─ ежедневный-брифинг/SKILL.md обзор «что делать следующим» (поверх Notion)
 
 docs/
+  ├─ onboarding-process.md интервью начальника (видение + процесс)
+  ├─ client-onboarding.md  SOP заведения нового клиента (бриф → Notion → Drive)
+  ├─ storage.md            где что хранится: сейчас vs цель
+  ├─ access-setup.md       подключение Notion + доступ к медиа S3 (креды)
+  ├─ postiz-integration.md публикация: подключение каналов в Postiz
+  ├─ s3.md                 S3: медиа сейчас + архив сессий
   ├─ dev-guide.md          как разрабатывать и обучать агентов
   ├─ session-finalize.md   процедура финализации сессии в конце задачи
-  ├─ openclaw-deploy.md    как раскатать прод OpenClaw (исторический, выключен 16.05)
-  ├─ proxy-and-server.md   IPs, порты, как достучаться к LiteLLM/прокси
-  └─ s3.md                 как пользоваться S3 (где медиа лежат)
+  └─ superpowers/specs/    дизайн-спеки (интеграция Notion/Drive/Postiz)
 ```
 
 ---
@@ -155,7 +213,9 @@ cd smm-system
 npm install            # @fal-ai/client, puppeteer, sharp, pdf-lib
 ```
 
-Запросить у Максима `.env` (LiteLLM, FAL, Apify, VK, GitHub PAT, Telegram, S3). Положить в корень. Файл в `.gitignore`.
+Запросить у Максима креды (см. `docs/access-setup.md`): `.env`
+(FAL, Apify, VK, GitHub PAT, S3, `NOTION_TOKEN`). Положить в корень.
+Секреты в `.gitignore`.
 
 Запуск:
 ```bash
@@ -174,13 +234,15 @@ claude          # Claude Code сам прочитает этот CLAUDE.md
 | `готово` | Заказчик одобрил, готово к публикации |
 | `опубликовано` | Опубликован в соцсети |
 
-Обновление в `content-plan.md` + `content-plan.html` — немедленно после смены.
+Статус ведётся в **Notion (база «Посты»)** — источник истины. Обновляй немедленно
+после смены. (Старый трекер `content-plan.md` ретайрнут.)
 
 ---
 
 ## Git
 
-После любого изменения файлов проекта:
+После изменения файлов проекта — предложи закоммитить и запушить, но
+**сначала спроси подтверждение оператора**. Не коммить и не пушь автоматически.
 
 ```bash
 git add .
@@ -188,38 +250,27 @@ git commit -m "<scope>: <action> — <ProjectID>"
 git push origin main
 ```
 
-Скоупы: `posts`, `content-plan`, `analytics`, `brief`, `designer`, `agents`, `tools`, `docs`, `feedback`, `litellm`, `memory`.
+Скоупы: `posts`, `content-plan`, `analytics`, `brief`, `designer`, `agents`, `tools`, `docs`, `feedback`, `memory`.
 
 ---
 
-## Жёсткие запреты
+## Правила
 
-- Не писать пост сам, не вызвав `copywriter`
-- Не делать HTML-макет сам, не вызвав `designer`
-- Не редактировать `voice.md` без явной команды пользователя
-- Не пушить заметки на main без явной команды пользователя
-- Никаких прямых ключей OpenAI/Anthropic/OpenRouter в коде — только `LITELLM_KEY` из `.env`
+- Не редактировать `voice.md` без явной команды оператора
+- Коммит и пуш разрешены, но **каждый раз спрашивать подтверждение оператора**
+  перед `git commit` и `git push` (не автоматически)
+- Секреты — только в `.env`. Не-секретные константы (ID баз Notion и т.п.) —
+  открыто в репо (`config/notion.json`)
 - YAGNI: не плодить «на всякий случай», не оставлять обратной совместимости после миграции (см. `global/rules.md`)
-
----
-
-## Расход на LLM
-
-Основная работа = подписка Claude Code, в spend-отчётах LiteLLM она не учитывается.
-LiteLLM-расход (utility-скрипты типа `daily_briefing.py`):
-
-```bash
-node tools/spend.mjs              # сводка по virtual key smm-openclaw
-node tools/spend.mjs --logs 7     # детально по моделям за 7 дней
-```
-
-LiteLLM UI: `http://5.2.66.188:4000/ui` (логин — master key из `/root/litellm/.env` на проксе).
 
 ---
 
 ## Если что-то непонятно
 
-- `docs/dev-guide.md` — как добавить агента, обучить копирайтера, отлаживать LLM-вызов
+- `docs/client-onboarding.md` — как завести нового клиента (бриф → Notion → Drive)
+- `docs/storage.md` — где что хранится (сейчас vs цель)
+- `docs/onboarding-process.md` — видение и процесс от начальника
+- `docs/dev-guide.md` — как добавить агента, обучить копирайтера, отлаживать
 - `docs/session-finalize.md` — финализация сессии в конце задачи
 - `global/UPDATES.md` — последние изменения системы
-- `agents/<name>/SOUL.md` — что именно делает каждый агент
+- `.claude/agents/<name>.md` — что именно делает каждый агент-эксперт

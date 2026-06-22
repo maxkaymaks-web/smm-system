@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Контент-план — ILIOS TAN | bit&pix агент</title>
+<style>
+@font-face {
+  font-family: 'Nata Sans';
+  src: url('../../global/brand/NataSans-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+}
+
+@page { size: A4 portrait; margin: 10mm 12mm; }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #FEFEFF;
+  --bg-alt:  #F7F3EF;
+  --text:    #0B0B0B;
+  --accent:  #A9683B;
+  --border:  rgba(11,11,11,0.09);
+  --muted:   rgba(11,11,11,0.42);
+  --r:       10px;
+  --r-pill:  20px;
+  --font:    'Nata Sans', -apple-system, sans-serif;
+}
+
+html { background: #e8e8e8; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  width: 760px;
+  margin: 32px auto;
+  padding: 36px 40px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  border-radius: 4px;
+}
+
+@media print {
+  html { background: var(--bg); }
+  body { margin: 0; border-radius: 0; padding: 0 28px; width: 100%; }
+}
+
+/* ── HEADER ── */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 28px;
+  border-bottom: 2px solid var(--text);
+  margin-bottom: 28px;
+}
+.header-left { flex: 1; }
+.header-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.header-title {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+.header-title span { color: var(--accent); }
+.header-sub {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 400;
+}
+.header-logo img { height: 52px; }
+
+/* ── STATS ROW ── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.stat-card {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px 16px;
+}
+.stat-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 5px;
+}
+.stat-value {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.5px;
+}
+.stat-value.accent { color: var(--accent); }
+.stat-value.sm { font-size: 17px; }
+.stat-sub { font-size: 10px; color: var(--muted); margin-top: 4px; }
+
+/* ── TABLE ── */
+.table-wrap {
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+thead tr { background: var(--text); color: #fff; }
+thead th {
+  padding: 10px 12px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-align: left;
+  white-space: nowrap;
+}
+tbody tr { border-bottom: 1px solid var(--border); }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--bg-alt); }
+tbody tr.week-row { background: #efe7df; }
+tbody tr.week-row td {
+  padding: 7px 12px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.week-label { display: flex; align-items: center; gap: 8px; }
+.week-label::before {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+}
+td { padding: 11px 12px; vertical-align: top; }
+.cell-num { font-size: 11px; font-weight: 700; color: var(--muted); width: 26px; }
+.cell-date { width: 52px; }
+.date-main { font-size: 12px; font-weight: 700; }
+.date-dow { font-size: 10px; color: var(--muted); }
+.cell-rubric { width: 148px; }
+.topic-title { font-size: 12px; font-weight: 600; line-height: 1.3; }
+.cell-format { width: 96px; }
+.format-text { font-size: 10.5px; color: var(--muted); }
+.cell-status { width: 78px; }
+.cell-src { width: 110px; }
+.src { font-size: 9.5px; font-weight: 600; color: var(--accent); }
+.src.none { color: var(--muted); font-weight: 400; }
+
+/* ── TAGS ── */
+.tag {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: var(--r-pill);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+.tag-amb    { background: rgba(169,104,59,0.15); color: #8b4a25; }
+.tag-edu    { background: rgba(37,99,235,0.08);  color: #1d4ed8; }
+.tag-safe   { background: #0B0B0B; color: #fff; }
+.tag-sell   { background: rgba(192,57,43,0.10);  color: #c0392b; }
+.tag-rel    { background: rgba(5,150,105,0.08);  color: #065f46; }
+
+/* ── STATUS ── */
+.status {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: var(--r-pill);
+  font-size: 9.5px;
+  font-weight: 600;
+}
+.status-draft { background: rgba(11,11,11,0.05); color: var(--muted); }
+
+/* ── FOOTER ── */
+.footer {
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+.footer-row { display: flex; justify-content: space-between; align-items: center; }
+.footer-note { font-size: 10px; color: var(--muted); }
+.footer-legend { font-size: 10px; color: var(--muted); margin-top: 10px; line-height: 1.6; }
+.footer-dot {
+  width: 6px; height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 6px;
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-left">
+    <div class="header-label">Контент-план · bit&pix агент</div>
+    <h1 class="header-title"><span>ILIOS TAN</span> — Instagram + ВКонтакте</h1>
+    <div class="header-sub">22 июня — 20 июля 2026 · 12 постов · 3 в неделю (Вт/Ср/Чт) · Фокус: художественная гимнастика + оттенок Pearl · @ilios_tan</div>
+  </div>
+  <div class="header-logo">
+    <img src="../../global/brand/logo.png" alt="bit&pix агент">
+  </div>
+</header>
+
+<!-- STATS -->
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="stat-label">Постов в месяц</div>
+    <div class="stat-value accent">12</div>
+    <div class="stat-sub">3 в неделю · Вт/Ср/Чт</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Главный формат</div>
+    <div class="stat-value sm">Фото-карусель</div>
+    <div class="stat-sub">из архива + 3–4 Reels</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Вовлечённость</div>
+    <div class="stat-value accent">~8%</div>
+    <div class="stat-sub">медиана @ilios_tan</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Материалы</div>
+    <div class="stat-value sm">Из архива</div>
+    <div class="stat-sub">фото, медали, сертификаты, видео</div>
+  </div>
+</div>
+
+<!-- TABLE -->
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Дата</th>
+        <th>Рубрика</th>
+        <th>Тема поста</th>
+        <th>Формат</th>
+        <th>Статус</th>
+        <th>Материал</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <!-- WEEK 1 -->
+      <tr class="week-row"><td colspan="7"><span class="week-label">Неделя 1 · 23–25 июня</span></td></tr>
+
+      <tr>
+        <td class="cell-num">01</td>
+        <td class="cell-date"><div class="date-main">23 июн</div><div class="date-dow">Вт</div></td>
+        <td class="cell-rubric"><span class="tag tag-amb">Амбассадоры · ILIOS GIRLS</span></td>
+        <td><div class="topic-title">Гимнастки на выступлении в загаре ILIOS TAN, Pearl — «выбор чемпионов»</div></td>
+        <td class="cell-format"><span class="format-text">Карусель (фото)</span></td>
+        <td class="cell-status"><span class="status status-draft">Черновик</span></td>
+        <td class="cell-src"><span class="src">фото с выступлений</span></td>
+      </tr>
+
+      <tr>
+        <td class="cell-num">02</td>
+        <td class="cell-date"><div class="date-main">24 июн</div><div class="date-dow">Ср</div></td>
+        <td class="cell-rubric"><span class="tag tag-safe">Безопасность · Честный знак</span></td>
+        <td><div class="topic-title">Чистота и ответственность бренда: без DHA, сертификат РФ, «Честный знак»</div></td>
+        <td class="cell-format"><span class="format-text">Карусель</span></td>
+        <td class="cell-status"><span class="status status-draft">Черновик</span></td>
+        <td class="cell-src"><span class="src">скрины сертификатов</span></td>
+      </tr>
+
+      <tr>
+        <td class="cell-num">03</td>
+        <td class="cell-date"><div class="date-main">25 июн</div><div class="date-dow">Чт</div></td>
+        <td class="cell-rubric"><span class="tag tag-amb">Амбассадоры · соцдоказательство</span></td>
+        <td><div class="topic-title">Наши спортсменки на пьедестале — кто выбирает ILIOS</div></td>
+        <td class="cell-format"><span class="format-text">Карусель (фото)</span></td>
+        <td class="cell-status"><span class="status status-draft">Черновик</span></td>
+        <td class="cell-src"><span class="src">фото с медалями/пьедестала</span></td>
+      </tr>
+
+      <!-- WEEK 2 -->
+      <tr class="week-row"><td colspan="7"><span class="week-label">Неделя 2 · 30 июня – 2 июля</span></td></tr>
+
+      <tr>
+        <td class="cell-num">04</td>
+        <td class="cell-date"><div class="date-main">30 июн</div><div class="date-dow">Вт</div></td>
+        <td class="cell-rubric"><span class="tag tag-edu">Обучающее</span></td>
+        <td><div class="topic-title">Как нанести Pearl ровно за 15 минут — пошагово (дизайн-инфографика)</div></td>
+        <td class="cell-format"><span class="format-text">Карусель (графика)</span></td>
+        <td class="cell-status"><span class="status status-draft">Черновик</span></td>
+        <td class="cell-src"><span class="src none">делает дизайнер</span></td>
+      </tr>
+
+      <tr>
+        <td class="cell-num">05</td>
+        <td class="cell-date"><div class="date-main">01 июл</div><div class="date-dow">Ср</div></td>
+        <td class="cell-rubric"><span class="tag tag-sell">Продукт · оффер</span></td>
+        <td><div class="topic-title">Pearl — оттенок №2 для художественной гимнастики (под свет зала) + сертификат 1500 ₽ / WB</div></td>
+        <td class="cell-format"><span class="format-text">Карусель</span></td>
+        <td class="cell-status"><span class="status status-draft">Черновик</span></td>
+        <td class="cell-src"><span class="src">фото продукта / сертификат 1500₽</span></td>
+      </tr>
+
+      <tr>
+        <td class="cell-num">06</td>
+        <td class="cell-date"><div class="date-main">02 июл</div><div class="date-dow">Чт</div></td>
+        <td class="cell-rubric"><span class="tag tag-amb">Амбассадоры · ILIOS GIRLS</span></td>
+        <td><div class="topic-title">Гимнастка в динамике на ковре — Pearl держится всё выступление</div></td>
+        <td class="cell-format"><span class="format-text">Reels</span></td>
+        <td class="cell-status"><span class="status status-draft">Черновик</span></td>
+        <td class="cell-src"><span class="src">видео с выступления</span></td>
+      </tr>
+
+      <!-- WEEK 3 -->
+      <tr class="week-row"><td colspan="7"><span class="week-label">Неделя 3 · 7–9 июля</span></td></tr>
+
+      <tr>
+        <td class="cell-num">07</td>
+        <td class="cell-date"><div class="date-main">07 июл</div><div class="date-dow">Вт</div></td>
+        <td class="cell-rubric"><span class="tag tag-rel">Relatable</span></td>
+        <td><div class="topic-title">«Загар, который выходит на ковёр вместе с тобой» — премиум-сторителлинг</div></td>
+        <td class="cell-format"><span class="format-text">Reels</span></td>
+        <td class="cell-status"><span class="status status-draft">Черновик</span></td>
+        <td class="cell-src"><span class="src">фото/видео выступлений</span></td>
+      </tr>
+
+      <tr>
+        <td class="cell-num">08</td>
+        <td class="cell-date"><div class="date-main">08 июл</div><div class="date-dow">Ср</div></td>
+        <td class="cell-rubric"><span class="tag tag-safe">Безопасность · Честный знак</span></td>
+        <td><div class="topic-title">Почему Pearl без DHA безопасен для детской кожи — экспертно</div></td>
+        <td class="cell-format"><span class="format-text">Карусель</span></td>
+        <td class="cell-status"><span class="status status-draft">Черновик</span></td>
+        <td class="cell-src"><span class="src">скрин сертификата</span></td>
+      </tr>
+
+      <tr>
+        <td class="cell-num">09</td>
+        <td class="cell-date"><div class="date-main">09 июл</div><div class="date-dow">Чт</div></td>
+        <td class="cell-rubric"><span class="tag tag-amb">Амбассадоры · соцдоказательство</span></td>
+        <td><div class="topic-title">Эстетика выступления: лучшие кадры гимнасток в Pearl</div></td>
+        <td class="cell-format"><span class="format-text">Карусель (фото)</span></td>
+        <td class="cell-status"><span class="status status-draft">Черновик</span></td>
+        <td class="cell-src"><span class="src">архив от фотографа</span></td>
+      </tr>
+
+      <!-- WEEK 4 -->
+      <tr class="week-row"><td colspan="7"><span class="week-label">Неделя 4 · 14–16 июля</span></td></tr>
+
+      <tr>
+        <td class="cell-num">10</td>
+        <td class="cell-date"><div class="date-main">14 июл</div><div class="date-dow">Вт</div></td>
+        <td class="cell-rubric"><span class="tag tag-amb">Амбассадоры · ILIOS GIRLS</span></td>
+        <td><div class="topic-title">Момент выхода / выступления — Pearl в свете зала</div></td>
+        <td class="cell-format"><span class="format-text">Reels</span></td>
+        <td class="cell-status"><span class="status status-draft">Черновик</span></td>
+        <td class="cell-src"><span class="src">видео с выступления</span></td>
+      </tr>
+
+      <tr>
+        <td class="cell-num">11</td>
+        <td class="cell-date"><div class="date-main">15 июл</div><div class="date-dow">Ср</div></td>
+        <td class="cell-rubric"><span class="tag tag-edu">Обучающее</span></td>
+        <td><div class="topic-title">Стойкость на ковре: прыжки, мост, лента, часы турнира — Pearl держится</div></td>
+        <td class="cell-format"><span class="format-text">Карусель (фото+текст)</span></td>
+        <td class="cell-status"><span class="status status-draft">Черновик</span></td>
+        <td class="cell-src"><span class="src">фото с выступлений</span></td>
+      </tr>
+
+      <tr>
+        <td class="cell-num">12</td>
+        <td class="cell-date"><div class="date-main">16 июл</div><div class="date-dow">Чт</div></td>
+        <td class="cell-rubric"><span class="tag tag-sell">Продукт · оффер</span></td>
+        <td><div class="topic-title">Образ чемпионки: Pearl как часть выступления + мягкий призыв (WB / сертификат 1500₽)</div></td>
+        <td class="cell-format"><span class="format-text">Карусель</span></td>
+        <td class="cell-status"><span class="status status-draft">Черновик</span></td>
+        <td class="cell-src"><span class="src">фото с пьедестала + продукт</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-row">
+    <div class="footer-note">Версия для согласования · 20 июня 2026</div>
+    <div class="footer-note"><span class="footer-dot"></span>bit&pix агент</div>
+  </div>
+  <div class="footer-legend">
+    Рубрики: <b>Амбассадоры</b> — гимнастки/пьедестал в Pearl · <b>Обучающее</b> — нанесение, стойкость ·
+    <b>Безопасность</b> — без DHA, сертификат, «Честный знак» · <b>Продукт</b> — оттенок Pearl, сертификат 1500₽, WB ·
+    <b>Relatable</b> — лёгкий сторителлинг.<br>
+    Весь контент собираем из присланного архива (фото гимнасток, медали/пьедестал, сертификаты, короткие видео) —
+    отдельная съёмка не требуется. Reels (#06, 07, 10) — из видео с выступлений. Контент для Instagram адаптируем под
+    ВКонтакте. Хэштеги не используем. Публикует заказчик.
+  </div>
+</footer>
+
+</body>
+</html>

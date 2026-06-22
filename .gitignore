@@ -36,3 +36,17 @@ projects/*/assets/brand/*.pdf
 /.s3-cache/
 /tmp-preview/
 state/
+
+# GCP service-account ключи (приватный ключ!) — секрет, НЕ коммитить, несмотря на «.json коммитим»
+smm-system-bit-*.json
+*.iam.gserviceaccount.com.json
+gcp-*.json
+service-account*.json
+.env.operator
+
+# VK OAuth локальные токены (секрет)
+tools/vk/.vk-token.json
+tools/vk/.vk-oauth-state.json
+
+# Временные снапшоты Playwright MCP
+.playwright-mcp/

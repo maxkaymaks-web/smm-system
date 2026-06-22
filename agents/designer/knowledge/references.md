@@ -115,6 +115,252 @@ clean(5), performance(2), engineered(1), innovation(1), system(1)
 
 ## Автообучение (новые — сверху)
 
+### Промпт-инжиниринг fal.ai — авто-обучение 15.06.2026
+
+#### Источники проверены
+- https://fal.ai/models → ошибка
+- https://fal.ai/changelog → ошибка
+- https://docs.fal.ai → ошибка
+
+#### Карта моделей по задачам
+- Генерация изображений: —
+- Редактирование/inpaint: —
+- Видео/анимация: —
+- Апскейл/улучшение: —
+- Vision/анализ: —
+
+#### Все найденные модели
+— нет данных
+
+#### Рекомендации для дизайнера
+- Основная генерация фонов → `fal-ai/nano-banana-2` (наш дефолт)
+- Удаление фона → `fal-ai/bria/background/remove`
+- Апскейл → `fal-ai/seedvr/upscale/image`
+---
+
+### Промпт-инжиниринг fal.ai — авто-обучение 12.06.2026
+
+#### Источники проверены
+- https://fal.ai/models → ошибка
+- https://fal.ai/changelog → ошибка
+- https://docs.fal.ai → ошибка
+
+#### Карта моделей по задачам
+- Генерация изображений: —
+- Редактирование/inpaint: —
+- Видео/анимация: —
+- Апскейл/улучшение: —
+- Vision/анализ: —
+
+#### Все найденные модели
+— нет данных
+
+#### Рекомендации для дизайнера
+- Основная генерация фонов → `fal-ai/nano-banana-2` (наш дефолт)
+- Удаление фона → `fal-ai/bria/background/remove`
+- Апскейл → `fal-ai/seedvr/upscale/image`
+---
+
+### Промпт-инжиниринг fal.ai — авто-обучение 11.06.2026
+
+#### Источники проверены
+- https://fal.ai/models → ошибка
+- https://fal.ai/changelog → ошибка
+- https://docs.fal.ai → ошибка
+
+#### Карта моделей по задачам
+- Генерация изображений: —
+- Редактирование/inpaint: —
+- Видео/анимация: —
+- Апскейл/улучшение: —
+- Vision/анализ: —
+
+#### Все найденные модели
+— нет данных
+
+#### Рекомендации для дизайнера
+- Основная генерация фонов → `fal-ai/nano-banana-2` (наш дефолт)
+- Удаление фона → `fal-ai/bria/background/remove`
+- Апскейл → `fal-ai/seedvr/upscale/image`
+---
+
+### Промпт-инжиниринг fal.ai — авто-обучение 30.05.2026
+
+#### Источники проверены
+- https://fal.ai/models → ошибка
+- https://fal.ai/changelog → ошибка
+- https://docs.fal.ai → ошибка
+
+#### Карта моделей по задачам
+- Генерация изображений: —
+- Редактирование/inpaint: —
+- Видео/анимация: —
+- Апскейл/улучшение: —
+- Vision/анализ: —
+
+#### Все найденные модели
+— нет данных
+
+#### Рекомендации для дизайнера
+- Основная генерация фонов → `fal-ai/nano-banana-2` (наш дефолт)
+- Удаление фона → `fal-ai/bria/background/remove`
+- Апскейл → `fal-ai/seedvr/upscale/image`
+---
+
+### Промпт-инжиниринг fal.ai — авто-обучение 23.05.2026
+
+#### Источники проверены
+- https://fal.ai/models → ошибка
+- https://fal.ai/changelog → ошибка
+- https://docs.fal.ai → ошибка
+
+#### Карта моделей по задачам
+- Генерация изображений: —
+- Редактирование/inpaint: —
+- Видео/анимация: —
+- Апскейл/улучшение: —
+- Vision/анализ: —
+
+#### Все найденные модели
+— нет данных
+
+#### Рекомендации для дизайнера
+- Основная генерация фонов → `fal-ai/nano-banana-2` (наш дефолт)
+- Удаление фона → `fal-ai/bria/background/remove`
+- Апскейл → `fal-ai/seedvr/upscale/image`
+---
+
+### Промпт-инжиниринг fal.ai — авто-обучение 22.05.2026
+
+#### Источники проверены
+- https://fal.ai/models → ошибка
+- https://fal.ai/changelog → ошибка
+- https://docs.fal.ai → ошибка
+
+#### Карта моделей по задачам
+- Генерация изображений: —
+- Редактирование/inpaint: —
+- Видео/анимация: —
+- Апскейл/улучшение: —
+- Vision/анализ: —
+
+#### Все найденные модели
+— нет данных
+
+#### Рекомендации для дизайнера
+- Основная генерация фонов → `fal-ai/nano-banana-2` (наш дефолт)
+- Удаление фона → `fal-ai/bria/background/remove`
+- Апскейл → `fal-ai/seedvr/upscale/image`
+---
+
+### Технологичность и Инновации — авто-обучение 13.05.2026
+> Аккаунты: @notionhq, @spacex, @dyson | Проанализировано изображений: 5
+
+#### Изученные посты
+  - **@spacex** (110,010 likes) — bold | deep navy blue sky, dark charcoal rocket, bright orange flam | rule of thirds, centered subject with negative space, ample 
+  - **@spacex** (70,455 likes) — bold | deep sky blue, dark metallic gray, bright orange flames, bri | rule of thirds, upper right, significant architectural frami
+  - **@dyson** (40,873 likes) — product | deep charcoal, muted blue, cool gray, industrial monochrome | centered, no clear focal point, ample negative space
+  - **@spacex** (52,756 likes) — Bold | Fiery orange, deep black, smoky white, intense yellow, drama | Rule of thirds, center-focused, generous negative space
+  - **@spacex** (45,302 likes) — bold | deep indigo, crimson red, industrial yellow, charcoal gray,  | rule of thirds, lower third, significant negative space
+
+#### Визуальные паттерны (синтез)
+— синтез не выполнен
+
+#### Цветовая палитра стиля
+— не определена
+
+#### Правила композиции
+— не определены
+
+#### Текстура и свет
+— не определены
+
+#### fal.ai промпты для стиля (применять при генерации)
+  - `A sleek, dark rocket blasting off, surrounded by white smoke against a deep blue sky, high contrast lighting, industrial aesthetic.`
+  - `A futuristic aircraft preparing for a test flight, dark metallic tones, bright engine glow, stark blue background, bold composition.`
+  - `A colossal rocket ascending from a towering structure against a stark blue sky, strong metallic textures, high contrast.`
+
+#### Дизайн-фокус
+строгие сетки, монохром, bold sans-serif, цифры как акцент, инфографика
+---
+
+### Роскошь и Премиум — авто-обучение 12.05.2026
+> Аккаунты: @dior, @chanelofficial, @louboutinworld | Проанализировано изображений: 1
+
+#### Изученные посты
+  - **@chanelofficial** (42,072 likes) — Luxury | Deep charcoal, rich gold, soft rose, warm ivory, opulent and | Centered subject, dominant subject placement, ample negative
+
+#### Визуальные паттерны (синтез)
+1. Крупные шрифты с засечками заглавными буквами
+2. Акцентный золотой цвет
+3. Обилие "воздуха" или пустого пространства
+4. Темные, глубокие основные цвета фона
+5. Фокус на детализированных текстурах (ткань, кожа)
+
+#### Цветовая палитра стиля
+Глубокие, насыщенные основные цвета (темно-серый, черный, темно-синий) с яркими золотыми акцентами, создающими контраст и ощущение богатства.
+
+#### Правила композиции
+Центральное расположение главного объекта, с большим количеством негативного пространства вокруг него, подчеркивающее его значимость и премиальность.
+
+#### Текстура и свет
+Мягкий, рассеянный свет, выявляющий текстуру материалов и кожи, часто с легким контрастом на лице или ключевых деталях.
+
+#### fal.ai промпты для стиля (применять при генерации)
+  - `A high-fashion portrait on a dark charcoal background with prominent gold lettering. Subject is centered with ample negative space, exuding luxury and premium`
+  - `A striking close-up of a woman wearing opulent jewelry, set against a deep black background with subtle gold accents and luxurious textures.`
+  - `A still life featuring a delicate perfume bottle, bathed in soft light on a dark, velvety surface, with elegant gold serif typography.`
+
+#### Дизайн-фокус
+тёмные фоны, gold accent, крупный serif CAPS, пустое пространство как роскошь
+---
+
+### Промпт-инжиниринг fal.ai — авто-обучение 11.05.2026
+
+#### Источники проверены
+- https://fal.ai/models → ошибка
+- https://fal.ai/changelog → ошибка
+- https://docs.fal.ai → ошибка
+
+#### Карта моделей по задачам
+- Генерация изображений: —
+- Редактирование/inpaint: —
+- Видео/анимация: —
+- Апскейл/улучшение: —
+- Vision/анализ: —
+
+#### Все найденные модели
+— нет данных
+
+#### Рекомендации для дизайнера
+- Основная генерация фонов → `fal-ai/nano-banana-2` (наш дефолт)
+- Удаление фона → `fal-ai/bria/background/remove`
+- Апскейл → `fal-ai/seedvr/upscale/image`
+---
+
+### Промпт-инжиниринг fal.ai — авто-обучение 08.05.2026
+
+#### Источники проверены
+- https://fal.ai/models → ошибка
+- https://fal.ai/changelog → ошибка
+- https://docs.fal.ai → ошибка
+
+#### Карта моделей по задачам
+- Генерация изображений: —
+- Редактирование/inpaint: —
+- Видео/анимация: —
+- Апскейл/улучшение: —
+- Vision/анализ: —
+
+#### Все найденные модели
+— нет данных
+
+#### Рекомендации для дизайнера
+- Основная генерация фонов → `fal-ai/nano-banana-2` (наш дефолт)
+- Удаление фона → `fal-ai/bria/background/remove`
+- Апскейл → `fal-ai/seedvr/upscale/image`
+---
+
 ### Промпт-инжиниринг fal.ai — авто-обучение 07.05.2026
 
 #### Источники проверены

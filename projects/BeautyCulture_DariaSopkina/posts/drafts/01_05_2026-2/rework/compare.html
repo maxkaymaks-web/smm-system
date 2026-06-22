@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Raleway:wght@400;500;600&display=swap');
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#ECE4D8;font-family:'Raleway',sans-serif;padding:48px}
+h1{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:46px;color:#1a1714;margin-bottom:8px}
+.lead{color:#5a4a3a;font-size:14px;margin-bottom:32px;max-width:900px;line-height:1.6}
+.row{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:24px}
+.row.two{grid-template-columns:repeat(2,1fr);max-width:760px}
+.row.three{grid-template-columns:repeat(3,1fr)}
+.card{background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 12px 36px rgba(26,23,20,0.08);display:flex;flex-direction:column}
+.card img{width:100%;display:block;aspect-ratio:1080/1350;object-fit:cover}
+.meta{padding:14px 18px 18px}
+.code{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:22px;color:#1a1714;letter-spacing:0.04em}
+.title{font-size:11px;font-weight:600;letter-spacing:0.32em;text-transform:uppercase;color:#8a6e52;margin-top:4px}
+.desc{font-size:12px;line-height:1.5;color:#3a302a;margin-top:10px}
+.tag{display:inline-block;margin-top:10px;padding:4px 10px;border-radius:4px;font-size:11px;font-weight:600;letter-spacing:0.06em}
+.fav{border:2px solid #2e8a4f}
+.fav .tag{background:#2e8a4f;color:#fff}
+.bug{border:2px solid #a14040}
+.bug .tag{background:#a14040;color:#fff}
+.mid .tag{background:#c8a957;color:#fff}
+.section{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:24px;color:#3a2e22;margin:24px 0 12px}
+</style></head><body>
+<h1>Переработка оригинала — игра с типографикой и позицией</h1>
+<div class="lead">Тот же стиль (кремовый фон, сериф-CAPS-заголовок, две фотки-карточки, метки «До»/«После», подпись «Культура»). Меняется только размер шрифтов, расположение и пропорции. Все используют armpit_1 (контраст в разы выше).</div>
+
+<div class="section">Без пустот, шрифт читаемый</div>
+<div class="row two">
+  <div class="card fav"><img src="r2_hero_headline.png">
+    <div class="meta"><div class="code">r2</div><div class="title">Hero headline</div>
+    <div class="desc">«ПОДМЫШКИ» 170px Cormorant сверху, фотки 740px высоты, подвал в одну линию: «4 процедуры / заметный результат» — «Культура / студия красоты». Заголовок вес кадра, фотки крупные, всё плотно.</div>
+    <span class="tag">★ ТОП-1</span></div></div>
+
+  <div class="card fav"><img src="r3_photos_dominate.png">
+    <div class="meta"><div class="code">r3</div><div class="title">Photos dominate</div>
+    <div class="desc">Заголовок 96px сверху + фотки 920px высоты (фото-доминанта). Снизу плотный подвал — цифра «4» 108px + слово «процедуры», справа «Культура». Контраст до/после максимально занимает площадь.</div>
+    <span class="tag">★ ТОП-2</span></div></div>
+</div>
+
+<div class="section">С недочётами</div>
+<div class="row three">
+  <div class="card mid"><img src="r1_baseline_bigger.png">
+    <div class="meta"><div class="code">r1</div><div class="title">Baseline bigger</div>
+    <div class="desc">Двустрочный заголовок «ПОДМЫШЕЧНЫЕ ВПАДИНЫ» 84px, фотки 680px, вертикальные боковые подписи. Читаемо, но вертикальный текст всё ещё мелковат, цифру «4» забыл вывести в HTML.</div>
+    <span class="tag">в работу можно</span></div></div>
+
+  <div class="card mid"><img src="r5_giant_four.png">
+    <div class="meta"><div class="code">r5</div><div class="title">Giant four</div>
+    <div class="desc">Та же база что у r2, но вместо подвала-строки — гигантская «4» 880px на фоне opacity 0.08. Идея не сработала — водяной знак почти не видно. С плотной нижней строкой как в r2 — пойдёт.</div>
+    <span class="tag">правится</span></div></div>
+
+  <div class="card bug"><img src="r4_horizontal_sides.png">
+    <div class="meta"><div class="code">r4</div><div class="title">Horizontal sides</div>
+    <div class="desc">Цифра «4» 240px слева, «ЗАМЕТНЫЙ РЕЗУЛЬТАТ» справа горизонтально. БАГ: правый текст обрезается («РЕЗУЛЬТ…»), фотки уже из-за боковых блоков → пустота сверху/снизу.</div>
+    <span class="tag">с багом</span></div></div>
+</div>
+
+<div class="section">Что было</div>
+<div class="row two">
+  <div class="card bug"><img src="../photo_01.jpg">
+    <div class="meta"><div class="code">×</div><div class="title">Старый — для сравнения</div>
+    <div class="desc">Тот же стиль кремовый фон + сериф, но мелкие фотки в центре, мелкий заголовок, нечитаемый вертикальный текст по бокам, пустота между фотками 100+px. Контраст слабый — armpit_4.</div>
+    <span class="tag">переделываем</span></div></div>
+</div>
+
+</body></html>

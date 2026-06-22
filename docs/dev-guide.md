@@ -1,6 +1,7 @@
 # Dev Guide — разработка и обучение агентов
 
-Для разработчика системы (не оператора). Оператор работает через OpenClaw, см. `ONBOARDING.md`.
+Для разработчика системы (не оператора). Оператор работает через Claude Code
+напрямую — точка входа `CLAUDE.md`.
 
 ## Принципы
 
@@ -8,44 +9,43 @@
 2. **YAGNI** — не делать ничего «на будущее», см. `global/rules.md`
 3. **Глобальные правила** — `global/rules.md` влияет на всех агентов
 4. **Проектный контекст** — только в `projects/{ProjectID}/`
-5. **Все LLM-вызовы через LiteLLM** — никаких прямых `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` в коде
+5. **Никаких прямых ключей** (`ANTHROPIC_API_KEY` / `OPENAI_API_KEY` / `FAL_KEY`) в коде — только из `.env`
 
 ## Структура агента
 
+Агенты-эксперты — нативные сабагенты Claude Code, вызываются через Agent tool:
+
 ```
-agents/{name}/
-  SOUL.md              ← конфиг OpenClaw + system prompt
-  knowledge/           ← необязательно: накопленные знания, патерны
-  learning/            ← необязательно: логи автообучения (designer)
+.claude/agents/{name}.md   ← frontmatter + system prompt
+agents/{name}/knowledge/   ← необязательно: накопленная база знаний агента
 ```
 
-`SOUL.md` начинается с YAML-фронтматтера:
+Frontmatter — формат Claude Code:
 
 ```yaml
 ---
 name: copywriter
-description: …
-model: smm/claude-haiku-4.5
-fallback_model: smm/claude-sonnet-4.6
-memory_scope: agent | project | global
-delegates_to: [other-agent-name]
-tools: [Read, Write, Edit, Bash]
-references: [skills/fal-ai/SKILL.md]
+description: когда звать агента (триггер для Agent tool)
+tools: Read, Write, Edit, Bash   # опционально; без поля — наследует все
 ---
 ```
 
-Тело файла — system prompt.
+Тело файла — system prompt. (Старый OpenClaw-формат `agents/{name}/SOUL.md` с полями
+`memory_scope`/`knowledge`/`references` снят — Claude Code их не читает.)
 
 ## Создать нового агента
 
-1. `agents/{name}/SOUL.md` — фронтматтер + system prompt
-2. В `agents/orchestrator/SOUL.md` → `delegates_to` добавить имя
-3. В `CLAUDE.md` → таблицу агентов добавить строку
+1. `.claude/agents/{name}.md` — frontmatter (name/description/tools) + system prompt
+2. База знаний (если нужна) — в `agents/{name}/knowledge/`, агент читает её сам
+3. В `CLAUDE.md` и `global/rules.md` → таблицу агентов добавить строку
 4. Коммит: `agents: add {name}`
 
-YAGNI: не дублируй текст из `global/rules.md` в SOUL.md — оркестратор уже передаёт правила в ТЗ.
+YAGNI: не дублируй текст из `global/rules.md` в агента — он передаётся в ТЗ.
 
 ## Создать нового клиента
+
+Полный SOP (бриф → локальные файлы → Notion → Drive → каналы) — `docs/client-onboarding.md`.
+Локальная часть кратко:
 
 ```bash
 cp -r projects/_template projects/{ProjectID}
@@ -54,9 +54,12 @@ cp -r projects/_template projects/{ProjectID}
 Дальше — заполнить через диалог с агентом `brief`, либо вручную:
 - `context.md` — клиент, бренд, табу
 - `strategy.md` — рубрикатор и KPI
-- `orchestrator.md` — стартовая задача
+- `overrides.md` — проектные оверрайды (табу, дизайн-спеки, следующая задача)
 
-## LiteLLM — настройка моделей
+## LiteLLM — настройка моделей (legacy)
+
+> LiteLLM остался только для spend-тулзов; основная работа идёт через подписку
+> Claude Code. Раздел актуален, если LiteLLM-gateway всё ещё используется.
 
 Конфиг живёт на проксе: `5.2.66.188:/root/litellm/config.yaml`.
 
@@ -89,9 +92,12 @@ Master key и Postgres-пароль — в `/root/litellm/.env`.
 
 ## Обучение дизайнера
 
-Автоматическое — `tools/designer_learning.py` запускается по cron (11:00 МСК), парсит Instagram через Apify по случайному стилю и пополняет `agents/designer/knowledge/references.md` + `learning/log.md`.
+Накопленный справочник стилей и композиций — `agents/designer/knowledge/`
+(`references.md`, `compositions.md`, `feedback_log.md`). Пополняется вручную:
+нашёл удачный приём/референс → допиши в `references.md` или `compositions.md`.
 
-Веса стилей: Нежность 25%, Технологичность 25%, Промпт-инжиниринг 20%, Роскошь 15%, Энергия 15%.
+> Старое автообучение через cron (`designer_learning.py`, Apify + Telegram-отчёт)
+> снято вместе с OpenClaw — осталась только накопленная база знаний.
 
 ## Отладка LLM-вызова
 
@@ -114,22 +120,14 @@ node tools/spend.mjs --logs 7     # детально по моделям за 7 
 
 ## Git-флоу
 
-Один `main`. Все агенты пишут синхронно (см. `global/rules.md`). Никаких worktree или копий репо.
+Один `main`. Никаких worktree или копий репо.
 
-Локально:
 ```bash
 git pull origin main
 # работа
 git add . && git commit -m "<scope>: <action>" && git push origin main
 ```
 
-На RU-сервере (для прод-OpenClaw):
-```bash
-ssh root@5.42.117.201 'cd /root/smm-system && git pull origin main'
-```
-
-Если меняешь `.env` — нужен `systemctl restart $OPENCLAW_SERVICE` на RU-сервере (см. `docs/openclaw-deploy.md`).
-
 ## Скоупы коммитов
 
-`posts`, `content-plan`, `analytics`, `brief`, `designer`, `agents`, `tools`, `docs`, `feedback`, `litellm`.
+`posts`, `content-plan`, `analytics`, `brief`, `designer`, `agents`, `tools`, `docs`, `feedback`.
