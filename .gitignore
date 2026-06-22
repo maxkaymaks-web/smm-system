@@ -50,3 +50,9 @@ tools/vk/.vk-oauth-state.json
 
 # Временные снапшоты Playwright MCP
 .playwright-mcp/
+
+# Локальные git-worktree'ы Claude Code (артефакт, не коммитить)
+.claude/worktrees/
+
+# Одноразовые рабочие скрипты — генерация ассетов и т.п. (медиа → S3)
+tmp/
