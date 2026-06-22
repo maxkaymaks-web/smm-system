@@ -80,9 +80,10 @@ const s3 = new S3Client({
 
 // ── locate session JSONL ─────────────────────────────────────────────────────
 function projectsDirForCwd(cwd) {
-  // CC encoding: / → -, rest as-is. Example:
-  //   /home/pavel/projects/smm-system → -home-pavel-projects-smm-system
-  return path.join(os.homedir(), '.claude', 'projects', cwd.replace(/\//g, '-'));
+  // CC encoding: любой не-[A-Za-z0-9] символ → '-'. Примеры:
+  //   /home/pavel/projects/smm-system  → -home-pavel-projects-smm-system
+  //   C:\Users\Пользователь\Claude     → C--Users--------------Claude
+  return path.join(os.homedir(), '.claude', 'projects', cwd.replace(/[^A-Za-z0-9]/g, '-'));
 }
 
 const sessionsDir = projectsDirForCwd(ROOT);
