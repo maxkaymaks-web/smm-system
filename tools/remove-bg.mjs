@@ -12,9 +12,10 @@ import fs from "fs";
 import https from "https";
 import http from "http";
 import path from "path";
+import { meter } from "./lib/fal-meter.mjs";
 
 // Load FAL_KEY
-const envPath = path.join(process.env.HOME, ".claude/.env.fal");
+const envPath = path.join(process.cwd(), ".env");
 let FAL_KEY = process.env.FAL_KEY;
 if (!FAL_KEY && fs.existsSync(envPath)) {
   FAL_KEY = fs.readFileSync(envPath, "utf-8").match(/FAL_KEY=(.+)/)?.[1]?.trim();
@@ -49,13 +50,16 @@ const imageUrl = await fal.storage.upload(blob, { contentType: mimeType });
 console.log("Uploaded:", imageUrl);
 
 console.log("Removing background (BRIA RMBG 2.0)...");
-const result = await fal.subscribe("fal-ai/bria/background/remove", {
-  input: { image_url: imageUrl },
-  logs: true,
-  onQueueUpdate: (u) => {
-    if (u.status === "IN_PROGRESS") u.logs?.forEach(l => console.log("[fal]", l.message));
-  },
-});
+const result = await meter(
+  { tool: "remove-bg", model: "fal-ai/bria/background/remove", params: {} },
+  () => fal.subscribe("fal-ai/bria/background/remove", {
+    input: { image_url: imageUrl },
+    logs: true,
+    onQueueUpdate: (u) => {
+      if (u.status === "IN_PROGRESS") u.logs?.forEach(l => console.log("[fal]", l.message));
+    },
+  })
+);
 
 const resultUrl = result.data.image.url;
 console.log("Downloading result...");

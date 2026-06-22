@@ -1,151 +1,133 @@
-# Dev Guide — Как разрабатывать и обучать агентов
+# Dev Guide — разработка и обучение агентов
 
-## Принципы системы
+Для разработчика системы (не оператора). Оператор работает через Claude Code
+напрямую — точка входа `CLAUDE.md`.
+
+## Принципы
 
 1. **Агенты stateless** — каждый получает полный контекст в ТЗ, ничего не помнит между запусками
-2. **Глобальные правила** — одно изменение в `global/rules.md` влияет на всех агентов всех проектов
-3. **Проектный контекст** — специфика клиента только в `projects/{client}/context.md`
-4. **Итерация** — улучшай агентов на основе реальных результатов, не теорий
+2. **YAGNI** — не делать ничего «на будущее», см. `global/rules.md`
+3. **Глобальные правила** — `global/rules.md` влияет на всех агентов
+4. **Проектный контекст** — только в `projects/{ProjectID}/`
+5. **Никаких прямых ключей** (`ANTHROPIC_API_KEY` / `OPENAI_API_KEY` / `FAL_KEY`) в коде — только из `.env`
 
+## Структура агента
+
+Агенты-эксперты — нативные сабагенты Claude Code, вызываются через Agent tool:
+
+```
+.claude/agents/{name}.md   ← frontmatter + system prompt
+agents/{name}/knowledge/   ← необязательно: накопленная база знаний агента
+```
+
+Frontmatter — формат Claude Code:
+
+```yaml
 ---
+name: copywriter
+description: когда звать агента (триггер для Agent tool)
+tools: Read, Write, Edit, Bash   # опционально; без поля — наследует все
+---
+```
 
-## Как создать нового клиента
+Тело файла — system prompt. (Старый OpenClaw-формат `agents/{name}/SOUL.md` с полями
+`memory_scope`/`knowledge`/`references` снят — Claude Code их не читает.)
+
+## Создать нового агента
+
+1. `.claude/agents/{name}.md` — frontmatter (name/description/tools) + system prompt
+2. База знаний (если нужна) — в `agents/{name}/knowledge/`, агент читает её сам
+3. В `CLAUDE.md` и `global/rules.md` → таблицу агентов добавить строку
+4. Коммит: `agents: add {name}`
+
+YAGNI: не дублируй текст из `global/rules.md` в агента — он передаётся в ТЗ.
+
+## Создать нового клиента
+
+Полный SOP (бриф → локальные файлы → Notion → Drive → каналы) — `docs/client-onboarding.md`.
+Локальная часть кратко:
 
 ```bash
-cp -r projects/_template projects/{client-slug}
+cp -r projects/_template projects/{ProjectID}
 ```
 
-Затем заполни:
-1. `projects/{client}/context.md` — всё о клиенте (бренд, тон, ЦА, цвета, табу)
-2. `projects/{client}/strategy.md` — контент-стратегия и KPI
-3. `projects/{client}/orchestrator.md` — задача для первого запуска
+Дальше — заполнить через диалог с агентом `brief`, либо вручную:
+- `context.md` — клиент, бренд, табу
+- `strategy.md` — рубрикатор и KPI
+- `overrides.md` — проектные оверрайды (табу, дизайн-спеки, следующая задача)
 
----
+## LiteLLM — настройка моделей (legacy)
 
-## Как запустить агента вручную
+> LiteLLM остался только для spend-тулзов; основная работа идёт через подписку
+> Claude Code. Раздел актуален, если LiteLLM-gateway всё ещё используется.
 
-В своей сессии Claude Code:
+Конфиг живёт на проксе: `5.2.66.188:/root/litellm/config.yaml`.
 
-```
-Запусти агента copywriter для проекта {client}:
-- Прочитай: global/rules.md, projects/{client}/context.md
-- Задача: написать пост на тему «[X]» для рубрики «[Y]»
-- CTA: [конкретный призыв]
-- Сохранить в: projects/{client}/posts/drafts/post-NN.md
-```
+Добавить новую модель:
 
----
-
-## Как запустить полный цикл (пост от идеи до inbox)
-
-```
-Запусти оркестратора для проекта {client}:
-- Прочитай: agents/orchestrator/skill.md
-- Проект: projects/{client}/
-- Задача: создать посты NN и NN+1 из content-plan.md
-```
-
-Оркестратор сам:
-1. Прочитает контекст
-2. Диспатчит копирайтера
-3. Проверит качество
-4. Диспатчит дизайнера
-5. Переместит в inbox
-
----
-
-## Как улучшить агента (обучение)
-
-### Шаг 1: Собери примеры хорошей работы
-
-Найди 3–5 постов с ER выше среднего. Скопируй тексты в `agents/copywriter/examples/good/`.
-
-### Шаг 2: Найди паттерн
-
-Что общего в хороших постах? Структура крючка? Тип CTA? Длина? Рубрика?
-
-### Шаг 3: Обнови skill.md
-
-Добавь паттерн в `agents/{role}/skill.md` раздел `## Проверенные паттерны`.
-
-### Шаг 4: Добавь few-shot примеры
-
-В `agents/copywriter/skill.md` добавь раздел `## Примеры отличных постов` с 2–3 реальными постами.
-
-### Шаг 5: Протестируй
-
-Запусти агента с новым скиллом на той же задаче. Сравни результат.
-
----
-
-## Как обновить тренды (ежемесячно)
-
-Открой `global/rules.md` → раздел `## Актуальные тренды`. Обнови на основе:
-- Отчётов аналитика (`analytics/report-YYYY-MM.md`)
-- Актуальных наблюдений за платформами
-- Новых форматов VK/TG/MAX
-
----
-
-## Структура веток GitHub
-
-```
-main   ← разработка, агенты, global/ (только ты)
-girl   ← только posts/ и feedback/ (девочка)
-```
-
-### Флоу публикации одного поста:
-
-```
-1. Оркестратор создаёт черновик → posts/drafts/
-2. Ты пушишь → main
-3. Ты мержишь main → girl: git checkout girl && git merge main && git push origin girl
-4. Девочка: ./tools/sync.sh pull
-5. Девочка работает с постом → posts/inbox/ → approved/
-6. Девочка: ./tools/sync.sh push
-7. Ты мержишь girl → main: git checkout main && git merge girl && git push origin main
-```
-
----
-
-## Добавление нового агента
-
-1. Создай `agents/{name}/skill.md` по структуре:
-   - Роль
-   - Что получает в ТЗ
-   - Что выдаёт (формат файла)
-   - Правила работы
-   - Чего не делать
-2. Добавь в `agents/orchestrator/skill.md` раздел «Диспатч {name}»
-3. Протестируй вручную с реальным ТЗ
-4. Коммит: `feat: add {name} agent skill`
-
----
-
-## Качество: как проверять агентов
-
-Чеклист: `global/standards.md` — применяй к любому посту.
-
-Системное улучшение раз в месяц:
-1. Запусти analytics агента по последнему месяцу
-2. Прочитай `analytics/report-YYYY-MM.md`
-3. Внеси изменения в skill.md агентов по выводам
-4. Обнови `global/rules.md` если паттерн кросс-клиентский
-
----
-
-## SSH и GitHub для девочки
-
-Девочка клонирует репо один раз:
 ```bash
-git clone git@github.com:maxkaymaks-web/smm-system.git
-cd smm-system
+ssh -p 24822 root@5.2.66.188
+cd /root/litellm
+# редактировать config.yaml
+docker compose restart litellm
 ```
 
-Убедись что её SSH ключ добавлен в GitHub → Settings → SSH keys.
+Создать новый virtual key (для другого проекта или подсистемы):
 
-Её ежедневные команды заменены скриптом:
 ```bash
-./tools/sync.sh pull   # утром
-./tools/sync.sh push   # вечером
+curl -sS -X POST http://127.0.0.1:4000/key/generate \
+  -H "Authorization: Bearer $LITELLM_MASTER_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"key_alias":"smm-experimental","models":["smm/*"],"max_budget":10,"budget_duration":"30d"}'
 ```
+
+Master key и Postgres-пароль — в `/root/litellm/.env`.
+
+## Обучение копирайтера
+
+1. Собрать 3–5 постов с ER выше среднего → `agents/copywriter/knowledge/hooks.md`
+2. Найти паттерн (структура крючка, тип CTA, длина, рубрика)
+3. Обновить `agents/copywriter/knowledge/patterns.md`
+4. Запустить агента на той же задаче → сравнить
+
+## Обучение дизайнера
+
+Накопленный справочник стилей и композиций — `agents/designer/knowledge/`
+(`references.md`, `compositions.md`, `feedback_log.md`). Пополняется вручную:
+нашёл удачный приём/референс → допиши в `references.md` или `compositions.md`.
+
+> Старое автообучение через cron (`designer_learning.py`, Apify + Telegram-отчёт)
+> снято вместе с OpenClaw — осталась только накопленная база знаний.
+
+## Отладка LLM-вызова
+
+Все запросы логируются в Postgres LiteLLM. Посмотреть последние:
+
+```bash
+ssh -p 24822 root@5.2.66.188 \
+  'curl -sS "http://127.0.0.1:4000/spend/logs?limit=20" \
+   -H "Authorization: Bearer $LITELLM_MASTER_KEY" | python3 -m json.tool | head -80'
+```
+
+Или подключиться к UI: `http://5.2.66.188:4000/ui` (логин — master key).
+
+## Расход проекта
+
+```bash
+node tools/spend.mjs              # сводка
+node tools/spend.mjs --logs 7     # детально по моделям за 7 дней
+```
+
+## Git-флоу
+
+Один `main`. Никаких worktree или копий репо.
+
+```bash
+git pull origin main
+# работа
+git add . && git commit -m "<scope>: <action>" && git push origin main
+```
+
+## Скоупы коммитов
+
+`posts`, `content-plan`, `analytics`, `brief`, `designer`, `agents`, `tools`, `docs`, `feedback`.

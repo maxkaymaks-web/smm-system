@@ -6,48 +6,48 @@ const puppeteer = require('puppeteer');
 const path = require('path');
 const fs = require('fs');
 
-// Try to find Chrome executable
+// Try to find Chrome executable — skip snap chromium (sandboxed, can't read host filesystem)
 function findChrome() {
   const candidates = [
     '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
     '/Applications/Chromium.app/Contents/MacOS/Chromium',
     '/usr/bin/google-chrome',
-    '/usr/bin/chromium-browser',
   ];
   for (const c of candidates) {
     if (fs.existsSync(c)) return c;
   }
-  return null; // let puppeteer find its own
+  return null; // let puppeteer use its own bundled chrome
 }
 
 async function renderHtml(htmlPath, outputPath, width = 1080) {
-  const executablePath = findChrome();
-  const launchOptions = {
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-  };
-  if (executablePath) {
-    launchOptions.executablePath = executablePath;
-  }
-
-  const browser = await puppeteer.launch(launchOptions);
-  const page = await browser.newPage();
-
-  const absoluteHtmlPath = path.resolve(htmlPath);
-  await page.goto(`file://${absoluteHtmlPath}`, { waitUntil: 'networkidle0' });
-
-  // Get actual content height
-  const height = await page.evaluate(() => document.body.scrollHeight);
-
-  await page.setViewport({
-    width: Number(width),
-    height: height,
-    deviceScaleFactor: 2, // 2x resolution — crisp on retina
+  // Use puppeteer's bundled Chrome (skip snap chromium — sandboxed, can't access host filesystem).
+  const systemChrome = findChrome();
+  const browser = await puppeteer.launch({
+    executablePath: systemChrome || puppeteer.executablePath(),
+    headless: 'new',
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-gpu',
+      '--disable-dev-shm-usage',
+      '--no-zygote',
+      '--single-process',
+    ],
   });
+
+  const page = await browser.newPage();
+  const html = fs.readFileSync(path.resolve(htmlPath), 'utf8');
+  await page.setContent(html, { waitUntil: 'domcontentloaded', timeout: 15000 });
+  // Allow web fonts (Google Fonts etc.) to load
+  await new Promise((r) => setTimeout(r, 2000));
+
+  const height = await page.evaluate(() => document.body.scrollHeight);
+  await page.setViewport({ width: Number(width), height, deviceScaleFactor: 2 });
 
   await page.screenshot({
     path: outputPath,
     fullPage: false,
-    clip: { x: 0, y: 0, width: Number(width), height: height },
+    clip: { x: 0, y: 0, width: Number(width), height },
   });
 
   await browser.close();
