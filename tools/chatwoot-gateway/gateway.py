@@ -215,6 +215,24 @@ async def cw_post_note(conv, text):
         log.error("не смог записать заметку об ошибке в диалог %s: %r", conv, e)
 
 
+async def cw_set_status(conv, mid, status, external_error=None):
+    """Отразить РЕАЛЬНЫЙ статус доставки в Chatwoot (только для API-инбоксов — наши TG/VK).
+    Схема: sent (1 галка) = принято в очередь; delivered (2 галки) = реально дошло до
+    клиента; failed (!) = не дошло, с текстом ошибки и кнопкой resend. 'read' (2 синие)
+    не ставим — Telegram-бот не отдаёт read-receipt. Статусы Chatwoot: sent/delivered/read/failed."""
+    if not API_TOKEN or not conv or mid is None:
+        return
+    try:
+        body = {"status": status}
+        if external_error:
+            body["external_error"] = external_error[:990]
+        r = await cw.patch(f"/api/v1/accounts/{ACCOUNT_ID}/conversations/{conv}/messages/{mid}",
+                           headers={"api_access_token": API_TOKEN}, json=body)
+        r.raise_for_status()
+    except Exception as e:
+        log.warning("не смог обновить статус msg=%s -> %s: %r", mid, status, e)
+
+
 async def download(client, url):
     r = await client.get(url)
     r.raise_for_status()
@@ -692,6 +710,7 @@ async def deliver_job(job):
             metas = await with_retries(lambda: cw_message_attachments(conv, mid),
                                        f"cw meta msg={mid}", OUT_ATTEMPTS, OUT_DELAYS)
         except Exception as e:
+            await cw_set_status(conv, mid, "failed", f"не получен список вложений из Chatwoot: {e!r}")
             await cw_post_note(conv, f"⚠️ Не удалось получить список вложений из Chatwoot после {OUT_ATTEMPTS} попыток ({e!r}). Клиенту НИЧЕГО не отправлено — повторите.")
             await _mark_done(mid, delivered=False)
             return
@@ -704,6 +723,7 @@ async def deliver_job(job):
             except Exception as e:
                 log.error("АТОМАРНЫЙ ОТКАЗ (скачивание) %s mid=%s: файл «%s» -> клиенту ничего не шлём",
                           ident, mid, a["name"])
+                await cw_set_status(conv, mid, "failed", f"не скачалось вложение «{a['name']}»: {e!r}")
                 await cw_post_note(conv, f"⚠️ Не удалось получить вложение «{a['name']}» из Chatwoot после {OUT_ATTEMPTS} попыток ({e!r}). Клиенту НИЧЕГО не отправлено — повторите отправку.")
                 await _mark_done(mid, delivered=False)
                 return
@@ -721,9 +741,11 @@ async def deliver_job(job):
             await _mark_done(mid, delivered=False)
             return
         await _mark_done(mid, delivered=True)
+        await cw_set_status(conv, mid, "delivered")  # две галки = реально дошло до клиента
         log.info("ДОСТАВЛЕНО -> %s: %s +%d файл(ов)", ident, content[:40], len(files))
     except Exception as e:
         log.error("ОТПРАВКА НЕ УДАЛАСЬ -> %s mid=%s: %r", ident, mid, e)
+        await cw_set_status(conv, mid, "failed", f"сбой отправки клиенту: {e!r}")
         await cw_post_note(conv, f"⚠️ Сбой отправки клиенту после {OUT_ATTEMPTS} попыток: {e!r}. Проверьте — возможно, доставлено не всё.")
         await _mark_done(mid, delivered=False)
 
