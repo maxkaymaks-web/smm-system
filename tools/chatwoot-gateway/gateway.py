@@ -56,7 +56,8 @@ TG_FILE = f"https://api.telegram.org/file/bot{TG_TOKEN}"
 STATE_PATH = os.environ.get("STATE_PATH", "/data/state.json")
 DEADLETTER_PATH = os.environ.get("DEADLETTER_PATH", "/data/deadletter.jsonl")
 MAX_BYTES = 40 * 1024 * 1024  # лимит вложения Chatwoot по умолчанию
-TG_PHOTO_LIMIT = 10 * 1024 * 1024  # Telegram не примет фото крупнее -> шлём документом
+TG_PHOTO_LIMIT = 10 * 1024 * 1024         # Telegram не примет фото крупнее -> шлём документом
+TG_VIDEO_INLINE_LIMIT = 10 * 1024 * 1024  # видео <= 10МБ шлём играбельным; крупнее -> документом (по требованию)
 ACCOUNT_ID = os.environ.get("CHATWOOT_ACCOUNT_ID", "1")
 API_TOKEN = os.environ.get("CHATWOOT_API_TOKEN", "")  # агентский токен (аватар, заметки, свежие URL вложений)
 
@@ -111,6 +112,10 @@ def deadletter(kind, payload, err):
 cw = httpx.AsyncClient(base_url=CHATWOOT_URL, trust_env=False, timeout=60)
 vk = httpx.AsyncClient(trust_env=False, timeout=60, follow_redirects=True)
 tg = httpx.AsyncClient(proxy=PROXY_URL, trust_env=False, timeout=60, follow_redirects=True)
+
+# Заливка медиа в TG/VK через медленный DPI-прокси не укладывается в 60с -> WriteTimeout.
+# Для отправки/загрузки файлов даём очень щедрый write/read-таймаут 30 мин (API-вызовы — на 60с).
+SEND_TIMEOUT = httpx.Timeout(connect=15.0, read=1800.0, write=1800.0, pool=15.0)
 
 
 def guess_ct(name, fallback="application/octet-stream"):
@@ -529,7 +534,7 @@ async def vk_upload_photo(peer_id, data, name):
     r = await vk.get("https://api.vk.com/method/photos.getMessagesUploadServer",
                      params={"peer_id": peer_id, "access_token": VK_TOKEN, "v": VK_API_V})
     up_url = r.json()["response"]["upload_url"]
-    up = await vk.post(up_url, files={"photo": (name, data, "image/jpeg")})
+    up = await vk.post(up_url, files={"photo": (name, data, "image/jpeg")}, timeout=SEND_TIMEOUT)
     uj = up.json()
     sv = await vk.get("https://api.vk.com/method/photos.saveMessagesPhoto", params={
         "photo": uj["photo"], "server": uj["server"], "hash": uj["hash"],
@@ -543,7 +548,7 @@ async def vk_upload_doc(peer_id, data, name):
                      params={"type": "doc", "peer_id": peer_id,
                              "access_token": VK_TOKEN, "v": VK_API_V})
     up_url = r.json()["response"]["upload_url"]
-    up = await vk.post(up_url, files={"file": (name, data, guess_ct(name))})
+    up = await vk.post(up_url, files={"file": (name, data, guess_ct(name))}, timeout=SEND_TIMEOUT)
     sv = await vk.get("https://api.vk.com/method/docs.save", params={
         "file": up.json()["file"], "title": name,
         "access_token": VK_TOKEN, "v": VK_API_V})
@@ -568,7 +573,7 @@ async def tg_send_photo(chat_id, img, caption):
         data = {"chat_id": str(chat_id)}
         if caption:
             data["caption"] = caption
-        r = await tg.post(f"{TG_API}/sendPhoto", data=data, files={"photo": (img["name"], img["data"])})
+        r = await tg.post(f"{TG_API}/sendPhoto", data=data, files={"photo": (img["name"], img["data"])}, timeout=SEND_TIMEOUT)
         r.raise_for_status()
         return r
     await with_retries(f, f"tg sendPhoto {chat_id}", OUT_ATTEMPTS, OUT_DELAYS)
@@ -579,52 +584,79 @@ async def tg_send_document(chat_id, doc, caption):
         data = {"chat_id": str(chat_id)}
         if caption:
             data["caption"] = caption
-        r = await tg.post(f"{TG_API}/sendDocument", data=data, files={"document": (doc["name"], doc["data"])})
+        r = await tg.post(f"{TG_API}/sendDocument", data=data, files={"document": (doc["name"], doc["data"])}, timeout=SEND_TIMEOUT)
         r.raise_for_status()
         return r
     await with_retries(f, f"tg sendDocument {chat_id}", OUT_ATTEMPTS, OUT_DELAYS)
 
 
-async def tg_send_media_group(chat_id, imgs, caption):
-    """Альбом одним запросом — атомарно (Telegram создаёт весь альбом либо отклоняет целиком)."""
+async def tg_send_video(chat_id, vid, caption):
+    async def f():
+        data = {"chat_id": str(chat_id), "supports_streaming": "true"}
+        if caption:
+            data["caption"] = caption
+        r = await tg.post(f"{TG_API}/sendVideo", data=data, files={"video": (vid["name"], vid["data"])}, timeout=SEND_TIMEOUT)
+        r.raise_for_status()
+        return r
+    await with_retries(f, f"tg sendVideo {chat_id}", OUT_ATTEMPTS, OUT_DELAYS)
+
+
+async def tg_send_media_group(chat_id, items, caption):
+    """Альбом одним запросом — атомарно (Telegram создаёт весь альбом либо отклоняет целиком).
+    items: dict с tg_type 'photo'|'video' (их можно мешать в одной группе)."""
     async def f():
         files, media = {}, []
-        for i, im in enumerate(imgs):
+        for i, it in enumerate(items):
             key = f"file{i}"
-            files[key] = (im["name"], im["data"])
-            mm = {"type": "photo", "media": f"attach://{key}"}
+            files[key] = (it["name"], it["data"])
+            mm = {"type": it.get("tg_type", "photo"), "media": f"attach://{key}"}
+            if it.get("tg_type") == "video":
+                mm["supports_streaming"] = True
             if i == 0 and caption:
                 mm["caption"] = caption
             media.append(mm)
         data = {"chat_id": str(chat_id), "media": json.dumps(media)}
-        r = await tg.post(f"{TG_API}/sendMediaGroup", data=data, files=files)
+        r = await tg.post(f"{TG_API}/sendMediaGroup", data=data, files=files, timeout=SEND_TIMEOUT)
         r.raise_for_status()
         return r
-    await with_retries(f, f"tg sendMediaGroup {chat_id} x{len(imgs)}", OUT_ATTEMPTS, OUT_DELAYS)
+    await with_retries(f, f"tg sendMediaGroup {chat_id} x{len(items)}", OUT_ATTEMPTS, OUT_DELAYS)
 
 
 def tg_partition(files):
-    """Фото (<=10МБ) шлём как фото/альбом; всё прочее (и крупные фото) — документами."""
-    imgs = [f for f in files if f.get("file_type") == "image" and len(f["data"]) <= TG_PHOTO_LIMIT]
-    rest = [f for f in files if f not in imgs]
-    return imgs, rest
+    """media — фото(<=10МБ) и видео(<=10МБ) для одного альбома (атомарно, видео играбельны);
+    docs — всё прочее: крупные фото/видео и не-медиа (отдельными документами)."""
+    media, docs = [], []
+    for f in files:
+        ft = f.get("file_type")
+        sz = len(f["data"])
+        if ft == "image" and sz <= TG_PHOTO_LIMIT:
+            media.append({**f, "tg_type": "photo"})
+        elif ft == "video" and sz <= TG_VIDEO_INLINE_LIMIT:
+            media.append({**f, "tg_type": "video"})
+        else:
+            docs.append(f)
+    return media, docs
 
 
 async def tg_deliver_atomic(chat_id, content, files):
-    """Все файлы уже скачаны. Фото — альбомом (атомарно), остальное — документами."""
+    """Все файлы уже скачаны. Фото+видео — одним альбомом (атомарно), остальное — документами."""
     if not files:
         await tg_send_text(chat_id, content)
         return
-    imgs, docs = tg_partition(files)
+    media, docs = tg_partition(files)
     caption_used = False
-    if len(imgs) >= 2:
-        for chunk in chunked(imgs, 10):
+    if len(media) >= 2:
+        for chunk in chunked(media, 10):
             cap = content if (not caption_used and content) else None
             await tg_send_media_group(chat_id, chunk, cap)
             caption_used = True
-    elif len(imgs) == 1:
+    elif len(media) == 1:
+        it = media[0]
         cap = content if content else None
-        await tg_send_photo(chat_id, imgs[0], cap)
+        if it["tg_type"] == "video":
+            await tg_send_video(chat_id, it, cap)
+        else:
+            await tg_send_photo(chat_id, it, cap)
         caption_used = bool(content)
     for d in docs:
         cap = content if (not caption_used and content) else None

@@ -41,17 +41,21 @@ def test_is_permanent():
     assert g.is_permanent(httpx.ReadError("")) is False  # сетевой обрыв -> ретрай
 
 
-def test_tg_partition_images_vs_docs():
+def test_tg_partition_media_vs_docs():
     small = b"x" * 10
-    big = b"x" * (g.TG_PHOTO_LIMIT + 1)
+    big_img = b"x" * (g.TG_PHOTO_LIMIT + 1)
+    big_vid = b"x" * (g.TG_VIDEO_INLINE_LIMIT + 1)
     files = [
-        {"file_type": "image", "data": small, "name": "a.jpg"},
-        {"file_type": "image", "data": big, "name": "huge.jpg"},   # >10МБ -> в документы
-        {"file_type": "file", "data": small, "name": "doc.pdf"},
+        {"file_type": "image", "data": small, "name": "a.jpg"},      # фото -> media
+        {"file_type": "video", "data": small, "name": "clip.mp4"},   # видео <=10МБ -> media (играбельно)
+        {"file_type": "image", "data": big_img, "name": "huge.jpg"}, # >10МБ -> docs
+        {"file_type": "video", "data": big_vid, "name": "huge.mp4"}, # видео >10МБ -> docs (файлом)
+        {"file_type": "file", "data": small, "name": "doc.pdf"},     # прочее -> docs
     ]
-    imgs, docs = g.tg_partition(files)
-    assert [f["name"] for f in imgs] == ["a.jpg"]
-    assert [f["name"] for f in docs] == ["huge.jpg", "doc.pdf"]
+    media, docs = g.tg_partition(files)
+    assert [f["name"] for f in media] == ["a.jpg", "clip.mp4"]
+    assert [f["tg_type"] for f in media] == ["photo", "video"]
+    assert [f["name"] for f in docs] == ["huge.jpg", "huge.mp4", "doc.pdf"]
 
 
 def test_dedup_seen_ring():
