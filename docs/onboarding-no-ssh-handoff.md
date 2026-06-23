@@ -27,7 +27,7 @@
   **Важно:** снимает `*_PROXY` из env (tinyproxy режет Notion по allow-листу) —
   иначе тулы не работали бы с устройств с прокси в `.env`.
 
-**Серверный сервис (развёрнут на проде 5.42.117.201, в Docker рядом с Postiz):**
+**Серверный сервис (развёрнут на проде 5.42.112.17, в Docker рядом с Postiz):**
 - `tools/onboard-service/` (server.mjs + Dockerfile + package.json) — тонкий
   HTTP-сервис. Делает `INSERT/UPDATE` в таблицу `Integration` Postiz (public API
   Postiz так не умеет). Слушает `127.0.0.1:4010`, nginx отдаёт `https://

@@ -53,7 +53,7 @@
    │                                 └─► Notion API  (NOTION_TOKEN)
    └─ tools/onboard/register-channel.mjs ─► HTTPS ─► onboard-service
                                                         (ONBOARD_API_KEY)
-СЕРВЕР 5.42.117.201 (ставит разработчик 1 раз)
+СЕРВЕР 5.42.112.17 (ставит разработчик 1 раз)
   nginx https://tech.bitandpix.ru/onboard/*  ──►  onboard-service (Node, :4010)
                                                     └─► Postgres Postiz (INSERT Integration)
 ```

@@ -5,7 +5,7 @@
 **Chatwoot** (self-host, MIT): Telegram у него нативно, VK заводится через
 «API Channel» + свой тонкий шлюз (long polling).
 
-Сервер — RU (`seo` 5.42.117.201, SSH **порт 22**). Полное состояние серверов и
+Сервер — RU (`seo` 5.42.112.17, SSH **порт 22**). Полное состояние серверов и
 egress — в **`docs/infra.md`** (не дублируем здесь). Проверено 12.06: с сервера
 `api.telegram.org` и `api.vk.com` достижимы **напрямую** (TG→302, VK→200). Telegram
 периодически режется DPI в РФ → как страховку гнать через tinyproxy `5.2.66.188:8888`
@@ -96,9 +96,9 @@ VK в очередной раз перепрятал раздел API. Что р
     проекта) → нет конфликта с Postiz.
   - `.env` на сервере (`chmod 600`): сгенерированы `SECRET_KEY_BASE`,
     `POSTGRES_PASSWORD`, `REDIS_PASSWORD`; `DEFAULT_LOCALE=ru`,
-    `ENABLE_ACCOUNT_SIGNUP=false`, `FRONTEND_URL=http://5.42.117.201:3000`.
+    `ENABLE_ACCOUNT_SIGNUP=false`, `FRONTEND_URL=http://5.42.112.17:3000`.
   - БД инициализирована (`db:chatwoot_prepare`): 91 таблица, 135 миграций.
-- **UI живой:** `http://5.42.117.201:3000` → `/installation/onboarding`
+- **UI живой:** `http://5.42.112.17:3000` → `/installation/onboarding`
   (создание первого админа). Доступен снаружи (ufw off, как у Postiz).
 
 ## Шлюз VK+TG (реализован 12.06.2026)
@@ -128,7 +128,7 @@ VK в очередной раз перепрятал раздел API. Что р
 - два API-канала в Chatwoot: «VK» и «Telegram» (identifier'ы — в `gateway.env`).
 - account-webhook зарегистрирован (`POST /api/v1/accounts/1/webhooks`).
 
-Доступ: **`https://chat.bitandpix.ru`** (домен на reg.ru, A-запись `chat`→5.42.117.201;
+Доступ: **`https://chat.bitandpix.ru`** (домен на reg.ru, A-запись `chat`→5.42.112.17;
 nginx-вход отдельным server-блоком, Postiz на `tech.bitandpix.ru` не задет; HTTPS —
 Let's Encrypt, общий `certbot.timer`). `FRONTEND_URL=https://chat.bitandpix.ru`.
 Админ `admin@bitpix.ru` (пароль — в локальном `.env` как `CHATWOOT_ADMIN_PASSWORD`).
@@ -153,7 +153,7 @@ Let's Encrypt, общий `certbot.timer`). `FRONTEND_URL=https://chat.bitandpix
 Chatwoot шлёт account-webhook `message_created`, НО блокирует внутренние URL (SSRF) →
 вебхук идёт на публичный `https://chat.bitandpix.ru/cw-<token>/chatwoot/webhook`,
 nginx проксирует на шлюз (`127.0.0.1:8090`). Плюс контейнерам rails/sidekiq прописан
-`extra_hosts: chat.bitandpix.ru:5.42.117.201` (иначе резолвят домен в старый wildcard-IP
+`extra_hosts: chat.bitandpix.ru:5.42.112.17` (иначе резолвят домен в старый wildcard-IP
 из DNS-кеша → cert mismatch). Текстовые исходящие в VK и TG **проверены, работают**.
 
 ## TODO (осталось)

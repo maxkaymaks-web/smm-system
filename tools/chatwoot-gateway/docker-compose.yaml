@@ -11,7 +11,7 @@ services:
       - postgres
       - redis
     extra_hosts:
-      - "chat.bitandpix.ru:5.42.117.201"   # обход stale DNS-кеша (wildcard), вебхук на свой домен
+      - "chat.bitandpix.ru:5.42.112.17"   # обход stale DNS-кеша (wildcard), вебхук на свой домен
     ports:
       - '3000:3000'
     environment:
@@ -28,7 +28,7 @@ services:
       - postgres
       - redis
     extra_hosts:
-      - "chat.bitandpix.ru:5.42.117.201"   # вебхуки на свой домен в обход stale DNS
+      - "chat.bitandpix.ru:5.42.112.17"   # вебхуки на свой домен в обход stale DNS
     environment:
       - NODE_ENV=production
       - RAILS_ENV=production

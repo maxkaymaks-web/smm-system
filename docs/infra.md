@@ -8,7 +8,7 @@
 
 | Роль | IP | SSH-порт | ОС | Ресурсы |
 |------|----|---------:|----|---------|
-| Основной «seo» (медиа/S3, сессии CC, кандидат под Postiz) | `5.42.117.201` | **22** | Ubuntu 24.04 | **1.9 GiB RAM**, 2 CPU, 38G диск (27G свободно) |
+| Основной «seo» (медиа/S3, сессии CC, кандидат под Postiz) | `5.42.112.17` | **22** | Ubuntu 24.04 | **1.9 GiB RAM**, 2 CPU, 38G диск (27G свободно) |
 | Прокси-egress | `5.2.66.188` | **24822** | — | — |
 
 ⚠️ **SSH-порты разные:** основной — `22`, прокси — `24822`. (Глобальная заметка
@@ -21,7 +21,7 @@
 - **BasicAuth** (логин/пароль — в `.env` как `PROXY_URL`, формат
   `http://<user>:<pass>@5.2.66.188:8888`)
 - CONNECT разрешён только на портах **443 / 563** (HTTPS-туннель)
-- **Allow-лист по IP:** `127.0.0.1`, `178.253.42.36`, `5.42.117.201`
+- **Allow-лист по IP:** `127.0.0.1`, `178.253.42.36`, `5.42.112.17`
   (основной сервер уже включён). Новый клиент egress'а → добавить его IP в
   `/etc/tinyproxy/tinyproxy.conf` (`Allow <ip>`) и `systemctl reload tinyproxy`.
 - Побочно на этом же хосте: `litellm-proxy` (Docker, `:4000`) + postgres —
@@ -85,11 +85,11 @@
 
 ## Host-nginx (общий reverse-proxy + HTTPS) — 13.06.2026
 
-- На хосте `5.42.117.201` стоит **nginx 1.24 + certbot 2.9** (НЕ в Docker).
+- На хосте `5.42.112.17` стоит **nginx 1.24 + certbot 2.9** (НЕ в Docker).
   Это **общая точка входа** сервера на портах 80/443.
 - Сайт `/etc/nginx/sites-available/tech.bitandpix.ru` → `proxy_pass 127.0.0.1:4007`
   (Postiz), websocket + `client_max_body_size 256m` (медиа).
-- **Домен `tech.bitandpix.ru`** (A-запись → 5.42.117.201). **HTTPS Let's Encrypt**
+- **Домен `tech.bitandpix.ru`** (A-запись → 5.42.112.17). **HTTPS Let's Encrypt**
   выпущен (до 2026-09-11, авто-renew через certbot timer). HTTP 80 → 301 на https.
 - **Второй сервис — Chatwoot — уже на `chat.bitandpix.ru`** (отдельный server-блок
   + свой LE-серт, выпущен 13.06.2026 другим агентом, → Chatwoot `:3000`). Серт
@@ -117,7 +117,7 @@
 - Манульный certbot запускать с **снятым прокси**: `env -u HTTPS_PROXY -u HTTP_PROXY certbot ...`
   (интерактивный shell имеет `HTTPS_PROXY` → ACME через tinyproxy может зависнуть;
   systemd-таймер и так идёт direct).
-- **SSH-обрывы на kex** у `5.42.117.201` учащаются при частых коннектах двух агентов
+- **SSH-обрывы на kex** у `5.42.112.17` учащаются при частых коннектах двух агентов
   (похоже fail2ban). Не молотить коннектами; при обрыве — пауза и retry.
 
 ## onboard-service (регистрация каналов без ssh) — 14.06.2026
@@ -174,7 +174,7 @@
 TELEGRAM_TOKEN: "<бот bit_and_pix_bot>"
 HTTPS_PROXY: "http://<user>:<pass>@5.2.66.188:8888"
 HTTP_PROXY:  "http://<user>:<pass>@5.2.66.188:8888"
-NO_PROXY: "localhost,127.0.0.1,::1,postiz-postgres,postiz-redis,temporal,tech.bitandpix.ru,5.42.117.201,5.2.66.188,vk.com,.vk.com,userapi.com,.userapi.com,vkuser.net,.vkuser.net"
+NO_PROXY: "localhost,127.0.0.1,::1,postiz-postgres,postiz-redis,temporal,tech.bitandpix.ru,5.42.112.17,5.2.66.188,vk.com,.vk.com,userapi.com,.userapi.com,vkuser.net,.vkuser.net"
 ```
 
 **Почему это работает и почему `NO_PROXY` именно такой (важный нюанс клиентов):**

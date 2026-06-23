@@ -36,8 +36,8 @@ SURVEY_API_KEY=dev INTAKE_PREFIX=smm/intake/_test/ PORT=4099 node server.mjs
 node --test
 ```
 
-## Деплой на seo (5.42.117.201)
-1. **DNS (оператор):** A-запись `survey.bitandpix.ru → 5.42.117.201`.
+## Деплой на seo (5.42.112.17)
+1. **DNS (оператор):** A-запись `survey.bitandpix.ru → 5.42.112.17`.
 2. Собрать/запустить контейнер (env передать через `--env-file` или compose):
    ```bash
    docker build -t survey-service tools/survey-service

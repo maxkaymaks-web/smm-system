@@ -755,14 +755,14 @@ git commit -m "tools: register-channel — подключение VK/TG кана
 ```bash
 cd /home/pavel/projects/smm-system
 tar czf /tmp/onboard-service.tgz -C tools onboard-service
-cat /tmp/onboard-service.tgz | ssh -p 22 root@5.42.117.201 'cat > /tmp/onboard-service.tgz && mkdir -p /opt/postiz-official/onboard-service && tar xzf /tmp/onboard-service.tgz -C /opt/postiz-official/ --strip-components=0'
+cat /tmp/onboard-service.tgz | ssh -p 22 root@5.42.112.17 'cat > /tmp/onboard-service.tgz && mkdir -p /opt/postiz-official/onboard-service && tar xzf /tmp/onboard-service.tgz -C /opt/postiz-official/ --strip-components=0'
 ```
 (Распаковка кладёт `/opt/postiz-official/onboard-service/`.)
 
 - [ ] **Step 2: Узнать `DATABASE_URL` Postiz + сгенерировать ключ**
 
 ```bash
-ssh -p 22 root@5.42.117.201 "grep -E '^DATABASE_URL=' /opt/postiz-official/.env; echo KEY=$(openssl rand -hex 24)"
+ssh -p 22 root@5.42.112.17 "grep -E '^DATABASE_URL=' /opt/postiz-official/.env; echo KEY=$(openssl rand -hex 24)"
 ```
 Запомнить `DATABASE_URL` и сгенерированный `ONBOARD_API_KEY`.
 
@@ -786,8 +786,8 @@ ssh -p 22 root@5.42.117.201 "grep -E '^DATABASE_URL=' /opt/postiz-official/.env;
 - [ ] **Step 4: Сверить схему `Integration` (см. Task 5 Step 3) и поднять**
 
 ```bash
-ssh -p 22 root@5.42.117.201 'docker exec postiz-postgres psql -U postiz -d postiz -c "\d \"Integration\"" '
-ssh -p 22 root@5.42.117.201 'cd /opt/postiz-official && docker compose -f docker-compose.trim.yaml up -d --build onboard-service'
+ssh -p 22 root@5.42.112.17 'docker exec postiz-postgres psql -U postiz -d postiz -c "\d \"Integration\"" '
+ssh -p 22 root@5.42.112.17 'cd /opt/postiz-official && docker compose -f docker-compose.trim.yaml up -d --build onboard-service'
 ```
 Если в схеме нашлись доп. NOT NULL — поправить INSERT в `server.mjs`, перелить (Step 1), пересобрать.
 
@@ -802,7 +802,7 @@ location /onboard/ {
 ```
 Затем:
 ```bash
-ssh -p 22 root@5.42.117.201 'nginx -t && systemctl reload nginx'
+ssh -p 22 root@5.42.112.17 'nginx -t && systemctl reload nginx'
 ```
 
 - [ ] **Step 6: Smoke снаружи**

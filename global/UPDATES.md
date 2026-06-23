@@ -120,7 +120,7 @@ S3-креды не нужны. Дальше по ответам заводишь
 
 ## 17.05.2026 — HTTPS_PROXY больше не относится к локальному CC
 
-- **Правило:** прокси `5.2.66.188:8888` нужен ТОЛЬКО для запусков с RU-сервера `5.42.117.201` (исторический OpenClaw, выключен 16.05.2026). Локальный `claude` в этом репо ходит во внешние сервисы (fal.ai, Apify, GitHub) напрямую — никакого `HTTPS_PROXY` ни в `.env`, ни в окружении задавать не надо.
+- **Правило:** прокси `5.2.66.188:8888` нужен ТОЛЬКО для запусков с RU-сервера `5.42.112.17` (исторический OpenClaw, выключен 16.05.2026). Локальный `claude` в этом репо ходит во внешние сервисы (fal.ai, Apify, GitHub) напрямую — никакого `HTTPS_PROXY` ни в `.env`, ни в окружении задавать не надо.
 - **Почему правка:** в `CLAUDE.md`, `global/rules.md`, `agents/designer/SOUL.md`, `skills/fal-ai/SKILL.md` и тексте ошибок `tools/generate-image.mjs` оставались формулировки в стиле «трафик идёт через `HTTPS_PROXY` из `.env`», которые сбивали локальную сессию: агент пытался выставлять прокси или подозревать его в любом сетевом фейле.
 - **Что осталось без изменений:** `docs/proxy-and-server.md` (инфра-док про сервер) и `docs/openclaw-deploy.md` (исторический деплой OpenClaw) — там прокси описан корректно в серверном контексте.
 
@@ -128,7 +128,7 @@ S3-креды не нужны. Дальше по ответам заводишь
 
 ## 16.05.2026 — уход от OpenClaw, ручной Claude Code + архив сессий
 
-- **OpenClaw на 5.42.117.201 отключён.** `openclaw-gateway.service` остановлен (stop + disable), оба root-cron'а (`session-watchdog.mjs` ежеминутный, `openclaw-logs-sync.mjs` daily 03:00) сняты. Последний финальный sync прошёл вручную (29 сессий / 75 файлов в `s3://seo/logs/openclaw/`, дельта после 16.05 03:00 — 6 файлов / 0.67 MB). Бинарь OpenClaw в `/usr/lib/node_modules`, `/root/.openclaw/`, конфиги — **не тронуты** (rollback одним `systemctl start`); полный cleanup отдельной задачей через 1-2 недели.
+- **OpenClaw на 5.42.112.17 отключён.** `openclaw-gateway.service` остановлен (stop + disable), оба root-cron'а (`session-watchdog.mjs` ежеминутный, `openclaw-logs-sync.mjs` daily 03:00) сняты. Последний финальный sync прошёл вручную (29 сессий / 75 файлов в `s3://seo/logs/openclaw/`, дельта после 16.05 03:00 — 6 файлов / 0.67 MB). Бинарь OpenClaw в `/usr/lib/node_modules`, `/root/.openclaw/`, конфиги — **не тронуты** (rollback одним `systemctl start`); полный cleanup отдельной задачей через 1-2 недели.
 - **Причина:** бюджет LiteLLM virtual key smm-openclaw исчерпан 16.05 ($50.07/$50); gateway бесполезно спамил `FailoverError`. Текущий формат «бот в TG отвечает сам на @mention» решено больше не поддерживать.
 - **Новый рабочий режим:** операторы запускают `cd smm-system && claude` руками, **1 задача = 1 сессия**. Это всё. Никаких 24/7-сервисов, никакого LiteLLM в горячем пути.
 - **Архив сессий CC в S3.** В конце задачи (с подтверждения оператора) Claude Code:
@@ -149,7 +149,7 @@ S3-креды не нужны. Дальше по ответам заводишь
 
 ## 14.05.2026 — архив сессий OpenClaw в S3
 
-- **`tools/openclaw-logs-sync.mjs`** — ежедневная (cron 03:00 на 5.42.117.201) выгрузка всех session JSONL (`*.jsonl`, `*.trajectory.jsonl`, `*.trajectory-path.json`, `*.jsonl.reset.*`) из `/root/.openclaw/agents/main/sessions/` в `s3://seo/logs/openclaw/{YYYY}/{MM}/{DD}/{file}`. Партиция — по дате первого event'а в JSONL (день рождения сессии), а не по mtime — благодаря чему растущая сессия не «разъезжается» по разным датам.
+- **`tools/openclaw-logs-sync.mjs`** — ежедневная (cron 03:00 на 5.42.112.17) выгрузка всех session JSONL (`*.jsonl`, `*.trajectory.jsonl`, `*.trajectory-path.json`, `*.jsonl.reset.*`) из `/root/.openclaw/agents/main/sessions/` в `s3://seo/logs/openclaw/{YYYY}/{MM}/{DD}/{file}`. Партиция — по дате первого event'а в JSONL (день рождения сессии), а не по mtime — благодаря чему растущая сессия не «разъезжается» по разным датам.
 - **Идемпотентность через `x-amz-meta-srcmtime` + `srcsize`**: повторный запуск пропускает неизменённые файлы (`skipped=N`); активные сессии переливаются на следующий день автоматически (S3 PUT перезаписывает).
 - **Снимок индекса**: `sessions.json` агента дополнительно копируется в `logs/openclaw/_index/sessions-{YYYY-MM-DD}.json` — даёт точку отсчёта «какие сессии были живы на конец суток».
 - **Зачем**: накопить корпус реальных кейсов использования (полный prompt + system prompt + messagesSnapshot + tool calls/results) для последующего разбора и обучения. JSONL OpenClaw содержит всё необходимое — этот скрипт только архивирует.
@@ -171,7 +171,7 @@ S3-креды не нужны. Дальше по ответам заводишь
 
 ## 11.05.2026 (обновление 3) — OpenClaw задеплоен на RU-сервер
 
-- **OpenClaw 2026.5.7** на `5.42.117.201`, user-systemd сервис от root, gateway loopback `127.0.0.1:18789`. EnvironmentFile подцепляет `/root/smm-system/.env` — `tools/*.mjs` (fal.ai, S3, tg-send) видят все креды.
+- **OpenClaw 2026.5.7** на `5.42.112.17`, user-systemd сервис от root, gateway loopback `127.0.0.1:18789`. EnvironmentFile подцепляет `/root/smm-system/.env` — `tools/*.mjs` (fal.ai, S3, tg-send) видят все креды.
 - **Node 22 обязательно** (LTS 18 не подходит — `Array.prototype.toSorted` отсутствует, `openclaw` postinstall падает).
 - **npm install — БЕЗ прокси**: registry.npmjs.org доступен с RU напрямую, а через tinyproxy CONNECT возвращает 407.
 - **Новая схема `openclaw.json`** (несовместимая со старой): `agents.defaults.{workspace,repoRoot,model.primary,model.fallbacks}`, `models.providers.<id>.{baseUrl,api,apiKey,models[]}`, `channels.telegram.{groupPolicy,groupAllowFrom,groups[chat_id]}`. `defaultAgent` per-group больше не существует — оркестратор берётся как `agents.defaults.model.primary`.
@@ -207,7 +207,7 @@ S3-креды не нужны. Дальше по ответам заводишь
 - **Полный переезд с Claude Code на OpenClaw.** Все агенты (`orchestrator`, `copywriter`, `designer`, `analytics`, `brief`, `content-planner`, `dushnila`) теперь живут в `agents/<name>/SOUL.md` (формат OpenClaw). Старые `skill.md` удалены. Папка `agents/skills/` удалена как дубль.
 - **LiteLLM как единственный AI-gateway** (`http://5.2.66.188:4000`, Postgres + spend tracking). Все модели под именами `smm/claude-haiku-4.5`, `smm/claude-sonnet-4.6`, `smm/claude-opus-4-7`, `smm/deepseek-v3`, `smm/gemini-2.5-flash`, `smm/gemini-2.5-pro`. Они идут через отдельный OpenRouter ключ для трекинга расхода SMM-проекта.
 - **Virtual key `smm-openclaw`** с бюджетом $50/30дн. `LITELLM_KEY` в `.env`. Расход: `node tools/spend.mjs`.
-- **HTTPS_PROXY** (tinyproxy на проксе 5.2.66.188:8888 с BasicAuth) прописан system-wide на RU-сервере `5.42.117.201` — `/etc/environment`, apt, git, npm видят. fal.ai/Apify/GitHub теперь доступны с RU.
+- **HTTPS_PROXY** (tinyproxy на проксе 5.2.66.188:8888 с BasicAuth) прописан system-wide на RU-сервере `5.42.112.17` — `/etc/environment`, apt, git, npm видят. fal.ai/Apify/GitHub теперь доступны с RU.
 - **Дефолт-модель оркестратора:** `smm/claude-sonnet-4.6`, копирайтер/аналитик/планер — `smm/claude-haiku-4.5`. Haiku в 15× дешевле Sonnet, на типовых задачах разница незаметна.
 - **Креды в `.env`** (gitignored): LITELLM, FAL, APIFY, VK, GitHub PAT, S3 (Timeweb seo bucket), Swift. Шаблон — `.env.example`.
 - **Душнила** — теперь полноценный агент `agents/dushnila/SOUL.md` для обработки ОС заказчика.

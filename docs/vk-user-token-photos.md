@@ -111,5 +111,5 @@
   см. `docs/infra.md`). Канон — в репо.
 - Связь клиент→канал: `projects/{ID}/channels.json` (`integrationId`, `internalId`=group_id).
 - Регистрация каналов: `tools/onboard/register-channel.mjs` + серверный `onboard-service`.
-- Сервер: `5.42.117.201`, SSH порт 22, стек `/opt/postiz-official/`. Постиз-контейнер
+- Сервер: `5.42.112.17`, SSH порт 22, стек `/opt/postiz-official/`. Постиз-контейнер
   ходит наружу: VK напрямую (NO_PROXY `.vk.com`,`.userapi.com`), TG через прокси.
