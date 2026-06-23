@@ -95,6 +95,41 @@
   + свой LE-серт, выпущен 13.06.2026 другим агентом, → Chatwoot `:3000`). Серт
   под тем же `certbot.timer`, продлевается автоматически.
 
+### ⚙️ Перф-настройки nginx (gzip + HTTP/2) — 23.06.2026 (ВРУЧНУЮ, не в Docker)
+
+> Жалоба: «Chatwoot и Postiz долго открываются». Диагностика: железо в норме
+> (load <1, RAM свободна), бэкенды отвечают за 45–150 мс — тормозило **холодное
+> скачивание фронтенд-ассетов**. Postiz уже был ок (его `_next`-ассеты Next.js
+> сам отдаёт gzip + `immutable`-кэш на год). Виноват был nginx для Chatwoot.
+
+Что включено вручную на сервере (`5.42.112.17`, файлы вне репо — **при передеплое
+nginx восстановить руками**):
+
+1. **gzip для статики** в `/etc/nginx/nginx.conf` — раньше `gzip on`, но `gzip_types`
+   был закомментирован → жался **только** `text/html`, а JS/CSS шли сырыми.
+   Раскомментировано + расширено: `gzip_vary on; gzip_proxied any;
+   gzip_comp_level 5; gzip_min_length 1024;` и `gzip_types` с
+   `application/javascript text/javascript text/css application/json
+   image/svg+xml application/wasm` (+шрифты). Эффект: холодное открытие Chatwoot
+   **19.2 MB → 5.0 MB** (−3.8×). На Postiz не влияет (его ассеты уже сжаты
+   апстримом — nginx повторно не трогает уже закодированные ответы).
+
+2. **HTTP/2** — `listen 443 ssl;` → **`listen 443 ssl http2;`** в
+   `tech.bitandpix.ru` (строка `listen 443`). ⚠️ nginx **1.24** — синтаксис
+   старый (`http2` в `listen`), НЕ `http2 on;` (это 1.25+, упадёт `unknown
+   directive`). `chat.bitandpix.ru` **намеренно БЕЗ** `http2`: оба сайта на одном
+   сокете `0.0.0.0:443`, опция протокола задаётся на сокет один раз → дубль даёт
+   варнинг `protocol options redefined`. Проверка: `curl -o /dev/null -w
+   "%{http_version}" https://chat.bitandpix.ru/` → `2`.
+
+3. Применение: `nginx -t && systemctl reload nginx` (без даунтайма). Бэкапы
+   конфигов на сервере: `*.bak.20260623-163547`.
+
+Дальше (НЕ делали, на будущее): дробление 2.9 MB `dashboard.js` Chatwoot — это
+**сборка их образа** (официальный `chatwoot/chatwoot:latest`, ассеты вшиты),
+форк не оправдан. Если упрёмся — дешевле поставить **brotli**-модуль в nginx
+(~+15% к gzip, без форков), чем лезть в их vite-билд.
+
 ### Сертификаты и автопродление (оба домена)
 
 | Домен | Сервис | Серт истекает | Продление |
