@@ -57,7 +57,7 @@ STATE_PATH = os.environ.get("STATE_PATH", "/data/state.json")
 DEADLETTER_PATH = os.environ.get("DEADLETTER_PATH", "/data/deadletter.jsonl")
 MAX_BYTES = 40 * 1024 * 1024  # лимит вложения Chatwoot по умолчанию
 TG_PHOTO_LIMIT = 10 * 1024 * 1024         # Telegram не примет фото крупнее -> шлём документом
-TG_VIDEO_INLINE_LIMIT = 10 * 1024 * 1024  # видео <= 10МБ шлём играбельным; крупнее -> документом (по требованию)
+TG_VIDEO_INLINE_LIMIT = 50 * 1024 * 1024  # видео шлём играбельным вплоть до потолка Bot API (50МБ); крупнее ботом вообще нельзя
 ACCOUNT_ID = os.environ.get("CHATWOOT_ACCOUNT_ID", "1")
 API_TOKEN = os.environ.get("CHATWOOT_API_TOKEN", "")  # агентский токен (аватар, заметки, свежие URL вложений)
 
@@ -623,8 +623,8 @@ async def tg_send_media_group(chat_id, items, caption):
 
 
 def tg_partition(files):
-    """media — фото(<=10МБ) и видео(<=10МБ) для одного альбома (атомарно, видео играбельны);
-    docs — всё прочее: крупные фото/видео и не-медиа (отдельными документами)."""
+    """media — фото(<=10МБ) и видео(<=50МБ) для одного альбома (атомарно, всё играбельно);
+    docs — только то, что инлайном физически нельзя: фото >10МБ, видео >50МБ, не-медиа."""
     media, docs = [], []
     for f in files:
         ft = f.get("file_type")

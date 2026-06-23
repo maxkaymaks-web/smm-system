@@ -47,9 +47,9 @@ def test_tg_partition_media_vs_docs():
     big_vid = b"x" * (g.TG_VIDEO_INLINE_LIMIT + 1)
     files = [
         {"file_type": "image", "data": small, "name": "a.jpg"},      # фото -> media
-        {"file_type": "video", "data": small, "name": "clip.mp4"},   # видео <=10МБ -> media (играбельно)
-        {"file_type": "image", "data": big_img, "name": "huge.jpg"}, # >10МБ -> docs
-        {"file_type": "video", "data": big_vid, "name": "huge.mp4"}, # видео >10МБ -> docs (файлом)
+        {"file_type": "video", "data": small, "name": "clip.mp4"},   # видео <=50МБ -> media (играбельно)
+        {"file_type": "image", "data": big_img, "name": "huge.jpg"}, # фото >10МБ -> docs
+        {"file_type": "video", "data": big_vid, "name": "huge.mp4"}, # видео >50МБ -> docs
         {"file_type": "file", "data": small, "name": "doc.pdf"},     # прочее -> docs
     ]
     media, docs = g.tg_partition(files)
