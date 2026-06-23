@@ -11,6 +11,7 @@
  *
  * Прайс берётся из tools/lib/fal-prices.json. Неизвестная модель → estimated_usd=null + warning в stderr.
  */
+import './net-proxy.mjs'; // side-effect: включает ProxyAgent, если задан FAL_PROXY/HTTPS_PROXY
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -67,6 +68,38 @@ function appendLog(entry) {
   fs.appendFileSync(SPEND_LOG, JSON.stringify(entry) + '\n');
 }
 
+// Сетевой обрыв соединения (VPN/прокси/DPI) — это НЕ ошибка промпта и не перегрузка
+// fal.ai, такое имеет смысл повторить. TIMEOUT из withTimeout-обёртки сюда не попадает
+// (его осознанно не ретраим — см. generate-image.mjs).
+function isTransientNetErr(err) {
+  const msg = `${err?.message ?? err} ${err?.cause?.code ?? err?.code ?? ''} ${err?.cause?.message ?? ''}`;
+  if (/TIMEOUT after/i.test(msg)) return false;
+  return /ECONNRESET|ECONNREFUSED|ETIMEDOUT|EAI_AGAIN|ENETUNREACH|EPIPE|UND_ERR|fetch failed|socket hang up|terminated|other side closed|network/i.test(msg);
+}
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+async function runWithRetry(runFn, { tries = 3, baseDelayMs = 1500 } = {}) {
+  let lastErr;
+  for (let attempt = 1; attempt <= tries; attempt++) {
+    try {
+      return await runFn();
+    } catch (err) {
+      lastErr = err;
+      if (attempt < tries && isTransientNetErr(err)) {
+        const delay = baseDelayMs * attempt;
+        process.stderr.write(
+          `[fal-meter] сетевой обрыв (попытка ${attempt}/${tries}): ${String(err?.message ?? err).slice(0, 120)} — повтор через ${delay / 1000}s\n`
+        );
+        await sleep(delay);
+        continue;
+      }
+      throw err;
+    }
+  }
+  throw lastErr;
+}
+
 /**
  * Запустить fal-вызов и записать стоимость в state/fal-spend.jsonl.
  * @param {object} ctx — { tool, model, params }
@@ -75,7 +108,7 @@ function appendLog(entry) {
 export async function meter(ctx, runFn) {
   const ts = new Date().toISOString();
   try {
-    const result = await runFn();
+    const result = await runWithRetry(runFn);
     const estimated_usd = estimate(ctx.model, ctx.params ?? {}, result);
     appendLog({
       ts,

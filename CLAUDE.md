@@ -268,6 +268,7 @@ git push origin main
 ## Если что-то непонятно
 
 - `docs/notion-access.md` — как ходить в Notion (через прямой API, не MCP)
+- `docs/fal-troubleshooting.md` — fal.ai падает под VPN (ECONNRESET) → `FAL_PROXY`
 - `docs/client-onboarding.md` — как завести нового клиента (бриф → Notion → Drive)
 - `docs/storage.md` — где что хранится (сейчас vs цель)
 - `docs/onboarding-process.md` — видение и процесс от начальника
