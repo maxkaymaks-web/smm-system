@@ -8,21 +8,32 @@
  *                                / сложная типографика / мульти-язык на картинке
  *
  * Использование:
- *   node tools/generate-image.mjs <prompt> <output.jpg> [aspect_ratio] [resolution] [--model=nano-banana-2|gpt-image-2] [--quality=low|medium|high]
+ *   node tools/generate-image.mjs <prompt> <output.jpg> [aspect_ratio] [resolution] [--model=nano-banana-2|gpt-image-2] [--quality=low|medium|high] [--ref=path1.jpg,path2.jpg]
  *
  * aspect_ratio: 1:1 | 16:9 | 9:16 | 4:3 | 3:4         (default: 3:4 для портретных постов)
  * resolution:   0.5K | 1K | 2K | 4K                    (используется nano-banana-2; default: 1K)
  * --quality:    low | medium | high                    (только gpt-image-2; default: high)
+ * --ref:        локальные файлы-референсы (img2img/edit, до 14, только nano-banana-2) —
+ *               загружаются в fal storage автоматически
  *
- * Requires: npm install @fal-ai/client
+ * Сетевой слой: запрос к fal.ai идёт через `curl` (child process), а не через
+ * @fal-ai/client/fetch. На этой сети длинные HTTPS-запросы через Node fetch
+ * (undici) к fal.ai рвутся ECONNRESET — это фатальное событие на TLS-сокете,
+ * которое не перехватывается даже process.on('uncaughtException'). curl через
+ * тот же HTTPS_PROXY стабильно работает (проверено многократно). Если когда-то
+ * сеть/прокси изменится и Node fetch станет надёжен — можно вернуть @fal-ai/client.
+ *
+ * Requires: curl в PATH (есть в Windows/macOS/Linux по умолчанию)
  * API key:  .env (репо-рут) → FAL_KEY=...
  */
 
-import { fal } from "@fal-ai/client";
 import fs from "fs";
-import https from "https";
 import path from "path";
+import { execFile } from "child_process";
+import { promisify } from "util";
 import { meter } from "./lib/fal-meter.mjs";
+
+const execFileAsync = promisify(execFile);
 
 const envPath = path.join(process.cwd(), ".env");
 let FAL_KEY = process.env.FAL_KEY;
@@ -35,17 +46,59 @@ if (!FAL_KEY) {
   process.exit(1);
 }
 
-fal.config({ credentials: FAL_KEY });
+const proxyUrl = process.env.HTTPS_PROXY || process.env.https_proxy;
 
 async function downloadFile(url, outputPath) {
   fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-  return new Promise((resolve, reject) => {
-    const file = fs.createWriteStream(outputPath);
-    https.get(url, (r) => {
-      r.pipe(file);
-      file.on("finish", () => { file.close(); resolve(outputPath); });
-    }).on("error", reject);
-  });
+  const args = ["-sS", "--max-time", "60"];
+  if (proxyUrl) args.push("-x", proxyUrl);
+  args.push("-o", outputPath, url);
+  await execFileAsync("curl", args);
+}
+
+/**
+ * Вызывает fal.ai sync-run endpoint (POST https://fal.run/{modelId}) через curl.
+ * Возвращает распарсенный JSON-ответ (без обёртки {data:...} — она только у SDK).
+ */
+async function callFalRun(modelId, input, timeoutMs) {
+  const tmpFile = path.join(process.cwd(), "state", `.fal-req-${Date.now()}-${Math.random().toString(36).slice(2)}.json`);
+  fs.mkdirSync(path.dirname(tmpFile), { recursive: true });
+  fs.writeFileSync(tmpFile, JSON.stringify(input));
+  const args = ["-sS", "--max-time", String(Math.ceil(timeoutMs / 1000))];
+  if (proxyUrl) args.push("-x", proxyUrl);
+  args.push(
+    "-X", "POST",
+    `https://fal.run/${modelId}`,
+    "-H", `Authorization: Key ${FAL_KEY}`,
+    "-H", "Content-Type: application/json",
+    "--data", `@${tmpFile}`
+  );
+  try {
+    const { stdout } = await execFileAsync("curl", args, { maxBuffer: 1024 * 1024 * 50 });
+    const json = JSON.parse(stdout);
+    if (json.detail) throw new Error(`fal.ai: ${typeof json.detail === "string" ? json.detail : JSON.stringify(json.detail)}`);
+    return json;
+  } finally {
+    fs.unlinkSync(tmpFile);
+  }
+}
+
+async function callFalRunWithRetry(modelId, input, timeoutMs, attempts = 3) {
+  let lastErr;
+  for (let i = 1; i <= attempts; i++) {
+    try {
+      return await callFalRun(modelId, input, timeoutMs);
+    } catch (err) {
+      lastErr = err;
+      const transient = /ECONNRESET|timed out|Connection reset|curl: \(\d+\)/i.test(err.message ?? "");
+      if (transient && i < attempts) {
+        console.error(`[generate-image] сетевой сбой (попытка ${i}/${attempts}): ${err.message} — retry...`);
+        continue;
+      }
+      throw err;
+    }
+  }
+  throw lastErr;
 }
 
 const ALLOWED_MODELS = new Set(["nano-banana-2", "gpt-image-2"]);
@@ -98,47 +151,52 @@ const ASPECT_TO_SIZE = {
 // nano-banana-2 быстрый (~15-30s), gpt-image-2 quality=high может идти до 5 минут
 const TIMEOUT_MS = model === "gpt-image-2" ? 300_000 : 120_000;
 
-function withTimeout(promise, ms) {
-  return Promise.race([
-    promise,
-    new Promise((_, reject) =>
-      setTimeout(() => reject(new Error(`TIMEOUT after ${ms / 1000}s. Это НЕ проблема промпта — fal.ai перегружен. Не переформулируй промпт, не retry — останови задачу и сообщи оператору.`)), ms)
-    ),
-  ]);
+let imageUrls;
+if (flags.ref) {
+  if (model !== "nano-banana-2") {
+    console.error("--ref (img2img) поддерживается только для nano-banana-2.");
+    process.exit(1);
+  }
+  const refPaths = flags.ref.split(",").map((p) => p.trim()).filter(Boolean);
+  console.log(`Encoding ${refPaths.length} reference image(s) as data URI...`);
+  const MIME = { ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png", ".webp": "image/webp" };
+  imageUrls = refPaths.map((p) => {
+    const ext = path.extname(p).toLowerCase();
+    const mime = MIME[ext] ?? "image/jpeg";
+    const b64 = fs.readFileSync(p).toString("base64");
+    return `data:${mime};base64,${b64}`;
+  });
 }
 
 console.log(`Generating: "${prompt}"`);
-console.log(`Output: ${outputPath} | model=${model} | ${aspectRatio}${model === "nano-banana-2" ? ` | ${resolution}` : ` | quality=${quality}`}`);
+console.log(`Output: ${outputPath} | model=${model} | ${aspectRatio}${model === "nano-banana-2" ? ` | ${resolution}` : ` | quality=${quality}`}${imageUrls ? ` | refs=${imageUrls.length}` : ""}`);
 
 let result;
 
 try {
   if (model === "nano-banana-2") {
     result = await meter(
-      { tool: "generate-image", model: "fal-ai/nano-banana-2", params: { resolution, aspect_ratio: aspectRatio, num_images: 1 } },
-      () => withTimeout(fal.run("fal-ai/nano-banana-2", {
-        input: {
-          prompt,
-          aspect_ratio: aspectRatio,
-          resolution,
-          output_format: "jpeg",
-          num_images: 1,
-        },
-      }), TIMEOUT_MS)
+      { tool: "generate-image", model: "fal-ai/nano-banana-2", params: { resolution, aspect_ratio: aspectRatio, num_images: 1, has_refs: !!imageUrls } },
+      () => callFalRunWithRetry("fal-ai/nano-banana-2", {
+        prompt,
+        aspect_ratio: aspectRatio,
+        resolution,
+        output_format: "jpeg",
+        num_images: 1,
+        ...(imageUrls ? { image_urls: imageUrls } : {}),
+      }, TIMEOUT_MS).then((json) => ({ data: json }))
     );
   } else {
     const imageSize = ASPECT_TO_SIZE[aspectRatio] ?? "portrait_4_3";
     result = await meter(
       { tool: "generate-image", model: "openai/gpt-image-2", params: { image_size: imageSize, quality, num_images: 1 } },
-      () => withTimeout(fal.run("openai/gpt-image-2", {
-        input: {
-          prompt,
-          image_size: imageSize,
-          quality,
-          output_format: "jpeg",
-          num_images: 1,
-        },
-      }), TIMEOUT_MS)
+      () => callFalRunWithRetry("openai/gpt-image-2", {
+        prompt,
+        image_size: imageSize,
+        quality,
+        output_format: "jpeg",
+        num_images: 1,
+      }, TIMEOUT_MS).then((json) => ({ data: json }))
     );
   }
 } catch (err) {

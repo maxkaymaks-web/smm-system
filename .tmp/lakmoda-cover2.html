@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<title>LAKMODA — обложка Reel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #2f4150;
+    --pill: #ffffff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+  }
+
+  body {
+    position: relative;
+    font-family: 'Montserrat', system-ui, sans-serif;
+    color: var(--ink);
+    background: url("lakmoda-cover-clean-bg.png") center center / cover no-repeat;
+  }
+
+  /* light cream-peach gradient — matches the textured reference exactly */
+  .grad {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 820px;
+    background: linear-gradient(180deg,
+      rgba(253, 244, 241, 0.00) 0%,
+      rgba(248, 220, 207, 0.45) 25%,
+      rgba(247, 220, 207, 0.85) 45%,
+      rgba(250, 236, 231, 0.97) 65%,
+      #fdf4f1 100%);
+  }
+
+  /* text stack */
+  .stack {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 140px;
+    text-align: center;
+    padding: 0 80px;
+  }
+
+  .super {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 30px;
+    letter-spacing: 9px;
+    color: #1c2a36;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+  }
+
+  .logo {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    font-size: 96px;
+    letter-spacing: 18px;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 26px;
+    padding-left: 18px;
+  }
+
+  .sub {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    font-size: 30px;
+    letter-spacing: 11px;
+    color: #1c2a36;
+    margin-bottom: 44px;
+    padding-left: 11px;
+  }
+
+  .pill {
+    display: inline-block;
+    background: var(--pill);
+    color: var(--ink);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    font-size: 32px;
+    letter-spacing: 1.2px;
+    padding: 18px 54px 20px;
+    border-radius: 999px;
+    box-shadow: 0 6px 18px rgba(150, 80, 60, 0.10);
+  }
+</style>
+</head>
+<body>
+  <div class="grad"></div>
+
+  <div class="stack">
+    <div class="super">Салон красоты</div>
+    <div class="logo">LAKMODA</div>
+    <div class="sub">МАНИКЮР &amp; ПЕДИКЮР</div>
+    <div class="pill">lakmoda.ru</div>
+  </div>
+</body>
+</html>
