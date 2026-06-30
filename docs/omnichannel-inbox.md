@@ -103,8 +103,9 @@ VK в очередной раз перепрятал раздел API. Что р
 
 ## Шлюз VK+TG (реализован 12.06.2026)
 
-Свой шлюз на long polling — HTTPS не нужен. Код в репо: `tools/chatwoot-gateway/`
-(`gateway.py`, `docker-compose.yaml`, `gateway.env.example`). На сервере живёт как
+Свой шлюз на long polling — HTTPS не нужен. Код: `smm-app/temp/chatwoot-gateway/`
+(переехал из smm-system при Track 2; `gateway.py`, `docker-compose.yaml`,
+`gateway.env.example`). На сервере живёт как
 сервис `gateway` в compose-проекте `chatwoot` (образ `python:3.12-slim`, ставит
 зависимости при старте, код примонтирован из `/opt/chatwoot/gateway/`).
 

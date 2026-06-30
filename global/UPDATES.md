@@ -6,6 +6,26 @@
 
 ---
 
+## 2026-06-30 — Публикация руками; вычистили Postiz/onboard-слой
+Зафиксировали реальность: **Postiz так и не интегрировали — посты публикуем руками.**
+Поэтому весь незаконченный автопостинг-слой убран из репо, чтобы не путал.
+
+- **Публикация — вручную.** Оператор постит готовый пост сам в соцсети, статус
+  обновляет в Notion. Никаких токенов соцсетей/ключей публикации оператору не нужно.
+  В CLAUDE.md модель теперь «2 окна + Notion» (Chatwoot + Claude Code), Postiz-окна нет.
+- **Удалено из smm-system:** `tools/onboard-service/`, `tools/postiz/`, `patches/`
+  (VK-патч Postiz), `tools/vk/`, `tools/onboard/register-channel.mjs`, все
+  `projects/*/channels.json`. Мёртвые docs (postiz-integration, onboarding-no-ssh-handoff,
+  vk-user-token-photos, onboard-no-ssh-спеки) и dev-memory про них — снесены.
+- **Переехало в `smm-app/temp/`** (staging под Track 2-миграцию): исходники живых
+  сервисов `chatwoot-gateway` и `survey-service`. Секреты `.env` скопированы в smm-app.
+- **Осталось у оператора:** `tools/onboard/{new-client,edit-client}.mjs`,
+  `tools/intake/check.mjs` (Шаг 0), весь контент-тулинг (генерация/рендер/S3).
+- Инфра-доки (`infra.md`) помечены транзитом → актуальный план переезда в
+  `smm-app/docs/specs/2026-06-30-track2-infra-migration-runbook.md`.
+
+---
+
 ## 2026-06-30 — Память теперь общая (git), личная память Claude выключена
 Нашли утечку: оператор говорил Claude «запомни на будущее», и тот сохранял
 **клиентские правила в личную память харнесса** (`~/.claude/.../memory/`) вместо

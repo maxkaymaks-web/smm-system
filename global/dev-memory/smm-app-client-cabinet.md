@@ -51,4 +51,4 @@ nginx.conf.sigil, CI). Команды: `make be t=test|cover|lint`, `make fe t=f
 
 Спека Трека 1: `smm-app/docs/specs/2026-06-29-cabinet-foundation-design.md`.
 План: `smm-app/docs/superpowers/plans/2026-06-29-cabinet-foundation-track1.md`.
-Связано: [[smm-servers-and-egress]] [[postiz-vk-telegram-integration]] [[target-architecture-3-windows]].
+Связано: [[smm-servers-and-egress]] [[target-architecture-3-windows]].

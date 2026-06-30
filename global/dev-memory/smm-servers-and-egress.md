@@ -44,13 +44,12 @@ Egress (уточнено 14.06.2026): **VK API (`api.vk.com`) — напряму
 флапает; из docker-контейнера TG особенно нестабилен (`ETIMEDOUT`). **Надёжный
 egress к Telegram — только через аутентиф. tinyproxy `5.2.66.188:8888`**
 (`getMe` через него = ok). Node `fetch`/undici env-прокси ИГНОРИРУЕТ → в коде
-нужен явный `ProxyAgent` (как сделано в `tools/onboard-service/server.mjs`:
-TG-валидация через `TELEGRAM_PROXY`, VK напрямую). **fal.ai / OpenAI / Anthropic
-геоблочат РФ-IP** (TLS обрывается на handshake) — тоже только через прокси.
+нужен явный `ProxyAgent` (TG-валидация через `TELEGRAM_PROXY`, VK напрямую).
+**fal.ai / OpenAI / Anthropic геоблочат РФ-IP** (TLS обрывается на handshake) —
+тоже только через прокси.
 
-Два трека на этом же сервере: (1) **исходящий** автопостинг VK/TG/IG/MAX через
-Postiz (approve-флоу draft→оператор→publish); (2) **входящий** омниканальный
-инбокс операторов на Chatwoot — **развёрнут и работает** на `https://chat.bitandpix.ru`
-(`/opt/chatwoot`, `:3000`+nginx+HTTPS). VK+TG в обе стороны, текст и медиа. Шлюз
-VK/TG в репо `tools/chatwoot-gateway/` (+ `DEPLOY.md`), детали — `docs/omnichannel-inbox.md`.
-Делят RAM/CPU и общий nginx/HTTPS (домена пока нет).
+На сервере: **входящий** омниканальный инбокс операторов на Chatwoot —
+**развёрнут и работает** на `https://chat.bitandpix.ru` (`/opt/chatwoot`,
+`:3000`+nginx+HTTPS). VK+TG в обе стороны, текст и медиа. Шлюз VK/TG — сервис
+chatwoot-gateway (исходник переехал в `smm-app/temp/chatwoot-gateway/` при Track 2;
+детали — `docs/omnichannel-inbox.md`). Публикация — вручную (Postiz отклонён).

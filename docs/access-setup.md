@@ -41,23 +41,11 @@ claude        # при первом старте подтвердить project-
 
 ---
 
-## 🟩 Онбординг каналов + публикация (ключи сервисов)
+## 🟩 Публикация
 
-Без этих двух ключей оператор не подключит соцсети клиента и не опубликует пост.
-Оба — секреты, раздаются операторам тем же защищённым каналом, что и Notion.
-
-```
-ONBOARD_API_KEY=<секрет сервиса онбординга>     # подключение VK/TG каналов (register-channel)
-POSTIZ_API_KEY=<Organization.apiKey из Postiz>   # публикация поста (Postiz public API)
-```
-
-- **`ONBOARD_API_KEY`** — задаётся в env контейнера `onboard-service` на сервере
-  (`ONBOARD_API_KEY`). Тот же ключ кладётся операторам. URL сервиса — константа
-  `ONBOARD_API_URL=https://tech.bitandpix.ru/onboard` (не секрет, уже в `.env.example`).
-- **`POSTIZ_API_KEY`** — это `Organization.apiKey` из БД Postiz (UI: Settings → API).
-  URL — константа `POSTIZ_API_URL=https://tech.bitandpix.ru` (host без `/api`);
-  эндпоинты — `${POSTIZ_API_URL}/api/public/v1/...`. Работает по https с любого
-  устройства (см. `docs/postiz-integration.md`).
+Публикация — **вручную**: оператор постит готовый пост сам в соцсети клиента,
+статус обновляет в Notion. Отдельных ключей соцсетей/сервиса публикации оператору
+**не нужно** (автопостинг через Postiz пробовали — не интегрировали, отказались).
 
 > Готовый раздаточный набор всех операторских секретов одним файлом —
 > сгенерировать из боевого `.env` и передать как `.env` оператору (см. «Кому
@@ -89,15 +77,15 @@ S3_SECRET_KEY=…
 
 **Сначала — разработчику** (настроить/проверить). **Потом — операторам.**
 
-Оператору для полного флоу без ssh нужны секреты: `NOTION_TOKEN`, `ONBOARD_API_KEY`,
-`POSTIZ_API_KEY`, `FAL_KEY`, `APIFY_TOKEN`/`APIFY_USER_ID`, `S3_ACCESS_KEY`/`S3_SECRET_KEY`.
+Оператору для работы нужны секреты: `NOTION_TOKEN`, `FAL_KEY`,
+`APIFY_TOKEN`/`APIFY_USER_ID`, `S3_ACCESS_KEY`/`S3_SECRET_KEY`, `SURVEY_API_KEY`.
 URL-адреса сервисов и ID баз — константы (в `.env.example` / `config/notion.json`),
-добывать не надо.
+добывать не надо. Публикация — руками, ключей соцсетей оператору не нужно.
 
-**НЕ передавать операторам** (админ/инфра): `*_ADMIN_PASSWORD` (Postiz/Chatwoot),
+**НЕ передавать операторам** (админ/инфра): `*_ADMIN_PASSWORD` (Chatwoot),
 `GITHUB_PAT` (git-доступ личный у каждого), `TELEGRAM_BOT_TOKEN` (живёт на сервере),
-`VK_COMMUNITY_TOKEN`/`VK_ID`/`VK_SECRET` (аккаунт bit&pix), `LITELLM_*`,
-`OPENROUTER_*`, `OPENCLAW_*`. Поэтому боевой `.env` целиком отдавать нельзя.
+`VK_COMMUNITY_TOKEN`/`VK_ID`/`VK_SECRET` (аккаунт bit&pix). Поэтому боевой `.env`
+целиком отдавать нельзя.
 
 Раздать удобно одним файлом: собрать `.env.operator` (только операторские секреты,
 скопированные из боевого `.env`; он в `.gitignore`) и передать оператору — тот

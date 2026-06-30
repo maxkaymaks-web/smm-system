@@ -1,7 +1,7 @@
 # Онбординг нового клиента — SOP
 
-Полный путь заведения клиента в новой модели: бриф → локальные файлы → Notion → медиа →
-каналы. Состояние на **14.06.2026** (где шаг ещё не разблокирован — помечено ⏳).
+Полный путь заведения клиента: бриф → локальные файлы → Notion → медиа → контент →
+публикация руками.
 
 > Роли: агент `brief` (через Agent tool) ведёт бриф и создаёт локальную структуру.
 > Шаги в Notion/Drive/каналах выполняет оператор + Claude Code по этому SOP.
@@ -20,7 +20,7 @@
     node tools/intake/check.mjs --get <key>     # одна заявка целиком (вопрос→ответ)
 
 Дальше Claude по ответам заводит проект (Шаг 2) и заполняет context/voice/strategy.
-Сервис — `tools/survey-service/` (дизайн: `docs/superpowers/specs/2026-06-20-survey-intake-form-design.md`).
+(Дизайн анкеты: `docs/superpowers/specs/2026-06-20-survey-intake-form-design.md`.)
 
 ## Шаг 1. Бриф
 
@@ -37,9 +37,8 @@
     node tools/onboard/new-client.mjs --id {ProjectID} --name "{Имя}" \
       --platforms VK,Telegram --operator "{оператор}" --focus "{фокус}"
 
-Создаёт `projects/{ProjectID}/` из `_template`, карточку в базе «Клиенты» и план-черновик,
-плюс `channels.json` (реестр каналов). Идемпотентно. Дальше заполняешь
-context/voice/strategy руками/через brief.
+Создаёт `projects/{ProjectID}/` из `_template`, карточку в базе «Клиенты» и план-черновик.
+Идемпотентно. Дальше заполняешь context/voice/strategy руками/через brief.
 
 > `ProjectID` — транслит названия без пробелов (напр. `BeautyCulture_DariaSopkina`).
 > `strategy.md` — **внутренний** «сухой» документ (JTBD + боли/триггеры). Клиенту **не показываем**.
@@ -69,18 +68,14 @@ context/voice/strategy руками/через brief.
 или presigned-ссылки (`node tools/s3.mjs url <ключ>`). Ссылку на медиа кладём в карточку
 клиента (Notion) и поле «Ассеты» постов. (Google Drive не используем — `docs/storage.md`.)
 
-## Шаг 5. Подключить каналы — без ssh
+## Шаг 5. Каналы
 
-    # VK: клиент создаёт community-токен (вкладка «Работа с API» сообщества)
-    node tools/onboard/register-channel.mjs --id {ProjectID} --type vk --group-id {GID} --token {vk1.a...}
-    # Telegram: добавить @bit_and_pix_bot админом канала, затем
-    node tools/onboard/register-channel.mjs --id {ProjectID} --type telegram --chat-id {-100...}
-
-Тул пишет канал в Postiz через onboard-service и сохраняет `integrationId` в
-`projects/{ProjectID}/channels.json`. Публикация — Postiz API по этому id
-(см. `docs/postiz-integration.md`). Правки клиента: `node tools/onboard/edit-client.mjs --id {ProjectID} ...`.
-
-- **Диалоги:** подключить каналы клиента (TG/VK/MAX) в Chatwoot (`tools/chatwoot-gateway/`) — отдельный шаг, вручную.
+- **Публикация — вручную.** Автопостинг не интегрирован (Postiz пробовали, отказались),
+  поэтому никаких токенов соцсетей в системе не регистрируем. Готовый пост оператор
+  публикует сам в соцсети клиента (Шаг 7).
+- **Диалоги:** входящие сообщения клиента (TG/VK/MAX) идут в Chatwoot. Подключение
+  каналов клиента в Chatwoot — отдельный ручной шаг (инфра, делает разработчик).
+- Правки полей клиента: `node tools/onboard/edit-client.mjs --id {ProjectID} ...`.
 
 ## Шаг 6. Первый контент-план клиенту
 
@@ -89,43 +84,18 @@ context/voice/strategy руками/через brief.
 отправляем через Chatwoot. **Два уровня согласования:** сначала план целиком (клиент
 одобряет состав/темы), затем каждый готовый пост отдельно. Финальную публикацию жмёт человек.
 
-## Шаг 7. Публикация: черновик в Postiz
+## Шаг 7. Публикация — вручную
 
-Когда пост готов (текст согласован, медиа в S3) — создаём черновик в Postiz:
+Когда пост готов (текст согласован, медиа в S3) — оператор **публикует его сам**
+в соцсети клиента:
 
-1. **Загрузи медиа** (если есть картинки) — по одной через `upload-from-url`:
-   ```bash
-   # presign URL в S3
-   node tools/s3.mjs url smm/projects/{ProjectID}/posts/drafts/{дата}-{N}/{file}.png 3600
-   # загрузить в Postiz → получишь {id, path}
-   curl -s -X POST "$POSTIZ_API_URL/api/public/v1/upload-from-url" \
-     -H "Authorization: $POSTIZ_API_KEY" -H "Content-Type: application/json" \
-     -d '{"url": "<presigned_url>"}'
-   ```
+1. Берёт финальный текст из `projects/{ProjectID}/posts/...` и медиа (из S3, presign:
+   `node tools/s3.mjs url <ключ> 3600`).
+2. Постит руками в нужную соцсеть (VK/Telegram/Instagram) от имени клиента.
+3. Обновляет статус поста в Notion (база «Посты») на `опубликовано`.
 
-2. **Создай черновик** — `POST /api/public/v1/posts` с `type=draft`:
-   ```json
-   {
-     "type": "draft",
-     "date": "<ISO>",
-     "shortLink": false,
-     "tags": [],
-     "posts": [
-       { "integration": {"id": "<vk_integrationId>"},
-         "value": [{"content": "<текст>", "image": [{"id":"...", "path":"..."}]}],
-         "settings": {"__type": "vk"} },
-       { "integration": {"id": "<tg_integrationId>"},
-         "value": [{"content": "<текст>", "image": [{"id":"...", "path":"..."}]}],
-         "settings": {"__type": "telegram"} }
-     ]
-   }
-   ```
-   `integrationId` — из `projects/{ProjectID}/channels.json`.
-
-3. **Дай оператору ссылку:** `https://tech.bitandpix.ru` → он открывает, видит черновик
-   во вкладке «Drafts», проверяет и нажимает «Publish». **Финальную кнопку жмёт человек.**
-
-> Только `type=draft` — никогда `type=now` из кода агента без явной команды оператора.
+> Нейросеть в соцсети сама не публикует. Автопостинг — кандидат в кабинет
+> (smm-app), пока его нет — только руками.
 
 ## Чек-лист
 
@@ -134,6 +104,5 @@ context/voice/strategy руками/через brief.
 - [ ] Аналитика конкурентов собрана (агент `analytics`)
 - [ ] Notion: карточка + план созданы тулом (Шаг 2); строки-посты — контент-флоу; Board-вид настроен
 - [ ] Медиа-папка заведена в S3, ссылка в карточке Notion
-- [ ] Каналы подключены (`register-channel.mjs` → Postiz; Chatwoot — вручную)
 - [ ] Контент-план отправлен клиенту на согласование (PDF)
-- [ ] Черновики созданы в Postiz (`type=draft`), оператор нажал Publish
+- [ ] Посты публикуются руками, статус в Notion обновляется

@@ -14,7 +14,7 @@ export function loadEnv() {
       if (m && !process.env[m[1]]) process.env[m[1]] = m[2];
     }
   }
-  // Онбординг-тулы ходят только в Notion и наш onboard-service — оба напрямую.
+  // Онбординг-тулы ходят только в Notion — напрямую.
   // tinyproxy из .env их режет (allow-лист по IP), а Node fetch чтит *_PROXY из env.
   // Снимаем прокси для этого процесса, чтобы тулы работали с любого устройства.
   for (const k of ['HTTP_PROXY', 'HTTPS_PROXY', 'http_proxy', 'https_proxy']) {

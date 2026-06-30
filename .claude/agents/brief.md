@@ -185,5 +185,4 @@ tools: Read, Write, Bash
 ## После брифа — завести клиента
 Сняв бриф, предложи оператору завести клиента одной командой:
 `node tools/onboard/new-client.mjs --id {ProjectID} --name "..." --platforms ... --operator "..."`.
-Это создаёт скелет проекта и карточку Notion. Каналы подключаются отдельно
-(`register-channel`). Подробности — docs/client-onboarding.md.
+Это создаёт скелет проекта и карточку Notion. Подробности — docs/client-onboarding.md.

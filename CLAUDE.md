@@ -29,13 +29,14 @@ Telegram). **Это отключено.** Теперь:
 - **Финальную публикацию всегда жмёт человек.** Нейросеть сама в соцсети ничего
   не публикует.
 
-### Три окна + Notion за ними
+### Два окна + Notion за ними
 
 - **Chatwoot** — клиентские диалоги, омниканал TG/VK/MAX. Развёрнут.
 - **Claude Code (ты)** — основной рабочий экран: подсказываешь что следующим,
-  вместе с оператором делаешь пост, пушишь в Postiz, ведёшь Notion.
-- **Postiz** — превью перед публикацией; человек жмёт ок/публикацию. Кандидат,
-  допиливается (см. `docs/postiz-integration.md`).
+  вместе с оператором делаешь пост, ведёшь Notion. Готовый пост оператор
+  **публикует руками** в соцсети.
+- **Публикация — вручную.** Автопостинг (Postiz) пробовали — не интегрировали,
+  отказались. Оператор постит сам; автопостинг — кандидат в кабинет (smm-app, позже).
 - **Notion** — БД/источник истины операционки (базы «Клиенты»/«Планы»/«Посты»)
   + Kanban для начальника. Ведёшь ты; начальник смотрит/иногда правит.
 
@@ -131,7 +132,7 @@ fal.ai (картинки/видео), Apify (парсинг).
   ├─ читает  → projects/{ProjectID}/{context,voice,strategy,overrides}.md  (git)
   ├─ ведёт   → Notion: базы «Клиенты»/«Планы»/«Посты» (операционка, источник истины)
   ├─ пишет   → projects/{ProjectID}/posts/drafts/{дата}-{N}/ (рабочие черновики)
-  ├─ пушит   → Postiz (готовый пост на превью → человек публикует)
+  ├─ отдаёт  → готовый пост оператору → оператор публикует РУКАМИ в соцсети
   └─ в конце → upload-session.mjs → архив сессий (см. docs/session-finalize.md)
 
 Генерация изображений / видео / TTS
@@ -146,22 +147,19 @@ fal.ai (картинки/видео), Apify (парсинг).
   Локально файлы — временные в /tmp.
 
 Диалоги с клиентом   → Chatwoot (TG/VK/MAX).
-Публикация           → Postiz (человек жмёт финальную кнопку).
+Публикация           → вручную (оператор постит сам; автопостинг не интегрирован).
 ```
 
 ---
 
-## Онбординг и публикация (без ssh)
+## Онбординг и публикация
 
 - Форма-бриф клиенту: дай ссылку **https://survey.bitandpix.ru**; забрать ответы —
   `node tools/intake/check.mjs` (список) / `--get <key>` (целиком). Это Шаг 0.
 - Завести/править клиента: `tools/onboard/new-client.mjs`, `edit-client.mjs`
-  (репо-скелет + карточка Notion). Подключить соцканалы:
-  `tools/onboard/register-channel.mjs` (VK community-токен / TG-канал → Postiz).
-- Связка клиент→канал — в `projects/{ID}/channels.json` (`integrationId`).
-- Публикация: Postiz public API (`upload-from-url` ×N → `/posts`,
-  `settings.__type`), реальные токены соцсетей держит Postiz. Детали —
-  `docs/postiz-integration.md`, полный флоу — `docs/client-onboarding.md`.
+  (репо-скелет + карточка Notion). Полный флоу — `docs/client-onboarding.md`.
+- **Публикация — вручную.** Готовый пост оператор постит сам в соцсети
+  (автопостинг не интегрирован — Postiz пробовали, отказались).
 
 ---
 
@@ -213,11 +211,9 @@ tools/                            утилиты (Node.js + Python)
   ├─ remove-bg.mjs      fal.ai BRIA убирает фон
   ├─ upscale.mjs        fal.ai SeedVR2 апскейл
   ├─ s3.mjs             S3 CRUD (медиа сейчас + архив сессий)
-  ├─ chatwoot-gateway/  шлюз VK+TG ↔ Chatwoot
-  ├─ onboard/new-client.mjs       завести клиента (репо + Notion), без ssh
+  ├─ intake/check.mjs             забрать ответы анкеты-брифа (Шаг 0)
+  ├─ onboard/new-client.mjs       завести клиента (репо + Notion)
   ├─ onboard/edit-client.mjs      править поля клиента в Notion + overrides
-  ├─ onboard/register-channel.mjs подключить VK/TG канал в Postiz, без ssh
-  ├─ onboard-service/             серверный сервис регистрации каналов (на сервере)
   ├─ lib/notion.mjs               обёртка Notion API
   ├─ upload-session.mjs выгрузка финализированной сессии CC в архив
   ├─ spend-report.mjs   отчёт по тратам (fal.ai / Apify)
@@ -235,11 +231,10 @@ docs/
   ├─ client-onboarding.md  SOP заведения нового клиента (бриф → Notion → Drive)
   ├─ storage.md            где что хранится: сейчас vs цель
   ├─ access-setup.md       подключение Notion + доступ к медиа S3 (креды)
-  ├─ postiz-integration.md публикация: подключение каналов в Postiz
   ├─ s3.md                 S3: медиа сейчас + архив сессий
   ├─ dev-guide.md          как разрабатывать и обучать агентов
   ├─ session-finalize.md   процедура финализации сессии в конце задачи
-  └─ superpowers/specs/    дизайн-спеки (интеграция Notion/Drive/Postiz)
+  └─ superpowers/specs/    дизайн-спеки (исторические; Notion/Drive/Postiz-эпоха)
 ```
 
 ---
