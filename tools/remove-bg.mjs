@@ -12,6 +12,7 @@ import fs from "fs";
 import https from "https";
 import http from "http";
 import path from "path";
+import { execFileSync } from "child_process";
 import { meter } from "./lib/fal-meter.mjs";
 
 // Load FAL_KEY
@@ -25,9 +26,18 @@ if (!FAL_KEY) { console.error("FAL_KEY not found"); process.exit(1); }
 fal.config({ credentials: FAL_KEY });
 
 async function downloadFile(url, outputPath) {
+  fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+
+  // Node's bare https.get ignores HTTPS_PROXY/FAL_PROXY and ECONNRESETs under
+  // VPN — shell out to curl (which does respect the proxy env vars) instead.
+  const proxy = process.env.FAL_PROXY || process.env.HTTPS_PROXY || process.env.https_proxy;
+  if (proxy) {
+    execFileSync("curl", ["-sS", "-x", proxy, "--max-time", "60", "-o", outputPath, url]);
+    return;
+  }
+
   const lib = url.startsWith("https") ? https : http;
   return new Promise((resolve, reject) => {
-    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
     const file = fs.createWriteStream(outputPath);
     lib.get(url, (r) => {
       r.pipe(file);

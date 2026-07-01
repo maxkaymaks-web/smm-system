@@ -36,8 +36,8 @@ async function renderHtml(htmlPath, outputPath, width = 1080) {
   });
 
   const page = await browser.newPage();
-  const html = fs.readFileSync(path.resolve(htmlPath), 'utf8');
-  await page.setContent(html, { waitUntil: 'domcontentloaded', timeout: 15000 });
+  const fileUrl = 'file://' + path.resolve(htmlPath).replace(/\\/g, '/');
+  await page.goto(fileUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
   // Allow web fonts (Google Fonts etc.) to load
   await new Promise((r) => setTimeout(r, 2000));
 
