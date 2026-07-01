@@ -248,6 +248,33 @@ async function listKeys(prefix) {
   return keys;
 }
 
+// Пересобрать _index/all-sessions.jsonl ЦЕЛИКОМ из per-session meta.json.
+// Истина — сами сессии (их meta.json), а НЕ предыдущий blob индекса. Поэтому
+// иммунно к двум багам read-modify-write: гонке (параллельный аплоад затирал
+// чужую свежую строку) и eventual consistency S3 (читали устаревший индекс и
+// перезаписывали без свежих строк). Каждый аплоад пишет полный индекс из свежего
+// листинга → пропавшая строка самоизлечивается на следующем аплоаде, а не залипает.
+// `extra` — только что загруженные в этом запуске (meta, baseKey); включаются
+// принудительно, даже если LIST ещё не видит собственный свежий meta.json.
+async function rebuildIndexFromMetas(extra = []) {
+  const metaKeys = (await listKeys(BY_PROJECT_PREFIX)).filter(k => k.endsWith('/meta.json'));
+  const bySid = new Map();
+  for (const e of extra) bySid.set(e.meta.session_id, e);   // свои свежие — приоритет
+  for (const key of metaKeys) {
+    const txt = await getText(key);
+    if (txt == null) continue;
+    let meta;
+    try { meta = JSON.parse(txt); } catch { continue; }
+    if (!meta.session_id || bySid.has(meta.session_id)) continue;
+    bySid.set(meta.session_id, { meta, baseKey: key.slice(0, -'/meta.json'.length) });
+  }
+  const entries = [...bySid.values()].sort((a, b) =>
+    String(a.meta.started_at).localeCompare(String(b.meta.started_at)));
+  const body = entries.map(({ meta, baseKey }) => JSON.stringify(buildIndexLine(meta, baseKey))).join('\n') + '\n';
+  await put(INDEX_KEY, body, 'application/x-ndjson');
+  return entries.length;
+}
+
 // ── upload one session (default mode) ────────────────────────────────────────
 async function runUpload() {
   if (args.length < 1 || args[0].startsWith('--')) {
@@ -322,15 +349,10 @@ async function runUpload() {
   await put(pointerKey, JSON.stringify(pointer, null, 2), 'application/json');
   console.log(`✓ ${pointerKey}`);
 
-  // index — read-modify-write по session_id (rebuild чинит, если он рассыпался)
-  const oldIndex = (await getText(INDEX_KEY)) ?? '';
-  const lines = oldIndex.split('\n').filter(l => {
-    if (!l.trim()) return false;
-    try { return JSON.parse(l).session_id !== sessionId; } catch { return false; }
-  });
-  lines.push(JSON.stringify(buildIndexLine(meta, baseKey)));
-  await put(INDEX_KEY, lines.join('\n') + '\n', 'application/x-ndjson');
-  console.log(`✓ ${INDEX_KEY} (${lines.length} sessions)`);
+  // index — пересобираем целиком из per-session meta.json (не доверяем прежнему
+  // blob: гонка/eventual-consistency его портили). Свою свежую строку передаём явно.
+  const n = await rebuildIndexFromMetas([{ meta, baseKey }]);
+  console.log(`✓ ${INDEX_KEY} (${n} sessions, rebuilt)`);
 }
 
 // ── rebuild: перегенерировать всё из raw.jsonl ───────────────────────────────
