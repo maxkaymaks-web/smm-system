@@ -16,17 +16,20 @@ metadata:
   стек без Elasticsearch). RAM **1.9 → 8 GiB** + 2G swap (делит с Chatwoot `:3000`).
   Детали и грабли (Temporal, search-attributes Keyword-фикс, VK_ID) — в репо
   `docs/infra.md`. Креды Postiz (API-ключ/админ) — в репо `.env` как `POSTIZ_*`.
-  ⚠️ **SSH на порту `22`**, НЕ 24822 (24822 закрыт). С недоверенных IP роняет
-  коннект на kex (fail2ban).
-- **Прокси `5.2.66.188`** — tinyproxy `:8888`, BasicAuth (пароль в `.env`
-  `PROXY_URL`, не в git), CONNECT 443/563, allow-лист по IP (основной уже внутри).
-  SSH на `24822`. Также крутит `litellm-proxy` :4000 (наследие OpenClaw).
-  ⚠️ **При смене IP RU-сервера allow-лист держится в ДВУХ местах** на проксе:
-  `/etc/tinyproxy/tinyproxy.conf` (`Allow <ip>`, reload tinyproxy) **И ufw**
-  (`ufw allow from <ip> to any port 8888 proto tcp`). Если не обновить — egress
-  с нового IP мёртв (timeout/`000`, не 403, т.к. ufw роняет TCP до tinyproxy),
-  и Postiz не стартует (не может скачать esbuild с npm → фронт :4200 не поднимается → 502).
-  Плюс на seo обновить `NO_PROXY` в `/etc/environment` (старый IP → новый).
+  ⚠️ **SSH: порт `24822` работает** (проверено 2026-07-03; прежняя заметка «только 22» устарела).
+  С недоверенных IP роняет коннект на kex/banner (fail2ban). IP рабочей машины ДИНАМИЧЕСКИЙ
+  (VPN, часто меняется) — на него не завязываться; SSH ходить с доверенного узла.
+- **Egress-прокси (АКТУАЛЬНО с 2026-07-03): загранбокс `5.255.105.123`** (`vps18420745`),
+  **3proxy** (user `egress`), SOCKS5 `:1080` + HTTP `:8888`, SSH `24822`. Крутит и `litellm-proxy`.
+  Старый прокси `5.2.66.188` (tinyproxy) — **МЁРТВ**, не использовать (встречается в устаревших доках).
+  ⚠️ **РФ-DPI глушит Meta/Telegram по SNI даже через прокси по ПУБЛИЧНОМУ IP** (крупный TLS-
+  хендшейк Meta дохнет: CONNECT ok, TLS виснет). Поэтому seo и загранбокс соединены
+  **WireGuard**: prod `10.8.0.2` <-> foreign `10.8.0.1` (wg0, MTU 1380, split-туннель
+  `AllowedIPs=10.8.0.0/24`). Заблокированное (Meta Graph API, Telegram) гнать через прокси
+  **на ТУННЕЛЬНОМ IP `10.8.0.1`**: `http://egress:<pw>@10.8.0.1:8888` или
+  `socks5h://...@10.8.0.1:1080`. gateway `PROXY_URL` уже переведён на туннель. Прямой РФ->Meta —
+  хрупкий fallback. Тест-адресат Telegram (НЕ клиент): `@reshifter`=Pavel, chat_id `1642013697`,
+  Chatwoot conversation 1.
 
 - **Резервный доступ по голому IP** (сделано 23.06.2026, «если домены отъебнут»):
   на seo ufw выключен, порты сервисов биндятся на `0.0.0.0` → доступны по IP:
