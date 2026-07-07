@@ -6,6 +6,15 @@
 
 ---
 
+## 2026-07-07 — Новый клиент: Профессор Судьбы (отношения/замужество, Москва)
+- Заведён проект `projects/ProfSudby/` из брифа survey.bitandpix.ru (ID 2464772363)
+- Пайплайн Reels #1: Apify 3 конкурента (@labkovskiyofficial, @satya.expert, @vasilisa.volodina, 120 роликов) → топ-10 по ratio → 5 отобранных → fal.ai анализ (прямые CDN URL без upload, т.к. storage.fal.run заблокирован) → сценарий → PDF
+- Лучший паттерн: @satya.expert «Дорогие мужчины» (556K, 9.9x ratio) — прямое обращение к ЦА + авторитетное откровение + CTA в комментарии
+- Сценарий: хук «Женщины, которые хотят замуж» + Судьба уже решила + CTA «ЗАМУЖ + город в комментарии»
+- Лайфхак: fal.ai `openrouter/router/video` принимает прямые Instagram CDN URL в `video_urls[]` без upload на storage.fal.run — работает даже когда storage заблокирован
+
+---
+
 ## 2026-07-06 — Новый клиент: ЭЛЕМОНТ (электромонтаж, Москва)
 - Заведён проект `projects/ELEMONT/` из брифа survey.bitandpix.ru (ID 2464823148)
 - Новый инструмент `tools/analyze-reels.mjs` — анализ видео через fal.ai `openrouter/router/video`
