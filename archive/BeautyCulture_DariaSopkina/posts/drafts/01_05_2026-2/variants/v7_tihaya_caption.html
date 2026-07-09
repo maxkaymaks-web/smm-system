@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Raleway:wght@300;400;500;600&display=swap');
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1350px;overflow:hidden;background:#FAF8F5}
+.slide{position:relative;width:1080px;height:1350px;overflow:hidden}
+.top-strip{position:absolute;top:0;left:0;right:0;height:96px;background:#FAF8F5;display:flex;align-items:center;justify-content:space-between;padding:0 60px;z-index:10;border-bottom:1px solid rgba(26,23,20,0.06)}
+.top-strip .left{font-family:'Raleway',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.42em;text-transform:uppercase;color:rgba(26,23,20,0.65)}
+.top-strip .center{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:26px;color:#1a1714;text-transform:uppercase;letter-spacing:0.32em}
+.top-strip .right{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:rgba(26,23,20,0.55);letter-spacing:0.1em}
+.dip{position:absolute;top:96px;left:0;right:0;height:1054px;display:flex}
+.dip>div{flex:1;height:100%;position:relative;overflow:hidden}
+.dip img{width:100%;height:100%;object-fit:cover;display:block}
+.divider{position:absolute;top:96px;left:540px;width:1px;height:1054px;background:#FAF8F5;z-index:5}
+.col-tag{position:absolute;bottom:24px;font-family:'Raleway',sans-serif;font-size:10px;font-weight:500;letter-spacing:0.42em;text-transform:uppercase;color:#FAF8F5;background:rgba(26,23,20,0.55);padding:8px 16px;border-radius:99px;backdrop-filter:blur(8px);z-index:6}
+.col-tag.left{left:24px}
+.col-tag.right{right:24px}
+.bottom-strip{position:absolute;bottom:0;left:0;right:0;height:200px;background:#FAF8F5;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;border-top:1px solid rgba(26,23,20,0.06);padding:0 80px}
+.bottom-strip .quote{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;font-size:34px;line-height:1.18;color:#1a1714;text-align:center;letter-spacing:0.005em;max-width:900px}
+.bottom-strip .stamp{margin-top:20px;font-family:'Raleway',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.5em;text-transform:uppercase;color:#8a6e52}
+</style></head>
+<body><div class="slide">
+<div class="top-strip">
+  <div class="left">До · После</div>
+  <div class="center">Подмышки</div>
+  <div class="right">Культура</div>
+</div>
+<div class="dip">
+  <div><img src="../../../../assets/images/before-after/armpit_1_before_up.jpg"><div class="col-tag left">До</div></div>
+  <div><img src="../../../../assets/images/before-after/armpit_1_after_up.jpg"><div class="col-tag right">После 4 процедур</div></div>
+</div>
+<div class="divider"></div>
+<div class="bottom-strip">
+  <div class="quote">Заметный результат уже после 3–4 сеансов</div>
+  <div class="stamp">Лазерная эпиляция</div>
+</div>
+</div></body></html>

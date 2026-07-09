@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&family=Raleway:wght@400;500;600&display=swap');
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#ECE4D8;font-family:'Raleway',sans-serif;padding:48px;min-height:100vh}
+h1{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:48px;color:#1a1714;margin-bottom:8px;letter-spacing:0.01em}
+.lead{color:#5a4a3a;font-size:14px;margin-bottom:36px;max-width:900px;line-height:1.6;letter-spacing:0.02em}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:28px}
+.card{background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 12px 36px rgba(26,23,20,0.08);display:flex;flex-direction:column}
+.card img{width:100%;display:block;aspect-ratio:1080/1350;object-fit:cover}
+.meta{padding:16px 18px 18px}
+.code{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:22px;color:#1a1714;letter-spacing:0.04em}
+.title{font-size:11px;font-weight:600;letter-spacing:0.32em;text-transform:uppercase;color:#8a6e52;margin-top:4px}
+.desc{font-size:12px;line-height:1.5;color:#3a302a;margin-top:10px}
+.score{margin-top:10px;font-size:11px;font-weight:600;color:#1a1714;letter-spacing:0.06em}
+.fav{border:2px solid #8a6e52}
+.fav .code::before{content:"★ ";color:#8a6e52}
+</style></head><body>
+<h1>До/после · подмышки — 7 вариантов</h1>
+<div class="lead">Каждый — разный подход к одной и той же задаче. Цель: показать контраст «до/после» лазерной эпиляции, сохранить голос бренда «Культура» (тёплая забота, серифная типографика, никаких хайповых триггеров). Все используют armpit_1 (контраст в разы выше предыдущего armpit_4).</div>
+<div class="grid">
+  <div class="card fav"><img src="v2_diptych_fullbleed.png">
+    <div class="meta"><div class="code">v2</div><div class="title">Diptych full-bleed</div>
+    <div class="desc">Две фотки во всю высоту, тонкий разделитель, кремовая полоса с заголовком снизу. Самый сильный визуальный удар «до/после» — контраст моментально читается.</div>
+    <div class="score">★ ТОП-1</div></div></div>
+
+  <div class="card fav"><img src="v7_tihaya_caption.png">
+    <div class="meta"><div class="code">v7</div><div class="title">Тихая editorial</div>
+    <div class="desc">Узкая полоса сверху (тэги), full-bleed диптих, italic-цитата снизу «заметный результат уже после 3–4 сеансов». Самый по-голосу проекта — тишина, доверие.</div>
+    <div class="score">★ ТОП-2</div></div></div>
+
+  <div class="card fav"><img src="v5_marble_cover.png">
+    <div class="meta"><div class="code">v5</div><div class="title">Мрамор-обложка</div>
+    <div class="desc">Чёрный мрамор как фон, крупный белый Cormorant «ПОДМЫШКИ» сверху, два фото-карточки внизу. Премиум-кодекс бренда, как slide_01 от 06_05.</div>
+    <div class="score">★ ТОП-3</div></div></div>
+
+  <div class="card"><img src="v4_slider_mockup.png">
+    <div class="meta"><div class="code">v4</div><div class="title">Слайдер-мокап</div>
+    <div class="desc">Имитация интерактивного «потяни и сравни» — белая линия + круглый маркер «↔». Оригинально, цепляет, но интерфейсный вайб может смотреться менее «студийно».</div>
+    <div class="score">альтернатива</div></div></div>
+
+  <div class="card"><img src="v1_dark_hero.png">
+    <div class="meta"><div class="code">v1</div><div class="title">Dark hero (06_05-style)</div>
+    <div class="desc">Тёмный кожный фон, гигантская «4» слева, две фото-карточки внизу. Близко к одобренному slide_03 от 06_05 — безопасный, но без вау.</div>
+    <div class="score">безопасно</div></div></div>
+
+  <div class="card"><img src="v6_magazine_solo.png">
+    <div class="meta"><div class="code">v6</div><div class="title">Magazine solo</div>
+    <div class="desc">Кожа-после на весь фон, гигантская чёрная «4» по центру, медальон «до» в углу. Дерзкий, журнальный — но воспринимается сложнее «классики».</div>
+    <div class="score">смело</div></div></div>
+
+  <div class="card"><img src="v3_numeric_anchor.png">
+    <div class="meta"><div class="code">v3</div><div class="title">Цифровой анкер</div>
+    <div class="desc">Кремовый фон, две фото-карточки в центре, гигантская «4» сзади как водяной знак. Чисто, но цифра еле видна — слабее ожидания.</div>
+    <div class="score">средне</div></div></div>
+
+  <div class="card"><img src="../photo_01.jpg">
+    <div class="meta"><div class="code" style="color:#a14040">×</div><div class="title" style="color:#a14040">текущий (плохой)</div>
+    <div class="desc">Для сравнения: предыдущий слайд. Использован слабый исходник armpit_4, мелкие фотки в центре, вертикальные надписи по бокам, цифра «4» оторвана от смысла.</div>
+    <div class="score" style="color:#a14040">переделываем</div></div></div>
+</div>
+</body></html>
