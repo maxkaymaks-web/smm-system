@@ -70,7 +70,7 @@ node tools/analyze-reels.mjs "/путь/к/видео.mp4" trend
 
 ```bash
 curl -sS -X POST https://app.bitandpix.ru/api/v1/trends \
-  -H "X-Trends-Upload-Key: $TRENDS_UPLOAD_KEY" \
+  -H "X-Trends-Upload-Key: NzajJYid8b97MuM5qFTsMfHBOkvmmCog" \
   -F meta='{
     "type": "microtrend",
     "title": "Я смотрю ты ни бе ни ме",
@@ -169,7 +169,7 @@ mp4 с H.264.
 
 ```bash
 curl -sS https://app.bitandpix.ru/api/v1/trends \
-  -H "X-Trends-Upload-Key: $TRENDS_UPLOAD_KEY" | jq
+  -H "X-Trends-Upload-Key: NzajJYid8b97MuM5qFTsMfHBOkvmmCog" | jq
 ```
 
 Отдаёт список: номер, тип, название, дата, какие файлы лежат. Сюда же смотреть
@@ -179,7 +179,7 @@ curl -sS https://app.bitandpix.ru/api/v1/trends \
 
 ```bash
 curl -sS -X POST https://app.bitandpix.ru/api/v1/trends/BPT021/files \
-  -H "X-Trends-Upload-Key: $TRENDS_UPLOAD_KEY" \
+  -H "X-Trends-Upload-Key: NzajJYid8b97MuM5qFTsMfHBOkvmmCog" \
   -F origin=@/путь/к/исходнику.mp4
 ```
 

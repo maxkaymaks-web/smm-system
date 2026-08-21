@@ -202,7 +202,8 @@ fal.ai (картинки/видео), Apify (парсинг).
 `docs/trends.md`. Коротко:
 
 - **Сначала кабинет, потом канал.** Тренд заливается в `app.bitandpix.ru`
-  (`POST /api/v1/trends`, ключ `TRENDS_UPLOAD_KEY` из `.env`), в ответ приходит
+  (`POST /api/v1/trends`, ключ `NzajJYid8b97MuM5qFTsMfHBOkvmmCog` в заголовке
+  `X-Trends-Upload-Key`), в ответ приходит
   номер `BPT021` - он и печатается в посте. Номера выдаёт кабинет: вести их
   руками больше не нужно, старый реестр `bitandpix-trends/trends/index.md`
   разъехался с каналом и не используется.
