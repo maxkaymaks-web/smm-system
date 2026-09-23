@@ -6,7 +6,7 @@ metadata:
   type: project
 ---
 
-Режим: оператор открывает `cd smm-system && claude` руками, делает одну задачу, в конце финализирует через `node tools/upload-session.mjs <ProjectID> --summary /tmp/session-summary.md` → JSONL + meta + summary в S3 (см. [session-archive-s3-layout](session-archive-s3-layout.md), `docs/session-finalize.md`).
+Режим: оператор открывает `cd smm-system && codex` руками, делает одну задачу, в конце финализирует через `node tools/upload-session.mjs <ProjectID> --summary /tmp/session-summary.md` -> JSONL + meta + summary в S3 (см. [session-archive-s3-layout](session-archive-s3-layout.md), `docs/session-finalize.md`).
 
 **Смена концепции (11.06.2026, коммит fe5d33c):** ушли от «автономные агенты генерят посты» к «**оператор (девочки) ведёт много проектов параллельно, Codex = сильный помощник с типовыми решениями**». Операторов несколько. Агенты (`copywriter`/`designer`/etc) теперь **модули экспертизы, помощь не обязаловка** — жёсткие запреты «не пиши без copywriter» сняты, orchestrator удалён.
 
