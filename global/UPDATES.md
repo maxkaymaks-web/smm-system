@@ -363,7 +363,7 @@ S3-креды не нужны. Дальше по ответам заводишь
 
 ## 17.05.2026 — HTTPS_PROXY больше не относится к локальному CC
 
-- **Правило:** прокси `5.2.66.188:8888` нужен ТОЛЬКО для запусков с RU-сервера `5.42.112.17` (исторический OpenClaw, выключен 16.05.2026). Локальный `claude` в этом репо ходит во внешние сервисы (fal.ai, Apify, GitHub) напрямую — никакого `HTTPS_PROXY` ни в `.env`, ни в окружении задавать не надо.
+- **Правило:** legacy egress endpoint нужен был ТОЛЬКО для запусков с RU-сервера `5.42.112.17` (исторический OpenClaw, выключен 16.05.2026). Локальный `claude` в этом репо ходит во внешние сервисы (fal.ai, Apify, GitHub) напрямую — никакого `HTTPS_PROXY` ни в `.env`, ни в окружении задавать не надо.
 - **Почему правка:** в `CLAUDE.md`, `global/rules.md`, `agents/designer/SOUL.md`, `skills/fal-ai/SKILL.md` и тексте ошибок `tools/generate-image.mjs` оставались формулировки в стиле «трафик идёт через `HTTPS_PROXY` из `.env`», которые сбивали локальную сессию: агент пытался выставлять прокси или подозревать его в любом сетевом фейле.
 - **Что осталось без изменений:** `docs/proxy-and-server.md` (инфра-док про сервер) и `docs/openclaw-deploy.md` (исторический деплой OpenClaw) — там прокси описан корректно в серверном контексте.
 
@@ -448,9 +448,9 @@ S3-креды не нужны. Дальше по ответам заводишь
 ## 11.05.2026 — переезд на OpenClaw + LiteLLM
 
 - **Полный переезд с Claude Code на OpenClaw.** Все агенты (`orchestrator`, `copywriter`, `designer`, `analytics`, `brief`, `content-planner`, `dushnila`) теперь живут в `agents/<name>/SOUL.md` (формат OpenClaw). Старые `skill.md` удалены. Папка `agents/skills/` удалена как дубль.
-- **LiteLLM как единственный AI-gateway** (`http://5.2.66.188:4000`, Postgres + spend tracking). Все модели под именами `smm/claude-haiku-4.5`, `smm/claude-sonnet-4.6`, `smm/claude-opus-4-7`, `smm/deepseek-v3`, `smm/gemini-2.5-flash`, `smm/gemini-2.5-pro`. Они идут через отдельный OpenRouter ключ для трекинга расхода SMM-проекта.
+- **LiteLLM как единственный AI-gateway** (`http://5.255.105.123:4000`, Postgres + spend tracking). Все модели под именами `smm/claude-haiku-4.5`, `smm/claude-sonnet-4.6`, `smm/claude-opus-4-7`, `smm/deepseek-v3`, `smm/gemini-2.5-flash`, `smm/gemini-2.5-pro`. Они идут через отдельный OpenRouter ключ для трекинга расхода SMM-проекта.
 - **Virtual key `smm-openclaw`** с бюджетом $50/30дн. `LITELLM_KEY` в `.env`. Расход: `node tools/spend.mjs`.
-- **HTTPS_PROXY** (tinyproxy на проксе 5.2.66.188:8888 с BasicAuth) прописан system-wide на RU-сервере `5.42.112.17` — `/etc/environment`, apt, git, npm видят. fal.ai/Apify/GitHub теперь доступны с RU.
+- **HTTPS_PROXY** (legacy tinyproxy с BasicAuth) был прописан system-wide на RU-сервере `5.42.112.17` — `/etc/environment`, apt, git, npm видели. fal.ai/Apify/GitHub были доступны с RU.
 - **Дефолт-модель оркестратора:** `smm/claude-sonnet-4.6`, копирайтер/аналитик/планер — `smm/claude-haiku-4.5`. Haiku в 15× дешевле Sonnet, на типовых задачах разница незаметна.
 - **Креды в `.env`** (gitignored): LITELLM, FAL, APIFY, VK, GitHub PAT, S3 (Timeweb seo bucket), Swift. Шаблон — `.env.example`.
 - **Душнила** — теперь полноценный агент `agents/dushnila/SOUL.md` для обработки ОС заказчика.

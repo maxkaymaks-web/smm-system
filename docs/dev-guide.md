@@ -61,12 +61,12 @@ cp -r projects/_template projects/{ProjectID}
 > LiteLLM остался только для spend-тулзов; основная работа идёт через подписку
 > Claude Code. Раздел актуален, если LiteLLM-gateway всё ещё используется.
 
-Конфиг живёт на проксе: `5.2.66.188:/root/litellm/config.yaml`.
+Конфиг живёт на проксе: `5.255.105.123:/root/litellm/config.yaml`.
 
 Добавить новую модель:
 
 ```bash
-ssh -p 24822 root@5.2.66.188
+ssh -p 24822 root@5.255.105.123
 cd /root/litellm
 # редактировать config.yaml
 docker compose restart litellm
@@ -104,12 +104,12 @@ Master key и Postgres-пароль — в `/root/litellm/.env`.
 Все запросы логируются в Postgres LiteLLM. Посмотреть последние:
 
 ```bash
-ssh -p 24822 root@5.2.66.188 \
+ssh -p 24822 root@5.255.105.123 \
   'curl -sS "http://127.0.0.1:4000/spend/logs?limit=20" \
    -H "Authorization: Bearer $LITELLM_MASTER_KEY" | python3 -m json.tool | head -80'
 ```
 
-Или подключиться к UI: `http://5.2.66.188:4000/ui` (логин — master key).
+Или подключиться к UI: `http://5.255.105.123:4000/ui` (логин — master key).
 
 ## Расход проекта
 

@@ -8,7 +8,7 @@
 Сервер — RU (`seo` 5.42.112.17, SSH **порт 22**). Полное состояние серверов и
 egress — в **`docs/infra.md`** (не дублируем здесь). Проверено 12.06: с сервера
 `api.telegram.org` и `api.vk.com` достижимы **напрямую** (TG→302, VK→200). Telegram
-периодически режется DPI в РФ → как страховку гнать через tinyproxy `5.2.66.188:8888`
+периодически режется DPI в РФ → как страховку гнать через 3proxy `5.255.105.123:8888`
 (allow-лист уже включает основной сервер; креды в `PROXY_URL` на сервере).
 
 ---
@@ -117,7 +117,7 @@ VK в очередной раз перепрятал раздел API. Что р
 - **Исходящие.** Chatwoot account-webhook (`message_created`) → `gateway:8080/chatwoot/webhook`.
   Берём только `message_type=outgoing`, маршрутизируем по префиксу identifier →
   VK `messages.send` / Telegram `sendMessage`.
-- **Egress.** Telegram — через tinyproxy (`PROXY_URL`, DPI в РФ); VK и сам Chatwoot —
+- **Egress.** Telegram — через 3proxy (`PROXY_URL`, DPI в РФ); VK и сам Chatwoot —
   напрямую (httpx-клиенты с `trust_env=False`, у TG явный `proxy=`).
 - **Аватарки.** Для новых контактов шлюз тянет фото профиля (VK `photo_200`, TG
   `getUserProfilePhotos`) и грузит в контакт агентским API (`CHATWOOT_API_TOKEN`).

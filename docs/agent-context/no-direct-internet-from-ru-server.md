@@ -1,12 +1,12 @@
 ---
 name: no-direct-internet-from-ru-server
-description: "RU-сервер 5.42.117.201 ХОДИТ во внешние сервисы (fal.ai, OpenAI, Anthropic, OpenRouter) ТОЛЬКО через прокси 5.2.66.188:8888. Прямые запросы — нестабильны (TLS-флэпы, RU-блок)."
+description: "RU-сервер 5.42.117.201 ХОДИТ во внешние сервисы (fal.ai, OpenAI, Anthropic, OpenRouter) ТОЛЬКО через 3proxy 5.255.105.123:8888. Прямые запросы — нестабильны (TLS-флэпы, RU-блок)."
 metadata:
   node_type: memory
   type: project
 ---
 
-OpenClaw runtime крутится на RU-IP `5.42.117.201`. **fal.ai, OpenAI, Anthropic, api.telegram.org из РФ напрямую не работают** — заблокированы / TLS обрывается на handshake (это не флэп, это стабильный блок РКН). **Все исходящие LLM/AI/image-gen/Telegram вызовы должны идти через tinyproxy на проксе `5.2.66.188:8888`.** Если запрос упал с `fetch failed | Client network socket disconnected before secure TLS connection was established` — клиент ушёл напрямую, не через прокси.
+OpenClaw runtime крутится на RU-IP `5.42.117.201`. **fal.ai, OpenAI, Anthropic, api.telegram.org из РФ напрямую не работают** — заблокированы / TLS обрывается на handshake (это не флэп, это стабильный блок РКН). **Все исходящие LLM/AI/image-gen/Telegram вызовы должны идти через 3proxy на egress-боксе `5.255.105.123:8888`.** Если запрос упал с `fetch failed | Client network socket disconnected before secure TLS connection was established` — клиент ушёл напрямую, не через прокси.
 
 **Telegram тоже блокируется** (Pavel подтвердил 2026-05-12). Из РФ `api.telegram.org` нестабилен (polling stalls, sendChatAction fails). **НЕ класть `api.telegram.org` в `NO_PROXY`** — он ОБЯЗАН идти через прокси, иначе бот будет терять getUpdates и отваливаться на sendMessage. (Раньше я ошибочно положил его в NO_PROXY — откатил.)
 
@@ -16,7 +16,7 @@ OpenClaw runtime крутится на RU-IP `5.42.117.201`. **fal.ai, OpenAI, A
 [image-generation] candidate failed: fal/fal-ai/flux/dev: fetch failed | Client network socket disconnected before secure TLS connection was established
 ```
 
-— это **не fal.ai сломан, а запрос пошёл напрямую с RU-IP** мимо прокси. Проверка: `curl -x http://prepbro:...@5.2.66.188:8888 https://fal.ai/` отвечает 200, прямой `fetch` из node иногда 200/404, иногда срывает TLS.
+— это **не fal.ai сломан, а запрос пошёл напрямую с RU-IP** мимо прокси. Проверка: `curl -x http://prepbro:...@5.255.105.123:8888 https://fal.ai/` отвечает 200, прямой `fetch` из node иногда 200/404, иногда срывает TLS.
 
 **Why:** инцидент 2026-05-12 — `image_generate` (fal-ai/flux/dev) дважды упал на TLS из-за RU-блока. Pavel подтвердил: «этот сервис просто не доступен из РФ». Curl через прокси к fal.ai отвечает 200 — значит обход блока через тинипрокси работает, нужно только убедиться что Node-клиент туда смотрит.
 
@@ -29,6 +29,6 @@ OpenClaw runtime крутится на RU-IP `5.42.117.201`. **fal.ai, OpenAI, A
    - AWS SDK (s3) → игнорит `HTTPS_PROXY` всегда; `s3.twcstorage.ru` РФ-хост, прокси не нужен.
    - `axios` → читает env только если `proxy: false` НЕ задан.
 4. Проверить env реального процесса: `cat /proc/$(systemctl --user show -p MainPID --value openclaw-gateway)/environ | tr '\0' '\n' | grep -i proxy`.
-5. `NO_PROXY` для OpenClaw runtime: `localhost,127.0.0.1,::1,5.42.117.201,5.2.66.188,s3.twcstorage.ru` — задано и в `/etc/environment`, и в `.env`. Telegram (api.telegram.org) **НЕ** в этом списке — он заблокирован из РФ и идёт через прокси наравне с fal.ai/OpenAI. `s3.twcstorage.ru` — РФ-хост, прокси не нужен.
+5. `NO_PROXY` для OpenClaw runtime: `localhost,127.0.0.1,::1,5.42.117.201,5.255.105.123,s3.twcstorage.ru` — задано и в `/etc/environment`, и в `.env`. Telegram (api.telegram.org) **НЕ** в этом списке — он заблокирован из РФ и идёт через прокси наравне с fal.ai/OpenAI. `s3.twcstorage.ru` — РФ-хост, прокси не нужен.
 
 Подробности кредов и портов — `docs/proxy-and-server.md` в репо. Связано: [openclaw-server-access](openclaw-server-access.md).

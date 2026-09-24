@@ -18,17 +18,17 @@
 
 ## LiteLLM gateway (legacy, для spend-тулзов)
 
-LiteLLM остаётся как gateway на `5.2.66.188:4000` — сейчас используется только
+LiteLLM остаётся как gateway на `5.255.105.123:4000` — сейчас используется только
 для отчётов о расходе (`tools/spend.mjs`, `tools/spend-report.mjs`). Основная
 работа идёт через подписку Claude Code, не через LiteLLM.
 
 ```bash
-ssh -p 24822 root@5.2.66.188          # управление gateway (порт SSH 24822)
+ssh -p 24822 root@5.255.105.123          # управление gateway (порт SSH 24822)
 node tools/spend-report.mjs           # отчёт fal.ai / Apify / LiteLLM
 ```
 
 Master key и Postgres-пароль — в `/root/litellm/.env` на проксе.
-UI: `http://5.2.66.188:4000/ui` (логин — master key).
+UI: `http://5.255.105.123:4000/ui` (логин — master key).
 
 > Нужен ли LiteLLM дальше после ухода от автономных агентов — открытый вопрос
 > к разработчику (см. `docs/onboarding-process.md`).
@@ -36,7 +36,7 @@ UI: `http://5.2.66.188:4000/ui` (логин — master key).
 ## Выведено из эксплуатации
 
 - **RU-сервер `5.42.112.17`** (OpenClaw runtime) — gateway остановлен 16.05.2026.
-- **tinyproxy `5.2.66.188:8888`** — был нужен только для исходящего трафика с
+- **3proxy `5.255.105.123:8888`** — был нужен только для исходящего трафика с
   RU-сервера; локальные запуски прокси не используют.
 - **Telegram-бот / группа SEO-claw** — отключены. Диалоги — Chatwoot, публикация — руками, медиа — S3 (Google Drive не используем).
 - **OpenClaw-кроны** (`session-watchdog`, `openclaw-logs-sync`, spend-кроны) — сняты.
