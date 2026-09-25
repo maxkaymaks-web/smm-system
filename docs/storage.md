@@ -13,17 +13,17 @@
 | Статусы постов, план, очередь, приоритет | **Notion** (базы «Клиенты»/«Планы»/«Посты») | Notion |
 | Карточка клиента (платформы, фокус, ссылка на медиа) | **Notion** | Notion |
 | Знания клиента: `context/voice/strategy/overrides` | **git** | git |
-| Ноу-хау агентства (`.claude/agents`, `.claude/skills`, `global/`) | **git** | git |
+| Ноу-хау агентства (`.codex/agents`, `.codex/skills`, `global/`) | **git** | git |
 | Медиа: HTML-рендеры, PNG/JPG/PDF/MP4, бренд-ассеты | **S3 Timeweb** | бакет `seo`, префикс `smm/` |
 | Пост под публикацию (текст+медиа) | **git** (черновик) → публикуется руками | `projects/{ID}/posts/` |
-| Архив сессий Claude Code | **S3** | `logs/claude-code/…` (тот же бакет) |
+| Архив сессий ассистента | **S3** | `logs/` (тот же бакет) |
 | Секреты (токены, ключи) | `.env` (gitignored) | локально |
 | Константы (ID баз Notion) | `config/notion.json` (в git) | git |
 
 ## По хранилищам
 
 **Notion — операционка.** Базы «Клиенты»/«Планы»/«Посты» под одной родительской
-страницей. ID — в `config/notion.json`, токен — `NOTION_TOKEN` в `.env`. Веду я (Claude
+страницей. ID — в `config/notion.json`, токен — `NOTION_TOKEN` в `.env`. Веду я (Codex
 Code); начальник смотрит Kanban и иногда правит. Связи: `Клиенты ──< Планы ──< Посты`.
 
 **git — знания.** `projects/{ID}/{context,voice,strategy,overrides}.md` — читаю в начале
@@ -46,7 +46,7 @@ Code); начальник смотрит Kanban и иногда правит. С
   либо веб-панель Timeweb (логин → бакет `seo`);
 - клиентам — **presigned-ссылки** (`node tools/s3.mjs url <ключ>`), уже работает.
 
-**S3 — архив сессий (остаётся).** `logs/claude-code/…`, пишет `upload-session.mjs`.
+**S3 — legacy-архив старых сессий (остаётся).** `logs/claude-code/…`, пишет `upload-session.mjs`.
 Машинный архив для майнинга паттернов; человек туда не лезет. Отдельный префикс, не `smm/`.
 
 **Публикация — вручную.** Готовый пост оператор постит сам в соцсети, статус

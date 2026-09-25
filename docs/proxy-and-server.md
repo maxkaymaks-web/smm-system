@@ -13,14 +13,14 @@
 | **Apify** | API напрямую | Парсинг Instagram/TikTok | `APIFY_TOKEN` в `.env` |
 | **GitHub** | `maxkaymaks-web/smm-system` | Репозиторий | `GITHUB_PAT` в `.env` |
 
-Локальный Claude Code ходит во все внешние сервисы **напрямую, без прокси**.
+Локальный Codex ходит во все внешние сервисы **напрямую, без прокси**.
 Не выставляй `HTTPS_PROXY`.
 
 ## LiteLLM gateway (legacy, для spend-тулзов)
 
 LiteLLM остаётся как gateway на `5.255.105.123:4000` — сейчас используется только
 для отчётов о расходе (`tools/spend.mjs`, `tools/spend-report.mjs`). Основная
-работа идёт через подписку Claude Code, не через LiteLLM.
+работа идёт через подписку Codex, не через LiteLLM.
 
 ```bash
 ssh -p 24822 root@5.255.105.123          # управление gateway (порт SSH 24822)

@@ -4,7 +4,7 @@
 публикация руками.
 
 > Роли: агент `brief` (через Agent tool) ведёт бриф и создаёт локальную структуру.
-> Шаги в Notion/Drive/каналах выполняет оператор + Claude Code по этому SOP.
+> Шаги в Notion/Drive/каналах выполняет оператор + Codex по этому SOP.
 > Карта хранилищ — `docs/storage.md`. Доступы/креды — `docs/access-setup.md`.
 
 ## Шаг 0. Форма-бриф клиенту (опционально, без звонка)
@@ -19,7 +19,7 @@
     node tools/intake/check.mjs                 # список заявок (свежие сверху)
     node tools/intake/check.mjs --get <key>     # одна заявка целиком (вопрос→ответ)
 
-Дальше Claude по ответам заводит проект (Шаг 2) и заполняет context/voice/strategy.
+Дальше Codex по ответам заводит проект (Шаг 2) и заполняет context/voice/strategy.
 (Дизайн анкеты: `docs/superpowers/specs/2026-06-20-survey-intake-form-design.md`.)
 
 ## Шаг 1. Бриф

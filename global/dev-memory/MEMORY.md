@@ -7,7 +7,7 @@
 >
 > **Оператор на серверы не лезет.** Сервер, SSH, деплой, починка сервисов — зона
 > разработчика. Если что-то лежит в инфре / нужен доступ — пинг разработчику
-> (Максим / Pavel), не чинить самому. См. правило о ролях в `CLAUDE.md`.
+> (Максим / Pavel), не чинить самому. См. правило о ролях в `AGENTS.md`.
 
 ## Что сюда писать
 
@@ -27,7 +27,7 @@ Chatwoot), особенности егресса/прокси, архитект�
 - [PAT для серверных git push](git-pat-on-server.md) — где токен на сервере, как подключён через credential.helper, симптом отставания origin/main
 - [S3-структура архива сессий CC](session-archive-s3-layout.md) — `logs/claude-code/by-project` + by-date + `_index`; парсит/пересобирает `upload-session.mjs` (schema v2, rebuild)
 - [smm-app — клиентский кабинет](smm-app-client-cabinet.md) — новый продукт (репо `reshifter1/smm-app`), Go+Gin+Next; Трек 1 (фундамент) в origin/main; Трек 2 — blue-green переезд на свежий бокс
-- [Целевая архитектура — 3 окна](target-architecture-3-windows.md) — Chatwoot (чаты) + Claude Code (работа) + публикация руками + Notion (БД) + S3 медиа под smm/ (Postiz/Drive отклонены)
+- [Целевая архитектура — 3 окна](target-architecture-3-windows.md) — Chatwoot (чаты) + Codex (работа) + публикация руками + Notion (БД) + S3 медиа под smm/ (Postiz/Drive отклонены)
 - [Секреты vs константы](secrets-vs-constants.md) — в .env только секреты (токены/ключи); не-секретные ID (Notion DB id и т.п.) — открыто в репо (`config/notion.json`)
 - [Исполнение: параллель + решать самому](execution-parallelism-decisiveness.md) — при прогоне планов параллелить независимые потоки (бэк‖фронт), не дёргать тулзой по мелочам процесса
 - [Аналитика не переживает смену сессий](analytics-not-persisted-between-sessions.md) — Apify-скрейп/анализ конкурентов не сохраняется в репо → следующая сессия запускает заново; нужно зафиксировать в скилле `сценарий-рилс` обязательное сохранение в `analytics/competitors.md`

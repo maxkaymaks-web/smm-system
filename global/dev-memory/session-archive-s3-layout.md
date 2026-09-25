@@ -1,6 +1,6 @@
 ---
 name: session-archive-s3-layout
-description: Структура архива сессий Claude Code в S3 (logs/claude-code/by-project + by-date + _index). Заливает tools/upload-session.mjs при финализации.
+description: Структура архива сессий Codex в S3 (logs/claude-code/by-project + by-date + _index). Заливает tools/upload-session.mjs при финализации.
 metadata: 
   node_type: memory
   type: reference

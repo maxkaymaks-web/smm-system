@@ -1,7 +1,7 @@
 # Dev Guide — разработка и обучение агентов
 
-Для разработчика системы (не оператора). Оператор работает через Claude Code
-напрямую — точка входа `CLAUDE.md`.
+Для разработчика системы (не оператора). Оператор работает через Codex
+напрямую — точка входа `AGENTS.md`.
 
 ## Принципы
 
@@ -13,14 +13,14 @@
 
 ## Структура агента
 
-Агенты-эксперты — нативные сабагенты Claude Code, вызываются через Agent tool:
+Агенты-эксперты — нативные сабагенты Codex, вызываются через Agent tool:
 
 ```
-.claude/agents/{name}.md   ← frontmatter + system prompt
+.codex/agents/{name}.md   ← frontmatter + system prompt
 agents/{name}/knowledge/   ← необязательно: накопленная база знаний агента
 ```
 
-Frontmatter — формат Claude Code:
+Frontmatter — формат Codex:
 
 ```yaml
 ---
@@ -31,13 +31,13 @@ tools: Read, Write, Edit, Bash   # опционально; без поля — �
 ```
 
 Тело файла — system prompt. (Старый OpenClaw-формат `agents/{name}/SOUL.md` с полями
-`memory_scope`/`knowledge`/`references` снят — Claude Code их не читает.)
+`memory_scope`/`knowledge`/`references` снят — Codex их не читает.)
 
 ## Создать нового агента
 
-1. `.claude/agents/{name}.md` — frontmatter (name/description/tools) + system prompt
+1. `.codex/agents/{name}.md` — frontmatter (name/description/tools) + system prompt
 2. База знаний (если нужна) — в `agents/{name}/knowledge/`, агент читает её сам
-3. В `CLAUDE.md` и `global/rules.md` → таблицу агентов добавить строку
+3. В `AGENTS.md` и `global/rules.md` → таблицу агентов добавить строку
 4. Коммит: `agents: add {name}`
 
 YAGNI: не дублируй текст из `global/rules.md` в агента — он передаётся в ТЗ.
@@ -59,7 +59,7 @@ cp -r projects/_template projects/{ProjectID}
 ## LiteLLM — настройка моделей (legacy)
 
 > LiteLLM остался только для spend-тулзов; основная работа идёт через подписку
-> Claude Code. Раздел актуален, если LiteLLM-gateway всё ещё используется.
+> Codex. Раздел актуален, если LiteLLM-gateway всё ещё используется.
 
 Конфиг живёт на проксе: `5.255.105.123:/root/litellm/config.yaml`.
 
