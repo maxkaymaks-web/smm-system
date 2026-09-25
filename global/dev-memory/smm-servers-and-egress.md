@@ -28,7 +28,7 @@ metadata:
   `AllowedIPs=10.8.0.0/24`). Заблокированное (Meta Graph API, Telegram) гнать через прокси
   **на ТУННЕЛЬНОМ IP `10.8.0.1`**: `http://egress:<pw>@10.8.0.1:8888` или
   `socks5h://...@10.8.0.1:1080`. gateway `PROXY_URL` уже переведён на туннель. Прямой РФ->Meta —
-  хрупкий fallback. Тест-адресат Telegram (НЕ клиент): `@reshifter`=Pavel, chat_id `1642013697`,
+  запрещённый прямой маршрут. Тест-адресат Telegram (НЕ клиент): `@reshifter`=Pavel, chat_id `1642013697`,
   Chatwoot conversation 1.
 
 - **Резервный доступ по голому IP** (сделано 23.06.2026, «если домены отъебнут»):

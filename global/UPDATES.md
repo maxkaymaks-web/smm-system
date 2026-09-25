@@ -145,7 +145,6 @@
   немедленно. Подробно — `global/rules.md` → «Очередь постов и статусы в Notion».
 - **Новый файл `projects/<ID>/session-log.md`** — короткая память проекта: 1 строка
   на сессию (что делали / что решили на будущее), читается на старте, дописывается
-  при финализации (`docs/session-finalize.md`, Шаг 4). Это НЕ дубль очереди —
   только решения и контекст, которых в Notion нет.
 
 ---
@@ -186,7 +185,6 @@
 
 - **Публикация — вручную.** Оператор постит готовый пост сам в соцсети, статус
   обновляет в Notion. Никаких токенов соцсетей/ключей публикации оператору не нужно.
-  В CLAUDE.md модель теперь «2 окна + Notion» (Chatwoot + Claude Code), Postiz-окна нет.
 - **Удалено из smm-system:** `tools/onboard-service/`, `tools/postiz/`, `patches/`
   (VK-патч Postiz), `tools/vk/`, `tools/onboard/register-channel.mjs`, все
   `projects/*/channels.json`. Мёртвые docs (postiz-integration, onboarding-no-ssh-handoff,
@@ -202,12 +200,10 @@
 
 ## 2026-06-30 — Память теперь общая (git), личная память Claude выключена
 Нашли утечку: оператор говорил Claude «запомни на будущее», и тот сохранял
-**клиентские правила в личную память харнесса** (`~/.claude/.../memory/`) вместо
 репо. Эта память per-machine: не коммитится, не видна другим операторам, не
 попадает в анализ — знание терялось.
 
 Что сделали:
-- **Личная память Claude выключена** в репо — `.claude/settings.json` →
   `autoMemoryEnabled: false` (уходит всем операторам через git; при первом
   старте может всплыть workspace-trust диалог — принять).
 - **Две общие памяти в git** (формат MEMORY.md-индекс + файлы по факту), читаются
@@ -216,7 +212,6 @@
   - `global/dev-memory/` — **память разработчика** (серверы, SSH, интеграции,
     внутренняя кухня). Читается **только в dev/`_unscoped`-сессиях**, оператору в
     контекст не подгружается.
-- **Сервер — зона разработчика** (новое правило в `CLAUDE.md` + `rules.md`):
   оператор на серверы не лезет, SSH/деплой/починка сервисов — только разработчик;
   нужен доступ — пинг ему. Чтобы операторы не «долбились по ssh».
 - **Клиентское знание — без изменений**: `projects/{ID}/overrides.md` /
@@ -245,7 +240,6 @@
 выгружались в S3 только если оператор вручную скажет «финализируй» — и так
 проебали ~3 недели сессий. Теперь Claude обязан в конце задачи сам спросить
 «закрываем? выгружаю логи?». Dev/инфра-сессии разработчика (`_unscoped`) —
-исключение, не навязываем. Детали — `docs/session-finalize.md`.
 
 ---
 
@@ -275,17 +269,13 @@ S3-креды не нужны. Дальше по ответам заводишь
 
 ---
 
-## 14.06.2026 (3) — Claude Code wiring (чтобы всё подтягивалось «само»)
 
-Аудит: что описано в доках ≠ что Claude Code реально автозагружает. Починено:
-- **Скиллы переехали `skills/` → `.claude/skills/`** — только там CC их автодискаверит.
   Добавлен frontmatter (`name`/`description`) в `ежедневный-брифинг/SKILL.md` (без него
   скилл не грузился). Ссылки `skills/…` в агентах/доках обновлены.
 - **Notion MCP подключён:** добавлен `.mcp.json` (сервер `notion` через
   `npx @notionhq/notion-mcp-server`, токен `${NOTION_TOKEN}`). ⚠️ Чтобы CC подставил
   токен — он должен быть **в окружении** при запуске: `set -a; source .env; set +a` →
   `claude` → подтвердить project MCP-сервер. Статус — `/mcp`. (См. `docs/access-setup.md`.)
-- **Сабагенты `.claude/agents/`** — 6 шт., frontmatter валиден; copywriter получил
   явный `tools: Read, Write`. (Отсутствие `tools` = наследование всех — не баг.)
 
 ---
@@ -297,32 +287,25 @@ S3-креды не нужны. Дальше по ответам заводишь
   (санкции); личный Drive через OAuth — хрупко и привязано к одному аккаунту. S3 уже
   работает, RU-родной, дёшев, headless-надёжен, team-safe.
 - **Медиа остаётся на S3**, но теперь **всё под префиксом `smm/`** (не в корне бакета):
-  `smm/projects/{ProjectID}/posts/…` и `…/assets/`. Архив сессий — отдельно (`logs/claude-code/…`).
 - **Просмотр для человека:** директору — Cyberduck/S3 Browser/веб-панель Timeweb; клиентам —
   presigned-ссылки (`tools/s3.mjs url`). Это и закрывало единственную причину хотеть Drive.
-- Обновлены: `storage.md`, `s3.md`, `access-setup.md` (выкинут Drive-раздел), `CLAUDE.md`,
   `rules.md`, спека (Компонент 2), `client-onboarding.md`, designer-агент, `.env.example`
   (убраны `GOOGLE_*`). Фаза 3 «Drive» — выкинута. Google service-account ключ не нужен.
 
 ---
 
-## 14.06.2026 — Notion-операционка живой + доки под Claude Code
 
 - **Notion как операционка — внедрено.** Созданы базы «Клиенты»/«Планы»/«Посты»
   (связи `Клиенты ──< Планы ──< Посты`), 6 проектов мигрированы (77 постов). ID баз —
   открыто в `config/notion.json`, токен — `NOTION_TOKEN` в `.env`. Операционная роль
   `content-plan.md` ретайрнута: статусы/план/очередь теперь в Notion.
-- **Агенты переведены под Claude Code.** Старый OpenClaw-формат `agents/*/SOUL.md`
-  (`memory_scope`/`knowledge`/`references`) → нативные сабагенты `.claude/agents/*.md`
   (frontmatter + system prompt, вызов через Agent tool). Базы знаний остались в
   `agents/<name>/knowledge/` (+ `brief/questions.md`).
 - **Новые доки:** `docs/storage.md` (где что хранится — сейчас vs цель),
   `docs/client-onboarding.md` (полный SOP заведения клиента: бриф → Notion → Drive →
   каналы), `docs/access-setup.md` (поправлены SA-email и имя ключа на фактические).
-- **Архитектура «3 окна»:** Chatwoot (диалоги) + Claude Code (работа) + Postiz
   (превью/публикация, кандидат) + Notion (БД) + Drive (медиа, Фаза 3, ещё не внедрён —
   медиа пока в S3). Дизайн — `docs/superpowers/specs/2026-06-12-notion-gdrive-integration-design.md`.
-- **Правки правил:** `CLAUDE.md` и `global/rules.md` переписаны под новую модель;
   git-правило — коммит/пуш только с подтверждением оператора (убрано «пушим
   немедленно»); зафиксировано «секреты в `.env`, константы открыто».
 - **Блокеры:** Drive (Фаза 3) ждёт `GDRIVE_ROOT_FOLDER_ID` + расшаренную папку;
@@ -333,13 +316,11 @@ S3-креды не нужны. Дальше по ответам заводишь
 ## 11.06.2026 — смена концепции + большая зачистка
 
 - **Новая модель работы.** Уход от «автономные агенты генерят посты» к «оператор
-  ведёт много проектов параллельно, Claude Code = сильный помощник с типовыми
   решениями». Операторов несколько, у каждого много проектов. Реализацию всей
   обвязки делает разработчик; будущий процесс описывает начальник.
 - **Telegram отменён полностью.** Доставка готового клиенту переезжает на Google
   Drive (тул у разработчика). Удалены: `tools/tg-send.mjs`, `tg-topic.mjs`,
   `get-tg-chat-id.mjs`, `tg-set-commands.mjs`, `spend-send.mjs`, `projects/topics.json`.
-  Все TG-упоминания вычищены из `CLAUDE.md`, `global/rules.md`, `agents/*`, `docs/*`.
 - **OpenClaw — снос артефактов.** Удалены: `agents/orchestrator/` (диспатчер был
   только под TG-автобот), `docs/openclaw-deploy.md`, `openclaw.json.example`,
   `ONBOARDING.md` (описывал OpenClaw/TG-онбординг), `tools/openclaw-logs-sync.mjs`,
@@ -350,7 +331,6 @@ S3-креды не нужны. Дальше по ответам заводишь
   `agents/designer/learning/` (логи крона). Накопленная база `agents/designer/knowledge/`
   оставлена — пополняется вручную.
 - **Жёсткие запреты сняты.** «Не писать пост без copywriter / не верстать без
-  designer» убрано из `CLAUDE.md` — агенты теперь модули экспертизы (помощь, не
   обязаловка), а не звенья обязательного оркестратора.
 - **Логирование** остаётся в S3 как есть. Добавлено: перед финализацией оператора
   опрашивают «всё ли сделано» и «делал ли что-то вне CC» — чтобы лог был полным
@@ -364,29 +344,19 @@ S3-креды не нужны. Дальше по ответам заводишь
 ## 17.05.2026 — HTTPS_PROXY больше не относится к локальному CC
 
 - **Правило:** legacy egress endpoint нужен был ТОЛЬКО для запусков с RU-сервера `5.42.112.17` (исторический OpenClaw, выключен 16.05.2026). Локальный `claude` в этом репо ходит во внешние сервисы (fal.ai, Apify, GitHub) напрямую — никакого `HTTPS_PROXY` ни в `.env`, ни в окружении задавать не надо.
-- **Почему правка:** в `CLAUDE.md`, `global/rules.md`, `agents/designer/SOUL.md`, `skills/fal-ai/SKILL.md` и тексте ошибок `tools/generate-image.mjs` оставались формулировки в стиле «трафик идёт через `HTTPS_PROXY` из `.env`», которые сбивали локальную сессию: агент пытался выставлять прокси или подозревать его в любом сетевом фейле.
 - **Что осталось без изменений:** `docs/proxy-and-server.md` (инфра-док про сервер) и `docs/openclaw-deploy.md` (исторический деплой OpenClaw) — там прокси описан корректно в серверном контексте.
 
 ---
 
-## 16.05.2026 — уход от OpenClaw, ручной Claude Code + архив сессий
 
 - **OpenClaw на 5.42.112.17 отключён.** `openclaw-gateway.service` остановлен (stop + disable), оба root-cron'а (`session-watchdog.mjs` ежеминутный, `openclaw-logs-sync.mjs` daily 03:00) сняты. Последний финальный sync прошёл вручную (29 сессий / 75 файлов в `s3://seo/logs/openclaw/`, дельта после 16.05 03:00 — 6 файлов / 0.67 MB). Бинарь OpenClaw в `/usr/lib/node_modules`, `/root/.openclaw/`, конфиги — **не тронуты** (rollback одним `systemctl start`); полный cleanup отдельной задачей через 1-2 недели.
 - **Причина:** бюджет LiteLLM virtual key smm-openclaw исчерпан 16.05 ($50.07/$50); gateway бесполезно спамил `FailoverError`. Текущий формат «бот в TG отвечает сам на @mention» решено больше не поддерживать.
 - **Новый рабочий режим:** операторы запускают `cd smm-system && claude` руками, **1 задача = 1 сессия**. Это всё. Никаких 24/7-сервисов, никакого LiteLLM в горячем пути.
-- **Архив сессий CC в S3.** В конце задачи (с подтверждения оператора) Claude Code:
   1. Пишет `summary.md` по шаблону **Hybrid YAML + recipe + narrative** в `/tmp/`.
-  2. Запускает `node tools/upload-session.mjs <ProjectID> --summary /tmp/session-summary.md`.
   3. В S3 уходит 5 объектов:
-     - `logs/claude-code/by-project/{ProjectID}/{YYYY-MM-DD}/{sid}/{raw.jsonl,meta.json,summary.md}`
-     - `logs/claude-code/by-date/{YYYY}/{MM}/{DD}/{sid}.pointer.json` (короткий json со ссылкой)
-     - `logs/claude-code/_index/all-sessions.jsonl` (read-modify-write по `session_id`)
-- **`meta.json` — детерминистический** (парсится из JSONL CC без LLM): usage по моделям, tool counts, bash-команды, files read/written/edited, subagents, первый prompt, ai-title, duration, model, cc_version, git_branch. См. `tools/upload-session.mjs`.
-- **`summary.md` пишет сам CC по своему же контексту** (никаких дополнительных LLM-вызовов и платы за саммаризацию). Формат — `docs/session-finalize.md`: frontmatter (`project_id`, `task_type` из таксономии 15 значений, `status`, `difficulty`, `automation_potential`, `reusable_recipe`, `tags`) + блоки «Что просили / Inputs / Recipe / Tools / Artifacts / Decisions / Lessons / Что автоматизировать» + опциональные раскрытия ТЗ к подагентам.
 - **Цель корпуса** — научиться повторять типовые задачи через UI «без нейронок»: накапливаем рецепты, поверх индекса позже строится сайтик с кнопками.
 - **Удалено:** `tools/session-watchdog.mjs` (был полезен только при живом OpenClaw — уведомлял в TG о таймаутах сессий бота).
 - **Не тронуто:** `tools/openclaw-logs-sync.mjs` (оставлен в репо как рабочий снапшоттер историчного `logs/openclaw/` префикса в S3 — можно запустить руками при необходимости).
-- **CLAUDE.md** переписан: вверху — указание читать `docs/session-finalize.md` в конце сессии, секция «Архитектура» обновлена (нет «Telegram-бот в проде»), есть упоминание `upload-session.mjs` в `tools/`.
 
 ---
 
@@ -447,7 +417,6 @@ S3-креды не нужны. Дальше по ответам заводишь
 
 ## 11.05.2026 — переезд на OpenClaw + LiteLLM
 
-- **Полный переезд с Claude Code на OpenClaw.** Все агенты (`orchestrator`, `copywriter`, `designer`, `analytics`, `brief`, `content-planner`, `dushnila`) теперь живут в `agents/<name>/SOUL.md` (формат OpenClaw). Старые `skill.md` удалены. Папка `agents/skills/` удалена как дубль.
 - **LiteLLM как единственный AI-gateway** (`http://5.255.105.123:4000`, Postgres + spend tracking). Все модели под именами `smm/claude-haiku-4.5`, `smm/claude-sonnet-4.6`, `smm/claude-opus-4-7`, `smm/deepseek-v3`, `smm/gemini-2.5-flash`, `smm/gemini-2.5-pro`. Они идут через отдельный OpenRouter ключ для трекинга расхода SMM-проекта.
 - **Virtual key `smm-openclaw`** с бюджетом $50/30дн. `LITELLM_KEY` в `.env`. Расход: `node tools/spend.mjs`.
 - **HTTPS_PROXY** (legacy tinyproxy с BasicAuth) был прописан system-wide на RU-сервере `5.42.112.17` — `/etc/environment`, apt, git, npm видели. fal.ai/Apify/GitHub были доступны с RU.
@@ -490,11 +459,9 @@ S3-креды не нужны. Дальше по ответам заводишь
 ## 26.04.2026 (обновление 5)
 
 - **Новый проект: Lis_Gym** — фитнес-блог lis.gym, платформа Instagram Reels, 15 сценариев/месяц. Папка `projects/Lis_Gym/`. Заполнены: `context.md` (клиент + аналитика конкурентов), `analytics/competitors.md` (138 рилсов, 13 аккаунтов). Стратегия в разработке.
-- **Новый скилл: `сценарий-рилс`** — пишет полные сценарии Instagram Reels. Читает `context.md` + `analytics/competitors.md`, выбирает рабочий формат (из аналитики), создаёт раскадровку с хронометражем, инструкциями по съёмке, подписью и хэштегами. Шаблон выходного файла: `posts/drafts/{дата}-reels-{N}/script.md`. Установить: `cp -r skills/* ~/.claude/skills/`.
 
 ## 26.04.2026 (обновление 4)
 
-- **Скиллы Claude Code теперь в репо** (`skills/`). Новый обязательный шаг при онбординге и после каждого `git pull`: `cp -r skills/* ~/.claude/skills/`. Это гарантирует, что все операторы используют актуальные версии.
 - **fal-ai скилл обновлён** (v2): добавлена полная методология промпт-инжиниринга (`references/prompt-engineering.md`) — структура SLCT, reverse-prompt, модельно-специфичные паттерны, шаблоны для SMM. Перед любой генерацией — читать references.
 - **Новые скиллы в репо:** `ежедневный-брифинг`, `сценарий-съёмки`, `директ-апи`.
 - **ONBOARDING.md обновлён** — добавлен Шаг 2 «Установить скиллы».
