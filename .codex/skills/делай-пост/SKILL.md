@@ -34,7 +34,7 @@ git, но в контекст сами не подгружаются. Если �
 6. `agents/copywriter/knowledge/patterns.md`, `hooks.md`, `feedback_log.md` —
    приёмы копирайтинга (часть пока пустая — это нормально, наполняется со
    временем; прочитать всё равно)
-7. `.claude/skills/fal-ai/references/prompt-engineering.md` — reverse-prompt
+7. `.codex/skills/fal-ai/references/prompt-engineering.md` — reverse-prompt
    методология для генерации картинок
 
 Знания о конкретном клиенте:
@@ -48,10 +48,10 @@ git, но в контекст сами не подгружаются. Если �
 
 ## После загрузки — рабочий процесс
 
-1. **Текст** — по `.claude/agents/copywriter.md` (структура поста, крючок, CTA,
+1. **Текст** — по `.codex/agents/copywriter.md` (структура поста, крючок, CTA,
    правила). Можешь звать сабагента `copywriter` через Agent tool, можешь писать
    сам — но строго по тем же правилам и знаниям.
-2. **Визуал** — по `.claude/agents/designer.md`: визуальный план →
+2. **Визуал** — по `.codex/agents/designer.md`: визуальный план →
    fal.ai-промпты (только `nano-banana-2` / `gpt-image-2`, методология из
    prompt-engineering.md) → HTML по таблице форматов → рендер → S3. Аналогично:
    можно звать сабагента `designer`.

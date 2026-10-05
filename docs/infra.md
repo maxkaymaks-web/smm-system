@@ -14,17 +14,17 @@
 | Роль | IP | SSH-порт | ОС | Ресурсы |
 |------|----|---------:|----|---------|
 | Основной «seo» (медиа/S3, сессии CC, кандидат под Postiz) | `5.42.112.17` | **22** | Ubuntu 24.04 | **1.9 GiB RAM**, 2 CPU, 38G диск (27G свободно) |
-| Прокси-egress | `5.2.66.188` | **24822** | — | — |
+| Прокси-egress | `5.255.105.123` | **24822** | — | — |
 
 ⚠️ **SSH-порты разные:** основной — `22`, прокси — `24822`. (Глобальная заметка
 «везде 24822» для основного сервера неверна.) Основной с некоторых IP роняет
 коннект на этапе kex (fail2ban/whitelist) — заходить с доверенного IP.
 
-## Прокси (tinyproxy на 5.2.66.188)
+## Прокси (3proxy на 5.255.105.123)
 
-- `tinyproxy` слушает `:8888`, `Listen 0.0.0.0`
+- `3proxy` слушает `:8888`, `Listen 0.0.0.0`
 - **BasicAuth** (логин/пароль — в `.env` как `PROXY_URL`, формат
-  `http://<user>:<pass>@5.2.66.188:8888`)
+  `http://<user>:<pass>@5.255.105.123:8888`)
 - CONNECT разрешён только на портах **443 / 563** (HTTPS-туннель)
 - **Allow-лист по IP:** `127.0.0.1`, `178.253.42.36`, `5.42.112.17`
   (основной сервер уже включён). Новый клиент egress'а → добавить его IP в
@@ -179,7 +179,7 @@ nginx восстановить руками**):
 - **Секреты — в env сервиса (server-side, НЕ в git):** `ONBOARD_API_KEY`,
   `DATABASE_URL` (как у Postiz), `POSTIZ_ORG_ID=637b7803-…`, `TELEGRAM_TOKEN`
   (бот `bit_and_pix_bot`), **`TELEGRAM_PROXY`** (= аутентиф. tinyproxy
-  `http://…@5.2.66.188:8888`; для egress к Telegram, см. ниже). Оператору в
+  `http://…@5.255.105.123:8888`; для egress к Telegram, см. ниже). Оператору в
   локальный `.env` — только `ONBOARD_API_URL` + `ONBOARD_API_KEY`. Токен пишется
   в Postiz **СЫРЫМ** (Postiz не шифрует).
 - **Egress валидации (важно, проверено 14.06):** перед `INSERT` сервис валидирует
@@ -212,9 +212,9 @@ nginx восстановить руками**):
 **Фикс — env контейнера `postiz` в `docker-compose.trim.yaml`:**
 ```yaml
 TELEGRAM_TOKEN: "<бот bit_and_pix_bot>"
-HTTPS_PROXY: "http://<user>:<pass>@5.2.66.188:8888"
-HTTP_PROXY:  "http://<user>:<pass>@5.2.66.188:8888"
-NO_PROXY: "localhost,127.0.0.1,::1,postiz-postgres,postiz-redis,temporal,tech.bitandpix.ru,5.42.112.17,5.2.66.188,vk.com,.vk.com,userapi.com,.userapi.com,vkuser.net,.vkuser.net"
+HTTPS_PROXY: "http://<user>:<pass>@5.255.105.123:8888"
+HTTP_PROXY:  "http://<user>:<pass>@5.255.105.123:8888"
+NO_PROXY: "localhost,127.0.0.1,::1,postiz-postgres,postiz-redis,temporal,tech.bitandpix.ru,5.42.112.17,5.255.105.123,vk.com,.vk.com,userapi.com,.userapi.com,vkuser.net,.vkuser.net"
 ```
 
 **Почему это работает и почему `NO_PROXY` именно такой (важный нюанс клиентов):**

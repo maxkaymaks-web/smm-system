@@ -1,7 +1,7 @@
 # Аналитика: топ-темы для каруселей @travnik_ural
 
 **Дата:** 2026-06-22  
-**Аналитик:** Claude Code  
+**Аналитик:** Codex
 **Источники:** @psy.gleb (50 постов), @gulnaz.rasilevna.blog (50 постов)  
 **Метод:** Apify Instagram Scraper → vision-анализ первых слайдов топ-постов
 

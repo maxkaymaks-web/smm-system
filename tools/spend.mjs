@@ -6,7 +6,7 @@
  * и /spend/logs за последние N дней.
  *
  * Требует в env:
- *   LITELLM_URL          — http://5.2.66.188:4000
+ *   LITELLM_URL          — http://5.255.105.123:4000
  *   LITELLM_ADMIN_KEY    — master key (опционально, для /spend/logs)
  *   LITELLM_KEY          — SMM virtual key (для /key/info по нему)
  *
