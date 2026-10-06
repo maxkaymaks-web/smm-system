@@ -77,5 +77,5 @@ curl -s -o /dev/null -w "напрямую -> HTTP %{http_code}\n" --max-time 15 
 
 ---
 
-См. также: `.claude/skills/fal-ai/SKILL.md` (раздел «Прокси / ECONNRESET»),
+См. также: `.codex/skills/fal-ai/SKILL.md` (раздел «Прокси / ECONNRESET»),
 память проекта `no-direct-internet-from-ru-server` и `smm-servers-and-egress`.

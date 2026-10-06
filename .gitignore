@@ -8,7 +8,7 @@ __pycache__/
 *.pyc
 *.pyo
 .idea/
-.claude/launch.json
+.codex/launch.json
 
 # Все бинарники и сгенерированный HTML лежат в S3 (bucket=seo).
 # В git коммитим только текст: .md, .json, .yml, исходники.
@@ -51,8 +51,8 @@ tools/vk/.vk-oauth-state.json
 # Временные снапшоты Playwright MCP
 .playwright-mcp/
 
-# Локальные git-worktree'ы Claude Code (артефакт, не коммитить)
-.claude/worktrees/
+# Локальные git-worktree'ы Codex (артефакт, не коммитить)
+.codex/worktrees/
 
 # Одноразовые рабочие скрипты — генерация ассетов и т.п. (медиа → S3)
 tmp/
